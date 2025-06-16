@@ -14,10 +14,10 @@
   ]" />
   <BannerSection sectionTitle="What We Offer" />
   <WhatWeOfferSection :offers="[
-    { imageSrc: '/assets/frame-1.svg', imageAlt: 'Brand Thinking', title: 'Brand-Led Product Thinking', description: 'We help you build digital products aligned with your brand voice and vision.', link: '#' },
-    { imageSrc: '/assets/frame-2.svg', imageAlt: 'Design Systems', title: 'Design Systems & UX Architecture', description: 'We craft scalable design systems and UX flows that bridge user needs and developer logic.', link: '#' },
-    { imageSrc: '/assets/frame-3.svg', imageAlt: 'Implementation Support', title: 'Full-Stack Implementation Support', description: 'From prototypes to production, we collaborate closely with your dev team — or bring our own.', link: '#' },
-    { imageSrc: '/assets/frame-4.svg', imageAlt: 'AI Innovation', title: 'AI-Infused Innovation & R&D', description: 'We bring forward-thinking, AI-powered tooling into the design and development process.', link: '#' }
+    { imageSrc: '/Synth/assets/frame-1.svg', imageAlt: 'Brand Thinking', title: 'Brand-Led Product Thinking', description: 'We help you build digital products aligned with your brand voice and vision.', link: '#' },
+    { imageSrc: '/Synth/assets/frame-2.svg', imageAlt: 'Design Systems', title: 'Design Systems & UX Architecture', description: 'We craft scalable design systems and UX flows that bridge user needs and developer logic.', link: '#' },
+    { imageSrc: '/Synth/assets/frame-3.svg', imageAlt: 'Implementation Support', title: 'Full-Stack Implementation Support', description: 'From prototypes to production, we collaborate closely with your dev team — or bring our own.', link: '#' },
+    { imageSrc: '/Synth/assets/frame-4.svg', imageAlt: 'AI Innovation', title: 'AI-Infused Innovation & R&D', description: 'We bring forward-thinking, AI-powered tooling into the design and development process.', link: '#' }
   ]" />
   <ProcessSection imageSrc="/Synth/assets/gitest.png" imageAlt="Synth" :sections="[
     { title: 'Discover', description: 'We dive into your business goals, users, and context.', link: '#', linkText: 'Tell us your story first →' },
@@ -36,7 +36,7 @@
     { icon: '✅', title: 'Seamless Collaboration', description: 'We unify strategy, development, and branding — no silos, no handoff gaps.' },
     { icon: '✅', title: 'Agile & AI-Powered', description: 'We use AI-powered tools to accelerate delivery, reduce cost, and stay ahead.' }
   ]" />
-  <StoriesSection storiesText="Explore our latest case studies" storiesLink="/success-stories"
+  <StoriesSection storiesText="Explore our latest case studies" storiesLink="#"
     blogText="Dive deeper into industry insights" blogLink="#" />
   <TestimonialSection imageSrc="assets/stephan.png" personName="Stephan Ryckeboer" personTitle="Head of Growth"
     quoteTitle="Simplicity takes effort"

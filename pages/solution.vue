@@ -31,7 +31,7 @@
     ctaText="Get in touch" ctaLink="#" class="pb-[8rem] pt-[8rem]" />
   <Translate
   sectionTitle="Translate into Product Experience"
-  imageSrc="/assets/git-1.png"
+  imageSrc="/Synth/assets/git-1.png"
   imageAlt="Github code"
   mainTitle="🎨 Make your product speak, look, and feel like your brand."
   mainDescription="Here, we bring the brand to life inside the product — not just through visuals, but through behavior, interaction, and language."

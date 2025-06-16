@@ -42,7 +42,7 @@
 
 <script setup>
   const footerData = {
-  logoSrc: "/assets/synt-logo.svg",
+  logoSrc: "/Synth/assets/synt-logo.svg",
   tagline: "No silos. Just synthesis.",
   socialLinks: [
     { icon: "fab fa-linkedin", url: "#", color: "border-[#0A66C2] hover:bg-[#0A66C2]" },
