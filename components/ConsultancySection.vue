@@ -23,36 +23,19 @@
     <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 relative z-10">
       <!-- Left Column -->
       <div class="py-12 md:pr-6 md:border-r border-[#636363]">
-        <h2 class="text-3xl font-bold text-white">Typical Consultancy</h2>
-        <div class="mt-6">
-          <h3 class="text-xl font-semibold text-white flex items-center gap-2">🚫 One-Size-Fits-All</h3>
-          <p class="text-gray-300 mt-2">Rigid, prepackaged solutions applied to everyone.</p>
-        </div>
-        <div class="mt-6 pt-4">
-          <h3 class="text-xl font-semibold text-white flex items-center gap-2">🚫 Siloed & Fragmented</h3>
-          <p class="text-gray-300 mt-2">Tech, design, and marketing handled in isolation.</p>
-        </div>
-        <div class="mt-6 pt-4 pb-4">
-          <h3 class="text-xl font-semibold text-white flex items-center gap-2">🚫 Slow & Overcomplicated</h3>
-          <p class="text-gray-300 mt-2">Manual workflows, outdated tools, and complexity that wastes time — and your
-            budget.</p>
+        <h2 class="text-3xl font-bold text-white">{{ leftTitle }}</h2>
+        <div v-for="(item, index) in leftItems" :key="index" class="mt-6">
+          <h3 class="text-xl font-semibold text-white flex items-center gap-2">{{ item.icon }} {{ item.title }}</h3>
+          <p class="text-gray-300 mt-2">{{ item.description }}</p>
         </div>
       </div>
 
       <!-- Right Column -->
       <div class="py-12 md:pl-6">
-        <h2 class="text-3xl font-bold text-white">SiteSynth</h2>
-        <div class="mt-6">
-          <h3 class="text-xl text-white font-semibold flex items-center gap-2">✅ Custom by Design</h3>
-          <p class="text-gray-300 mt-2">Tailored strategies designed for your unique context.</p>
-        </div>
-        <div class="mt-6 pt-4">
-          <h3 class="text-xl text-white font-semibold flex items-center gap-2">✅ Seamless Collaboration</h3>
-          <p class="text-gray-300 mt-2">We unify strategy, development, and branding — no silos, no handoff gaps.</p>
-        </div>
-        <div class="mt-6 pt-4 pb-4">
-          <h3 class="text-xl text-white font-semibold flex items-center gap-2">✅ Agile & AI-Powered</h3>
-          <p class="text-gray-300 mt-2">We use AI-powered tools to accelerate delivery, reduce cost, and stay ahead.</p>
+        <h2 class="text-3xl font-bold text-white">{{ rightTitle }}</h2>
+        <div v-for="(item, index) in rightItems" :key="index" class="mt-6">
+          <h3 class="text-xl text-white font-semibold flex items-center gap-2">{{ item.icon }} {{ item.title }}</h3>
+          <p class="text-gray-300 mt-2">{{ item.description }}</p>
         </div>
       </div>
     </div>
@@ -61,6 +44,14 @@
 
 <script setup>
 import { onMounted, onBeforeUnmount } from 'vue'
+import { defineProps } from 'vue'
+
+defineProps({
+  leftTitle: String,
+  leftItems: Array,
+  rightTitle: String,
+  rightItems: Array
+})
 
 let glowListener = null
 

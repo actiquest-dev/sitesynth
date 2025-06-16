@@ -12,6 +12,7 @@
     "deploy": "gh-pages --dotfiles -d .output/public"
   },
   "dependencies": {
+    "@nuxt/image": "^1.10.0",
     "nuxt": "^3.17.5",
     "vue": "^3.5.16",
     "vue-router": "^4.5.1"
