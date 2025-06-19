@@ -2,15 +2,21 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
   devtools: { enabled: true },
+
   modules: ['@nuxtjs/tailwindcss', '@nuxt/image'],
+
   components: [
     { path: '~/components', pathPrefix: false }
   ],
+
+  ssr: true, // optional, true by default but can be explicit
+
   nitro: {
-    preset: 'static',
+    preset: 'vercel', // ✅ change from 'static' to 'vercel'
   },
+
   app: {
-    buildAssetsDir: 'assets',
-    baseURL: '/Synth/',
+    baseURL: '/', // ✅ change from '/Synth/' to '/'
+    // ❌ remove `buildAssetsDir` unless you specifically need a custom one
   }
 })

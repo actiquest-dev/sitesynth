@@ -59,10 +59,10 @@ const navItems = [
         link: "#",
         dropdownWidth: "w-[500px]",
         subItems: [
-            { imageSrc: "/Synth/assets/frame-1.svg", label: "Brand-Driven Product Strategy", description: "Align product design with your brand’s identity and goals.", link: "/brand-driven-product-strategy" },
-            { imageSrc: "/Synth/assets/frame-2.svg", label: "UX & Design Systems", description: "Build consistent, scalable, and user-friendly interfaces.", link: "/ux-and-design-system" },
-            { imageSrc: "/Synth/assets/frame-3.svg", label: "Development Support & Execution", description: "Turn designs into real, high-quality digital products.", link: "#" },
-            { imageSrc: "/Synth/assets/frame-4.svg", label: "AI-Powered Workflows & Innovation", description: "Use smart tools to move faster and reduce cost.", link: "#" }
+            { imageSrc: "/assets/frame-1.svg", label: "Brand-Driven Product Strategy", description: "Align product design with your brand’s identity and goals.", link: "/brand-driven-product-strategy" },
+            { imageSrc: "/assets/frame-2.svg", label: "UX & Design Systems", description: "Build consistent, scalable, and user-friendly interfaces.", link: "/ux-and-design-system" },
+            { imageSrc: "/assets/frame-3.svg", label: "Development Support & Execution", description: "Turn designs into real, high-quality digital products.", link: "#" },
+            { imageSrc: "/assets/frame-4.svg", label: "AI-Powered Workflows & Innovation", description: "Use smart tools to move faster and reduce cost.", link: "#" }
         ]
     },
     {

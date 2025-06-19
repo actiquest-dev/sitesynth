@@ -7,9 +7,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
-    "predeploy": "touch .output/public/.nojekyll",
-    "deploy": "gh-pages --dotfiles -d .output/public"
+    "postinstall": "nuxt prepare"
   },
   "dependencies": {
     "@nuxt/image": "^1.10.0",
