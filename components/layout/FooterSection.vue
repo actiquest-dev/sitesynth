@@ -75,7 +75,7 @@
       ]
     }
   ],
-  footerLinks: { privacy: "#", copyright: "© 2025 SyteSynth | All rights reserved." }
+  footerLinks: { privacy: "#", copyright: "© 2025 SyteSynth & Tech Paw | All rights reserved." }
 };
 
 </script>
