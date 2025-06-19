@@ -20,13 +20,13 @@
       'Miro or FigJam for live collaboration',
       'Whimsical for brand attributes and tone sliders',
       'Optional pre-workshop surveys via Typeform or Google Forms'
-    ]" imageSrc="/Synth/assets/git-1.png" />
+    ]" imageSrc="/assets/git-1.png" />
 
-  <Testimonial imageSrc="/Synth/assets/mayya.png" personName="Mayya Aprosina" personTitle="CEO & Business Designer"
+  <Testimonial imageSrc="/assets/mayya.png" personName="Mayya Aprosina" personTitle="CEO & Business Designer"
     quoteTitle="A clear why shapes everything that follows."
     quoteText="Understanding why your brand exists — beyond products or features — gives every decision direction. It’s the foundation for building digital experiences that feel aligned, intentional, and real."
     ctaText="Get in touch" ctaLink="#" class="pb-[8rem] pt-[8rem]" />
-  <TranslateSection sectionTitle="Translate into Product Experience" imageSrc="/Synth/assets/git-1.png"
+  <TranslateSection sectionTitle="Translate into Product Experience" imageSrc="/assets/git-1.png"
     imageAlt="Github code" mainTitle="🎨 Make your product speak, look, and feel like your brand."
     mainDescription="Here, we bring the brand to life inside the product — not just through visuals, but through behavior, interaction, and language."
     toolsTitle="🛠️ Tools we use:" :links="[
@@ -53,7 +53,7 @@
       'Notion for shared strategy docs',
       'Slack or Loom for async feedback',
       'Monday.com or Jira for team tracking'
-    ]" imageSrc="/Synth/assets/git-1.png" />
+    ]" imageSrc="/assets/git-1.png" />
   <StoriesSection storiesText="Check our successful stories" storiesLink="#"
     blogText="Read our blog to get more insights" blogLink="#" />
   <WhiteSection class="pb-[8rem]" title="Get Started Today"
