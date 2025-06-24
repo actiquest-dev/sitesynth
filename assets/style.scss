@@ -1,0 +1,89 @@
+/* Import your static CSS here or migrate styles from your old style.css */
+// @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+// @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..900&display=swap');
+
+body {
+  * {
+    font-family: "Space Grotesk", sans-serif;
+    font-optical-sizing: auto;
+  }
+
+  &::selection {
+    background: #A620FF;
+    color: white;
+  }
+}
+
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+  display: inline-block;
+  position: relative;
+  background: rgba(0, 0, 0, 0.09);
+  padding: 0.5rem 1rem;
+  color: white;
+  font-weight: 600;
+  border: 2px solid transparent;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    background: #fff;
+    transition: all 0.3s ease;
+  }
+
+  &::before {
+    height: 2px;
+    width: 0;
+    top: 0;
+    left: 0;
+  }
+
+  &::after {
+    height: 2px;
+    width: 0;
+    bottom: 0;
+    right: 0;
+  }
+
+  span {
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      width: 2px;
+      height: 0;
+      background: #fff;
+      transition: all 0.3s ease;
+    }
+
+    &::before {
+      top: 0;
+      left: 0;
+    }
+
+    &::after {
+      bottom: 0;
+      right: 0;
+    }
+  }
+
+  &:hover {
+    &::before,
+    &::after {
+      width: 100%;
+    }
+
+    span {
+      &::before,
+      &::after {
+        height: 100%;
+      }
+    }
+  }
+}
