@@ -6,7 +6,7 @@
                 <NuxtLink :href="item.link"
                     class="font-medium transition-colors duration-1000 flex items-center space-x-1 group">
                     <span>{{ item.label }}</span>
-                    <i class="fas fa-chevron-up transform transition-transform duration-300 group-hover:rotate-180"></i>
+                    <i class="fas fa-chevron-down transform transition-transform duration-300 group-hover:rotate-180"></i>
                 </NuxtLink>
 
                 <!-- Dropdown Panel with Dynamic Width -->

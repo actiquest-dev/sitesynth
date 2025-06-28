@@ -4,6 +4,31 @@
 We build with it."
         description="AI is transforming how teams design, build, and operate — but most companies don’t know where to start. We help you find the right use cases, test fast, and integrate AI meaningfully into your product or process."
         buttonText="Let’s Build Together" buttonLink="#" />
+    <TwoColumnsDesign sectionBgColor="bg-[#DDDDDD]" leftColumnBgColor="bg-[#DDDDDD]" rightColumnBgColor="bg-[#161616]" textColorleft="text-[#161616]" textColorRight="text-white">
+        <template #left>
+            <h3 class="text-lg mb-2">WHY AI NOW?</h3>
+            <h2 class="text-4xl font-bold mb-4">You don’t need an AI lab. You need traction.</h2>
+        </template>
+
+        <template #right>
+            <p class="text-white font-bold mb-4">AI is transforming how teams design, build, and operate — but most companies don’t know where to start. We help you find the right use cases, test fast, and integrate AI meaningfully into your product or process.</p>
+        </template>
+    </TwoColumnsDesign>
+    <TwoColumnsDesign sectionBgColor="" leftColumnBgColor="bg-[#191919]" rightColumnBgColor="bg-[#161616]" textColorleft="text-[#161616]" textColorRight="text-white">
+        <template #left>
+            <h2 class="text-4xl mb-2 text-white">84% 🪄</h2>
+            <h2 class="text-4xl mb-2 text-white">of executives</h2>
+            <p class="text-lg font-bold mb-4 text-white">say AI will give them a competitive advantage — but only 19% have adopted it at scale.</p>
+            <p class="text-[#999999]"> — McKinsey Global AI Survey</p>
+        </template>
+
+        <template #right>
+            <h2 class="text-4xl mb-2 text-white">5x 🚀</h2>
+            <h2 class="text-4xl mb-2 text-white">faster</h2>
+            <p class="text-lg font-bold mb-4 text-white">Companies that adopt AI early grow 50% faster in productivity and customer retention.</p>
+            <p class="text-[#999999]">—  BCG AI at Scale Report</p>
+        </template>
+    </TwoColumnsDesign>
     <Testimonial imageSrc="/assets/miguel.png" personName="Miguel Aprossine " personTitle="AI & Web3 Visionary Partner"
         quoteTitle="AI isn’t here to replace your team"
         quoteText="We use AI to cut the noise, speed up workflows, and reveal smarter ways to build. It’s not about hype — it’s about helping real teams move faster with less friction."

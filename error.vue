@@ -28,22 +28,16 @@
         <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <NuxtLink 
             to="/" 
-            class="button group relative inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-transparent border-2 border-white hover:bg-white hover:text-[#161616] transition-all duration-300 overflow-hidden"
+            class="button btn-2 px-4 py-2 text-white font-semibold"
           >
-            <span class="relative z-10 flex items-center">
-              <i class="fas fa-home mr-2"></i>
-              Go Home
-            </span>
+            Go Home
           </NuxtLink>
           
           <button 
             @click="handleError"
-            class="button group relative inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-[#161616] bg-white hover:bg-transparent hover:text-white border-2 border-white transition-all duration-300 overflow-hidden"
+            class="button btn-2 px-4 py-2 text-white font-semibold"
           >
-            <span class="relative z-10 flex items-center">
-              <i class="fas fa-refresh mr-2"></i>
-              Try Again
-            </span>
+            Try Again
           </button>
         </div>
         
