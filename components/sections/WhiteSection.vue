@@ -1,5 +1,5 @@
 <template>
-    <section class="bg-[#161616] flex justify-center">
+    <section :class="`${bgColor} flex justify-center`">
         <div class="relative overflow-hidden z-0 testimonial-card max-w-6xl mx-auto text-center px-6 group">
             <div class="bg-[#DDDDDD] border border-[#636363] py-20 px-20 relative overflow-hidden">
                 <GlowEffect />
@@ -34,7 +34,11 @@ defineProps({
     primaryText: String,
     primaryLink: String,
     secondaryText: String,
-    secondaryLink: String
+    secondaryLink: String,
+    bgColor: {
+        type: String,
+        default: 'bg-[#161616]'
+    },
 });
 
 </script>

@@ -11,7 +11,10 @@
         </div>
         <h3 class="text-xl font-semibold text-white flex items-center gap-2 mb-2">{{ leftH3 }}</h3>
         <p class="text-gray-300 mb-2 whitespace-pre-line">{{ leftP }}</p>
-        <a :href="leftLearnMoreLink" class="text-blue-400 underline pt-4">{{ leftLearnMoreText }}</a>
+        <a :href="leftLearnMoreLink" class="text-[#8CB0FF] pt-4">
+          {{ leftLearnMoreText }}
+          <i class="ml-1 fa-solid fa-chevron-right text-sm"></i>
+        </a>
       </div>
 
       <!-- Right Column -->
@@ -22,7 +25,10 @@
         </div>
         <h3 class="text-xl font-semibold text-white flex items-center gap-2 mb-2">{{ rightH3 }}</h3>
         <p class="text-gray-300 mb-2 whitespace-pre-line">{{ rightP }}</p>
-        <a :href="rightLearnMoreLink" class="text-blue-400 underline pt-4">{{ rightLearnMoreText }}</a>
+        <a :href="rightLearnMoreLink" class="text-[#8CB0FF] pt-4 flex items-center">
+          {{ rightLearnMoreText }}
+          <i class="ml-1 fa-solid fa-chevron-right text-sm"></i>
+        </a>
       </div>
     </div>
     

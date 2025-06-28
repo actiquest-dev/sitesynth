@@ -5,7 +5,7 @@
     <TwoColumnsDesign leftTitle="Design debt is real. So is handoff hell."
         rightParagraph="When teams move fast without systems, the result is chaos: duplicated components, messy UX, endless revisions, and frustrated developers. We fix that by putting structure where it matters — in the product’s foundation." />
     <FigmaSection title="Figma" h3="🧱 Design Systems That Scale"
-        description="From tokens to components to documentation — we build reusable, flexible design foundations that support your team’s workflow, not slow it down.   Using Figma as the single source of truth, we create shared libraries, usage rules, and naming standards your team can actually use — with optional dev integration via Zeroheight or Storybook."
+        description="From tokens to components to documentation — we build reusable, flexible design foundations that support your team’s workflow, not slow it down. Using Figma as the single source of truth, we create shared libraries, usage rules, and naming standards your team can actually use — with optional dev integration via Zeroheight or Storybook."
         imageSrc="/assets/figma.svg" imageAlt="Figma Logo" primaryText="Try Figma"
         primaryLink="https://www.figma.com/" secondaryText="Learn More"
         secondaryLink="https://www.figma.com/design-systems/" />

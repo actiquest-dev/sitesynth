@@ -89,8 +89,8 @@ const navItems = [
     subItems: [
       { label: "Brand-Driven Product Strategy", link: "/brand-driven-product-strategy" },
       { label: "UX & Design Systems", link: "/ux-and-design-system" },
-      { label: "Development Support & Execution", link: "#" },
-      { label: "AI-Powered Workflows & Innovation", link: "#" }
+      { label: "Development Support & Execution", link: "/full-stack-implementation" },
+      { label: "AI-Powered Workflows & Innovation", link: "/ai-innovation" }
     ]
   },
   {

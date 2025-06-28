@@ -9,7 +9,7 @@
     :imageAlt="process.imageAlt"
     :sections="process.sections"
   />
-  <AiToolSection />
+   <AiToolSection />
   <ConsultancySection
     :leftTitle="consultancy.leftTitle"
     :leftItems="consultancy.leftItems"

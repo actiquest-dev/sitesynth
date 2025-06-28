@@ -1,8 +1,8 @@
 <template>
-  <section class="group relative overflow-hidden bg-[#161616] services pt-20">
+  <section :class="`${bgColor} group relative overflow-hidden services pt-20`">
     <GlowEffect />
     <div class="flex justify-center">
-      <div class="w-full md:w-2/4 bg-[#FFFFFF24] p-14 shadow-lg">
+      <div :class="`${bgDivider} w-full md:w-2/4 p-14 shadow-lg`">
         <h2 class="text-3xl font-bold text-white text-center mb-10">{{ title }}</h2>
         <div v-for="(item, index) in items" :key="index" class="mb-8 last:mb-0">
           <h3 class="text-xl font-semibold text-white flex items-center gap-2">{{ item.icon }} {{ item.title }}</h3>
@@ -18,6 +18,14 @@ import { defineProps } from 'vue'
 
 defineProps({
   title: String,
-  items: Array
+  items: Array,
+  bgColor: {
+    type: String,
+    default: 'bg-[#161616]'
+  },
+  bgDivider: {
+    type: String,
+    default: 'bg-[#FFFFFF24]'
+  }
 })
 </script>
