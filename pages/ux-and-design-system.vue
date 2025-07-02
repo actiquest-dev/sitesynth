@@ -3,7 +3,7 @@
     <HeroDesign title="Design that’s consistent, scalable, and ready to ship."
         description="We build design systems and UX architecture that grow with your product — enabling your teams to move faster, stay on-brand, and deliver with confidence." />
     <TwoColumnsDesign leftTitle="Design debt is real. So is handoff hell."
-        rightParagraph="When teams move fast without systems, the result is chaos: duplicated components, messy UX, endless revisions, and frustrated developers. We fix that by putting structure where it matters — in the product’s foundation." />
+        rightParagraph="When teams move fast without systems, the result is chaos: duplicated components, messy UX, endless revisions, and frustrated developers. We fix that by putting structure where it matters — in the product’s foundation." leftColumnBgColor="bg-[#191919]" rightColumnBgColor="bg-[#191919]" />
     <FigmaSection title="Figma" h3="🧱 Design Systems That Scale"
         description="From tokens to components to documentation — we build reusable, flexible design foundations that support your team’s workflow, not slow it down. Using Figma as the single source of truth, we create shared libraries, usage rules, and naming standards your team can actually use — with optional dev integration via Zeroheight or Storybook."
         imageSrc="/assets/figma.svg" imageAlt="Figma Logo" primaryText="Try Figma"

@@ -1,12 +1,12 @@
 <template>
-  <section :class="`group relative overflow-hidden border-t border-b border-[#636363] services ${sectionBgColor}`">
+  <section :class="`group relative overflow-hidden border-t border-b border-[#636363] `">
     
 
     <!-- Content -->
-    <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 relative z-10">
+    <div class="mx-auto grid grid-cols-1 md:grid-cols-2 relative z-10">
       <GlowEffect />
       <!-- Left Column -->
-      <div :class="`py-24 md:pr-6 md:border-r border-[#636363] ${leftColumnBgColor}`">
+      <div :class="`px-6 py-24 md:pl-[10rem] md:pr-6 md:border-r border-[#636363] ${leftColumnBgColor}`">
         <!-- Use slot if provided, otherwise fallback to prop -->
         <slot name="left">
           <h2 :class="`leading-snug text-4xl font-bold ${textColorLeft}`">{{ leftTitle }}</h2>
@@ -14,7 +14,7 @@
       </div>
 
       <!-- Right Column -->
-      <div :class="`py-24 md:pl-6 ${rightColumnBgColor}`">
+      <div :class="`px-6 py-24 md:pr-[10rem] md:pl-6 ${rightColumnBgColor}`">
         <!-- Use slot if provided, otherwise fallback to prop -->
         <slot name="right">
           <p :class="`leading-relaxed text-1xl font-bold ${textColorRight}`">{{ rightParagraph }}</p>
