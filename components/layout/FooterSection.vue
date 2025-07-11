@@ -5,7 +5,7 @@
       <div class="flex flex-col items-start justify-between md:col-span-1">
         <div class="mb-6">
           <NuxtLink to="/"><img :src="footerData.logoSrc" alt="logo"></NuxtLink>
-          <p class="text-[#A3A3A3] text-base mt-[2rem] mb-[3rem]">{{ footerData.tagline }}</p>
+          <p class="text-white text-base mt-[2rem] mb-[3rem]">{{ footerData.tagline }}</p>
           <div class="flex space-x-6">
             <NuxtLink v-for="(social, index) in footerData.socialLinks" :key="index" :to="social.url" 
               aria-label="Social Link" class="w-10 h-10 flex items-center justify-center rounded-full border-2 text-white transition duration-1000"
@@ -21,7 +21,7 @@
         <div v-for="(section, index) in footerData.menuSections" :key="index">
           <h4 class="text-[#636363] font-normal mb-6">{{ section.title }}</h4>
           <ul class="space-y-2">
-            <li v-for="(link, i) in section.links" :key="i" class="text-white font-light transition-colors duration-1000 hover:text-[#8CB0FF]">
+            <li v-for="(link, i) in section.links" :key="i" class="text-sm text-white font-normal transition-colors duration-1000 hover:text-[#8CB0FF]">
               <NuxtLink :href="link.url">{{ link.text }}</NuxtLink>
             </li>
           </ul>

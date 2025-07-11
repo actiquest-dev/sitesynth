@@ -7,18 +7,18 @@
       <!-- Left Column -->
       <div class="py-12 md:pr-6 md:border-r border-[#636363]">
         <h2 class="text-3xl font-bold text-white">{{ leftTitle }}</h2>
-        <div v-for="(item, index) in leftItems" :key="index" class="mt-6">
+        <div v-for="(item, index) in leftItems" :key="index" class="mt-12">
           <h3 class="text-xl font-semibold text-white flex items-center gap-2">{{ item.icon }} {{ item.title }}</h3>
-          <p class="text-gray-300 mt-2">{{ item.description }}</p>
+          <p class="text-[#999999] mt-2 font-light">{{ item.description }}</p>
         </div>
       </div>
 
       <!-- Right Column -->
       <div class="py-12 md:pl-6">
         <h2 class="text-3xl font-bold text-white">{{ rightTitle }}</h2>
-        <div v-for="(item, index) in rightItems" :key="index" class="mt-6">
+        <div v-for="(item, index) in rightItems" :key="index" class="mt-12">
           <h3 class="text-xl text-white font-semibold flex items-center gap-2">{{ item.icon }} {{ item.title }}</h3>
-          <p class="text-gray-300 mt-2">{{ item.description }}</p>
+          <p class="text-[#999999] mt-2 font-light">{{ item.description }}</p>
         </div>
       </div>
     </div>

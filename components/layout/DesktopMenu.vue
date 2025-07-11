@@ -6,7 +6,8 @@
                 <NuxtLink :href="item.link"
                     class="font-medium transition-colors duration-1000 flex items-center space-x-1 group">
                     <span>{{ item.label }}</span>
-                    <i class="fas fa-chevron-down transform transition-transform duration-300 group-hover:rotate-180"></i>
+                    <i
+                        class="fas fa-chevron-down transform transition-transform duration-300 group-hover:rotate-180"></i>
                 </NuxtLink>
 
                 <!-- Dropdown Panel with Dynamic Width -->
@@ -15,14 +16,14 @@
                     <ul class="p-4 space-y-2">
                         <li v-for="(subItem, subIndex) in item.subItems" :key="subIndex" class="list-none">
                             <NuxtLink :href="subItem.link"
-                                class="flex items-start space-x-4 hover:bg-[#2A2A2A] p-4 rounded-lg transition-colors duration-300">
+                                class="flex items-center space-x-4 hover:bg-[#2A2A2A] p-4 rounded-lg transition-colors duration-300 group/item">
                                 <img v-if="subItem.imageSrc" :src="subItem.imageSrc" alt="Icon"
-                                    class="w-14 h-14 rounded object-cover" />
+                                    class="w-14 h-14 rounded object-cover transition-all duration-300 group-hover/item:brightness-0 group-hover/item:invert" />
                                 <div>
                                     <h3 class="text-white text-base font-semibold mb-1">
                                         {{ subItem.label }}
                                     </h3>
-                                    <p v-if="subItem.description" class="text-gray-300 text-sm">
+                                    <p v-if="subItem.description" class="text-[#999999] text-sm">
                                         {{ subItem.description }}
                                     </p>
                                 </div>
@@ -43,7 +44,7 @@
 
         <!-- CTA Button -->
         <div class="flex-1 text-right">
-            <NuxtLink :href="cta.link" class="button btn-2 px-4 py-2 text-white font-semibold">
+            <NuxtLink :href="cta.link" class="border-[1px] border-white hover:bg-[#8D35FF] hover:text-white hover:border-[#8D35FF] bg-white text-[#161616] px-4 py-2 font-semibold transition-colors duration-[1000ms]">
                 <span>{{ cta.text }}</span>
             </NuxtLink>
         </div>
@@ -53,7 +54,16 @@
 
 <script setup>
 const navItems = [
-    { label: "Product", link: "#" },
+    { 
+        label: "Product", 
+        link: "#",
+        dropdownWidth: "w-[500px]",
+        subItems: [
+            { imageSrc: "/assets/membria.svg", label: "ScoreSynth", link: "/brand-driven-product-strategy" },
+            { imageSrc: "/assets/ai-live-pod.svg", label: "Membria", link: "/ux-and-design-system" },
+            { imageSrc: "/assets/score-synth.svg", label: "AI Live Pod", link: "/full-stack-implementation" },
+        ]
+    },
     {
         label: "Solutions",
         link: "#",
@@ -65,15 +75,15 @@ const navItems = [
             { imageSrc: "/assets/frame-4.svg", label: "AI-Powered Workflows & Innovation", description: "Use smart tools to move faster and reduce cost.", link: "/ai-innovation" }
         ]
     },
-    {
-        label: "Resources",
-        link: "#",
-        dropdownWidth: "w-auto min-w-[240px]",
-        subItems: [
-            { label: "Success Stories", link: "#" },
-            { label: "Sync Blog", link: "#" }
-        ]
-    },
+    // {
+    //     label: "Resources",
+    //     link: "#",
+    //     dropdownWidth: "w-auto min-w-[240px]",
+    //     subItems: [
+    //         { label: "Success Stories", link: "#" },
+    //         { label: "Sync Blog", link: "#" }
+    //     ]
+    // },
     {
         label: "Company",
         link: "#",
@@ -83,7 +93,6 @@ const navItems = [
             { label: "Careers", link: "#" }
         ]
     },
-    { label: "Pricing", link: "#" }
 ];
 
 const cta = { text: "Get started", link: "#" };

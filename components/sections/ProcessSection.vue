@@ -15,25 +15,29 @@
             <p class="text-[#999999] mt-2">{{ section.description }}</p>
             <a :href="section.link" class="text-[#8CB0FF] font-semibold mt-4 inline-block pb-8 hover:text-[#A620FF] transition-colors duration-1000">
               {{ section.linkText }}
+              <i class="fa-solid fa-chevron-right relative top-[2px]" aria-hidden="true"></i>
             </a>
           </div>
         </div>
       </div>
 
       <!-- Right Column (Image) -->
-      <div>
-        <img :src="imageSrc" :alt="imageAlt">
+      <div :class="`${imageClass}`">
+        <img :src="getCurrentImageSrc" :alt="getCurrentImageAlt" class="transition-opacity duration-300">
       </div>
     </div>
   </section>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-defineProps({
+import { ref, computed } from 'vue'
+
+const props = defineProps({
   sections: Array,
   imageSrc: String,
-  imageAlt: String
+  imageAlt: String,
+  imageClass: String,
+  images: Array // New prop for dynamic images
 })
 
 // 0: Discover, 1: Define, 2: Design, 3: Deliver
@@ -41,4 +45,21 @@ const openIndex = ref(0)
 function toggle(idx) {
   openIndex.value = openIndex.value === idx ? -1 : idx
 }
+
+// Computed properties for dynamic image handling
+const getCurrentImageSrc = computed(() => {
+  if (props.images && props.images.length > 0) {
+    const currentImage = props.images[openIndex.value]
+    return currentImage ? currentImage.src : (props.imageSrc || '')
+  }
+  return props.imageSrc || ''
+})
+
+const getCurrentImageAlt = computed(() => {
+  if (props.images && props.images.length > 0) {
+    const currentImage = props.images[openIndex.value]
+    return currentImage ? currentImage.alt : (props.imageAlt || '')
+  }
+  return props.imageAlt || ''
+})
 </script>

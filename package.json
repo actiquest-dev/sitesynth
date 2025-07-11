@@ -7,7 +7,9 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "sass:watch": "sass --watch assets/style.scss:assets/style.css",
+    "sass:build": "sass assets/style.scss assets/style.css"
   },
   "dependencies": {
     "@nuxt/image": "^1.10.0",
