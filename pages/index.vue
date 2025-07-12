@@ -19,17 +19,12 @@
     { imageSrc: '/assets/frame-3.svg', imageAlt: 'Implementation Support', title: 'Full-Stack Implementation Support', description: 'From prototypes to production, we collaborate closely with your dev team — or bring our own.', link: '#' },
     { imageSrc: '/assets/frame-4.svg', imageAlt: 'AI Innovation', title: 'AI-Infused Innovation & R&D', description: 'We bring forward-thinking, AI-powered tooling into the design and development process.', link: '#' }
   ]" />
-  <ProcessSection 
-    imageSrc="/assets/why-1.png" 
-    imageClass="px-10 py-10" 
-    imageAlt="Synth" 
-    :images="[
-      { src: '/assets/why-1.png', alt: 'Discover - Business Goals Analysis' },
-      { src: '/assets/2-what.png', alt: 'Define - Challenge Clarification' },
-      { src: '/assets/how-3.png', alt: 'Design - Systems and Flows' },
-      { src: '/assets/4-when.png', alt: 'Deliver - Design Implementation' }
-    ]"
-    :sections="[
+  <ProcessSection imageSrc="/assets/why-1.png" imageClass="px-10 py-10" imageAlt="Synth" :images="[
+    { src: '/assets/why-1.png', alt: 'Discover - Business Goals Analysis' },
+    { src: '/assets/2-what.png', alt: 'Define - Challenge Clarification' },
+    { src: '/assets/how-3.png', alt: 'Design - Systems and Flows' },
+    { src: '/assets/4-when.png', alt: 'Deliver - Design Implementation' }
+  ]" :sections="[
       { title: 'Discover', description: 'We dive into your business goals, users, and context.', link: '#', linkText: 'Tell us your story first' },
       { title: 'Define', description: 'We clarify the challenge and craft a shared direction.', link: '#', linkText: 'How connect brand and product' },
       { title: 'Design', description: 'Systems, visuals, and flows — always aligned.', link: '#', linkText: 'How we build design systems' },
@@ -37,24 +32,19 @@
     ]" />
 
   <BannerSection sectionTitle="New AI product we are working on" />
-  
-  <TwoColumnSection class="pb-20"
-    leftPadding="pl-[4rem]"
-    rightPadding=""
-    :leftContent="{
-      image: { src: '/assets/ScoreSynth.svg', alt: 'Innovation Icon' },
-      imageText: { tag: 'h3', content: 'ScoreSynth' },
-      textElements: [
-        { tag: 'h4', content: 'From sound to score — in just a few steps.' },
-        { tag: 'p', content: 'We integrate cutting-edge AI tools to streamline your design and development process, reducing time-to-market while maintaining quality.' },
-      ],
-      link: { href: '#', text: 'Discover more about our product' }
-    }"
-    :rightContent="{
+
+  <TwoColumnSection class="pb-20" leftPadding="pl-[4rem]" rightPadding="" :leftContent="{
+    image: { src: '/assets/ScoreSynth.svg', alt: 'Innovation Icon' },
+    imageText: { tag: 'h3', content: 'ScoreSynth' },
+    textElements: [
+      { tag: 'h4', content: 'From sound to score — in just a few steps.' },
+      { tag: 'p', content: 'We integrate cutting-edge AI tools to streamline your design and development process, reducing time-to-market while maintaining quality.' },
+    ],
+    link: { href: '#', text: 'Discover more about our product' }
+  }" :rightContent="{
       image: { src: '/assets/music.png', alt: 'AI Development Process', class: 'w-full h-auto rounded-lg' }
-    }"
-  />
-  
+    }" />
+
   <ConsultancySection leftTitle="Typical Consultancy" :leftItems="[
     { icon: '🚫', title: 'One-Size-Fits-All', description: 'Rigid, prepackaged solutions applied to everyone.' },
     { icon: '🚫', title: 'Siloed & Fragmented', description: 'Tech, design, and marketing handled in isolation.' },

@@ -2,6 +2,7 @@
   <HeaderSection />
   <HeroBrand title="Build products that feel as good as they function."
     description="Your brand - is your language. we embed your brand’s voice, values, and character into your digital product from day one. We make sure every interaction feels intentional — not just usable, but unmistakably you."
+    backgroundImage="/assets/brand-driven-bg.svg"
     buttonText="Do you know why?" buttonLink="#" :cards="[
       { icon: '🧭', title: 'Understand the Brand', description: 'We begin by distilling your brand’s essence — tone, values, and purpose — into clear, strategic inputs. Through focused sessions and rapid discovery, we align on what your brand really stands for.', link: '#' },
       { icon: '🎨', title: 'Translate into Product Experience', description: 'We map your brand into UX flows, content, and behaviors — ensuring every screen, message, and interaction feels consistent, intentional, and unmistakably you.', link: '#' },
@@ -52,8 +53,42 @@
       'Slack or Loom for async feedback',
       'Monday.com or Jira for team tracking'
     ]" imageSrc="/assets/git-1.png" />
-  <StoriesSection storiesText="Check our successful stories" storiesLink="#"
-    blogText="Read our blog to get more insights" blogLink="#" />
+  <BannerSection sectionTitle="What You Get" />
+  <Column class="pb-20" :columns="[
+  {
+    icon: '🧬',
+    imageAlt: 'Brand Icon',
+    title: 'Clear Brand Architecture',
+    headerTag: 'h3',
+    description: 'Atomic, flexible, and organized — built for scaling without clutter.'
+  },
+  {
+    icon: '🗺️',
+    title: 'User Journey Maps',
+    headerTag: 'h3',
+    description: 'Clear maps of how users move through your product — across all key journeys.'
+  },
+  {
+    icon: '⚡',
+    title: '🎯 Pattern Usage Guidelines',
+    headerTag: 'h3',
+    description: 'Know exactly when and how to use each pattern — no guessing, no inconsistency.'
+  }
+]" />
+<Column class="pb-20" :columns="[
+  {
+    icon: '📘 ',
+    title: 'Design System Documentation',
+    headerTag: 'h3',
+    description: 'Everything documented and ready in Figma’s Dev Mode, Zeroheight, or your preferred platform.'
+  },
+  {
+    icon: '🛠️',
+    title: 'Practical, Living Docs',
+    headerTag: 'h3',
+    description: 'Practical, living docs that support day-to-day work — not just sit in a folder.'
+  },
+]" />
   <WhiteSection class="pb-[8rem]" title="Get Started Today"
     description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you’re becoming."
     primaryText="Start a Project" primaryLink="#" secondaryText="Book a Call" secondaryLink="#" />

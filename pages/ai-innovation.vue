@@ -39,16 +39,55 @@ We build with it."
         { title: '🛠️ Rapid Prototyping with AI', description: 'We build proof-of-concepts using modern AI APIs and open-source tools. → GPT-4, Claude, local LLMs, RAG, LangChain, Whisper, vector search', link: '#' },
         { title: '🧪 Integrated AI in Product & Design', description: 'We embed AI into design workflows and product experiences — responsibly and at speed. → UX copy generation, AI-powered assistants, personalized content flows', link: '#' }
     ]" />
-    <AiToolSection />
-    <WhatYouGetDesign title="What You Get" :items="[
-        { icon: '✅', title: 'Strategy Brief', description: 'A clear overview of your AI opportunity areas, mapped to business and user goals.' },
-        { icon: '✅', title: 'Working Prototype', description: 'A functional proof-of-concept — built fast with real tools, not just slides.' },
-        { icon: '✅', title: 'UX Concept with AI in the Loop', description: 'Interactive flows or UI elements that show how AI enhances the experience.' },
-        { icon: '✅', title: 'Technical Recommendations', description: 'Guidance on tooling, integration paths, and how to scale from prototype to product.' },
-        { icon: '✅', title: 'Optional Scale Support', description: 'Need help shipping or evolving the idea? We stay involved if you want us.' }
+    <BannerSection sectionTitle="New AI product we are working on" />
+    <TwoColumnSection class="pb-20" leftPadding="pl-[4rem]" rightPadding="" :leftContent="{
+    image: { src: '/assets/ScoreSynth.svg', alt: 'Innovation Icon' },
+    imageText: { tag: 'h3', content: 'ScoreSynth' },
+    textElements: [
+      { tag: 'h4', content: 'From sound to score — in just a few steps.' },
+      { tag: 'p', content: 'We integrate cutting-edge AI tools to streamline your design and development process, reducing time-to-market while maintaining quality.' },
+    ],
+    link: { href: '#', text: 'Discover more about our product' }
+  }" :rightContent="{
+      image: { src: '/assets/music.png', alt: 'AI Development Process', class: 'w-full h-auto rounded-lg' }
+    }" />
+    <BannerSection sectionTitle="What You Get" />
+    <Column class="pb-20" :columns="[
+        {
+            icon: '🧬',
+            imageAlt: 'Brand Icon',
+            title: 'Clear Brand Architecture',
+            headerTag: 'h3',
+            description: 'Atomic, flexible, and organized — built for scaling without clutter.'
+        },
+        {
+            icon: '🗺️',
+            title: 'User Journey Maps',
+            headerTag: 'h3',
+            description: 'Clear maps of how users move through your product — across all key journeys.'
+        },
+        {
+            icon: '⚡',
+            title: '🎯 Pattern Usage Guidelines',
+            headerTag: 'h3',
+            description: 'Know exactly when and how to use each pattern — no guessing, no inconsistency.'
+        }
     ]" />
-    <StoriesSection storiesText="Check our successful stories" storiesLink="#"
-        blogText="Read our blog to get more insights" blogLink="#" />
+    <Column class="pb-20" :columns="[
+        {
+            icon: '📘 ',
+            title: 'Design System Documentation',
+            headerTag: 'h3',
+            description: 'Everything documented and ready in Figma’s Dev Mode, Zeroheight, or your preferred platform.'
+        },
+        {
+            icon: '🛠️',
+            title: 'Practical, Living Docs',
+            headerTag: 'h3',
+            description: 'Practical, living docs that support day-to-day work — not just sit in a folder.'
+        },
+    ]" />
+    
     <WhiteSection class="pb-[8rem]" title="Get Started Today"
         description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you’re becoming."
         primaryText="Start a Project" primaryLink="#" secondaryText="Book a Call" secondaryLink="#" />
