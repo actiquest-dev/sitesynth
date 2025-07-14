@@ -3,7 +3,7 @@
         <GlowEffect />
         <div class="relative max-w-6xl mx-auto px-6 pt-[6rem] pb-[6rem]">
             <div class="text-center px-6">
-                <img :src="imageSrc" :alt="imageAlt" class="mx-auto block w-20" />
+                <img :src="imageSrc" :alt="imageAlt" class="mx-auto block w-20 pb-6" />
                 <h2 class="text-4xl font-extrabold mb-10">{{ title }}</h2>
                 <h3 class="text-2xl font-normal mb-10">{{ h3 }}</h3>
                 <p class="text-base sm:text-lg font-normal">{{ description }}</p>

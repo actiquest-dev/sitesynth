@@ -1,5 +1,5 @@
 <template>
-  <section class="group relative overflow-hidden border-t border-b border-[#636363] bg-[#DDDDDD] services">
+  <section :class="`${bgColor} group relative overflow-hidden border-t border-b border-[#636363] services`">
     <GlowEffect />
 
     <!-- Content -->
@@ -23,6 +23,10 @@ defineProps({
   leftImgSrc: String,
   leftImgAlt: String,
   rightImgSrc: String,
-  rightImgAlt: String
+  rightImgAlt: String,
+  bgColor: {
+    type: String,
+    default: 'bg-[#161616]'
+  }
 })
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <section :class="backgroundColor">
+  <section :class="backgroundColor" :style="backgroundImageStyle">
     <div class="max-w-6xl mx-auto px-6 py-12">
       <div :class="gridClasses">
         <div 
@@ -69,6 +69,10 @@ const props = defineProps({
   headerTextColor: {
     type: String,
     default: 'text-white'
+  },
+  backgroundImage: {
+    type: String,
+    default: null
   }
 })
 
@@ -83,6 +87,19 @@ const gridClasses = computed(() => {
   }
   
   return gridMap[count] || 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+})
+
+// Computed style for background image
+const backgroundImageStyle = computed(() => {
+  if (props.backgroundImage) {
+    return {
+      backgroundImage: `url(${props.backgroundImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }
+  }
+  return {}
 })
 
 // Function to get appropriate CSS classes based on header tag

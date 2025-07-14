@@ -1,15 +1,16 @@
 <template>
-    <HeaderSection />
-    <HeroFullstack title="Design without development is just a suggestion."
+    <HeaderSection :darkBackground="true" />
+    <HeroFullstack backgroundImage="/assets/full-stack-bg.svg" title="Design without development is just a suggestion."
         description="We stay in — writing real code, collaborating in Git, and making sure everything works in production."
         buttonText="Let’s Build Together" backgroundColor="bg-[#DDDDDD]" buttonLink="#" :cards="[
             { icon: '⚛️', title: 'Front-End Engineering', description: 'Beautiful, accessible, and fast interfaces built for real users.', link: '#' },
             { icon: '🌐', title: 'Back-End Engineering', description: 'Scalable, secure, and API-ready architecture.', link: '#' },
             { icon: '🤝', title: 'Integrated Dev Collaboration', description: 'We plug into your workflow, toolset, and priorities.', link: '#' }
         ]" />
-
-    <UnderstandBrandSection title="Front-End Engineering" bgColor="bg-[#DDDDDD]" contentBgColor="bg-[#161616]"
-        textColor="text-white" leftTitle="⚙️ Production-Ready Engineering"
+    <BannerSection sectionTitle="Front-End Engineering" textAlign="left" backgroundColor="bg-[#DDDDDD]"
+        textColor="text-[#161616]" />
+    <UnderstandBrandSection bgColor="bg-[#DDDDDD]" contentBgColor="bg-[#161616]" textColor="text-white"
+        leftTitle="⚙️ Production-Ready Engineering"
         leftDescription="From the very start, we write code that ships — scalable, modular, and built for long-term growth. We don’t hand off mockups. We deliver real product foundations."
         :tags="[
             'React',
@@ -20,14 +21,15 @@
             'Figma Dev Mode for visual–code alignment',
             'React, Vue, Next.js, Nuxt for frontend development',
             'GitHub / GitLab for version control & code reviews'
-        ]" imageSrc="/assets/git-1.png" />
+        ]" imageSrc="/assets/front-end.png" />
     <TestimonialWhite imageSrc="/assets/marco.png" personName="Marco Maffei" personTitle="Full-Stack Engineer"
         quoteTitle="Ideas are cheap. Shipping is rare. We focus on the rare."
         quoteText="Anyone can brainstorm. We’re here to build — and get it live." ctaText="Get in touch" ctaLink="#"
         class="pb-[8rem] pt-[8rem]" />
-    <TranslateSection sectionTitle="Back-End Engineering" imageSrc="/assets/git-2.png" imageAlt="Github code"
-        bgColor="bg-[#DDDDDD]" textColor="text-white" contentBgColor="bg-[#161616]"
-        mainTitle="🧩 Back-End Infrastructure You Can Trust"
+    <BannerSection sectionTitle="Back-End Engineering" textAlign="text-right" backgroundColor="bg-[#DDDDDD]"
+        textColor="text-[#161616]" />
+    <TranslateSection imageSrc="/assets/back-end.png" imageAlt="Github code" bgColor="bg-[#DDDDDD]"
+        textColor="text-white" contentBgColor="bg-[#161616]" mainTitle="🧩 Back-End Infrastructure You Can Trust"
         mainDescription="We build solid, secure, and flexible backends — tailored to your product’s logic. APIs, CMS, authentication, databases — all under control and ready to scale."
         toolsTitle="🛠️ Tools we use:" :links="[
             { text: 'Custom APIs', url: '#' },
@@ -40,6 +42,8 @@
             'Whimsical or FigJam for early UX sketches and tone sliders',
             'REST & GraphQL API integrations'
         ]" />
+    <BannerSection sectionTitle="Integrated Dev Collaboration" textAlign="text-left" backgroundColor="bg-[#DDDDDD]"
+        textColor="text-[#161616]" />
     <UnderstandBrandSection title="Integrated Dev Collaboration" bgColor="bg-[#DDDDDD]"
         leftTitle="🚀 Flexible Dev Partnership"
         leftDescription="We adapt to your team setup. Whether we lead the build or join your engineers, our focus stays the same: momentum, clean handoff, and smooth launches."
@@ -48,11 +52,14 @@
             'Embedded Support',
             'CI/CD Friendly',
             'Launch Assistance'
-        ]" imageSrc="/assets/git-1.png" />
+        ]" toolsTitle="🛠️ Tools we use:" :toolsList="[
+            'Slack & Notion for async alignment',
+            'GitHub Projects or Jira for sprints & tasks',
+            'Stripe, Auth0, and 3rd-party APIs for integration work'
+        ]" imageSrc="/assets/integration.png" />
 
-    <BannerSection backgroundColor="bg-[#DDDDDD]"
-textColor sectionTitle="What You Get" />
-    <Column headerTextColor="text-[#161616]"  class="pb-20" backgroundColor="bg-[#DDDDDD]" :columns="[
+    <BannerSection backgroundColor="bg-[#DDDDDD]" textColor sectionTitle="What You Get" />
+    <Column headerTextColor="text-[#161616]" backgroundColor="bg-[#DDDDDD]" :columns="[
         {
             icon: '🧬',
             imageAlt: 'Brand Icon',
@@ -73,7 +80,7 @@ textColor sectionTitle="What You Get" />
             description: 'Know exactly when and how to use each pattern — no guessing, no inconsistency.'
         }
     ]" />
-    <Column headerTextColor="text-[#161616]" class="pb-20" backgroundColor="bg-[#DDDDDD]" :columns="[
+    <Column headerTextColor="text-[#161616]" backgroundColor="bg-[#DDDDDD]" :columns="[
         {
             icon: '📘 ',
             title: 'Design System Documentation',

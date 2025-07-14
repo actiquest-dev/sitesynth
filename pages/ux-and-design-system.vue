@@ -1,17 +1,26 @@
 <template>
     <HeaderSection />
-    <HeroDesign title="Design that’s consistent, scalable, and ready to ship."
+    <HeroDesign backgroundImage="/assets/design-bg.svg" title="Design that’s consistent, scalable, and ready to ship."
         description="We build design systems and UX architecture that grow with your product — enabling your teams to move faster, stay on-brand, and deliver with confidence." />
-    <TwoColumnsDesign leftTitle="Design debt is real. So is handoff hell."
-        rightParagraph="When teams move fast without systems, the result is chaos: duplicated components, messy UX, endless revisions, and frustrated developers. We fix that by putting structure where it matters — in the product’s foundation."
-        leftColumnBgColor="bg-[#191919]" rightColumnBgColor="bg-[#191919]" />
+    <TwoColumnsDesign sectionBgColor="bg-[#161616]" leftColumnBgColor="bg-[#161616]" rightColumnBgColor="bg-[#161616]">
+        <template #left>
+            <h3 class="text-white text-lg mb-2">WHY YOU NEED FIGMA?</h3>
+            <h2 class="text-white text-4xl font-bold mb-4">Design debt is real. So is handoff hell..</h2>
+        </template>
+
+        <template #right>
+            <p class="text-white text-[24px] mb-4">When teams move fast without systems, the result is chaos: duplicated
+                components, messy UX, endless revisions, and frustrated developers. We fix that by putting structure
+                where it matters — in the product’s foundation.</p>
+        </template>
+    </TwoColumnsDesign>
     <FigmaSection title="Figma" h3="🧱 Design Systems That Scale"
         description="From tokens to components to documentation — we build reusable, flexible design foundations that support your team’s workflow, not slow it down. Using Figma as the single source of truth, we create shared libraries, usage rules, and naming standards your team can actually use — with optional dev integration via Zeroheight or Storybook."
         imageSrc="/assets/figma.svg" imageAlt="Figma Logo" primaryText="Try Figma" primaryLink="https://www.figma.com/"
         secondaryText="Learn More" secondaryLink="https://www.figma.com/design-systems/" />
-    <OneColumnImage centerImg="/assets/figma-screen.png" centerImgAlt="Figma Screen" />
-    <TwoColumnsImagesOnly leftImgSrc="/assets/figma-jam.png" leftImgAlt="FigJam Screenshot"
-        rightImgSrc="/assets/figma-dev.png" rightImgAlt="Figma Dev Mode Screenshot" />
+    <OneColumnImage centerImg="/assets/figma-3.png" centerImgAlt="Figma Screen" />
+    <TwoColumnsImagesOnly leftImgSrc="/assets/figma-2.png" leftImgAlt="FigJam Screenshot"
+        rightImgSrc="/assets/figma-1.png" rightImgAlt="Figma Dev Mode Screenshot" />
     <TwoColumnsWithImages leftImgSrc="/assets/figma.svg" leftImgAlt="FigJam Logo" leftH2="FigJam"
         leftH3="🔀 UX Architecture That Makes Sense"
         leftP="From tokens to components to documentation — we build reusable, flexible design foundations that support your team’s workflow, not slow it down. Using Figma as the single source of truth, we create shared libraries, usage rules, and naming standards your team can actually use — with optional dev integration via Zeroheight or Storybook."
@@ -22,7 +31,7 @@
       Using Figma’s Dev Mode, we bridge the gap between design and development with clear tokens, component logic, and handoff details — no extra tools, no ambiguity." rightLearnMoreText="Learn more about Dev Mode"
         rightLearnMoreLink="#" />
     <BannerSection sectionTitle="What You Get" />
-    <Column class="pb-20" :columns="[
+    <Column :columns="[
         {
             icon: '🧬',
             imageAlt: 'Brand Icon',
@@ -43,7 +52,7 @@
             description: 'Know exactly when and how to use each pattern — no guessing, no inconsistency.'
         }
     ]" />
-    <Column class="pb-20" :columns="[
+    <Column backgroundImage="/assets/columns-bg.svg" :columns="[
         {
             icon: '📘 ',
             title: 'Design System Documentation',

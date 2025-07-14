@@ -3,6 +3,7 @@
   <header
     :class="[
       'w-full fixed top-0 left-0 z-50 py-4 backdrop-blur-md transition-all duration-300',
+      darkBackground ? 'bg-[#161616]' : '',
       scrolled ? 'bg-[#161616] sm:bg-[#161616b3]' : ''
     ]"
   >
@@ -31,7 +32,13 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-// import { NuxtLink } from '#components'
+
+const props = defineProps({
+  darkBackground: {
+    type: Boolean,
+    default: false
+  }
+})
 
 const menuOpen = ref(false)
 const scrolled = ref(false)

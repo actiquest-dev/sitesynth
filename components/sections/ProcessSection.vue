@@ -9,11 +9,11 @@
             @click="toggle(index)"
           >
             {{ section.title }}
-            <span class="text-[#8CB0FF] toggle-btn">{{ openIndex === index ? '−' : '+' }}</span>
+            <span :class="`${accentColor} toggle-btn`">{{ openIndex === index ? '−' : '+' }}</span>
           </h3>
           <div class="toggle-content transition-all duration-500 ease-in-out overflow-hidden" :class="openIndex === index ? 'max-h-[500px]' : 'max-h-0'">
             <p class="text-[#999999] mt-2">{{ section.description }}</p>
-            <a :href="section.link" class="text-[#8CB0FF] font-semibold mt-4 inline-block pb-8 hover:text-[#A620FF] transition-colors duration-1000">
+            <a v-if="section.link" :href="section.link" :class="`${accentColor} font-semibold mt-4 inline-block pb-8 transition-colors duration-1000`">
               {{ section.linkText }}
               <i class="fa-solid fa-chevron-right relative top-[2px]" aria-hidden="true"></i>
             </a>
@@ -37,7 +37,11 @@ const props = defineProps({
   imageSrc: String,
   imageAlt: String,
   imageClass: String,
-  images: Array // New prop for dynamic images
+  images: Array, // New prop for dynamic images
+  accentColor: {
+    type: String,
+    default: 'text-[#8CB0FF]'
+  }
 })
 
 // 0: Discover, 1: Define, 2: Design, 3: Deliver

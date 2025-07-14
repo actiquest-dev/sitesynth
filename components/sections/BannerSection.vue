@@ -1,6 +1,6 @@
 <template>
-    <section :class="`text-center py-20 ${backgroundColor}`">
-        <h2 :class="`text-4xl ${textColor}`">{{ sectionTitle }}</h2>
+    <section :class="`py-20 ${backgroundColor} ${textAlign}`">
+        <h2 :class="`max-w-6xl mx-auto text-4xl ${textColor}`">{{ sectionTitle }}</h2>
     </section>
 </template>
 
@@ -14,6 +14,10 @@ defineProps({
     textColor: {
         type: String,
         default: 'text-white'
+    },
+    textAlign: {
+        type: String,
+        default: 'text-center'
     }
 });
 </script>

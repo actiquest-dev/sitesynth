@@ -1,13 +1,8 @@
 <template>
-  <!-- Top Title Section -->
-  <section :class="`pt-[4rem] pb-[4rem] ${bgColor}`">
-    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 px-6">
-      <h2 :class="`text-left text-4xl ${h2Color}`">{{ title }}</h2>
-    </div>
-  </section>
 
   <!-- Content Section -->
-  <section :class="`border-t border-b border-[#636363] ${contentBgColor}`">
+  <section :class="`group relative overflow-hidden border-t border-b border-[#636363] ${contentBgColor}`">
+    <GlowEffect />
     <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2">
       <!-- Left Column -->
       <div class="border-r border-[#636363] py-12 p-6">
@@ -27,7 +22,7 @@
         <!-- Tools -->
         <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">{{ toolsTitle }}</h2>
         <ul class="list-disc pl-6" :class="textColor">
-          <li v-for="(tool, index) in toolsList" :key="index">{{ tool }}</li>
+          <li class="pb-2" v-for="(tool, index) in toolsList" :key="index">{{ tool }}</li>
         </ul>
       </div>
 

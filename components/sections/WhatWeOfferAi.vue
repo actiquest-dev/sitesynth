@@ -4,7 +4,7 @@
 
         <div class="relative max-w-6xl mx-auto px-6">
             <!-- Cards Grid -->
-            <div class="mt-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div v-for="(card, index) in cards" :key="index"
                     class="border border-[#636363] bg-[#ffffff14] p-6 py-12 flex flex-col justify-between cursor-pointer">
                     <h3 class="text-xl font-semibold text-center pt-6 pb-8">{{ card.icon }} {{ card.title }}</h3>

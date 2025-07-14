@@ -1,5 +1,5 @@
 <template>
-  <section class="relative bg-[#DDDDDD] text-white group overflow-hidden">
+  <section class="relative bg-[#DDDDDD] text-white group overflow-hidden" :style="backgroundImageStyle">
     <GlowEffect />
 
     <div class="relative max-w-6xl mx-auto px-6 pt-[16rem] pb-[12rem]">
@@ -29,13 +29,31 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 
-defineProps({
+const props = defineProps({
   title: String,
   description: String,
   buttonText: String,
   buttonLink: String,
-  cards: Array
+  cards: Array,
+  backgroundImage: {
+    type: String,
+    default: null
+  }
 });
+
+// Computed style for background image
+const backgroundImageStyle = computed(() => {
+  if (props.backgroundImage) {
+    return {
+      backgroundImage: `url(${props.backgroundImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }
+  }
+  return {}
+})
 
 </script>

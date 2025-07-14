@@ -12,7 +12,7 @@
         <!-- Right Column (2/3) -->
         <div class="md:col-span-2 flex flex-col justify-center px-6">
           <i class="text-6xl text-[#A620FF] fa-solid fa-quote-left"></i>
-          <h3 class="text-2xl font-bold text-[#161616] mt-4 mb-6">{{ quoteTitle }}</h3>
+          <h3 class="text-3xl font-bold text-[#161616] mt-4 mb-6">{{ quoteTitle }}</h3>
           <p class="text-[#636363]">
             "{{ quoteText }}"
           </p>

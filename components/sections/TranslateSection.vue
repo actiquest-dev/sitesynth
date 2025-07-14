@@ -1,9 +1,6 @@
 <template>
-  <section :class="`${bgColor}`">
-    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 px-6 pb-[1.5rem]">
-      <div></div>
-      <h2 :class="`text-left text-4xl ${h2Color} px-6`">{{ sectionTitle }}</h2>
-    </div>
+  <section :class="`${bgColor} group relative overflow-hidden`">
+    <GlowEffect />
     <div :class="`border-t border-b border-[#636363] ${contentBgColor}`">
       <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 px-6">
         <!-- Image Section -->
