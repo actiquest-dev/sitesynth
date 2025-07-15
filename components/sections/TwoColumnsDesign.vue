@@ -1,10 +1,9 @@
 <template>
   <section :class="`group relative overflow-hidden border-t border-b border-[#636363] `">
     
-
     <!-- Content -->
     <div class="mx-auto grid grid-cols-1 md:grid-cols-2 relative z-10">
-      <GlowEffect />
+      <component :is="selectedGlowEffect" />
       <!-- Left Column -->
       <div :class="`px-6 py-24 md:pl-[10rem] md:pr-6 md:border-r border-[#636363] ${leftColumnBgColor}`">
         <!-- Use slot if provided, otherwise fallback to prop -->
@@ -26,7 +25,10 @@
 </template>
 
 <script setup>
-defineProps({
+
+import { defineAsyncComponent, computed } from 'vue'
+
+const props = defineProps({
   // Legacy props for backwards compatibility
   leftTitle: String,
   rightParagraph: String,
@@ -51,6 +53,17 @@ defineProps({
   textColorRight: {
     type: String,
     default: 'text-white'
-  }
+  },
+  glowEffect: {
+    type: String,
+    default: 'GlowEffect'
+  },
 })
+
+// Dynamically load the glow component by name from the effects folder
+const selectedGlowEffect = computed(() =>
+    defineAsyncComponent(() =>
+        import(`@/components/effects/${props.glowEffect}.vue`)
+    )
+)
 </script>

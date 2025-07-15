@@ -1,13 +1,13 @@
 <template>
     <section :class="`${bgColor} flex justify-center`">
         <div class="relative overflow-hidden z-0 testimonial-card max-w-6xl mx-auto text-center px-6 group">
-            <div class="bg-[#DDDDDD] border border-[#636363] py-20 px-20 relative overflow-hidden">
-                <GlowEffect />
+            <div :class="`${bgInside} border border-[#636363] py-20 px-20 relative overflow-hidden`">
+                <component :is="selectedGlowEffect" />
 
                 <!-- Text Content -->
                 <div class="flex flex-col items-center relative z-10">
-                    <h2 class="text-4xl font-bold text-black">{{ title }}</h2>
-                    <p class="text-gray-700 my-6">{{ description }}</p>
+                    <h2 :class="`${textColor} text-4xl font-bold`">{{ title }}</h2>
+                    <p :class="`${textColor} my-6`">{{ description }}</p>
 
                     <!-- Call-to-Action Buttons -->
                     <div class="flex justify-center gap-4 mt-6">
@@ -28,7 +28,9 @@
 
 <script setup>
 
-defineProps({
+import { defineAsyncComponent, computed } from 'vue'
+
+const props = defineProps({
     title: String,
     description: String,
     primaryText: String,
@@ -39,6 +41,26 @@ defineProps({
         type: String,
         default: 'bg-[#161616]'
     },
+    bgInside: {
+        type: String,
+        default: 'bg-[#DDDDDD]'
+    },
+    textColor: {
+        type: String,
+        default: 'text-[#161616]'
+    },
+    glowEffect: {
+        type: String,
+        default: 'GlowEffect'
+    }
 });
 
+// Dynamically load the glow component by name from the effects folder
+const selectedGlowEffect = computed(() =>
+    defineAsyncComponent(() =>
+        import(`@/components/effects/${props.glowEffect}.vue`)
+    )
+)
+
 </script>
+

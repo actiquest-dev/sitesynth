@@ -37,7 +37,7 @@ const props = defineProps({
   imageSrc: String,
   imageAlt: String,
   imageClass: String,
-  images: Array, // New prop for dynamic images
+  images: Array,
   accentColor: {
     type: String,
     default: 'text-[#8CB0FF]'
