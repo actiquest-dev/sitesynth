@@ -1,5 +1,5 @@
 <template>
-    <section :class="`${bgColor} flex justify-center`">
+    <section :class="`${bgColor} flex justify-center bg-cover bg-center bg-no-repeat`" :style="backgroundImageStyle">
         <div class="relative overflow-hidden z-0 testimonial-card max-w-6xl mx-auto text-center px-6 group">
             <div :class="`${bgInside} border border-[#636363] py-20 px-20 relative overflow-hidden`">
                 <component :is="selectedGlowEffect" />
@@ -52,6 +52,10 @@ const props = defineProps({
     glowEffect: {
         type: String,
         default: 'GlowEffect'
+    },
+    bgImage: {
+        type: String,
+        default: null
     }
 });
 
@@ -61,6 +65,16 @@ const selectedGlowEffect = computed(() =>
         import(`@/components/effects/${props.glowEffect}.vue`)
     )
 )
+
+// Computed background image style
+const backgroundImageStyle = computed(() => {
+    if (props.bgImage) {
+        return {
+            backgroundImage: `url(${props.bgImage})`
+        }
+    }
+    return {}
+})
 
 </script>
 

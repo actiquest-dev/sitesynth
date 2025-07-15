@@ -17,8 +17,8 @@
         <div v-for="(card, index) in cards" :key="index"
           class="border border-[#636363] bg-[#161616] p-6 py-12 flex flex-col justify-between cursor-pointer">
           <h3 class="text-xl font-semibold text-center pt-6 pb-8">{{ card.icon }} {{ card.title }}</h3>
-          <p class="text-center text-[#999999] mt-2">{{ card.description }}</p>
-          <div class="text-center mt-4">
+          <p class="text-center text-[#999999]">{{ card.description }}</p>
+          <div class="text-center mt-6">
             <a :href="card.link"
               class="text-[#8CB0FF] font-semibold hover:text-[#A620FF] transition-colors duration-1000">Read more →</a>
           </div>

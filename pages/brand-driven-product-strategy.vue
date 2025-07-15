@@ -97,7 +97,7 @@
     description: 'Practical, living docs that support day-to-day work — not just sit in a folder.'
   },
 ]" />
-  <WhiteSection class="pb-[8rem]" title="Get Started Today"
+  <WhiteSection bgImage="/assets/brand-driven-bg.svg" class="pt-[4rem] pb-[8rem]" title="Get Started Today"
     description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you’re becoming."
     primaryText="Start a Project" primaryLink="#" secondaryText="Book a Call" secondaryLink="#" />
   <FooterSection />

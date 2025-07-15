@@ -1,5 +1,5 @@
 <template>
-  <section class="border-b border-[#636363] bg-[#161616]">
+  <section class="border-b border-t border-[#636363] bg-[#161616]">
     <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2">
       <!-- Left Column (Expandable Sections) -->
       <div class="border-r border-[#636363] py-12 pr-12">
