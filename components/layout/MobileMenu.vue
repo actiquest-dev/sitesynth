@@ -82,7 +82,15 @@ function toggleSubmenu(index) {
 
 // NAVIGATION
 const navItems = [
-  { label: "Product", link: "#" },
+  { 
+    label: "Product", 
+    link: "#",
+    subItems: [
+      { imageSrc: "/assets/score-synth.svg", label: "ScoreSynth", link: "/scoresynth/" },
+      { imageSrc: "/assets/membria.svg", label: "Membria", link: "https://membria.xyz/", target: "_blank" },
+      { imageSrc: "/assets/ai-live-pod.svg", label: "AI Live Pod", link: "https://ailivepod.framer.website/", target: "_blank" },
+    ]
+  },
   {
     label: "Solutions",
     link: "#",
@@ -94,14 +102,6 @@ const navItems = [
     ]
   },
   {
-    label: "Resources",
-    link: "#",
-    subItems: [
-      { label: "Success Stories", link: "#" },
-      { label: "Sync Blog", link: "#" }
-    ]
-  },
-  {
     label: "Company",
     link: "#",
     subItems: [
@@ -109,7 +109,6 @@ const navItems = [
       { label: "Careers", link: "#" }
     ]
   },
-  { label: "Pricing", link: "#" }
 ]
 
 // CTA
