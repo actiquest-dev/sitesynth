@@ -1,50 +1,40 @@
 <template>
   <section class="bg-[#161616] flex justify-center">
     <div class="max-w-6xl mx-auto px-6">
-      <div ref="card" class="grid grid-cols-1 md:grid-cols-2 gap-8 relative border border-[#636363] group overflow-hidden">
+      <div ref="card"
+        class="grid grid-cols-1 md:grid-cols-2 gap-8 relative border border-[#636363] group overflow-hidden">
         <GlowEffect />
-        
+
         <!-- Left Column (1/2) -->
         <div :class="`flex flex-col justify-center ${leftPadding}`">
           <!-- Image and Text Row -->
           <div class="flex items-center gap-4 mb-6">
             <img :src="leftContent.image.src" :alt="leftContent.image.alt" class="w-auto max-w-[80px] h-auto" />
             <div>
-              <component 
-                :is="leftContent.imageText.tag" 
-                :class="getTextClasses(leftContent.imageText.tag)"
-              >
+              <component :is="leftContent.imageText.tag" :class="getTextClasses(leftContent.imageText.tag)">
                 {{ leftContent.imageText.content }}
               </component>
             </div>
           </div>
-          
+
           <!-- Dynamic Text Elements -->
           <div v-for="(textItem, index) in leftContent.textElements" :key="index" class="mb-4">
-            <component 
-              :is="textItem.tag" 
-              :class="getTextClasses(textItem.tag)"
-            >
+            <component :is="textItem.tag" :class="getTextClasses(textItem.tag)">
               {{ textItem.content }}
             </component>
           </div>
-          
+
           <!-- Link -->
-          <a 
-            :href="leftContent.link.href" 
-            class="text-[#8CB0FF] mt-6 w-auto max-w-max py-2 font-semibold inline-block"
-          >
-            <span>{{ leftContent.link.text }}</span> <i class="fa-solid fa-chevron-right relative top-[2px]" aria-hidden="true"></i>
+          <a :href="leftContent.link.href" class="text-[#8CB0FF] mt-6 w-auto max-w-max py-2 font-semibold inline-block">
+            <span>{{ leftContent.link.text }}</span> <i class="fa-solid fa-chevron-right relative top-[2px]"
+              aria-hidden="true"></i>
           </a>
         </div>
-        
+
         <!-- Right Column (1/2) -->
         <div :class="`flex flex-col justify-center items-center ${rightPadding}`">
-          <img 
-            :src="rightContent.image.src" 
-            :alt="rightContent.image.alt" 
-            :class="rightContent.image.class || 'w-full h-auto max-w-[100%]'"
-          />
+          <img :src="rightContent.image.src" :alt="rightContent.image.alt"
+            :class="rightContent.image.class || 'w-full h-auto max-w-[100%]'" />
         </div>
       </div>
     </div>
@@ -75,17 +65,17 @@ defineProps({
   },
   leftPadding: {
     type: String,
-    default: 'pl-[5rem]'
+    default: ''
   },
   rightPadding: {
     type: String,
-    default: 'pr-[5rem]'
+    default: ''
   }
 })
 
 const getTextClasses = (tag) => {
   const baseClasses = 'text-white'
-  
+
   switch (tag) {
     case 'h1':
       return `${baseClasses} text-4xl font-bold mb-4`

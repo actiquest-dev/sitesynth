@@ -6,7 +6,6 @@
           v-for="(column, index) in columns" 
           :key="index" 
           class="flex flex-col items-start p-6"
-          :class="columns.length < 3 ? 'w-80' : ''"
         >
           <!-- Icon/Image and Header Row -->
           <div class="flex items-center mb-4">
@@ -80,13 +79,16 @@ const props = defineProps({
 const gridClasses = computed(() => {
   const count = props.columnCount || props.columns.length
   
-  const gridMap = {
-    1: 'flex justify-center',
-    2: 'flex justify-center gap-8',
-    3: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+  if (count === 2) {
+    // 2 columns: centered with equal width, space on sides
+    return 'grid grid-cols-1 md:grid-cols-2 md:max-w-4xl md:mx-auto gap-8'
+  } else if (count === 3) {
+    // 3 columns: full width with equal distribution
+    return 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'
   }
   
-  return gridMap[count] || 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+  // Default fallback
+  return 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'
 })
 
 // Computed style for background image

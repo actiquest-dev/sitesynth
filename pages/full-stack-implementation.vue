@@ -9,7 +9,7 @@
         ]" />
     <BannerSection sectionTitle="Front-End Engineering" textAlign="left" backgroundColor="bg-[#DDDDDD]"
         textColor="text-[#161616]" />
-    <UnderstandBrandSection bgColor="bg-[#DDDDDD]" contentBgColor="bg-[#161616]" textColor="text-white"
+    <UnderstandBrandSection imagePosition="bottom-0" bgColor="bg-[#DDDDDD]" contentBgColor="bg-[#161616]" textColor="text-white"
         leftTitle="⚙️ Production-Ready Engineering"
         leftDescription="From the very start, we write code that ships — scalable, modular, and built for long-term growth. We don’t hand off mockups. We deliver real product foundations."
         :tags="[
@@ -28,7 +28,7 @@
         class="pb-[8rem] pt-[8rem]" />
     <BannerSection sectionTitle="Back-End Engineering" textAlign="text-right" backgroundColor="bg-[#DDDDDD]"
         textColor="text-[#161616]" />
-    <TranslateSection imageSrc="/assets/back-end.png" imageAlt="Github code" bgColor="bg-[#DDDDDD]"
+    <TranslateSection imagePosition="top-[10%] right-[10%]" imageSrc="/assets/back-end.png" imageAlt="Github code" bgColor="bg-[#DDDDDD]"
         textColor="text-white" contentBgColor="bg-[#161616]" mainTitle="🧩 Back-End Infrastructure You Can Trust"
         mainDescription="We build solid, secure, and flexible backends — tailored to your product’s logic. APIs, CMS, authentication, databases — all under control and ready to scale."
         toolsTitle="🛠️ Tools we use:" :links="[
@@ -44,7 +44,7 @@
         ]" />
     <BannerSection sectionTitle="Integrated Dev Collaboration" textAlign="text-left" backgroundColor="bg-[#DDDDDD]"
         textColor="text-[#161616]" />
-    <UnderstandBrandSection title="Integrated Dev Collaboration" bgColor="bg-[#DDDDDD]"
+    <UnderstandBrandSection imagePosition="bottom-0 right-[-200px]" title="Integrated Dev Collaboration" bgColor="bg-[#DDDDDD]"
         leftTitle="🚀 Flexible Dev Partnership"
         leftDescription="We adapt to your team setup. Whether we lead the build or join your engineers, our focus stays the same: momentum, clean handoff, and smooth launches."
         :tags="[

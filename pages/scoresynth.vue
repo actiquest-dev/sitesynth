@@ -1,22 +1,21 @@
 <template>
     <HeaderSection />
-    <HeroGeneric :logo="{ src: '/assets/ScoreSynth.svg', alt: 'ScoreSynth Logo', class: 'h-20 w-auto' }"
+    <HeroGeneric backgroundImage="/assets/hero-scoresynth-bg.png" backgroundPosition="bg-right-bottom" :logo="{ src: '/assets/ScoreSynth.svg', alt: 'ScoreSynth Logo', class: 'h-20 w-auto' }"
         paddingClasses="pt-[16rem] pb-[10rem]" :content="[
             { tag: 'h1', text: 'ScoreSynth', margin: 'mb-6' },
             { tag: 'h2', text: 'Turn ideas into full scores. In minutes.', margin: 'mb-8' },
             { tag: 'p', text: 'ScoreSynth is an AI-powered tool that transcribes, arranges, and scores music into professional orchestral sheet music — from just audio or MIDI input.', margin: 'mb-0' }
         ]" />
-    <TwoColumnsDesign glowEffect="GlowRed" sectionBgColor="bg-[#DDDDDD]" leftColumnBgColor="bg-[#DDDDDD]" rightColumnBgColor="bg-[#161616]"
-        textColorleft="text-[#161616]" textColorRight="text-white">
+    <TwoColumnsDesign glowEffect="GlowRed" sectionBgColor="bg-[#161616]" leftColumnBgColor="bg-[#161616]" rightColumnBgColor="bg-[#161616]">
         <template #left>
-            <h3 class="text-lg mb-2">Scoring Music is Hard. And That’s Holding People Back.</h3>
-            <p class="text-normal font-bold mb-4">Before founding SiteSynth, I was a musician. I studied at the
+            <h3 class="text-white text-lg mb-2">Scoring Music is Hard. And That’s Holding People Back.</h3>
+            <p class="text-[#999999] text-normal font-light mb-4">Before founding SiteSynth, I was a musician. I studied at the
                 conservatory, spent years immersed in orchestras, and worked closely with composers, arrangers, and
                 ensembles of all shapes and sizes. And while I eventually moved into technology and development, my
                 passion for music never left.</p>
-            <h3 class="text-normal mb-2">How complex, technical, and time-consuming it is to produce orchestral scores.
+            <h3 class="text-white text-normal mb-2">How complex, technical, and time-consuming it is to produce orchestral scores.
             </h3>
-            <p class="text-normal font-bold mb-4">Whether you’re a professional composer or an educator leading an
+            <p class="text-[#999999] text-normal font-light mb-4">Whether you’re a professional composer or an educator leading an
                 amateur orchestra, the process of writing, adapting, and arranging music for a specific group of
                 musicians is often a massive barrier. You need a professional skill for that.</p>
         </template>
@@ -75,7 +74,7 @@
             paragraph: 'Not a pro? No problem. Play with ideas, hear them instantly, and learn by doing — no steep learning curve.'
         }
     ]" />
-    <WhiteSection class="pb-[8rem]" bgColor="bg-[#161616]" bgInside="bg-[#161616]" textColor="text-white"
+    <WhiteSection class="pb-[8rem] pt-[8rem]" bgColor="bg-[#161616]" bgInside="bg-[#161616]" textColor="text-white"
         title="Get Started Today"
         description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you’re becoming."
         primaryText="Start a Project" primaryLink="#" secondaryText="Book a Call" secondaryLink="#"

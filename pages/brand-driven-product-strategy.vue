@@ -11,7 +11,7 @@
 
   <BannerSection sectionTitle="Understand the Brand" backgroundColor="bg-[#DDDDDD]" textColor="text-[#161616]" textAlign="text-left" />
 
-  <UnderstandBrandSection title="Understand the Brand" bgColor="bg-[#DDDDDD]"
+  <UnderstandBrandSection imagePosition="bottom-0 right-[-200px] max-w-[120%]" bgColor="bg-[#DDDDDD]"
     leftTitle="🧭 The compass of your business"
     leftDescription="We begin by distilling your brand’s essence — tone, values, and purpose — into clear, strategic inputs. Through focused workshops and stakeholder alignment, we translate abstract brand traits into usable creative and product direction."
     :tags="[
@@ -32,11 +32,11 @@
 
   <BannerSection sectionTitle="Translate into Product Experience" backgroundColor="bg-[#DDDDDD]" textColor="text-[#161616]" textAlign="text-right" />
 
-  <TranslateSection sectionTitle="Translate into Product Experience" imageSrc="/assets/translate-into.png" imageAlt="Github code" mainTitle="🎨 Make your product speak, look, and feel like your brand." bgColor="bg-[#DDDDDD]" textColor="text-[#161616]"
+  <TranslateSection imagePosition="bottom-0" imageSrc="/assets/translate-into.png" imageAlt="Github code" mainTitle="🎨 Make your product speak, look, and feel like your brand." bgColor="bg-[#DDDDDD]" textColor="text-[#161616]"
     mainDescription="Here, we bring the brand to life inside the product — not just through visuals, but through behavior, interaction, and language."
     toolsTitle="🛠️ Tools we use:" :links="[
-      { text: 'Brand Discovery Sessions', url: '#' },
-      { text: 'Stakeholder Interviews', url: '#' },
+      { text: 'UX Tone Principles', url: '#' },
+      { text: 'Messaging Frameworks', url: '#' },
       { text: 'Brand Audit', url: '#' },
       { text: 'Personality Mapping', url: '#' }
     ]" :tools="[
@@ -48,7 +48,7 @@
 
   <BannerSection sectionTitle="Align Across Teams" backgroundColor="bg-[#161616]" textColor="text-white" textAlign="text-left" />
 
-  <UnderstandBrandSection title="Align Across Teams" bgColor="bg-[#161616]" contentBgColor="bg-[#161616]" h2Color="text-[#DDDDDD]" textColor="text-[#DDDDDD]" tagBgColor="bg-[#222222]" tagTextColor="text-white" leftTitle="🤝 Turn strategy into shared understanding."
+  <UnderstandBrandSection imagePosition="bottom-0 right-[-150px]" bgColor="bg-[#161616]" contentBgColor="bg-[#161616]" h2Color="text-[#DDDDDD]" textColor="text-[#DDDDDD]" tagBgColor="bg-[#222222]" tagTextColor="text-white" leftTitle="🤝 Turn strategy into shared understanding."
     leftDescription="Even the best strategy fails without alignment. We bring teams together — literally and strategically — so they move in sync."
     :tags="[
       'Cross-Functional Sessions',

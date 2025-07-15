@@ -4,17 +4,17 @@
     <div :class="`border-t border-b border-[#636363] ${contentBgColor}`">
       <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 px-6">
         <!-- Image Section -->
-        <div class="py-12 p-6 border-r border-[#636363]">
-          <img :src="imageSrc" :alt="imageAlt">
+        <div class="border-r border-[#636363] relative">
+          <img :src="imageSrc" :alt="imageAlt" :class="`md:absolute ${imagePosition}`">
         </div>
 
         <!-- Content Section -->
         <div class="py-12 px-8">
-          <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">{{ mainTitle }}</h2>
+          <h2 :class="`text-2xl font-semibold pb-4 ${textColor}`">{{ mainTitle }}</h2>
           <p :class="`leading-relaxed ${textColor}`">{{ mainDescription }}</p>
 
           <!-- Dynamic Links -->
-          <div class="flex flex-wrap gap-4 py-10">
+          <div class="flex flex-wrap gap-4 py-6">
             <a v-for="(link, index) in links" :key="index" :href="link.url"
               :class="`${tagBgColor} ${tagTextColor} border-1 ${borderColor} px-6 py-3 rounded-[49px] inline-block`">
               {{ link.text }}
@@ -71,5 +71,9 @@ defineProps({
     type: String,
     default: 'border-white'
   },
+  imagePosition: {
+    type: String,
+    default: ''
+  }
 });
 </script>

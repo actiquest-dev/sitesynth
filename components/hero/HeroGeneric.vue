@@ -1,5 +1,5 @@
 <template>
-  <section class="relative bg-[#161616] text-white group overflow-hidden" :style="backgroundImageStyle">
+  <section class="relative bg-[#161616] text-white group overflow-hidden bg-cover bg-no-repeat" :class="backgroundPosition" :style="backgroundImageStyle">
     <GlowRed />
 
     <div class="relative max-w-6xl mx-auto px-6" :class="paddingClasses">
@@ -11,10 +11,7 @@
 
         <!-- Dynamic Content Elements -->
         <div v-for="(element, index) in content" :key="index" :class="getElementMargin(element.margin)">
-          <component 
-            :is="element.tag" 
-            :class="getElementClasses(element.tag, element.textColor)"
-          >
+          <component :is="element.tag" :class="getElementClasses(element.tag, element.textColor)">
             {{ element.text }}
           </component>
         </div>
@@ -49,6 +46,10 @@ const props = defineProps({
     type: String,
     default: null
   },
+  backgroundPosition: {
+    type: String,
+    default: 'bg-center'
+  },
   paddingClasses: {
     type: String,
     default: ''
@@ -71,14 +72,14 @@ const backgroundImageStyle = computed(() => {
 // Function to get appropriate CSS classes based on tag
 const getElementClasses = (tag, customTextColor) => {
   const textColor = customTextColor || 'text-white'
-  
+
   switch (tag) {
     case 'h1':
       return `${textColor} text-4xl sm:text-5xl font-extrabold`
     case 'h2':
       return `${textColor} text-3xl sm:text-4xl font-bold`
     case 'h3':
-      return `${textColor} text-2xl sm:text-3xl font-bold`
+      return `${textColor} text-2xl sm:text-3xl font-normal`
     case 'h4':
       return `${textColor} text-xl sm:text-2xl font-semibold`
     case 'h5':

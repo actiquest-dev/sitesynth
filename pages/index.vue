@@ -33,7 +33,7 @@
 
   <BannerSection sectionTitle="New AI product we are working on" />
 
-  <TwoColumnSection class="pb-20" leftPadding="pl-[4rem]" rightPadding="" :leftContent="{
+  <TwoColumnSection class="pb-20" leftPadding="pl-[4rem] pt-[2rem] md:pt-[0rem]" rightPadding="" :leftContent="{
     image: { src: '/assets/ScoreSynth.svg', alt: 'Innovation Icon' },
     imageText: { tag: 'h3', content: 'ScoreSynth' },
     textElements: [

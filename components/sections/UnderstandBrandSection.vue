@@ -27,15 +27,16 @@
       </div>
 
       <!-- Right Column Image -->
-      <div class="py-12 p-6">
-        <img :src="imageSrc" alt="Section image" />
+      <div :class="`${paddingImage} relative`">
+        <img :src="imageSrc" alt="Section image" :class="`md:absolute ${imagePosition}`" />
       </div>
     </div>
   </section>
 </template>
 
 <script setup>
-defineProps({
+
+const props = defineProps({
   title: String,
   bgColor: {
     type: String,
@@ -64,6 +65,14 @@ defineProps({
   borderColor: {
     type: String,
     default: 'border-white'
+  },
+  paddingImage: {
+    type: String,
+    default: ''
+  },
+  imagePosition: {
+    type: String,
+    default: ''
   },
   leftTitle: String,
   leftDescription: String,
