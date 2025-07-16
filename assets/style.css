@@ -8,6 +8,11 @@ body::selection {
   color: white;
 }
 
+body.glowred::selection {
+  background: #AA3733;
+  color: white;
+}
+
 footer a {
   font-family: "Inter", sans-serif;
 }

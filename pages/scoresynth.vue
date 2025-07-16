@@ -1,3 +1,11 @@
+<script setup>
+useHead({
+  bodyAttrs: {
+    class: 'glowred'
+  }
+})
+</script>
+
 <template>
     <HeaderSection />
     <HeroGeneric backgroundImage="/assets/hero-scoresynth-bg.png" backgroundPosition="bg-right-bottom"
