@@ -6,32 +6,43 @@
     <TwoColumnsDesign sectionBgColor="bg-[#DDDDDD]" leftColumnBgColor="bg-[#DDDDDD]" rightColumnBgColor="bg-[#161616]"
         textColorleft="text-[#161616]" textColorRight="text-white">
         <template #left>
-            <h3 class="text-lg mb-2">WHY AI NOW?</h3>
-            <h2 class="text-4xl font-bold mb-4">You don’t need an AI lab. You need traction.</h2>
+            <div class="px-6 py-24 md:pl-[10rem] md:pr-6 md:border-r border-[#636363] bg-[#DDDDDD]">
+                <h3 class="text-lg mb-2">WHY AI NOW?</h3>
+                <h2 class="text-4xl font-bold mb-4">You don’t need an AI lab. You need traction.</h2>
+            </div>
         </template>
 
         <template #right>
-            <p class="text-white font-bold mb-4">AI is transforming how teams design, build, and operate — but most
-                companies don’t know where to start. We help you find the right use cases, test fast, and integrate AI
-                meaningfully into your product or process.</p>
+            <div class="px-6 py-24 md:pr-[10rem] md:pl-6 bg-[#161616]">
+                <p class="text-white font-bold mb-4">AI is transforming how teams design, build, and operate — but most
+                    companies don’t know where to start. We help you find the right use cases, test fast, and integrate
+                    AI
+                    meaningfully into your product or process.</p>
+            </div>
         </template>
     </TwoColumnsDesign>
     <TwoColumnsDesign sectionBgColor="" leftColumnBgColor="bg-[#191919]" rightColumnBgColor="bg-[#161616]"
         textColorleft="text-[#161616]" textColorRight="text-white">
         <template #left>
-            <h2 class="text-4xl mb-2 text-white">84% 🪄</h2>
-            <h2 class="text-4xl mb-2 text-white">of executives</h2>
-            <p class="text-lg font-bold mb-4 text-white">say AI will give them a competitive advantage — but only 19%
-                have adopted it at scale.</p>
-            <p class="text-[#999999]"> — McKinsey Global AI Survey</p>
+            <div class="px-6 py-24 md:pl-[10rem] md:pr-6 md:border-r border-[#636363] bg-[#191919]">
+                <h2 class="text-4xl mb-2 text-white">84% 🪄</h2>
+                <h2 class="text-4xl mb-2 text-white">of executives</h2>
+                <p class="text-lg font-bold mb-4 text-white">say AI will give them a competitive advantage — but only
+                    19%
+                    have adopted it at scale.</p>
+                <p class="text-[#999999]"> — McKinsey Global AI Survey</p>
+            </div>
         </template>
 
         <template #right>
-            <h2 class="text-4xl mb-2 text-white">5x 🚀</h2>
-            <h2 class="text-4xl mb-2 text-white">faster</h2>
-            <p class="text-lg font-bold mb-4 text-white">Companies that adopt AI early grow 50% faster in productivity
-                and customer retention.</p>
-            <p class="text-[#999999]">— BCG AI at Scale Report</p>
+            <div class="px-6 py-24 md:pr-[10rem] md:pl-6 bg-[#161616]">
+                <h2 class="text-4xl mb-2 text-white">5x 🚀</h2>
+                <h2 class="text-4xl mb-2 text-white">faster</h2>
+                <p class="text-lg font-bold mb-4 text-white">Companies that adopt AI early grow 50% faster in
+                    productivity
+                    and customer retention.</p>
+                <p class="text-[#999999]">— BCG AI at Scale Report</p>
+            </div>
         </template>
     </TwoColumnsDesign>
     <Testimonial imageSrc="/assets/miguel.png" personName="Miguel Aprossine " personTitle="AI & Web3 Visionary Partner"
@@ -93,7 +104,7 @@
         },
     ]" />
 
-    <WhiteSection class="pb-[8rem]" title="Get Started Today"
+    <WhiteSection bgImage="/assets/HeroAi.svg" class="pt-[4rem] pb-[8rem]" title="Get Started Today"
         description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you’re becoming."
         primaryText="Start a Project" primaryLink="#" secondaryText="Book a Call" secondaryLink="#" />
     <FooterSection />

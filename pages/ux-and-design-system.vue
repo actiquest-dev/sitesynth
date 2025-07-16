@@ -4,12 +4,16 @@
         description="We build design systems and UX architecture that grow with your product — enabling your teams to move faster, stay on-brand, and deliver with confidence." />
     <TwoColumnsDesign sectionBgColor="bg-[#161616]" leftColumnBgColor="bg-[#161616]" rightColumnBgColor="bg-[#161616]">
         <template #left>
-            <h3 class="text-white text-lg mb-2">WHY YOU NEED FIGMA?</h3>
-            <h2 class="text-white text-4xl font-bold mb-4">Design debt is real. So is handoff hell..</h2>
+            <div class="px-6 py-24 md:pl-[10rem] md:pr-6 md:border-r border-[#636363]">
+                <h3 class="text-white text-lg mb-2">WHY YOU NEED FIGMA?</h3>
+                <h2 class="text-white text-4xl font-bold">Design debt is real. So is handoff hell..</h2>
+            </div>
         </template>
 
         <template #right>
-            <p class="text-white text-[24px] mb-4">When teams move fast without systems, the result is chaos: duplicated components, messy UX, endless revisions, and frustrated developers.<br>We fix that by putting structure where it matters — in the product’s foundation.</p>
+            <div class="px-6 py-24 md:pr-[10rem] md:pl-6">
+                <p class="text-white text-[24px]">When teams move fast without systems, the result is chaos: duplicated components, messy UX, endless revisions, and frustrated developers.<br>We fix that by putting structure where it matters — in the product’s foundation.</p>
+            </div>
         </template>
     </TwoColumnsDesign>
     <FigmaSection title="Figma" h3="🧱 Design Systems That Scale"
@@ -64,7 +68,7 @@
             description: 'Practical, living docs that support day-to-day work — not just sit in a folder.'
         },
     ]" />
-    <WhiteSection bgImage="/assets/design-bg.svg" class="pb-[8rem]" title="Get Started Today"
+    <WhiteSection bgImage="/assets/design-bg.svg" class="pt-[4rem] pb-[8rem]" title="Get Started Today"
         description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you’re becoming."
         primaryText="Start a Project" primaryLink="#" secondaryText="Book a Call" secondaryLink="#" />
     <FooterSection />

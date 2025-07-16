@@ -52,10 +52,10 @@
     {
       title: "Solutions",
       links: [
-        { text: "Brand-Driven Product Strategy", url: "/brand-driven-product-strategy" },
-        { text: "UX & Design Systems", url: "/ux-and-design-system" },
-        { text: "Development Support", url: "#" },
-        { text: "AI-Powered Workflows", url: "#" }
+        { text: "Brand-Driven Product Strategy", url: "/brand-driven-product-strategy/" },
+        { text: "UX & Design Systems", url: "/ux-and-design-system/" },
+        { text: "Development Support", url: "/full-stack-implementation/" },
+        { text: "AI-Powered Workflows", url: "/ai-innovation/" }
       ]
     },
     {
@@ -63,8 +63,7 @@
       links: [
         { text: "About us", url: "#" },
         { text: "Careers", url: "#" },
-        { text: "The SyteSynth blog", url: "#" },
-        { text: "AI-Powered Workflows", url: "#" }
+        { text: "Score Synth", url: "/scoresynth/" },
       ]
     },
     {

@@ -9,8 +9,8 @@
         ]" />
     <BannerSection sectionTitle="Front-End Engineering" textAlign="left" backgroundColor="bg-[#DDDDDD]"
         textColor="text-[#161616]" />
-    <UnderstandBrandSection imagePosition="bottom-[-100px] right-[-300px]" bgColor="bg-[#DDDDDD]" contentBgColor="bg-[#161616]" textColor="text-white"
-        leftTitle="⚙️ Production-Ready Engineering"
+    <UnderstandBrandSection imagePosition="bottom-[-100px] right-[-300px]" bgColor="bg-[#DDDDDD]"
+        contentBgColor="bg-[#161616]" textColor="text-white" leftTitle="⚙️ Production-Ready Engineering"
         leftDescription="From the very start, we write code that ships — scalable, modular, and built for long-term growth. We don’t hand off mockups. We deliver real product foundations."
         :tags="[
             'React',
@@ -28,8 +28,9 @@
         class="pb-[8rem] pt-[8rem]" />
     <BannerSection sectionTitle="Back-End Engineering" textAlign="text-right" backgroundColor="bg-[#DDDDDD]"
         textColor="text-[#161616]" />
-    <TranslateSection imagePosition="top-[10%] right-[10%]" imageSrc="/assets/back-end.png" imageAlt="Github code" bgColor="bg-[#DDDDDD]"
-        textColor="text-white" contentBgColor="bg-[#161616]" mainTitle="🧩 Back-End Infrastructure You Can Trust"
+    <TranslateSection imagePosition="top-[10%] right-[10%]" imageSrc="/assets/back-end.png" imageAlt="Github code"
+        bgColor="bg-[#DDDDDD]" textColor="text-white" contentBgColor="bg-[#161616]"
+        mainTitle="🧩 Back-End Infrastructure You Can Trust"
         mainDescription="We build solid, secure, and flexible backends — tailored to your product’s logic. APIs, CMS, authentication, databases — all under control and ready to scale."
         toolsTitle="🛠️ Tools we use:" :links="[
             { text: 'Custom APIs', url: '#' },
@@ -44,8 +45,8 @@
         ]" />
     <BannerSection sectionTitle="Integrated Dev Collaboration" textAlign="text-left" backgroundColor="bg-[#DDDDDD]"
         textColor="text-[#161616]" />
-    <UnderstandBrandSection imagePosition="bottom-0 right-[-200px]" title="Integrated Dev Collaboration" bgColor="bg-[#DDDDDD]"
-        leftTitle="🚀 Flexible Dev Partnership"
+    <UnderstandBrandSection imagePosition="bottom-0 right-[-200px]" title="Integrated Dev Collaboration"
+        bgColor="bg-[#DDDDDD]" leftTitle="🚀 Flexible Dev Partnership"
         leftDescription="We adapt to your team setup. Whether we lead the build or join your engineers, our focus stays the same: momentum, clean handoff, and smooth launches."
         :tags="[
             'Dev Handoff',
@@ -94,7 +95,7 @@
             description: 'Practical, living docs that support day-to-day work — not just sit in a folder.'
         },
     ]" />
-    <WhiteSection class="pb-[8rem]" bgColor="bg-[#DDDDDD]" title="Get Started Today"
+    <WhiteSection bgImage="/assets/full-stack-bg.svg" class="pt-[4rem] pb-[8rem]" bgColor="bg-[#DDDDDD]" title="Get Started Today"
         description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you’re becoming."
         primaryText="Start a Project" primaryLink="#" secondaryText="Book a Call" secondaryLink="#" />
     <FooterSection />

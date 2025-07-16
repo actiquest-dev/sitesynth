@@ -54,7 +54,7 @@
 
 <script setup>
 const navItems = [
-    { 
+    {
         label: "Product", 
         link: "#",
         dropdownWidth: "w-[500px]",
