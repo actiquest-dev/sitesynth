@@ -16,28 +16,47 @@
 
                 <!-- Input -->
                 <div class="relative flex-1">
-                    <input type="url" v-model="link" placeholder="Enter a link"
-                        class="w-full h-12 px-4 bg-[#6363634D] text-[#A3A3A3] focus:outline-none">
+                    <input 
+                        type="url" 
+                        v-model="link" 
+                        placeholder="Enter a link"
+                        :disabled="isSubmitting"
+                        class="w-full h-12 px-4 bg-[#6363634D] text-[#A3A3A3] focus:outline-none disabled:opacity-50">
 
                     <!-- Right Arrow Button -->
-                    <button type="submit"
-                        class="absolute cursor-pointer inset-y-0 right-0 flex items-center justify-center w-12 bg-[#A259FF]">
-                        <i class="fas fa-arrow-right text-white"></i>
+                    <button 
+                        type="submit"
+                        :disabled="isSubmitting || !link.trim()"
+                        class="absolute cursor-pointer inset-y-0 right-0 flex items-center justify-center w-12 bg-[#A259FF] disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i v-if="!isSubmitting" class="fas fa-arrow-right text-white"></i>
+                        <i v-else class="fas fa-spinner fa-spin text-white"></i>
                     </button>
                 </div>
             </form>
+
+            <!-- Message -->
+            <div v-if="message" class="text-center mt-4 px-6">
+                <p :class="message.includes('successfully') ? 'text-green-400' : 'text-red-400'">
+                    {{ message }}
+                </p>
+            </div>
         </div>
     </section>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const props = defineProps({
     title: String,
     description: String,
     backgroundImage: String
 });
+
+// Form state
+const link = ref('')
+const isSubmitting = ref(false)
+const message = ref('')
 
 // Simple computed style for background image
 const backgroundImageStyle = computed(() => {
@@ -52,4 +71,35 @@ const backgroundImageStyle = computed(() => {
   return {}
 })
 
+// Form submission handler
+const submitForm = async () => {
+  if (!link.value.trim()) {
+    message.value = 'Please enter a link'
+    return
+  }
+
+  isSubmitting.value = true
+  message.value = ''
+
+  try {
+    const response = await $fetch('/api/send-link', {
+      method: 'POST',
+      body: {
+        link: link.value
+      }
+    })
+
+    if (response.success) {
+      message.value = 'Link submitted successfully!'
+      link.value = '' // Clear the form
+    } else {
+      message.value = response.error || 'Something went wrong'
+    }
+  } catch (error) {
+    console.error('Submission error:', error)
+    message.value = 'Failed to submit link. Please try again.'
+  } finally {
+    isSubmitting.value = false
+  }
+}
 </script>

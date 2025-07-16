@@ -54,7 +54,7 @@
             description: 'Know exactly when and how to use each pattern — no guessing, no inconsistency.'
         }
     ]" />
-    <Column backgroundImage="/assets/columns-bg.svg" :columns="[
+    <Column backgroundImage="/assets/design-bg.svg" :columns="[
         {
             icon: '📘 ',
             title: 'Design System Documentation',

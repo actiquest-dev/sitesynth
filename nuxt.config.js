@@ -18,5 +18,9 @@ export default defineNuxtConfig({
   app: {
     baseURL: '/', // ✅ change from '/Synth/' to '/'
     // ❌ remove `buildAssetsDir` unless you specifically need a custom one
-  }
+  },
+  runtimeConfig: {
+    // The private keys which are only available on server-side
+    brevoApiKey: process.env.BREVO_API_KEY,
+  },
 })
