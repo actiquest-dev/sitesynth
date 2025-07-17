@@ -12,6 +12,7 @@ This checklist outlines the remaining tasks to complete and optimize the website
 | Brevo account for email API | MAYYA | ❌ Not started | Connect with official email |
 | Google Analytics account | MAYYA or MARCO| ❌ Not started | Needed for traffic insights |
 | Google Search Console account | MAYYA or MARCO| ❌ Not started | For indexing and performance |
+| Ahrefs account | MAYYA or MARCO| ❌ Not started | For indexing and performance |
 | Axeptio cookie consent account | MAYYA | ❌ Not started | For GDPR compliance |
 | Google Business | MAYYA | ❌ Not started | For presence on google |
 

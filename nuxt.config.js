@@ -5,7 +5,7 @@ export default defineNuxtConfig({
 
   devtools: { enabled: true },
 
-  modules: ['@nuxtjs/tailwindcss', '@nuxt/image', '@nuxtjs/sitemap', '@nuxtjs/robots'],
+  modules: ['@nuxtjs/tailwindcss', '@nuxt/image', '@nuxtjs/sitemap', '@nuxtjs/robots', '@zadigetvoltaire/nuxt-gtm'],
 
   components: [
     { path: '~/components', pathPrefix: false }
@@ -31,5 +31,11 @@ export default defineNuxtConfig({
     siteUrl: 'https://synth-phi.vercel.app',
     autoLastmod: true,
   },
+
+  gtm: {
+    id: 'GTM-T6LHVCGC',
+    enableRouterSync: true,
+    debug: true,
+  }
 
 })
