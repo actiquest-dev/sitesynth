@@ -24,12 +24,6 @@ useHead({
     { name: 'viewport', content: 'width=device-width, initial-scale=1.0' },
     { charset: 'utf-8' }
   ],
-  meta: [
-    {
-      name: 'google-site-verification',
-      content: 'ObW9imC_xGfEY6gSafAumvQEcun2jsxue36sq8U6yME'
-    }
-  ],
   link: [
     { rel: 'icon', type: 'image/svg+xml', href: '/assets/favicon.svg' },
     { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
