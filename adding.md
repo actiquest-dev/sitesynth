@@ -33,10 +33,10 @@ This checklist outlines the remaining tasks to complete and optimize the website
 |------|-------|--------|-------|
 | SEO titles & descriptions | MAYYA | ❌ Not started | For all pages |
 | Shareable social image (Open Graph) | MAYYA | ❌ Not started | For better link previews |
-| Schema.org structured data | MARCO| ❌ Not started | Add relevant schema |
-| Canonical URLs | MARCO| ❌ Not started | Avoid duplicate content issues |
-| Sitemap.xml | MARCO| ❌ Not started | Helps search engines crawl site |
-| robots.txt | MARCO| ❌ Not started | Control crawler access |
+| Schema.org structured data | MARCO| ⚠️ Partially done | Add relevant schema |
+| Canonical URLs | MARCO| ✅ Done | Avoid duplicate content issues |
+| Sitemap.xml | MARCO| ✅ Done | Helps search engines crawl site |
+| robots.txt | MARCO| ⚠️ in progress to test | Control crawler access |
 
 ---
 
