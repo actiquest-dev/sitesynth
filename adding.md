@@ -8,11 +8,12 @@ This checklist outlines the remaining tasks to complete and optimize the website
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
-| Vercel account for Mayya | YOU | ❌ Not started | Free plan is sufficient for now |
-| Brevo account for email API | YOU | ❌ Not started | Connect with official email |
-| Google Analytics account | YOU or ME | ❌ Not started | Needed for traffic insights |
-| Google Search Console account | YOU or ME | ❌ Not started | For indexing and performance |
-| Axeptio cookie consent account | YOU | ❌ Not started | For GDPR compliance |
+| Vercel account for Mayya | MAYYA | ❌ Not started | Free plan is sufficient for now |
+| Brevo account for email API | MAYYA | ❌ Not started | Connect with official email |
+| Google Analytics account | MAYYA or MARCO| ❌ Not started | Needed for traffic insights |
+| Google Search Console account | MAYYA or MARCO| ❌ Not started | For indexing and performance |
+| Axeptio cookie consent account | MAYYA | ❌ Not started | For GDPR compliance |
+| Google Business | MAYYA | ❌ Not started | For presence on google |
 
 ---
 
@@ -20,9 +21,9 @@ This checklist outlines the remaining tasks to complete and optimize the website
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
-| HTTPS setup | ME | ✅ Done | Default on Vercel |
-| Domain migration to Vercel | YOU & ME | ⚠️ In progress | Coordinate together |
-| No redirection needed | ME | ✅ Done | No action required |
+| HTTPS setup | MARCO| ✅ Done | Default on Vercel |
+| Domain migration to Vercel | MAYYA & MARCO| ⚠️ In progress | Coordinate together |
+| No redirection needed | MARCO| ✅ Done | No action required |
 
 ---
 
@@ -30,12 +31,12 @@ This checklist outlines the remaining tasks to complete and optimize the website
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
-| SEO titles & descriptions | YOU | ❌ Not started | For all pages |
-| Shareable social image (Open Graph) | YOU | ❌ Not started | For better link previews |
-| Schema.org structured data | ME | ❌ Not started | Add relevant schema |
-| Canonical URLs | ME | ❌ Not started | Avoid duplicate content issues |
-| Sitemap.xml | ME | ❌ Not started | Helps search engines crawl site |
-| robots.txt | ME | ❌ Not started | Control crawler access |
+| SEO titles & descriptions | MAYYA | ❌ Not started | For all pages |
+| Shareable social image (Open Graph) | MAYYA | ❌ Not started | For better link previews |
+| Schema.org structured data | MARCO| ❌ Not started | Add relevant schema |
+| Canonical URLs | MARCO| ❌ Not started | Avoid duplicate content issues |
+| Sitemap.xml | MARCO| ❌ Not started | Helps search engines crawl site |
+| robots.txt | MARCO| ❌ Not started | Control crawler access |
 
 ---
 
@@ -43,7 +44,7 @@ This checklist outlines the remaining tasks to complete and optimize the website
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
-| Compress images / convert to WebP | ME | ⚠️ Partially done | Optimize for faster load times |
+| Compress images / convert to WebP | MARCO| ⚠️ Partially done | Optimize for faster load times |
 
 ---
 
@@ -51,10 +52,10 @@ This checklist outlines the remaining tasks to complete and optimize the website
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
-| 500 error page | ME | ✅ Done | Already exists |
-| Privacy Policy / Terms of Service | YOU | ❌ Not started | Generic version is fine |
-| Main Contact Form | YOU | ❌ Not started | Essential for user inquiries |
-| Social media links | YOU | ❌ Not started | Add to footer or header |
+| 500 error page | MARCO| ✅ Done | Already exists |
+| Privacy Policy / Terms of Service | MAYYA | ❌ Not started | Generic version is fine |
+| Main Contact Form | MAYYA | ❌ Not started | Essential for user inquiries |
+| Social media links | MAYYA | ❌ Not started | Add to footer or header |
 
 ---
 
@@ -67,4 +68,4 @@ This checklist outlines the remaining tasks to complete and optimize the website
 
 ---
 
-_Last updated: 16 July 2025_
+_Last updated: 17 July 2025_
