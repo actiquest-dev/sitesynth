@@ -20,13 +20,13 @@
         description="From tokens to components to documentation — we build reusable, flexible design foundations that support your team’s workflow, not slow it down. Using Figma as the single source of truth, we create shared libraries, usage rules, and naming standards your team can actually use — with optional dev integration via Zeroheight or Storybook."
         imageSrc="/assets/figma.svg" imageAlt="Figma Logo" primaryText="Try Figma" primaryLink="https://www.figma.com/"
         secondaryText="Learn More" secondaryLink="https://www.figma.com/design-systems/" />
-    <OneColumnImage centerImg="/assets/figma-3.png" centerImgAlt="Figma Screen" />
+    <OneColumnImage padding="px-6 pt-[6rem]" centerImg="/assets/figma-3.png" centerImgAlt="Figma Screen" />
     <TwoColumnsImagesOnly leftImgSrc="/assets/figma-2.png" leftImgAlt="FigJam Screenshot"
         rightImgSrc="/assets/figma-1.png" rightImgAlt="Figma Dev Mode Screenshot" />
-    <TwoColumnsWithImages leftImgSrc="/assets/figma.svg" leftImgAlt="FigJam Logo" leftH2="FigJam"
+    <TwoColumnsWithImages leftImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-logo-1.png" leftImgAlt="FigJam Logo" leftH2="FigJam"
         leftH3="🔀 UX Architecture That Makes Sense"
         leftP="From tokens to components to documentation — we build reusable, flexible design foundations that support your team’s workflow, not slow it down. Using Figma as the single source of truth, we create shared libraries, usage rules, and naming standards your team can actually use — with optional dev integration via Zeroheight or Storybook."
-        leftLearnMoreText="Learn more about FigJam" leftLearnMoreLink="#" rightImgSrc="/assets/figma.svg"
+        leftLearnMoreText="Learn more about FigJam" leftLearnMoreLink="#" rightImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-logo-2.png"
         rightImgAlt="FigJam Logo" rightH2="Figma Dev Mode" rightH3="🤝 Built for Real Teams, Not Just Slides"
         rightP="We design with engineers in mind — ensuring everything is structured, inspectable, and ready to build. 
       

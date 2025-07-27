@@ -75,24 +75,14 @@ const navItems = [
             { imageSrc: "/assets/frame-4.svg", label: "AI-Powered Workflows & Innovation", description: "Use smart tools to move faster and reduce cost.", link: "/ai-innovation" }
         ]
     },
-    // {
-    //     label: "Resources",
-    //     link: "#",
-    //     dropdownWidth: "w-auto min-w-[240px]",
-    //     subItems: [
-    //         { label: "Success Stories", link: "#" },
-    //         { label: "Sync Blog", link: "#" }
-    //     ]
-    // },
     {
-        label: "Company",
-        link: "#",
-        dropdownWidth: "w-auto min-w-[240px]",
-        subItems: [
-            { label: "About Us", link: "#" },
-            { label: "Careers", link: "#" }
-        ]
+        label: "About Us",
+        link: "#"
     },
+    {
+        label: "Careers", 
+        link: "#"
+    }
 ];
 
 const cta = { text: "Get started", link: "#" };

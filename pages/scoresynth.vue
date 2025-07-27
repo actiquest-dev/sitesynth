@@ -46,6 +46,9 @@ useHead({
         { tag: 'h3', text: 'From sound to score — in just a few steps.', margin: 'mb-8' },
         { tag: 'p', text: 'Whether you’re humming a melody, exporting a MIDI, or uploading a full demo track, ScoreSynth transforms your input into a professionally arranged orchestral score. Heres how:', margin: 'mb-0' }
     ]" />
+
+    <OneColumnImage glowEffect="GlowRed" centerImg="/assets/new-assets/products-page/product/score-synth/how-works/uis-over-pattern.png" centerImgAlt="ScoreSynth UI Interface" />
+
     <ProcessSection accentColor="text-[#AA3733]" imageSrc="/assets/why-1.png" imageClass="px-10 py-10" imageAlt="Synth"
         :images="[
             { src: '/assets/upload.png', alt: 'Discover - Business Goals Analysis' },

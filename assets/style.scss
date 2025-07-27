@@ -2,9 +2,26 @@
 // @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
 // @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..900&display=swap');
 
+/* Roc Grotesk Font Definitions */
+@font-face {
+  font-family: "Roc Grotesk";
+  src: url("/assets/new-assets/font/hfont/rocgrotesk-medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roc Grotesk";
+  src: url("/assets/new-assets/font/hfont/rocgrotesk-bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 body {
   * {
-    font-family: "Space Grotesk", sans-serif;
+    font-family: "Roc Grotesk", sans-serif;
     font-optical-sizing: auto;
   }
 

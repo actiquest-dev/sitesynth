@@ -65,7 +65,7 @@
         ],
         link: { href: '#', text: 'Discover more about our product' }
     }" :rightContent="{
-        image: { src: '/assets/membria-ss.png', alt: 'Membria Screenshot', class: 'w-full h-auto rounded-lg' }
+        image: { src: '/assets/new-assets/solutions-page/solutions/ai-infused-innovation-and-rd/cta/membria-image.png', alt: 'Membria Screenshot', class: 'w-full h-auto rounded-lg' }
     }" />
     <BannerSection sectionTitle="What You Get" />
     <Column class="pb-20" :columns="[

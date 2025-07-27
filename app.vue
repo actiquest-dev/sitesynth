@@ -28,7 +28,7 @@ useHead({
     { rel: 'icon', type: 'image/svg+xml', href: '/assets/favicon.svg' },
     { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
     { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-    { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Inter:wght@100..900&display=swap' },
+    { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap' },
     { rel: 'stylesheet', href: 'https://unpkg.com/swiper/swiper-bundle.min.css' },
     { rel: 'canonical', href: canonicalUrl }
   ],

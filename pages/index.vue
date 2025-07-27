@@ -20,10 +20,10 @@
     { imageSrc: '/assets/frame-4.svg', imageAlt: 'AI Innovation', title: 'AI-Infused Innovation & R&D', description: 'We bring forward-thinking, AI-powered tooling into the design and development process.', link: '#' }
   ]" />
   <ProcessSection imageSrc="/assets/why-1.png" imageClass="px-10 py-10" imageAlt="Synth" :images="[
-    { src: '/assets/why-1.png', alt: 'Discover - Business Goals Analysis' },
-    { src: '/assets/2-what.png', alt: 'Define - Challenge Clarification' },
-    { src: '/assets/how-3.png', alt: 'Design - Systems and Flows' },
-    { src: '/assets/4-when.png', alt: 'Deliver - Design Implementation' }
+    { src: '/assets/new-assets/home-page/home/what-we-offer/discover.png', alt: 'Discover - Business Goals Analysis' },
+    { src: '/assets/new-assets/home-page/home/what-we-offer/define.png', alt: 'Define - Challenge Clarification' },
+    { src: '/assets/new-assets/home-page/home/what-we-offer/design.png', alt: 'Design - Systems and Flows' },
+    { src: '/assets/new-assets/home-page/home/what-we-offer/deliver.png', alt: 'Deliver - Design Implementation' }
   ]" :sections="[
       { title: 'Discover', description: 'We dive into your business goals, users, and context.', link: '#', linkText: 'Tell us your story first' },
       { title: 'Define', description: 'We clarify the challenge and craft a shared direction.', link: '#', linkText: 'How connect brand and product' },
@@ -54,11 +54,9 @@
     { icon: '✅', title: 'Seamless Collaboration', description: 'We unify strategy, development, and branding — no silos, no handoff gaps.' },
     { icon: '✅', title: 'Agile & AI-Powered', description: 'We use AI-powered tools to accelerate delivery, reduce cost, and stay ahead.' }
   ]" />
-  <StoriesSection storiesText="Explore our latest case studies" storiesLink="#"
-    blogText="Dive deeper into industry insights" blogLink="#" />
   <Testimonial imageSrc="assets/koen.png" personName="Koen Vergauwen" personTitle="Head of Growth"
     quoteTitle="Simplicity takes effort"
     quoteText="It takes real effort to cut through the noise and get to what matters. But that’s where momentum begins. At SiteSynth, we believe clarity is a competitive advantage. That’s why we work to make the complex simple — and the simple successful."
-    ctaText="Get in touch" ctaLink="#" class="pb-[8rem]" />
+    ctaText="Get in touch" ctaLink="#" class="pb-[8rem] pt-[8rem]" />
   <FooterSection />
 </template>
