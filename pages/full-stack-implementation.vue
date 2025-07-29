@@ -7,8 +7,8 @@
             { icon: '🌐', title: 'Back-End Engineering', description: 'Scalable, secure, and API-ready architecture.', link: '#' },
             { icon: '🤝', title: 'Integrated Dev Collaboration', description: 'We plug into your workflow, toolset, and priorities.', link: '#' }
         ]" />
-    <BannerSection sectionTitle="Front-End Engineering" textAlign="left" backgroundColor="bg-[#DDDDDD]"
-        textColor="text-[#161616]" />
+    <BannerSection sectionTitle="Front-End Engineering" textAlign="left" backgroundColor="bg-[#161616]"
+        textColor="text-white" />
     <UnderstandBrandSection imagePosition="bottom-[-100px] right-[-300px]" bgColor="bg-[#DDDDDD]"
         contentBgColor="bg-[#161616]" textColor="text-white" leftTitle="⚙️ Production-Ready Engineering"
         leftDescription="From the very start, we write code that ships — scalable, modular, and built for long-term growth. We don’t hand off mockups. We deliver real product foundations."
