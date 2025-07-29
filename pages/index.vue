@@ -15,15 +15,15 @@
   <BannerSection sectionTitle="What We Offer" />
   <WhatWeOfferSection :offers="[
     { imageSrc: '/assets/new-assets/home-page/home/cards/brand-driven-product-strategy.svg', imageAlt: 'Brand Thinking', title: 'Brand-Led Product Thinking', description: 'We help you build digital products aligned with your brand voice and vision.', link: '#' },
-    { imageSrc: '/assets/frame-2.svg', imageAlt: 'Design Systems', title: 'Design Systems & UX Architecture', description: 'We craft scalable design systems and UX flows that bridge user needs and developer logic.', link: '#' },
-    { imageSrc: '/assets/frame-3.svg', imageAlt: 'Implementation Support', title: 'Full-Stack Implementation Support', description: 'From prototypes to production, we collaborate closely with your dev team — or bring our own.', link: '#' },
+    { imageSrc: '/assets/new-assets/home-page/home/cards/ux-and-design-systems.svg', imageAlt: 'Design Systems', title: 'Design Systems & UX Architecture', description: 'We craft scalable design systems and UX flows that bridge user needs and developer logic.', link: '#' },
+    { imageSrc: '/assets/new-assets/home-page/home/cards/development-support.svg', imageAlt: 'Implementation Support', title: 'Full-Stack Implementation Support', description: 'From prototypes to production, we collaborate closely with your dev team — or bring our own.', link: '#' },
     { imageSrc: '/assets/new-assets/home-page/home/cards/ai-powered-workflows.svg', imageAlt: 'AI Innovation', title: 'AI-Infused Innovation & R&D', description: 'We bring forward-thinking, AI-powered tooling into the design and development process.', link: '#' }
   ]" />
   <ProcessSection imageSrc="/assets/why-1.png" imageClass="" imageAlt="Synth" :images="[
-    { src: '/assets/new-assets/home-page/home/what-we-offer/discover.png', alt: 'Discover - Business Goals Analysis' },
-    { src: '/assets/new-assets/home-page/home/what-we-offer/define.png', alt: 'Define - Challenge Clarification' },
-    { src: '/assets/new-assets/home-page/home/what-we-offer/design.png', alt: 'Design - Systems and Flows' },
-    { src: '/assets/new-assets/home-page/home/what-we-offer/deliver.png', alt: 'Deliver - Design Implementation' }
+    { src: '/assets/new-assets/home-page/home/what-we-offer/Discover.png', alt: 'Discover - Business Goals Analysis' },
+    { src: '/assets/new-assets/home-page/home/what-we-offer/Define.png', alt: 'Define - Challenge Clarification' },
+    { src: '/assets/new-assets/home-page/home/what-we-offer/Design.png', alt: 'Design - Systems and Flows' },
+    { src: '/assets/new-assets/home-page/home/what-we-offer/Deliver.png', alt: 'Deliver - Design Implementation' }
   ]" :sections="[
       { title: 'Discover', description: 'We dive into your business goals, users, and context.', link: '#', linkText: 'Tell us your story first' },
       { title: 'Define', description: 'We clarify the challenge and craft a shared direction.', link: '#', linkText: 'How connect brand and product' },
@@ -42,7 +42,7 @@
     ],
     link: { href: '#', text: 'Discover more about our product' }
   }" :rightContent="{
-      image: { src: '/assets/music.png', alt: 'AI Development Process', class: 'w-full h-auto rounded-lg' }
+      image: { src: '/assets/new-assets/home-page/home/cta/score-synth-feature-image.png', alt: 'AI Development Process', class: 'w-full h-auto rounded-lg' }
     }" />
 
   <ConsultancySection leftTitle="Typical Consultancy" :leftItems="[
