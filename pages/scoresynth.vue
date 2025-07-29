@@ -46,11 +46,11 @@ useHead({
 
     <ProcessSection accentColor="text-[#AA3733]" imageSrc="/assets/why-1.png" imageClass="px-10 py-10" imageAlt="Synth"
         :images="[
-            { src: '/assets/upload.png', alt: 'Discover - Business Goals Analysis' },
-            { src: '/assets/ai-analize.png', alt: 'Define - Challenge Clarification' },
-            { src: '/assets/symphony.png', alt: 'Design - Systems and Flows' },
-            { src: '/assets/orchestration.png', alt: 'Deliver - Design Implementation' },
-            { src: '/assets/output.png', alt: 'Deliver - Design Implementation' }
+            { src: '/assets/new-assets/products-page/product/score-synth/how-works/accordion/upload-your-source/ui-over-pattern.png', alt: 'Discover - Business Goals Analysis' },
+            { src: '/assets/new-assets/products-page/product/score-synth/how-works/accordion/ai-analyzes-and-separates-the-music/scores-over-pattern.png', alt: 'Define - Challenge Clarification' },
+            { src: '/assets/new-assets/products-page/product/score-synth/how-works/accordion/transcription-into-digital-notes/ui-over-pattern.png', alt: 'Design - Systems and Flows' },
+            { src: '/assets/new-assets/products-page/product/score-synth/how-works/accordion/orchestration-with-intelligence/ui-over-pattern.png', alt: 'Deliver - Design Implementation' },
+            { src: '/assets/new-assets/products-page/product/score-synth/how-works/accordion/output-ready-to-use-sheet-music/ui-over-pattern.png', alt: 'Deliver - Design Implementation' }
         ]" :sections="[
             { title: 'Upload your source', description: 'ScoreSynth accepts MP3, WAV, MIDI, MusicXML, or even scanned sheet music. You can also describe your request using a text prompt — or combine multiple songs for AI to arrange.' },
             { title: 'AI Analyzes & Separates the Music', description: 'With AI source separation (Demucs), we isolate key musical layers so the system understands what each instrument or voice is doing.' },
