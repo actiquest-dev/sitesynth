@@ -17,7 +17,7 @@
     { imageSrc: '/assets/new-assets/home-page/home/cards/brand-driven-product-strategy.svg', imageAlt: 'Brand Thinking', title: 'Brand-Led Product Thinking', description: 'We help you build digital products aligned with your brand voice and vision.', link: '#' },
     { imageSrc: '/assets/frame-2.svg', imageAlt: 'Design Systems', title: 'Design Systems & UX Architecture', description: 'We craft scalable design systems and UX flows that bridge user needs and developer logic.', link: '#' },
     { imageSrc: '/assets/frame-3.svg', imageAlt: 'Implementation Support', title: 'Full-Stack Implementation Support', description: 'From prototypes to production, we collaborate closely with your dev team — or bring our own.', link: '#' },
-    { imageSrc: '/assets/frame-4.svg', imageAlt: 'AI Innovation', title: 'AI-Infused Innovation & R&D', description: 'We bring forward-thinking, AI-powered tooling into the design and development process.', link: '#' }
+    { imageSrc: '/assets/new-assets/home-page/home/cards/ai-powered-workflows.svg', imageAlt: 'AI Innovation', title: 'AI-Infused Innovation & R&D', description: 'We bring forward-thinking, AI-powered tooling into the design and development process.', link: '#' }
   ]" />
   <ProcessSection imageSrc="/assets/why-1.png" imageClass="px-10 py-10" imageAlt="Synth" :images="[
     { src: '/assets/new-assets/home-page/home/what-we-offer/discover.png', alt: 'Discover - Business Goals Analysis' },
