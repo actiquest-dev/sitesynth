@@ -19,10 +19,16 @@
   font-display: swap;
 }
 
+@for $i from 1 through 6 {
+  h#{$i} {
+    font-family: "Roc Grotesk", sans-serif!important;
+    font-optical-sizing: auto;
+  }
+}
+
 body {
   * {
-    font-family: "Roc Grotesk", sans-serif;
-    font-optical-sizing: auto;
+    font-family: "Inter", sans-serif;
   }
 
   &::selection {
