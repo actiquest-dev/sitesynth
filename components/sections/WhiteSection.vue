@@ -12,11 +12,11 @@
                     <!-- Call-to-Action Buttons -->
                     <div class="flex justify-center gap-4 mt-6">
                         <a :href="primaryLink"
-                            class="px-6 py-2 bg-black text-white font-semibold hover:bg-gray-800 transition-colors duration-500">
+                            class="px-6 py-2 border-[#161616] hover:bg-white hover:text-[#161616] hover:border-white bg-[#161616] text-white transition-colors duration-[1000ms] font-semibold">
                             {{ primaryText }}
                         </a>
                         <a :href="secondaryLink"
-                            class="px-6 py-2 bg-white text-black font-semibold hover:bg-gray-200 transition-colors duration-500">
+                            :class="`px-6 py-2 border-[1px] border-white hover:bg-[${hover}] hover:text-white hover:border-[${hover}] bg-white text-[#161616] transition-colors duration-[1000ms] font-semibold`">
                             {{ secondaryText }}
                         </a>
                     </div>
@@ -56,6 +56,10 @@ const props = defineProps({
     bgImage: {
         type: String,
         default: null
+    },
+    hover: {
+        type: String,
+        default: '#8D35FF'
     }
 });
 

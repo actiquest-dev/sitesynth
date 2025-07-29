@@ -23,7 +23,7 @@
             :class="['block w-8 h-[3px] bg-white transition-transform duration-300', menuOpen ? '-rotate-45 -translate-y-2' : '']"></span>
         </div>
       </button>
-      <DesktopMenu />
+      <DesktopMenu :hoverbg="hoverbg" :hoverborder="hoverborder" />
       <MobileMenu :menuOpen="menuOpen" />
 
     </div>
@@ -37,6 +37,14 @@ const props = defineProps({
   darkBackground: {
     type: Boolean,
     default: false
+  },
+  hoverbg: {
+    type: String,
+    default: 'hover:bg-[#8D35FF]'
+  },
+  hoverborder: {
+    type: String,
+    default: 'hover:border-[#8D35FF]'
   }
 })
 

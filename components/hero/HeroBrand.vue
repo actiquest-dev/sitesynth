@@ -7,7 +7,7 @@
       <div class="text-center px-6">
         <h1 class="text-4xl sm:text-5xl font-extrabold mb-10">{{ title }}</h1>
         <p class="text-base sm:text-lg font-medium mb-8">{{ description }}</p>
-        <a :href="buttonLink" class="inline-block mt-8 px-4 py-2 text-black bg-white font-semibold">
+        <a :href="buttonLink" class="border-[1px] border-white hover:bg-[#8D35FF] hover:text-white hover:border-[#8D35FF] bg-white text-[#161616] transition-colors duration-[1000ms] inline-block mt-8 px-4 py-2 font-semibold">
           <span>{{ buttonText }}</span>
         </a>
       </div>
@@ -20,7 +20,7 @@
           <p class="text-center text-[#999999] mt-2">{{ card.description }}</p>
           <div class="text-center mt-4">
             <a :href="card.link"
-              class="text-[#8CB0FF] font-semibold hover:text-[#A620FF] transition-colors duration-1000">Read more <i class="fa-solid fa-chevron-right relative top-[2px]" aria-hidden="true"></i></a>
+              class="text-[#8CB0FF] font-semibold hover:text-[#A620FF] transition-colors duration-1000">{{ readMore }} <i class="fa-solid fa-chevron-right relative top-[2px]" aria-hidden="true"></i></a>
           </div>
         </div>
       </div>
@@ -37,7 +37,8 @@ const props = defineProps({
   buttonText: String,
   buttonLink: String,
   cards: Array,
-  backgroundImage: String
+  backgroundImage: String,
+  readMore: String
 });
 
 // Simple computed style for background image

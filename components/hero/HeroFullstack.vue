@@ -7,7 +7,7 @@
       <div class="text-center px-6">
         <h1 class="text-[#161616] text-4xl sm:text-5xl font-extrabold mb-10">{{ title }}</h1>
         <p class="text-[#161616] text-base sm:text-lg font-medium mb-8">{{ description }}</p>
-        <a :href="buttonLink" class="inline-block mt-8 px-4 py-2 text-white bg-[#161616] font-semibold">
+        <a :href="buttonLink" class="inline-block mt-8 px-4 py-2 border-[#161616] hover:bg-white hover:text-[#161616] hover:border-white bg-[#161616] text-white transition-colors duration-[1000ms] font-semibold">
           <span>{{ buttonText }}</span>
         </a>
       </div>

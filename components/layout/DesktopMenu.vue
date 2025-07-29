@@ -6,8 +6,7 @@
                 <NuxtLink :href="item.link" :target="item.target"
                     class="font-medium transition-colors duration-1000 flex items-center space-x-1 group">
                     <span>{{ item.label }}</span>
-                    <i
-                        class="fas fa-chevron-down transform transition-transform duration-300 group-hover:rotate-180"></i>
+                    <i class="fas fa-chevron-down transform transition-transform duration-300 group-hover:rotate-180"></i>
                 </NuxtLink>
 
                 <!-- Dropdown Panel with Dynamic Width -->
@@ -44,7 +43,7 @@
 
         <!-- CTA Button -->
         <div class="flex-1 text-right">
-            <NuxtLink :href="cta.link" :target="cta.target" class="border-[1px] border-white hover:bg-[#8D35FF] hover:text-white hover:border-[#8D35FF] bg-white text-[#161616] px-4 py-2 font-semibold transition-colors duration-[1000ms]">
+            <NuxtLink :href="cta.link" :target="cta.target" :class="`border-[1px] border-white ${hoverbg} hover:text-white ${hoverborder} bg-white text-[#161616] px-4 py-2 font-semibold transition-colors duration-[1000ms]`">
                 <span>{{ cta.text }}</span>
             </NuxtLink>
         </div>
@@ -53,6 +52,18 @@
 
 
 <script setup>
+
+const props = defineProps({
+  hoverbg: {
+    type: String,
+    default: 'hover:bg-[#8D35FF]'
+  },
+  hoverborder: {
+    type: String,
+    default: 'hover:border-[#8D35FF]'
+  }
+})
+
 const navItems = [
     {
         label: "Product", 

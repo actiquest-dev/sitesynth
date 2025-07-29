@@ -7,7 +7,7 @@ useHead({
 </script>
 
 <template>
-    <HeaderSection />
+    <HeaderSection hoverbg="hover:bg-[#AA3733]" hoverborder="hover:border-[#AA3733]" />
     <HeroGeneric backgroundImage="/assets/hero-scoresynth-bg.png" backgroundPosition="bg-right-bottom"
         :logo="{ src: '/assets/ScoreSynth.svg', alt: 'ScoreSynth Logo', class: 'h-20 w-auto' }"
         paddingClasses="pt-[16rem] pb-[10rem]" :content="[
@@ -63,7 +63,7 @@ useHead({
             { title: 'Orchestration with intelligence', description: 'ScoreSynth assigns parts to real instruments using a custom orchestration model. Just pick the ensemble type and difficulty — or describe what you want.' },
             { title: 'Output: Ready-to-use sheet music', description: 'Get clean PDF and MusicXML files, ready for printing or editing. Every version includes AI playback so you can preview the arrangement.' }
         ]" />
-    <Testimonial quoteColor="text-[#AA3733]" imageSrc="/assets/mayya.png" personName="Mayya Aprosina"
+    <Testimonial hoverbg="hover:bg-[#AA3733]" hoverborder="hover:border-[#AA3733]" quoteColor="text-[#AA3733]" imageSrc="/assets/mayya.png" personName="Mayya Aprosina"
         personTitle="CEO & Business Designer" quoteTitle="A clear why shapes everything that follows."
         quoteText="Understanding why your brand exists — beyond products or features — gives every decision direction. It’s the foundation for building digital experiences that feel aligned, intentional, and real."
         ctaText="Get in touch" ctaLink="#" class="pb-[8rem] pt-[8rem]" glowEffect="GlowRed" />
@@ -94,7 +94,7 @@ useHead({
             paragraph: 'Not a pro? No problem. Play with ideas, hear them instantly, and learn by doing — no steep learning curve.'
         }
     ]" />
-    <WhiteSection class="pb-[8rem] pt-[8rem]" bgColor="bg-[#161616]" bgInside="bg-[#161616]" textColor="text-white"
+    <WhiteSection hover="#AA3733" class="pb-[8rem] pt-[8rem]" bgColor="bg-[#161616]" bgInside="bg-[#161616]" textColor="text-white"
         title="Get Started Today"
         description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you’re becoming."
         primaryText="Start a Project" primaryLink="#" secondaryText="Book a Call" secondaryLink="#"

@@ -16,7 +16,7 @@
           <p class="text-[#636363]">
             "{{ quoteText }}"
           </p>
-          <a :href="ctaLink" class="mt-6 w-auto max-w-max px-4 py-2 bg-[#161616] btn-2 text-white font-semibold">
+          <a :href="ctaLink" class="mt-6 w-auto max-w-max px-4 py-2 border-[#161616] hover:bg-white hover:text-[#161616] hover:border-white bg-[#161616] text-white transition-colors duration-[1000ms] font-semibold">
             <span>{{ ctaText }}</span>
           </a>
         </div>

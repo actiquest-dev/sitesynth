@@ -16,13 +16,13 @@
           <p class="text-gray-300">
             "{{ quoteText }}"
           </p>
-          <a :href="ctaLink" class="mt-6 w-auto max-w-max px-4 py-2 button btn-2 text-white font-semibold">
+          <a :href="ctaLink" :class="`border-[1px] border-white ${hoverbg} hover:text-white ${hoverborder} bg-white text-[#161616] mt-6 w-auto max-w-max px-4 py-2 font-semibold transition-colors duration-[1000ms]`">
             <span>{{ ctaText }}</span>
           </a>
         </div>
       </div>
     </div>
-  </section>
+  </section> 
 </template>
 
 <script setup>
@@ -43,6 +43,14 @@ const props = defineProps({
   quoteColor: {
     type: String,
     default: 'text-[#A620FF]'
+  },
+  hoverbg: {
+    type: String,
+    default: 'hover:bg-[#8D35FF]' // Purple as default
+  },
+  hoverborder: {
+    type: String,
+    default: 'hover:border-[#8D35FF]' // Purple as default
   }
 })
 
