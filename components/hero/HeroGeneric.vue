@@ -1,6 +1,7 @@
 <template>
   <section class="relative bg-[#161616] text-white group overflow-hidden bg-cover bg-no-repeat" :class="backgroundPosition" :style="backgroundImageStyle">
     <GlowRed />
+    <ParticleEffect />
 
     <div class="relative max-w-6xl mx-auto px-6" :class="paddingClasses">
       <div class="text-center px-6 max-w-4xl mx-auto">
