@@ -19,25 +19,20 @@ useHead({
         rightColumnBgColor="bg-[#161616]">
         <template #left>
             <div class="px-6 py-24 md:pl-[10rem] md:pr-6 md:border-r border-[#636363] bg-[#161616]">
-                <h3 class="text-white text-lg mb-2">Scoring Music is Hard. And That’s Holding People Back.</h3>
-                <p class="text-[#999999] text-normal font-light mb-4">Before founding SiteSynth, I was a musician. I
-                    studied at the
-                    conservatory, spent years immersed in orchestras, and worked closely with composers, arrangers, and
-                    ensembles of all shapes and sizes. And while I eventually moved into technology and development, my
-                    passion for music never left.</p>
-                <h3 class="text-white text-normal mb-2">How complex, technical, and time-consuming it is to produce
-                    orchestral scores.
+                <h2 class="text-white text-lg mb-2"> From Musician to Builder.</h2>
+                <p class="text-[#999999] text-normal font-light mb-4">Before founding SiteSynth, I was a musician. 
+                  I studied at the conservatory, spent years immersed in orchestras, and worked closely with composers, arrangers,
+                  and ensembles of all shapes and sizes. And while I eventually moved into technology and development, my passion for music never left.</p>
+                <h3 class="text-white text-normal mb-2">With SynthScore, we’re removing that barrier.
                 </h3>
-                <p class="text-[#999999] text-normal font-light">Whether you’re a professional composer or an educator
-                    leading an
-                    amateur orchestra, the process of writing, adapting, and arranging music for a specific group of
-                    musicians is often a massive barrier. You need a professional skill for that.</p>
+                <p class="text-[#999999] text-normal font-light">It’s not just software — it’s a bridge. A way to unify creativity and accessibility. 
+                  Whether you're a professional composer or a hobbyist with a melody in your head, SynthScore helps turn that spark into something performable — fast.</p>
             </div>
         </template>
 
         <template #right>
             <div>
-                <img src="/assets/score-sytnh-img.png" alt="ScoreSynth Image" class="h-full" />
+                <img src="/assets/new-assets/products-page/product/score-synth/how-works/UI'sOverPattern.png" alt="ScoreSynth Image" class="h-full" />
             </div>
         </template>
     </TwoColumnsDesign>
