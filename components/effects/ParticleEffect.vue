@@ -69,9 +69,9 @@ onBeforeUnmount(() => {
 
 .particle {
   position: absolute;
-  width: 4px;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.6);
+  width: 2px;
+  height: 2px;
+  background: white;
   border-radius: 50%;
   animation: float linear infinite, fade ease-in-out infinite alternate;
 }
@@ -96,7 +96,7 @@ onBeforeUnmount(() => {
 
 @keyframes fade {
   0% {
-    opacity: 0.3;
+    opacity: 0.7;
   }
   100% {
     opacity: 0.8;
