@@ -2,7 +2,7 @@
   <HeaderSection />
   <HeroBrand title="Build products that feel as good as they function."
     description="Your brand - is your language. we embed your brand’s voice, values, and character into your digital product from day one. We make sure every interaction feels intentional — not just usable, but unmistakably you."
-    backgroundImage="/assets/brand-driven-bg.svg"
+    backgroundImage="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/hero-pattern.svg"
     readMore="Read more"
     buttonText="Do you know why?" buttonLink="#" :cards="[
       { icon: '🧭', title: 'Understand the Brand', description: 'We begin by distilling your brand’s essence — tone, values, and purpose — into clear, strategic inputs. Through focused sessions and rapid discovery, we align on what your brand really stands for.', link: '#' },
