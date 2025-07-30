@@ -70,9 +70,9 @@ const navItems = [
         link: "#",
         dropdownWidth: "w-[500px]",
         subItems: [
-            { imageSrc: "/assets/score-synth.svg", label: "ScoreSynth", link: "/scoresynth/" },
-            { imageSrc: "/assets/membria.svg", label: "Membria", link: "https://membria.xyz/", target: "_blank" },
-            { imageSrc: "/assets/ai-live-pod.svg", label: "AI Live Pod", link: "https://ailivepod.framer.website/", target: "_blank" },
+            { imageSrc: "/assets/new-assets/Menu/Product/gray/ScoreSynth.svg", label: "ScoreSynth", link: "/scoresynth/" },
+            { imageSrc: "/assets/new-assets/Menu/Product/gray/Membria.svg", label: "Membria", link: "https://membria.xyz/", target: "_blank" },
+            { imageSrc: "/assets/new-assets/Menu/Product/gray/AILivePod.svg", label: "AI Live Pod", link: "https://ailivepod.framer.website/", target: "_blank" },
         ]
     },
     {
@@ -80,10 +80,10 @@ const navItems = [
         link: "#",
         dropdownWidth: "w-[500px]",
         subItems: [
-            { imageSrc: "/assets/new-assets/Menu/Solutions/Brand-Driven Product Strategy.svg", label: "Brand-Driven Product Strategy", description: "Align product design with your brand’s identity and goals.", link: "/brand-driven-product-strategy" },
-            { imageSrc: "/assets/new-assets/Menu/Solutions/UX & Design Systems.svg", label: "UX & Design Systems", description: "Build consistent, scalable, and user-friendly interfaces.", link: "/ux-and-design-system" },
-            { imageSrc: "/assets/new-assets/Menu/Solutions/Development Support & Execution.svg", label: "Development Support & Execution", description: "Turn designs into real, high-quality digital products.", link: "/full-stack-implementation" },
-            { imageSrc: "/assets/new-assets/Menu/Solutions/AI-Powered Workflows & Innovation.svg", label: "AI-Powered Workflows & Innovation", description: "Use smart tools to move faster and reduce cost.", link: "/ai-innovation" }
+            { imageSrc: "/assets/new-assets/Menu/Solutions/gray/Brand-Driven Product Strategy.svg", label: "Brand-Driven Product Strategy", description: "Align product design with your brand’s identity and goals.", link: "/brand-driven-product-strategy" },
+            { imageSrc: "/assets/new-assets/Menu/Solutions/gray/UX & Design Systems.svg", label: "UX & Design Systems", description: "Build consistent, scalable, and user-friendly interfaces.", link: "/ux-and-design-system" },
+            { imageSrc: "/assets/new-assets/Menu/Solutions/gray/Development Support & Execution.svg", label: "Development Support & Execution", description: "Turn designs into real, high-quality digital products.", link: "/full-stack-implementation" },
+            { imageSrc: "/assets/new-assets/Menu/Solutions/gray/AI-Powered Workflows & Innovation.svg", label: "AI-Powered Workflows & Innovation", description: "Use smart tools to move faster and reduce cost.", link: "/ai-innovation" }
         ]
     },
     {

@@ -1,6 +1,7 @@
 <template>
   <!-- Hero Section -->
-  <section class="w-full h-[100vh] bg-[#161616] text-white relative overflow-hidden flex items-center justify-center hero-section group">
+  <section class="w-full h-[100vh] bg-[#161616] text-white relative overflow-hidden flex items-center justify-center hero-section group"
+    :style="backgroundImage ? `background-image: url('${backgroundImage}'); background-size: cover; background-position: center; background-repeat: no-repeat;` : ''">
     <GlowEffect />
     <ParticleEffect />
     <div class="max-w-6xl mx-auto text-center px-6 relative z-10 w-full">
@@ -13,6 +14,7 @@
 <script setup>
 defineProps({
   title: String,
-  subtitle: String
+  subtitle: String,
+  backgroundImage: String
 });
 </script>
