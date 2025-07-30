@@ -14,19 +14,32 @@
                     :class="['absolute top-full left-0 mt-4 bg-[#1E1E1E] border border-[#333] shadow-xl rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50', item.dropdownWidth]">
                     <ul class="p-4 space-y-2">
                         <li v-for="(subItem, subIndex) in item.subItems" :key="subIndex" class="list-none">
-                            <NuxtLink :href="subItem.link" :target="subItem.target"
-                                class="flex items-center space-x-4 hover:bg-[#2A2A2A] p-4 rounded-lg transition-colors duration-300 group/item">
-                                <img v-if="subItem.imageSrc" :src="subItem.imageSrc" alt="Icon"
-                                    class="w-14 h-14 rounded object-cover" />
-                                <div>
-                                    <h3 class="text-white text-base font-semibold mb-1">
-                                        {{ subItem.label }}
-                                    </h3>
-                                    <p v-if="subItem.description" class="text-[#999999] text-sm">
-                                        {{ subItem.description }}
-                                    </p>
-                                </div>
-                            </NuxtLink>
+                           <NuxtLink
+  :href="subItem.link"
+  :target="subItem.target"
+  class="flex items-start space-x-4 group hover:bg-[#2A2A2A] p-4 rounded-lg transition-colors duration-300"
+>
+  <img
+    v-if="subItem.imageSrc"
+    :src="subItem.imageSrc"
+    alt="Icon"
+    class="w-14 h-14 rounded object-cover transition-all duration-300 group-hover:brightness-110 group-hover:contrast-110"
+/>
+  <div>
+    <h3
+      class="text-white text-base font-semibold mb-1 transition-colors duration-300 group-hover:text-white"
+    >
+      {{ subItem.label }}
+    </h3>
+    <p
+      v-if="subItem.description"
+      class="text-[#999999] text-sm transition-colors duration-300 group-hover:text-[#CCCCCC]"
+    >
+      {{ subItem.description }}
+    </p>
+  </div>
+</NuxtLink>
+
                         </li>
                     </ul>
 
