@@ -22,13 +22,14 @@
       </div>
 
       <!-- Right Column (Image) -->
-      <div :class="`${imageClass}`">
+      <div :class="`${imageClass} relative`" :style="{ minHeight: containerHeight + 'px' }">
         <transition name="image-fade" mode="out-in" appear>
           <img 
             :key="getCurrentImageSrc" 
             :src="getCurrentImageSrc" 
             :alt="getCurrentImageAlt" 
-            class="w-full h-full object-cover"
+            class="absolute inset-0 w-full h-full object-cover"
+            @load="updateContainerHeight"
           >
         </transition>
       </div>
@@ -52,8 +53,26 @@ const props = defineProps({
 })
 
 const openIndex = ref(0)
+const containerHeight = ref(400) // Default height
+
 function toggle(idx) {
   openIndex.value = openIndex.value === idx ? -1 : idx
+}
+
+// Function to update container height based on loaded images
+function updateContainerHeight(event) {
+  const img = event.target
+  const naturalHeight = img.naturalHeight
+  const naturalWidth = img.naturalWidth
+  const containerWidth = img.offsetWidth
+  
+  // Calculate the height the image would have at the container width
+  const scaledHeight = (naturalHeight / naturalWidth) * containerWidth
+  
+  // Update container height to accommodate the tallest image
+  if (scaledHeight > containerHeight.value) {
+    containerHeight.value = scaledHeight
+  }
 }
 
 // Computed properties for dynamic image handling
