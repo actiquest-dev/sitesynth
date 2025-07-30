@@ -6,7 +6,8 @@
                 <NuxtLink :href="item.link" :target="item.target"
                     class="font-medium transition-colors duration-1000 flex items-center space-x-1 group">
                     <span>{{ item.label }}</span>
-                    <i class="fas fa-chevron-down transform transition-transform duration-300 group-hover:rotate-180"></i>
+                    <i
+                        class="fas fa-chevron-down transform transition-transform duration-300 group-hover:rotate-180"></i>
                 </NuxtLink>
 
                 <!-- Dropdown Panel with Dynamic Width -->
@@ -14,31 +15,21 @@
                     :class="['absolute top-full left-0 mt-4 bg-[#1E1E1E] border border-[#333] shadow-xl rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50', item.dropdownWidth]">
                     <ul class="p-4 space-y-2">
                         <li v-for="(subItem, subIndex) in item.subItems" :key="subIndex" class="list-none">
-                           <NuxtLink
-  :href="subItem.link"
-  :target="subItem.target"
-  class="flex items-start space-x-4 group hover:bg-[#2A2A2A] p-4 rounded-lg transition-colors duration-300"
->
-  <img
-    v-if="subItem.imageSrc"
-    :src="subItem.imageSrc"
-    alt="Icon"
-    class="w-14 h-14 rounded object-cover transition-all duration-300 group-hover:brightness-110 group-hover:contrast-110"
-/>
-  <div>
-    <h3
-      class="text-white text-base font-semibold mb-1 transition-colors duration-300 group-hover:text-white"
-    >
-      {{ subItem.label }}
-    </h3>
-    <p
-      v-if="subItem.description"
-      class="text-[#999999] text-sm transition-colors duration-300 group-hover:text-[#CCCCCC]"
-    >
-      {{ subItem.description }}
-    </p>
-  </div>
-</NuxtLink>
+                            <NuxtLink :href="subItem.link" :target="subItem.target"
+                                class="flex items-start space-x-4 group hover:bg-[#2A2A2A] p-4 rounded-lg transition-colors duration-300">
+                                <img v-if="subItem.imageSrc" :src="subItem.imageSrc" alt="Icon"
+                                    class="w-14 h-14 rounded object-cover transition-all duration-300 group-hover:brightness-110 group-hover:contrast-110" />
+                                <div>
+                                    <h3
+                                        class="text-white text-base font-semibold mb-1 transition-colors duration-300 group-hover:text-white">
+                                        {{ subItem.label }}
+                                    </h3>
+                                    <p v-if="subItem.description"
+                                        class="text-[#999999] text-sm transition-colors duration-300 group-hover:text-[#CCCCCC]">
+                                        {{ subItem.description }}
+                                    </p>
+                                </div>
+                            </NuxtLink>
 
                         </li>
                     </ul>
@@ -48,7 +39,8 @@
 
             <!-- Single Link -->
             <template v-else>
-                <NuxtLink :href="item.link" :target="item.target" class="hover:text-[#8CB0FF] font-medium transition-colors duration-1000">
+                <NuxtLink :href="item.link" :target="item.target"
+                    class="hover:text-[#8CB0FF] font-medium transition-colors duration-1000">
                     {{ item.label }}
                 </NuxtLink>
             </template>
@@ -56,7 +48,8 @@
 
         <!-- CTA Button -->
         <div class="flex-1 text-right">
-            <NuxtLink :href="cta.link" :target="cta.target" :class="`border-[1px] border-white ${hoverbg} hover:text-white ${hoverborder} bg-white text-[#161616] px-4 py-2 font-semibold transition-colors duration-[1000ms]`">
+            <NuxtLink :href="cta.link" :target="cta.target"
+                :class="`border-[1px] border-white ${hoverbg} hover:text-white ${hoverborder} bg-white text-[#161616] px-4 py-2 font-semibold transition-colors duration-[1000ms]`">
                 <span>{{ cta.text }}</span>
             </NuxtLink>
         </div>
@@ -67,19 +60,19 @@
 <script setup>
 
 const props = defineProps({
-  hoverbg: {
-    type: String,
-    default: 'hover:bg-[#8D35FF]'
-  },
-  hoverborder: {
-    type: String,
-    default: 'hover:border-[#8D35FF]'
-  }
+    hoverbg: {
+        type: String,
+        default: 'hover:bg-[#8D35FF]'
+    },
+    hoverborder: {
+        type: String,
+        default: 'hover:border-[#8D35FF]'
+    }
 })
 
 const navItems = [
     {
-        label: "Product", 
+        label: "Product",
         link: "#",
         dropdownWidth: "w-[500px]",
         subItems: [
@@ -104,7 +97,7 @@ const navItems = [
         link: "#"
     },
     {
-        label: "Careers", 
+        label: "Careers",
         link: "#"
     }
 ];
