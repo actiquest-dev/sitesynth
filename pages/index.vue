@@ -1,6 +1,8 @@
 <template>
   <HeaderSection />
-  <HeroIndex title="No silos. Just synthesis." subtitle="Where product, brand, and tech finally align" />
+  <HeroIndex title="No silos. Just synthesis." subtitle="Where product, brand, and tech finally align" 
+    backgroundImage="/assets/new-assets/home-page/home/hero-section/BGGradient.svg"/>
+  
   <Carousel :images="[
     { src: '/assets/figma.png', alt: 'Figma Logo', link: 'https://www.figma.com/' },
     { src: '/assets/infosys.png', alt: 'Infosys Logo', link: 'https://www.infosys.com/' },
