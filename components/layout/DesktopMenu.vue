@@ -17,7 +17,7 @@
                             <NuxtLink :href="subItem.link" :target="subItem.target"
                                 class="flex items-center space-x-4 hover:bg-[#2A2A2A] p-4 rounded-lg transition-colors duration-300 group/item">
                                 <img v-if="subItem.imageSrc" :src="subItem.imageSrc" alt="Icon"
-                                    class="w-14 h-14 rounded object-cover transition-all duration-300 group-hover/item:brightness-0 group-hover/item:invert" />
+                                    class="w-14 h-14 rounded object-cover" />
                                 <div>
                                     <h3 class="text-white text-base font-semibold mb-1">
                                         {{ subItem.label }}

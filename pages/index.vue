@@ -19,7 +19,7 @@
     { imageSrc: '/assets/new-assets/home-page/home/cards/development-support.svg', imageAlt: 'Implementation Support', title: 'Full-Stack Implementation Support', description: 'From prototypes to production, we collaborate closely with your dev team — or bring our own.', link: '#' },
     { imageSrc: '/assets/new-assets/home-page/home/cards/ai-powered-workflows.svg', imageAlt: 'AI Innovation', title: 'AI-Infused Innovation & R&D', description: 'We bring forward-thinking, AI-powered tooling into the design and development process.', link: '#' }
   ]" />
-  <ProcessSection imageSrc="/assets/why-1.png" imageClass="" imageAlt="Synth" :images="[
+  <ProcessSection imageSrc="/assets/new-assets/home-page/home/what-we-offer/Discover.png" imageClass="" imageAlt="Synth" :images="[
     { src: '/assets/new-assets/home-page/home/what-we-offer/Discover.png', alt: 'Discover - Business Goals Analysis' },
     { src: '/assets/new-assets/home-page/home/what-we-offer/Define.png', alt: 'Define - Challenge Clarification' },
     { src: '/assets/new-assets/home-page/home/what-we-offer/Design.png', alt: 'Design - Systems and Flows' },

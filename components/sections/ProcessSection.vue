@@ -5,15 +5,15 @@
       <div class="border-r border-[#636363] py-12 pr-12">
         <div v-for="(section, index) in sections" :key="index" class="toggle-section border-t border-[#636363] pt-4 mt-4" :class="index === 0 ? 'border-t-0' : ''">
           <h3
-            :class="['flex items-center justify-between cursor-pointer', openIndex === index ? 'text-white text-2xl font-bold' : 'text-[#636363] text-xl font-semibold']"
+            :class="['flex items-center justify-between cursor-pointer transition-all duration-300 ease-out', openIndex === index ? 'text-white text-2xl font-bold' : 'text-[#636363] text-xl font-semibold']"
             @click="toggle(index)"
           >
             {{ section.title }}
             <span :class="`${accentColor} toggle-btn`">{{ openIndex === index ? '−' : '+' }}</span>
           </h3>
-          <div class="toggle-content transition-all duration-500 ease-in-out overflow-hidden" :class="openIndex === index ? 'max-h-[500px]' : 'max-h-0'">
+          <div class="toggle-content transition-all duration-600 ease-out overflow-hidden" :class="openIndex === index ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'">
             <p class="text-[#999999] mt-2">{{ section.description }}</p>
-            <a v-if="section.link" :href="section.link" :class="`${accentColor} font-semibold mt-4 inline-block pb-8 transition-colors duration-1000`">
+            <a v-if="section.link" :href="section.link" :class="`${accentColor} font-semibold mt-4 inline-block pb-8 transition-colors duration-300`">
               {{ section.linkText }}
               <i class="fa-solid fa-chevron-right relative top-[2px]" aria-hidden="true"></i>
             </a>
@@ -23,7 +23,14 @@
 
       <!-- Right Column (Image) -->
       <div :class="`${imageClass}`">
-        <img :src="getCurrentImageSrc" :alt="getCurrentImageAlt" class="transition-opacity duration-300">
+        <transition name="image-fade" mode="out-in" appear>
+          <img 
+            :key="getCurrentImageSrc" 
+            :src="getCurrentImageSrc" 
+            :alt="getCurrentImageAlt" 
+            class="w-full h-full object-cover"
+          >
+        </transition>
       </div>
     </div>
   </section>
@@ -44,7 +51,6 @@ const props = defineProps({
   }
 })
 
-// 0: Discover, 1: Define, 2: Design, 3: Deliver
 const openIndex = ref(0)
 function toggle(idx) {
   openIndex.value = openIndex.value === idx ? -1 : idx
@@ -67,3 +73,21 @@ const getCurrentImageAlt = computed(() => {
   return props.imageAlt || ''
 })
 </script>
+
+<style scoped>
+/* Simple, clean image opacity transition */
+.image-fade-enter-active,
+.image-fade-leave-active {
+  transition: opacity 0.5s ease-in-out;
+}
+
+.image-fade-enter-from,
+.image-fade-leave-to {
+  opacity: 0;
+}
+
+.image-fade-enter-to,
+.image-fade-leave-from {
+  opacity: 1;
+}
+</style>
