@@ -1,5 +1,5 @@
 <template>
-    <section class="bg-[#161616] bg-cover bg-center bg-no-repeat" :style="backgroundStyle">
+    <section :id="id || undefined" class="bg-[#161616] bg-cover bg-center bg-no-repeat" :style="backgroundStyle">
         
         <div class="max-w-6xl mx-auto px-6 py-16">
             <!-- Title -->
@@ -41,6 +41,10 @@
 import { computed } from 'vue'
 
 const props = defineProps({
+    id: {
+        type: String,
+        default: ''
+    },
     title: {
         type: String,
         default: ''

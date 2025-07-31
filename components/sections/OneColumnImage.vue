@@ -1,5 +1,5 @@
 <template>
-  <section class="group relative overflow-hidden border-t border-[#636363] bg-[#161616] services">
+  <section :id="id || undefined" class="group relative overflow-hidden border-t border-[#636363] bg-[#161616] services">
     <component :is="selectedGlowEffect" />
 
     <!-- Content -->
@@ -13,6 +13,10 @@
 import { defineAsyncComponent, computed } from 'vue'
 
 const props = defineProps({
+  id: {
+      type: String,
+      default: ''
+  },
   centerImg: String,
   centerImgAlt: String,
   glowEffect: {

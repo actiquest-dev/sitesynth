@@ -1,6 +1,6 @@
 <template>
 
-  <section class="border-t border-[#636363] bg-[#161616]">
+  <section :id="id || undefined" class="border-t border-[#636363] bg-[#161616]">
     <div class="max-w-6xl mx-auto px-6">
       <div class="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         <div v-for="(offer, index) in offers" :key="index"
@@ -20,6 +20,10 @@
 <script setup>
 
 defineProps({
+  id: {
+    type: String,
+    default: ''
+  },
   offers: Array
 });
 

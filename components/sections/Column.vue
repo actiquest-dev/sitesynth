@@ -1,5 +1,5 @@
 <template>
-  <section :class="backgroundColor" :style="backgroundImageStyle">
+  <section :id="id || undefined" :class="backgroundColor" :style="backgroundImageStyle">
     <div class="max-w-6xl mx-auto px-6 py-12">
       <div :class="gridClasses">
         <div 
@@ -42,6 +42,10 @@
 import { computed } from 'vue'
 
 const props = defineProps({
+  id: {
+    type: String,
+    default: ''
+  },
   columns: {
     type: Array,
     required: true,

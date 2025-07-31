@@ -1,5 +1,5 @@
 <template>
-  <section :class="`${bgColor} group relative overflow-hidden`">
+  <section :id="id || undefined" :class="`${bgColor} group relative overflow-hidden`">
     <GlowEffect />
     <div :class="`border-t border-b border-[#636363] ${contentBgColor}`">
       <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 px-6">
@@ -35,6 +35,10 @@
 
 <script setup>
 defineProps({
+  id: {
+    type: String,
+    default: ''
+  },
   sectionTitle: String,
   imageSrc: String,
   imageAlt: String,

@@ -1,7 +1,7 @@
 <template>
 
   <!-- Content Section -->
-  <section :class="`group relative overflow-hidden border-t border-b border-[#636363] ${contentBgColor}`">
+  <section :id="id || undefined" :class="`group relative overflow-hidden border-t border-b border-[#636363] ${contentBgColor}`">
     <GlowEffect />
     <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2">
       <!-- Left Column -->
@@ -37,6 +37,10 @@
 <script setup>
 
 const props = defineProps({
+  id: {
+    type: String,
+    default: ''
+  },
   title: String,
   bgColor: {
     type: String,

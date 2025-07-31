@@ -1,8 +1,8 @@
 <template>
     <HeaderSection />
-    <HeroDesign backgroundImage="/assets/design-bg.svg" title="Design that’s consistent, scalable, and ready to ship."
+    <HeroDesign id="hero-design" backgroundImage="/assets/design-bg.svg" title="Design that’s consistent, scalable, and ready to ship."
         description="We build design systems and UX architecture that grow with your product — enabling your teams to move faster, stay on-brand, and deliver with confidence." />
-    <TwoColumnsDesign sectionBgColor="bg-[#161616]" leftColumnBgColor="bg-[#161616]" rightColumnBgColor="bg-[#161616]">
+    <TwoColumnsDesign id="why-figma" sectionBgColor="bg-[#161616]" leftColumnBgColor="bg-[#161616]" rightColumnBgColor="bg-[#161616]">
         <template #left>
             <div class="px-6 py-24 md:pl-[10rem] md:pr-6 md:border-r border-[#636363]">
                 <h3 class="text-white text-lg mb-2">WHY YOU NEED FIGMA?</h3>
@@ -16,24 +16,24 @@
             </div>
         </template>
     </TwoColumnsDesign>
-    <FigmaSection title="Figma" h3="🧱 Design Systems That Scale"
+    <FigmaSection id="figma" title="Figma" h3="🧱 Design Systems That Scale"
         description="From tokens to components to documentation — we build reusable, flexible design foundations that support your team’s workflow, not slow it down. Using Figma as the single source of truth, we create shared libraries, usage rules, and naming standards your team can actually use — with optional dev integration via Zeroheight or Storybook."
         imageSrc="/assets/figma.svg" imageAlt="Figma Logo" primaryText="Try Figma" primaryLink="https://www.figma.com/"
         secondaryText="Learn More" secondaryLink="https://www.figma.com/design-systems/" />
-    <OneColumnImage padding="px-6 pt-[6rem]" centerImg="/assets/figma-3.png" centerImgAlt="Figma Screen" />
-    <TwoColumnsImagesOnly leftImgSrc="/assets/figma-2.png" leftImgAlt="FigJam Screenshot"
+    <OneColumnImage id="figma-screen" padding="px-6 pt-[6rem]" centerImg="/assets/figma-3.png" centerImgAlt="Figma Screen" />
+    <TwoColumnsImagesOnly id="figma-screenshots" leftImgSrc="/assets/figma-2.png" leftImgAlt="FigJam Screenshot"
         rightImgSrc="/assets/figma-1.png" rightImgAlt="Figma Dev Mode Screenshot" />
-    <TwoColumnsWithImages leftImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-logo-1.png" leftImgAlt="FigJam Logo" leftH2="FigJam"
+    <TwoColumnsWithImages id="figma-ux-architecture" leftImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-logo-1.png" leftImgAlt="FigJam Logo" leftH2="FigJam"
         leftH3="🔀 UX Architecture That Makes Sense"
         leftP="From tokens to components to documentation — we build reusable, flexible design foundations that support your team’s workflow, not slow it down. Using Figma as the single source of truth, we create shared libraries, usage rules, and naming standards your team can actually use — with optional dev integration via Zeroheight or Storybook."
-        leftLearnMoreText="Learn more about FigJam" leftLearnMoreLink="#" rightImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-logo-2.png"
+        leftLearnMoreText="Learn more about FigJam" leftLearnMoreLink="https://www.figma.com/figjam/" rightImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-logo-2.png"
         rightImgAlt="FigJam Logo" rightH2="Figma Dev Mode" rightH3="🤝 Built for Real Teams, Not Just Slides"
         rightP="We design with engineers in mind — ensuring everything is structured, inspectable, and ready to build. 
       
       Using Figma’s Dev Mode, we bridge the gap between design and development with clear tokens, component logic, and handoff details — no extra tools, no ambiguity." rightLearnMoreText="Learn more about Dev Mode"
-        rightLearnMoreLink="#" />
-    <BannerSection sectionTitle="What You Get" />
-    <Column :columns="[
+        rightLearnMoreLink="https://www.figma.com/dev-mode/" />
+    <BannerSection id="what-you-get" sectionTitle="What You Get" />
+    <Column id="what-you-get-columns" :columns="[
         {
             icon: '🧬',
             imageAlt: 'Brand Icon',
@@ -54,7 +54,7 @@
             description: 'Know exactly when and how to use each pattern — no guessing, no inconsistency.'
         }
     ]" />
-    <Column :columns="[
+    <Column id="what-you-get-docs" :columns="[
         {
             icon: '📘 ',
             title: 'Design System Documentation',
@@ -68,7 +68,7 @@
             description: 'Practical, living docs that support day-to-day work — not just sit in a folder.'
         },
     ]" />
-    <WhiteSection bgImage="/assets/design-bg.svg" class="pt-[8rem] pb-[8rem]" title="Get Started Today"
+    <WhiteSection id="get-started-today" bgImage="/assets/design-bg.svg" class="pt-[8rem] pb-[8rem]" title="Get Started Today"
         description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you’re becoming."
         primaryText="Start a Project" primaryLink="#" secondaryText="Book a Call" secondaryLink="#" />
     <FooterSection />

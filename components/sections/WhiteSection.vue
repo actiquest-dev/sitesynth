@@ -1,5 +1,5 @@
 <template>
-    <section :class="`${bgColor} flex justify-center bg-cover bg-center bg-no-repeat`" :style="backgroundImageStyle">
+    <section :id="id || undefined" :class="`${bgColor} flex justify-center bg-cover bg-center bg-no-repeat`" :style="backgroundImageStyle">
         <div class="relative overflow-hidden z-0 testimonial-card max-w-6xl mx-auto text-center px-6 group">
             <div :class="`${bgInside} border border-[#636363] py-20 px-20 relative overflow-hidden`">
                 <component :is="selectedGlowEffect" />
@@ -31,6 +31,10 @@
 import { defineAsyncComponent, computed } from 'vue'
 
 const props = defineProps({
+    id: {
+        type: String,
+        default: ''
+    },
     title: String,
     description: String,
     primaryText: String,

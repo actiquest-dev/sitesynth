@@ -1,9 +1,9 @@
 <template>
     <HeaderSection />
-    <HeroAi backgroundImage="/assets/HeroAi.svg" title="Everyone talks about AI. We build with it."
+    <HeroAi id="hero-ai" backgroundImage="/assets/HeroAi.svg" title="Everyone talks about AI. We build with it."
         description="AI is transforming how teams design, build, and operate — but most companies don’t know where to start. We help you find the right use cases, test fast, and integrate AI meaningfully into your product or process."
         buttonText="Let’s Build Together" buttonLink="#" />
-    <TwoColumnsDesign sectionBgColor="bg-[#DDDDDD]" leftColumnBgColor="bg-[#DDDDDD]" rightColumnBgColor="bg-[#161616]"
+    <TwoColumnsDesign id="info-ai" sectionBgColor="bg-[#DDDDDD]" leftColumnBgColor="bg-[#DDDDDD]" rightColumnBgColor="bg-[#161616]"
         textColorleft="text-[#161616]" textColorRight="text-white">
         <template #left>
             <div class="px-6 py-24 md:pl-[10rem] md:pr-6 md:border-r border-[#636363] bg-[#DDDDDD]">
@@ -21,7 +21,7 @@
             </div>
         </template>
     </TwoColumnsDesign>
-    <TwoColumnsDesign sectionBgColor="" leftColumnBgColor="bg-[#191919]" rightColumnBgColor="bg-[#161616]"
+    <TwoColumnsDesign id="stats-ai" sectionBgColor="" leftColumnBgColor="bg-[#191919]" rightColumnBgColor="bg-[#161616]"
         textColorleft="text-[#161616]" textColorRight="text-white">
         <template #left>
             <div class="px-6 py-24 md:pl-[10rem] md:pr-6 md:border-r border-[#636363] bg-[#191919]">
@@ -45,30 +45,30 @@
             </div>
         </template>
     </TwoColumnsDesign>
-    <Testimonial imageSrc="/assets/miguel.png" personName="Miguel Aprossine " personTitle="AI & Web3 Visionary Partner"
+    <Testimonial id="testimonial-miguel" imageSrc="/assets/miguel.png" personName="Miguel Aprossine " personTitle="AI & Web3 Visionary Partner"
         quoteTitle="AI isn’t here to replace your team"
         quoteText="We use AI to cut the noise, speed up workflows, and reveal smarter ways to build. It’s not about hype — it’s about helping real teams move faster with less friction."
         ctaText="Get in touch" ctaLink="#" class="pt-[8rem]" />
     <BannerSection sectionTitle="What We Offer" />
-    <WhatWeOfferAi :cards="[
+    <WhatWeOfferAi id="what-we-offer-ai" :cards="[
         { title: '🧭 AI Strategy & Use-Case Mapping', description: 'We identify where AI can add real value — across product, operations, or internal tooling. → Discovery workshops, automation audits, risk/benefit framing', link: '#' },
         { title: '🛠️ Rapid Prototyping with AI', description: 'We build proof-of-concepts using modern AI APIs and open-source tools. → GPT-4, Claude, local LLMs, RAG, LangChain, Whisper, vector search', link: '#' },
         { title: '🧪 Integrated AI in Product & Design', description: 'We embed AI into design workflows and product experiences — responsibly and at speed. → UX copy generation, AI-powered assistants, personalized content flows', link: '#' }
     ]" />
     <BannerSection sectionTitle="New AI product we are working on" />
-    <TwoColumnSection class="pb-20" leftPadding="pl-[4rem] pt-[2rem] md:pt-[0rem]" rightPadding="" :leftContent="{
+    <TwoColumnSection id="membria" class="pb-20" leftPadding="pl-[4rem] pt-[2rem] md:pt-[0rem]" rightPadding="" :leftContent="{
         image: { src: '/assets/membria-logo.svg', alt: 'Membria Logo' },
         imageText: { tag: 'h3', content: 'Membria' },
         textElements: [
             { tag: 'h4', content: 'Knowledge Memory Layer' },
             { tag: 'p', content: 'Membria builds a decentralized memory and reasoning layer for Tiny Language Models, enabling AI to learn, adapt, and grow smarter over time.' },
         ],
-        link: { href: '#', text: 'Discover more about our product' }
+        link: { href: 'https://membria.xyz/', target: '_blank', text: 'Discover more about our product' }
     }" :rightContent="{
         image: { src: '/assets/new-assets/solutions-page/solutions/ai-infused-innovation-and-rd/cta/membria-image.png', alt: 'Membria Screenshot', class: 'w-full h-auto rounded-lg' }
     }" />
     <BannerSection sectionTitle="What You Get" />
-    <Column class="pb-20" :columns="[
+    <Column id="what-you-get" class="pb-20" :columns="[
         {
             icon: '🧬',
             imageAlt: 'Brand Icon',
@@ -89,7 +89,7 @@
             description: 'Know exactly when and how to use each pattern — no guessing, no inconsistency.'
         }
     ]" />
-    <Column class="pb-20" :columns="[
+    <Column id="design-system" class="pb-20" :columns="[
         {
             icon: '📘 ',
             title: 'Design System Documentation',
@@ -104,7 +104,7 @@
         },
     ]" />
 
-    <WhiteSection bgImage="/assets/HeroAi.svg" class="pt-[8rem] pb-[8rem]" title="Get Started Today"
+    <WhiteSection id="get-started-today" bgImage="/assets/HeroAi.svg" class="pt-[8rem] pb-[8rem]" title="Get Started Today"
         description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you’re becoming."
         primaryText="Start a Project" primaryLink="#" secondaryText="Book a Call" secondaryLink="#" />
     <FooterSection />

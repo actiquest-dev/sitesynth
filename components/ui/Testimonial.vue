@@ -1,5 +1,5 @@
 <template>
-  <section class="bg-[#161616] flex justify-center">
+  <section :id="id" class="bg-[#161616] flex justify-center">
     <div class="max-w-6xl mx-auto px-6">
       <div ref="card" class="grid grid-cols-1 md:grid-cols-3 gap-8 relative border border-[#636363] py-14 group overflow-hidden">
          <component :is="selectedGlowEffect" />
@@ -29,6 +29,10 @@
 import { computed } from 'vue'
 
 const props = defineProps({
+  id: {
+    type: String,
+    default: ''
+  },
   imageSrc: String,
   personName: String,
   personTitle: String,

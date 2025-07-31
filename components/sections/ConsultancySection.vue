@@ -1,5 +1,5 @@
 <template>
-  <section class="group relative overflow-hidden border-t border-b border-[#636363] bg-[#161616] services">
+  <section :id="id || undefined" class="group relative overflow-hidden border-t border-b border-[#636363] bg-[#161616] services">
     <GlowEffect />
 
     <!-- Content -->
@@ -29,6 +29,10 @@
 import { defineProps } from 'vue'
 
 defineProps({
+  id: {
+    type: String,
+    default: ''
+  },
   leftTitle: String,
   leftItems: Array,
   rightTitle: String,

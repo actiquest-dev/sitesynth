@@ -1,5 +1,5 @@
 <template>
-  <section :class="`${bgColor} py-20`">
+  <section :id="id || undefined" :class="`${bgColor} py-20`">
     <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2">
       <!-- Left Column: Successful Stories -->
       <div class="mb-4 md:mb-0 md:pr-4 pl-4 text-left md:text-right md:border-r border-[#636363]">
@@ -19,6 +19,10 @@
 
 <script setup>
 defineProps({
+  id: {
+    type: String,
+    default: ''
+  },
   storiesText: String,
   storiesLink: String,
   blogText: String,

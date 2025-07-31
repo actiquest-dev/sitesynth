@@ -1,5 +1,5 @@
 <template>
-  <section class="bg-[#161616] flex justify-center">
+  <section :id="id || undefined" class="bg-[#161616] flex justify-center">
     <div class="max-w-6xl mx-auto px-6">
       <div ref="card"
         class="grid grid-cols-1 md:grid-cols-2 gap-8 relative border border-[#636363] group overflow-hidden">
@@ -25,7 +25,7 @@
           </div>
 
           <!-- Link -->
-          <a :href="leftContent.link.href" class="text-[#8CB0FF] mt-6 w-auto max-w-max py-2 font-semibold inline-block">
+          <a :href="leftContent.link.href" :target="leftContent.link.target" class="text-[#8CB0FF] mt-6 w-auto max-w-max py-2 font-semibold inline-block">
             <span>{{ leftContent.link.text }}</span> <i class="fa-solid fa-chevron-right relative top-[2px]"
               aria-hidden="true"></i>
           </a>
@@ -44,6 +44,10 @@
 <script setup>
 
 defineProps({
+  id: {
+    type: String,
+    default: ''
+  },
   leftContent: {
     type: Object,
     required: true,
@@ -52,7 +56,7 @@ defineProps({
     //   image: { src: String, alt: String },
     //   imageText: { tag: String, content: String },
     //   textElements: [{ tag: String, content: String }],
-    //   link: { href: String, text: String }
+    //   link: { href: String, text: String, target?: String }
     // }
   },
   rightContent: {

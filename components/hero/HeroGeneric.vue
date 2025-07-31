@@ -1,5 +1,5 @@
 <template>
-  <section class="relative bg-[#161616] text-white group overflow-hidden bg-cover bg-no-repeat" :class="backgroundPosition" :style="backgroundImageStyle">
+  <section :id="id || undefined" class="relative bg-[#161616] text-white group overflow-hidden bg-cover bg-no-repeat" :class="backgroundPosition" :style="backgroundImageStyle">
     <GlowRed />
     <ParticleEffect />
 
@@ -25,6 +25,10 @@
 import { computed } from 'vue'
 
 const props = defineProps({
+  id: {
+    type: String,
+    default: ''
+  },
   logo: {
     type: Object,
     default: null

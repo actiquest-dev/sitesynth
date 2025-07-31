@@ -1,5 +1,5 @@
 <template>
-  <section class="relative bg-[#161616] text-white group overflow-hidden bg-cover bg-center bg-no-repeat" :style="backgroundImageStyle">
+  <section :id="id || undefined" class="relative bg-[#161616] text-white group overflow-hidden bg-cover bg-center bg-no-repeat" :style="backgroundImageStyle">
     <GlowEffect />
 
     <div class="relative max-w-6xl mx-auto px-6 pt-[16rem] pb-[12rem]">
@@ -19,6 +19,10 @@
 import { computed } from 'vue'
 
 const props = defineProps({
+  id: {
+    type: String,
+    default: ''
+  },
   title: String,
   description: String,
   buttonText: String,

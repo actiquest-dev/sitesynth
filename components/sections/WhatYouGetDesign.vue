@@ -1,5 +1,5 @@
 <template>
-  <section :class="`${bgColor} group relative overflow-hidden services pt-20`">
+  <section :id="id || undefined" :class="`${bgColor} group relative overflow-hidden services pt-20`">
     <GlowEffect />
     <div class="flex justify-center">
       <div :class="`${bgDivider} w-full md:w-2/4 p-14 shadow-lg`">
@@ -17,6 +17,10 @@
 import { defineProps } from 'vue'
 
 defineProps({
+  id: {
+    type: String,
+    default: ''
+  },
   title: String,
   items: Array,
   bgColor: {

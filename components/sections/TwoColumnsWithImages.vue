@@ -1,5 +1,5 @@
 <template>
-  <section class="group relative overflow-hidden border-t border-b border-[#636363] bg-[#161616] services">
+  <section :id="id || undefined" class="group relative overflow-hidden border-t border-b border-[#636363] bg-[#161616] services">
 
     <!-- Content -->
     <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 relative z-10">
@@ -38,6 +38,10 @@
 <script setup>
 
 defineProps({
+  id: {
+    type: String,
+    default: ''
+  },
   leftImgSrc: String,
   leftImgAlt: String,
   leftH2: String,

@@ -1,5 +1,5 @@
 <template>
-    <section class="relative bg-[#161616] text-white group overflow-hidden">
+    <section :id="id || undefined" class="relative bg-[#161616] text-white group overflow-hidden">
         <GlowEffect />
         <div class="relative max-w-6xl mx-auto px-6 pt-[6rem] pb-[6rem]">
             <div class="text-center px-6">
@@ -26,6 +26,10 @@
 <script setup>
 
 defineProps({
+    id: {
+        type: String,
+        default: ''
+    },
     title: String,
     h3: String,
     description: String,

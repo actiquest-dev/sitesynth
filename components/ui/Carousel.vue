@@ -1,6 +1,6 @@
 <template>
   <!-- Carousel Section -->
-  <section class="relative bg-[#161616] pt-[4rem] pb-[4rem] border-t border-b border-[#636363]">
+  <section :id="id || undefined" class="relative bg-[#161616] pt-[4rem] pb-[4rem] border-t border-b border-[#636363]">
     <!-- Left Transparent Overlay -->
     <div class="absolute top-0 left-0 w-70 h-full bg-gradient-to-r from-[#161616] to-transparent pointer-events-none z-10 fade-left"></div>
     <!-- Right Transparent Overlay -->
@@ -20,6 +20,10 @@
 
 <script setup>
 defineProps({
+  id: {
+    type: String,
+    default: ''
+  },
   images: Array
 })
 

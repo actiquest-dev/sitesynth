@@ -1,5 +1,5 @@
 <template>
-  <section :class="`group relative overflow-hidden border-t border-b border-[#636363] ${sectionBgColor}`">
+  <section :id="id || undefined" :class="`group relative overflow-hidden border-t border-b border-[#636363] ${sectionBgColor}`">
     
     <!-- Content -->
     <div class="mx-auto grid grid-cols-1 md:grid-cols-2 relative z-10">
@@ -20,6 +20,10 @@
 import { defineAsyncComponent, computed } from 'vue'
 
 const props = defineProps({
+  id: {
+    type: String,
+    default: ''
+  },
   // Styling props
   sectionBgColor: {
     type: String,
