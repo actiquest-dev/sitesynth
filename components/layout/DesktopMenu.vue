@@ -4,8 +4,11 @@
             <template v-if="item.subItems">
                 <!-- Dropdown Trigger -->
                 <NuxtLink :href="item.link" :target="item.target"
-                    class="font-medium transition-colors duration-1000 flex items-center space-x-1 group">
-                    <span>{{ item.label }}</span>
+                    :class="[
+                        'font-medium transition-colors duration-1000 flex items-center space-x-1 group',
+                        isCurrentParent(item) ? 'current' : ''
+                    ]">
+                    <span :class="isCurrentParent(item) ? 'underline' : ''">{{ item.label }}</span>
                     <i class="fas fa-chevron-down transform transition-transform duration-300 group-hover:rotate-180"></i>
                 </NuxtLink>
 
@@ -15,9 +18,17 @@
                     <ul class="p-4 space-y-2">
                         <li v-for="(subItem, subIndex) in item.subItems" :key="subIndex" class="list-none">
                             <NuxtLink :href="subItem.link" :target="subItem.target"
-                                class="flex items-center space-x-4 hover:bg-[#2A2A2A] p-4 rounded-lg transition-colors duration-300 group/item">
+                                :class="[
+                                    'flex items-center space-x-4 hover:bg-[#2A2A2A] p-4 rounded-lg transition-colors duration-300 group/item',
+                                    isCurrentPage(subItem.link) ? 'current' : ''
+                                ]">
                                 <img v-if="subItem.imageSrc" :src="subItem.imageSrc" alt="Icon"
-                                    class="w-14 h-14 rounded object-cover transition-all duration-300 group-hover/item:brightness-0 group-hover/item:invert" />
+                                    :class="[
+                                        'w-14 h-14 rounded object-cover transition-all duration-300',
+                                        isCurrentPage(subItem.link) 
+                                            ? 'brightness-0 invert' 
+                                            : 'group-hover/item:brightness-0 group-hover/item:invert'
+                                    ]" />
                                 <div>
                                     <h3 class="text-white text-base font-semibold mb-1">
                                         {{ subItem.label }}
@@ -35,7 +46,11 @@
 
             <!-- Single Link -->
             <template v-else>
-                <NuxtLink :href="item.link" :target="item.target" class="hover:text-[#8CB0FF] font-medium transition-colors duration-1000">
+                <NuxtLink :href="item.link" :target="item.target" 
+                    :class="[
+                        'hover:text-[#8CB0FF] font-medium transition-colors duration-1000',
+                        isCurrentPage(item.link) ? 'current' : ''
+                    ]">
                     {{ item.label }}
                 </NuxtLink>
             </template>
@@ -63,6 +78,30 @@ const props = defineProps({
     default: 'hover:border-[#8D35FF]'
   }
 })
+
+// Get current route
+const route = useRoute()
+
+// Function to check if current page matches the link
+const isCurrentPage = (link) => {
+    if (!link || link === '#') return false
+    
+    // Handle external links
+    if (link.startsWith('http')) return false
+    
+    // Normalize paths for comparison
+    const currentPath = route.path
+    const linkPath = link.endsWith('/') ? link.slice(0, -1) : link
+    const normalizedCurrent = currentPath.endsWith('/') ? currentPath.slice(0, -1) : currentPath
+    
+    return normalizedCurrent === linkPath || currentPath.startsWith(linkPath + '/')
+}
+
+// Function to check if any sub-item is current (for parent highlighting)
+const isCurrentParent = (item) => {
+    if (!item.subItems) return false
+    return item.subItems.some(subItem => isCurrentPage(subItem.link))
+}
 
 const navItems = [
     {
