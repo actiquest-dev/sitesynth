@@ -26,8 +26,7 @@
         quoteTitle="Ideas are cheap. Shipping is rare. We focus on the rare."
         quoteText="Anyone can brainstorm. We’re here to build — and get it live." ctaText="Get in touch" ctaLink="#"
         class="pb-[8rem] pt-[8rem]" />
-    <BannerSection id="banner-back-end" sectionTitle="Back-End Engineering" textAlign="text-right" backgroundColor="bg-[#DDDDDD]"
-        textColor="text-[#161616]" />
+    <BannerSection id="banner-back-end" sectionTitle="Back-End Engineering" textAlign="text-right" backgroundColor="bg-[#161616]" textColor="text-white" />
     <TranslateSection id="translate-back-end" imagePosition="top-[10%] right-[10%]" imageSrc="/assets/back-end.png" imageAlt="Github code"
         bgColor="bg-[#DDDDDD]" textColor="text-white" contentBgColor="bg-[#161616]"
         mainTitle="🧩 Back-End Infrastructure You Can Trust"

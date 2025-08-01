@@ -23,11 +23,11 @@ export default defineNuxtPlugin(() => {
   }
 
   // Custom smooth scroll function with dynamic offset
-  const smoothScrollTo = (targetId, extraOffset = 20) => {
+  const smoothScrollTo = (targetId) => {
     const target = document.getElementById(targetId.replace('#', ''))
     if (target) {
       const headerHeight = getHeaderHeight()
-      const totalOffset = headerHeight + extraOffset
+      const totalOffset = headerHeight
       const targetPosition = target.offsetTop - totalOffset
       
       window.scrollTo({
