@@ -27,7 +27,6 @@ const props = defineProps({
   description: String,
   buttonText: String,
   buttonLink: String,
-  cards: Array,
   backgroundImage: {
     type: String,
     default: null

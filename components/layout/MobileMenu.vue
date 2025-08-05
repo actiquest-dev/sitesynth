@@ -1,10 +1,17 @@
 <template>
   <div
-    :class="['fixed top-[112px] left-0 w-full h-[calc(100vh-5rem)] bg-[#161616] text-white flex flex-col items-center pt-10 px-6 space-y-6 transition-transform duration-300 z-40 overflow-y-scroll', menuOpen ? 'translate-x-0' : '-translate-x-full']">
-    
+    :class="[
+      'fixed top-[112px] left-0 w-full h-[calc(100vh-5rem)] bg-[#161616] text-white flex flex-col items-center pt-10 px-6 space-y-6 transition-transform duration-300 z-40 overflow-y-scroll',
+      menuOpen ? 'translate-x-0' : '-translate-x-full',
+    ]"
+  >
     <!-- NAVIGATION -->
     <nav class="flex flex-col space-y-4 text-center w-full max-w-sm">
-      <div v-for="(item, index) in navItems" :key="index" class="border-b border-gray-700 pb-4">
+      <div
+        v-for="(item, index) in navItems"
+        :key="index"
+        class="border-b border-gray-700 pb-4"
+      >
         <template v-if="item.subItems">
           <div
             class="flex items-center justify-between cursor-pointer"
@@ -71,48 +78,68 @@
 </template>
 
 <script setup>
-import { ref, defineProps } from 'vue'
+import { ref, defineProps } from "vue";
 
-defineProps({ menuOpen: Boolean })
+defineProps({ menuOpen: Boolean });
 
-const openSubmenus = ref({})
+const openSubmenus = ref({});
 function toggleSubmenu(index) {
-  openSubmenus.value[index] = !openSubmenus.value[index]
+  openSubmenus.value[index] = !openSubmenus.value[index];
 }
 
 // NAVIGATION
 const navItems = [
-  { 
-    label: "Product", 
+  {
+    label: "Product",
     link: "#",
     subItems: [
-      { imageSrc: "/assets/score-synth.svg", label: "ScoreSynth", link: "/scoresynth/" },
-      { imageSrc: "/assets/membria.svg", label: "Membria", link: "https://membria.xyz/", target: "_blank" },
-      { imageSrc: "/assets/ai-live-pod.svg", label: "AI Live Pod", link: "https://ailivepod.framer.website/", target: "_blank" },
-    ]
+      {
+        imageSrc: "/assets/score-synth.svg",
+        label: "ScoreSynth",
+        link: "/scoresynth/",
+      },
+      {
+        imageSrc: "/assets/membria.svg",
+        label: "Membria",
+        link: "https://membria.xyz/",
+        target: "_blank",
+      },
+      {
+        imageSrc: "/assets/ai-live-pod.svg",
+        label: "AI Live Pod",
+        link: "https://ailivepod.framer.website/",
+        target: "_blank",
+      },
+    ],
   },
   {
     label: "Solutions",
     link: "#",
     subItems: [
-      { label: "Brand-Driven Product Strategy", link: "/brand-driven-product-strategy" },
+      {
+        label: "Brand-Driven Product Strategy",
+        link: "/brand-driven-product-strategy",
+      },
       { label: "UX & Design Systems", link: "/ux-and-design-system" },
-      { label: "Development Support & Execution", link: "/full-stack-implementation" },
-      { label: "AI-Powered Workflows & Innovation", link: "/ai-innovation" }
-    ]
+      {
+        label: "Development Support & Execution",
+        link: "/full-stack-implementation",
+      },
+      { label: "AI-Powered Workflows & Innovation", link: "/ai-innovation" },
+    ],
   },
   {
     label: "Company",
     link: "#",
     subItems: [
-      { label: "About Us", link: "#" },
-      { label: "Careers", link: "#" }
-    ]
+      { label: "About Us", link: "/about-us" },
+      { label: "Careers", link: "/careers" },
+    ],
   },
-]
+];
 
 // CTA
-const cta = { text: "Get started", link: "#" }
+const cta = { text: "Get started", link: "#" };
 
 // SOCIAL ICONS
 const socials = [
@@ -120,21 +147,21 @@ const socials = [
     name: "LinkedIn",
     url: "#",
     icon: "fab fa-linkedin",
-    hoverBg: "hover:bg-[#0A66C2]"
+    hoverBg: "hover:bg-[#0A66C2]",
   },
   {
     name: "Instagram",
     url: "#",
     icon: "fab fa-instagram",
-    hoverBg: "hover:bg-[#E4405F]"
+    hoverBg: "hover:bg-[#E4405F]",
   },
   {
     name: "YouTube",
     url: "#",
     icon: "fab fa-youtube",
-    hoverBg: "hover:bg-[#FF0000]"
-  }
-]
+    hoverBg: "hover:bg-[#FF0000]",
+  },
+];
 </script>
 
 <style scoped>

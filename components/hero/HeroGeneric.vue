@@ -1,19 +1,35 @@
 <template>
-  <section :id="id || undefined" class="relative bg-[#161616] text-white group overflow-hidden bg-cover bg-no-repeat" :class="backgroundPosition" :style="backgroundImageStyle">
-    <GlowRed />
+  <section
+    :id="id || undefined"
+    class="relative bg-[#161616] text-white group overflow-hidden bg-cover bg-no-repeat"
+    :class="backgroundPosition"
+    :style="backgroundImageStyle"
+  >
+    <component :is="selectedGlowEffect" />
     <ParticleEffect />
 
     <div class="relative max-w-6xl mx-auto px-6" :class="paddingClasses">
       <div class="text-center px-6 max-w-4xl mx-auto">
         <!-- Logo -->
         <div v-if="logo" class="mb-8 flex justify-center">
-          <img :src="logo.src" :alt="logo.alt || 'Logo'" :class="logo.class || 'h-16 w-auto'" />
+          <img
+            :src="logo.src"
+            :alt="logo.alt || 'Logo'"
+            :class="logo.class || 'h-16 w-auto'"
+          />
         </div>
 
         <!-- Dynamic Content Elements -->
-        <div v-for="(element, index) in content" :key="index" :class="getElementMargin(element.margin)">
-          <component :is="element.tag" :class="getElementClasses(element.tag, element.textColor)">
-            {{ element.text }}
+        <div
+          v-for="(element, index) in content"
+          :key="index"
+          :class="getElementMargin(element.margin)"
+        >
+          <component
+            :is="element.tag"
+            :class="getElementClasses(element.tag, element.textColor)"
+          >
+            <span v-html="element.text"></span>
           </component>
         </div>
       </div>
@@ -22,21 +38,21 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { defineAsyncComponent, computed } from "vue";
 
 const props = defineProps({
   id: {
     type: String,
-    default: ''
+    default: "",
   },
   logo: {
     type: Object,
-    default: null
+    default: null,
     // Structure: { src: String, alt?: String, class?: String }
   },
   content: {
     type: Array,
-    required: true
+    required: true,
     // Structure:
     // [
     //   {
@@ -47,59 +63,70 @@ const props = defineProps({
     //   }
     // ]
   },
+  glowEffect: {
+    type: String,
+    default: "GlowEffect",
+  },
   backgroundImage: {
     type: String,
-    default: null
+    default: null,
   },
   backgroundPosition: {
     type: String,
-    default: 'bg-center'
+    default: "bg-center",
   },
   paddingClasses: {
     type: String,
-    default: ''
-  }
-})
+    default: "",
+  },
+});
 
 // Computed style for background image
 const backgroundImageStyle = computed(() => {
   if (props.backgroundImage) {
     return {
       backgroundImage: `url(${props.backgroundImage})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+    };
   }
-  return {}
-})
+  return {};
+});
 
 // Function to get appropriate CSS classes based on tag
 const getElementClasses = (tag, customTextColor) => {
-  const textColor = customTextColor || 'text-white'
+  const textColor = customTextColor || "text-white";
 
   switch (tag) {
-    case 'h1':
-      return `${textColor} text-4xl sm:text-5xl font-extrabold`
-    case 'h2':
-      return `${textColor} text-3xl sm:text-4xl font-bold`
-    case 'h3':
-      return `${textColor} text-2xl sm:text-3xl font-normal`
-    case 'h4':
-      return `${textColor} text-xl sm:text-2xl font-semibold`
-    case 'h5':
-      return `${textColor} text-lg sm:text-xl font-semibold`
-    case 'h6':
-      return `${textColor} text-base sm:text-lg font-semibold`
-    case 'p':
-      return `${textColor} text-base sm:text-lg font-medium`
+    case "h1":
+      return `${textColor} text-4xl sm:text-5xl font-extrabold`;
+    case "h2":
+      return `${textColor} text-3xl sm:text-4xl font-bold`;
+    case "h3":
+      return `${textColor} text-2xl sm:text-3xl font-normal`;
+    case "h4":
+      return `${textColor} text-xl sm:text-2xl font-semibold`;
+    case "h5":
+      return `${textColor} text-lg sm:text-xl font-semibold`;
+    case "h6":
+      return `${textColor} text-base sm:text-lg font-semibold`;
+    case "p":
+      return `${textColor} text-base sm:text-lg font-medium`;
     default:
-      return `${textColor} text-base`
+      return `${textColor} text-base`;
   }
-}
+};
+
+// Dynamically load the glow component by name from the effects folder
+const selectedGlowEffect = computed(() =>
+  defineAsyncComponent(() =>
+    import(`@/components/effects/${props.glowEffect}.vue`)
+  )
+);
 
 // Function to get margin classes
 const getElementMargin = (customMargin) => {
-  return customMargin || 'mb-8'
-}
+  return customMargin || "mb-8";
+};
 </script>
