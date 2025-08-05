@@ -24,7 +24,7 @@
       'Miro or FigJam for live collaboration',
       'Whimsical for brand attributes and tone sliders',
       'Optional pre-workshop surveys via Typeform or Google Forms'
-    ]" imageSrc="/assets/understand-brand.png" />
+    ]" imageSrc="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/understand-brand.png" />
 
   <Testimonial id="testimonial-mayya" imageSrc="/assets/mayya.png" personName="Mayya Aprosina"
     personTitle="CEO & Business Designer" quoteTitle="A clear why shapes everything that follows."
@@ -34,7 +34,7 @@
   <BannerSection id="translate-into-product" sectionTitle="Translate into Product Experience" backgroundColor="bg-[#DDDDDD]"
     textColor="text-[#161616]" textAlign="text-right" />
 
-  <TranslateSection imagePosition="bottom-0" imageSrc="/assets/translate-into.png"
+  <TranslateSection imagePosition="bottom-0" imageSrc="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/translate-into-product-experience.png"
     imageAlt="Github code" mainTitle="🎨 Make your product speak, look, and feel like your brand."
     bgColor="bg-[#DDDDDD]" textColor="text-[#161616]"
     mainDescription="Here, we bring the brand to life inside the product — not just through visuals, but through behavior, interaction, and language."
@@ -67,7 +67,7 @@
       'Notion for shared strategy docs',
       'Slack or Loom for async feedback',
       'Monday.com or Jira for team tracking'
-    ]" imageSrc="/assets/brand-driven.png" />
+    ]" imageSrc="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/align-across-teams.png" />
   <BannerSection sectionTitle="What You Get" />
   <Column id="what-you-get" :columns="[
     {
@@ -85,7 +85,7 @@
     },
     {
       icon: '⚡',
-      title: '🎯 Pattern Usage Guidelines',
+      title: 'Pattern Usage Guidelines',
       headerTag: 'h3',
       description: 'Know exactly when and how to use each pattern — no guessing, no inconsistency.'
     }
