@@ -20,9 +20,9 @@
         description="From tokens to components to documentation — we build reusable, flexible design foundations that support your team’s workflow, not slow it down. Using Figma as the single source of truth, we create shared libraries, usage rules, and naming standards your team can actually use — with optional dev integration via Zeroheight or Storybook."
         imageSrc="/assets/figma.svg" imageAlt="Figma Logo" primaryText="Try Figma" primaryLink="https://www.figma.com/"
         secondaryText="Learn More" secondaryLink="https://www.figma.com/design-systems/" />
-    <OneColumnImage id="figma-screen" padding="px-6 pt-[6rem]" centerImg="/assets/figma-3.png" centerImgAlt="Figma Screen" />
-    <TwoColumnsImagesOnly id="figma-screenshots" leftImgSrc="/assets/figma-2.png" leftImgAlt="FigJam Screenshot"
-        rightImgSrc="/assets/figma-1.png" rightImgAlt="Figma Dev Mode Screenshot" />
+    <OneColumnImage id="figma-screen" centerImg="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-main-ui.png" centerImgAlt="Figma Screen" />
+    <TwoColumnsImagesOnly id="figma-screenshots" leftImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-jam.png" leftImgAlt="FigJam Screenshot"
+        rightImgSrc="assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-dev-mode.png" rightImgAlt="Figma Dev Mode Screenshot" />
     <TwoColumnsWithImages id="figma-ux-architecture" leftImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-logo-1.png" leftImgAlt="FigJam Logo" leftH2="FigJam"
         leftH3="🔀 UX Architecture That Makes Sense"
         leftP="From tokens to components to documentation — we build reusable, flexible design foundations that support your team’s workflow, not slow it down. Using Figma as the single source of truth, we create shared libraries, usage rules, and naming standards your team can actually use — with optional dev integration via Zeroheight or Storybook."
@@ -68,7 +68,7 @@
             description: 'Practical, living docs that support day-to-day work — not just sit in a folder.'
         },
     ]" />
-    <WhiteSection id="get-started-today" bgImage="/assets/design-bg.svg" class="pt-[8rem] pb-[8rem]" title="Get Started Today"
+    <WhiteSection id="get-started-today" bgImage="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/below-pattern.svg" class="pt-[8rem] pb-[8rem]" title="Get Started Today"
         description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you’re becoming."
         primaryText="Start a Project" primaryLink="#" secondaryText="Book a Call" secondaryLink="#" />
     <FooterSection />
