@@ -35,34 +35,34 @@
     <BannerSection id="what-you-get" sectionTitle="What You Get" />
     <Column id="what-you-get-columns" :columns="[
         {
-            icon: '🧬',
+            icon: '🧩',
             imageAlt: 'Brand Icon',
-            title: 'Clear Brand Architecture',
+            title: 'Centralized Figma System',
             headerTag: 'h3',
             description: 'Atomic, flexible, and organized — built for scaling without clutter.'
         },
         {
-            icon: '🗺️',
-            title: 'User Journey Maps',
+            icon: '🧭',
+            title: 'UX Flow Diagrams & Interaction Logic',
             headerTag: 'h3',
             description: 'Clear maps of how users move through your product — across all key journeys.'
         },
         {
-            icon: '⚡',
-            title: '🎯 Pattern Usage Guidelines',
+            icon: '📐',
+            title: 'Pattern Usage Guidelines',
             headerTag: 'h3',
             description: 'Know exactly when and how to use each pattern — no guessing, no inconsistency.'
         }
     ]" />
     <Column id="what-you-get-docs" :columns="[
         {
-            icon: '📘 ',
+            icon: '📚 ',
             title: 'Design System Documentation',
             headerTag: 'h3',
             description: 'Everything documented and ready in Figma’s Dev Mode, Zeroheight, or your preferred platform.'
         },
         {
-            icon: '🛠️',
+            icon: '🔄',
             title: 'Practical, Living Docs',
             headerTag: 'h3',
             description: 'Practical, living docs that support day-to-day work — not just sit in a folder.'
