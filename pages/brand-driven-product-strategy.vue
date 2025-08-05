@@ -71,37 +71,37 @@
   <BannerSection sectionTitle="What You Get" />
   <Column id="what-you-get" :columns="[
     {
-      icon: '🧬',
+      icon: '🧠',
       imageAlt: 'Brand Icon',
-      title: 'Clear Brand Architecture',
+      title: 'Strategic Foundation',
       headerTag: 'h3',
-      description: 'Atomic, flexible, and organized — built for scaling without clutter.'
+      description: 'A clear product direction rooted in your brand’s purpose, promise, and personality — not just market trends or feature requests.'
+    },
+    {
+      icon: '🧱',
+      title: 'Messaging Frameworks',
+      headerTag: 'h3',
+      description: 'Positioning, voice, and messaging pillars your whole team can rally around — consistent across product, marketing, and sales.'
     },
     {
       icon: '🗺️',
-      title: 'User Journey Maps',
+      title: 'Cross-Team Alignment',
       headerTag: 'h3',
-      description: 'Clear maps of how users move through your product — across all key journeys.'
-    },
-    {
-      icon: '⚡',
-      title: 'Pattern Usage Guidelines',
-      headerTag: 'h3',
-      description: 'Know exactly when and how to use each pattern — no guessing, no inconsistency.'
+      description: 'Collaborative tools and rituals to keep design, product, and business stakeholders aligned — from kickoff to launch.'
     }
   ]" />
   <Column id="design-system" class="pb-20" :columns="[
     {
-      icon: '📘 ',
-      title: 'Design System Documentation',
+      icon: '🧪',
+      title: 'Decision-Making Criteria',
       headerTag: 'h3',
-      description: 'Everything documented and ready in Figma’s Dev Mode, Zeroheight, or your preferred platform.'
+      description: 'Shared principles that help your team move faster — and know why they're making the choices they are.'
     },
     {
-      icon: '🛠️',
-      title: 'Practical, Living Docs',
+      icon: '🚧',
+      title: 'Actionable Product Architecture',
       headerTag: 'h3',
-      description: 'Practical, living docs that support day-to-day work — not just sit in a folder.'
+      description: 'Feature roadmaps and IA built around real user needs and business priorities — not guesswork.'
     },
   ]" />
   <WhiteSection id="get-started-today" bgImage="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/below-pattern.svg" class="pt-[8rem] pb-[8rem]"
