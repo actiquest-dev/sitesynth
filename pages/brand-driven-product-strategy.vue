@@ -42,7 +42,7 @@
 
   <UnderstandBrandSection
     id="business"
-    imagePosition="bottom-0 right-[-200px] max-w-[120%]"
+    imagePosition="h-full object-cover"
     bgColor="bg-[#DDDDDD]"
     leftTitle="🧭 The compass of your business"
     leftDescription="We begin by distilling your brand’s essence — tone, values, and purpose — into clear, strategic inputs. Through focused workshops and stakeholder alignment, we translate abstract brand traits into usable creative and product direction."
@@ -81,7 +81,7 @@
   />
 
   <TranslateSection
-    imagePosition="bottom-0"
+    imagePosition="h-full object-cover"
     imageSrc="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/translate-into-product-experience.png"
     imageAlt="Github code"
     mainTitle="🎨 Make your product speak, look, and feel like your brand."

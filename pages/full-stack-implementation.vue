@@ -38,7 +38,7 @@
   />
   <UnderstandBrandSection
     id="understand-front-end"
-    imagePosition="bottom-[-100px] right-[-300px]"
+    imagePosition="h-full object-cover"
     bgColor="bg-[#DDDDDD]"
     contentBgColor="bg-[#161616]"
     textColor="text-white"
@@ -77,7 +77,7 @@
   />
   <TranslateSection
     id="translate-back-end"
-    imagePosition="top-[10%] right-[10%]"
+    imagePosition="h-100 object-cover"
     imageSrc="/assets/back-end.png"
     imageAlt="Github code"
     bgColor="bg-[#DDDDDD]"
@@ -109,7 +109,7 @@
 
   <UnderstandBrandSection
     id="understand-integrated-dev-collaboration"
-    imagePosition="bottom-0 right-[-200px]"
+    imagePosition="h-full object-cover"
     title="Integrated Dev Collaboration"
     bgColor="bg-[#DDDDDD]"
     leftTitle="🚀 Flexible Dev Partnership"
