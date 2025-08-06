@@ -148,14 +148,14 @@
     positionTextColor="text-[#999999]"
     :teamMembers="[
       {
-        imageSrc: '/assets/mayya.png',
+        imageSrc: '/assets/koen-team.png',
         name: 'Koen Vergauwen',
         nameTag: 'h3',
         nameClass: '',
         position: 'Head of Growth',
       },
       {
-        imageSrc: '/assets/miguel.png',
+        imageSrc: '/assets/mayya-team.png',
         name: 'Mayya Aprosina',
         nameTag: 'h3',
         nameClass: '',
@@ -169,21 +169,21 @@
         position: 'Full-Stack Engineer',
       },
       {
-        imageSrc: '/assets/mayya.png',
+        imageSrc: '/assets/anne-team.png',
         name: 'Anna Gorbenko',
         nameTag: 'h3',
         nameClass: '',
         position: 'Content Manager',
       },
       {
-        imageSrc: '/assets/miguel.png',
+        imageSrc: '/assets/miguel-team.png',
         name: 'Miguel Aprossine',
         nameTag: 'h3',
         nameClass: '',
         position: 'AI & Web3 Visionary Partner',
       },
       {
-        imageSrc: '/assets/marco.png',
+        imageSrc: '/assets/miguel-team.png',
         name: 'Wanna Join?',
         nameTag: 'h3',
         nameClass: '',

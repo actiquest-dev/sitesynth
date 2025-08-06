@@ -65,6 +65,8 @@
     </template>
   </TwoColumnsDesign>
 
+  <BannerSection text="Our Positions" />
+
   <BannerSection text="Our Culture, Your Benefits" />
   <Column
     id="what-you-get"
