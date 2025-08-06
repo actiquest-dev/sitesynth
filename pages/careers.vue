@@ -3,7 +3,7 @@
   <HeroGeneric
     backgroundImage=""
     backgroundPosition="bg-right-bottom"
-    paddingClasses="pt-[16rem] pb-[10rem]"
+    paddingClasses="pt-[16rem] h-[100vh]"
     glowEffect="GlowBlue"
     :content="[
       {
@@ -65,7 +65,7 @@
     </template>
   </TwoColumnsDesign>
 
-  <BannerSection sectionTitle="Our Culture, Your Benefits" />
+  <BannerSection text="Our Culture, Your Benefits" />
   <Column
     id="what-you-get"
     class="pb-20"

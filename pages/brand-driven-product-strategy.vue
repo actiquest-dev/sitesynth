@@ -35,10 +35,9 @@
 
   <BannerSection
     id="understand-the-brand"
-    sectionTitle="Understand the Brand"
-    backgroundColor="bg-[#DDDDDD]"
-    textColor="text-[#161616]"
-    textAlign="text-left"
+    text="Understand the Brand"
+    sectionClass="py-20 text-left bg-[#DDDDDD]"
+    contentClass="text-[#161616] max-w-6xl mx-auto text-4xl"
   />
 
   <UnderstandBrandSection
@@ -75,11 +74,10 @@
   />
 
   <BannerSection
-    id="translate-into-product"
-    sectionTitle="Translate into Product Experience"
-    backgroundColor="bg-[#DDDDDD]"
-    textColor="text-[#161616]"
-    textAlign="text-right"
+    id="understand-the-brand"
+    text="Translate into Product Experience"
+    sectionClass="py-20 text-right bg-[#DDDDDD]"
+    contentClass="text-[#161616] max-w-6xl mx-auto text-4xl"
   />
 
   <TranslateSection
@@ -107,10 +105,9 @@
 
   <BannerSection
     id="align-across-teams"
-    sectionTitle="Align Across Teams"
-    backgroundColor="bg-[#161616]"
-    textColor="text-white"
-    textAlign="text-left"
+    text="Align Across Teams"
+    sectionClass="py-20 text-left bg-[#161616]"
+    contentClass="text-white max-w-6xl mx-auto text-4xl"
   />
 
   <UnderstandBrandSection
@@ -138,7 +135,7 @@
     ]"
     imageSrc="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/align-across-teams.png"
   />
-  <BannerSection sectionTitle="What You Get" />
+  <BannerSection text="What You Get" />
   <Column
     id="what-you-get"
     :columns="[

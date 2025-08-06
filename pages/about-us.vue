@@ -3,7 +3,7 @@
   <HeroGeneric
     backgroundImage=""
     backgroundPosition="bg-right-bottom"
-    paddingClasses="pt-[16rem] pb-[10rem]"
+    paddingClasses="pt-[16rem] h-[100vh]"
     glowEffect="GlowBlue"
     :content="[
       {
@@ -125,15 +125,76 @@
         <img
           src="/assets/mayya-studio.jpg"
           alt="ScoreSynth Image"
-          class="h-full w-full object-cover"
+          class="w-full object-cover"
         />
       </div>
     </template>
   </TwoColumnsDesign>
+  <BannerSection
+    text="Our team"
+    tag="h2"
+    sectionClass="pt-20 pb-[2rem] bg-[#161616] text-white text-center"
+  />
+  <BannerSection
+    text="Creatives, Developers, Designers — meet the team that specializes in <br> turning dreams into digital masterpieces."
+    tag="p"
+    sectionClass="bg-[#161616] text-white text-center"
+    contentClass="mx-auto text-normal text-white"
+  />
+  <TeamsSection
+    id="our-team"
+    backgroundColor="bg-[#161616]"
+    nameTextColor="text-white"
+    positionTextColor="text-[#999999]"
+    :teamMembers="[
+      {
+        imageSrc: '/assets/mayya.png',
+        name: 'Koen Vergauwen',
+        nameTag: 'h3',
+        nameClass: '',
+        position: 'Head of Growth',
+      },
+      {
+        imageSrc: '/assets/miguel.png',
+        name: 'Mayya Aprosina',
+        nameTag: 'h3',
+        nameClass: '',
+        position: 'CEO & Business Designer',
+      },
+      {
+        imageSrc: '/assets/marco.png',
+        name: 'Marco Maffei',
+        nameTag: 'h3',
+        nameClass: '',
+        position: 'Full-Stack Engineer',
+      },
+      {
+        imageSrc: '/assets/mayya.png',
+        name: 'Anna Gorbenko',
+        nameTag: 'h3',
+        nameClass: '',
+        position: 'Content Manager',
+      },
+      {
+        imageSrc: '/assets/miguel.png',
+        name: 'Miguel Aprossine',
+        nameTag: 'h3',
+        nameClass: '',
+        position: 'AI & Web3 Visionary Partner',
+      },
+      {
+        imageSrc: '/assets/marco.png',
+        name: 'Wanna Join?',
+        nameTag: 'h3',
+        nameClass: '',
+        position: 'Wanna Join?',
+      },
+    ]"
+  />
   <WhiteSection
+    hover="#0033ff"
     glowEffect="GlowBlue"
     id="get-started-today"
-    bgImage=""
     class="pt-[8rem] pb-[8rem]"
     title="Get Started Today"
     description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you’re becoming."

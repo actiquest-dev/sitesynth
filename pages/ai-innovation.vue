@@ -83,7 +83,7 @@
     ctaLink="#"
     class="pt-[8rem]"
   />
-  <BannerSection sectionTitle="What We Offer" />
+  <BannerSection text="What We Offer" />
   <WhatWeOfferAi
     id="what-we-offer-ai"
     :cards="[
@@ -107,7 +107,7 @@
       },
     ]"
   />
-  <BannerSection sectionTitle="New AI product we are working on" />
+  <BannerSection text="New AI product we are working on" />
   <TwoColumnSection
     id="membria"
     class="pb-20"
@@ -138,7 +138,7 @@
       },
     }"
   />
-  <BannerSection sectionTitle="What You Get" />
+  <BannerSection text="What You Get" />
   <Column
     id="what-you-get"
     class="pb-20"

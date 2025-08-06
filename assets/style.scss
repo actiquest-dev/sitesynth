@@ -21,13 +21,13 @@
 
 @for $i from 1 through 6 {
   h#{$i} {
-    font-family: "Roc Grotesk", sans-serif!important;
+    font-family: "Roc Grotesk", sans-serif;
     font-optical-sizing: auto;
   }
 }
 
 body {
-  * {
+  p,li,ul,ol {
     font-family: "Inter", sans-serif;
   }
 
