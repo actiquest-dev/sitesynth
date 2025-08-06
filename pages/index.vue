@@ -230,3 +230,40 @@
   />
   <FooterSection />
 </template>
+
+<script setup>
+// SEO Configuration for Home Page - Only override what's unique
+useSeoMeta({
+  // Override the default title with homepage-specific version
+  title:
+    "SiteSynth - No silos. Just synthesis. | Where Product, Brand & Tech Align",
+
+  // Homepage-specific description
+  description:
+    "Where product, brand, and tech finally align. We help companies bridge strategy, design, and engineering to create digital products that scale.",
+
+  // Homepage-specific keywords (extends the defaults)
+  keywords:
+    "strategic design, product development, brand strategy, full-stack development, design systems, AI innovation, UX design, web development, no silos synthesis",
+
+  // Open Graph - Only the unique values
+  ogTitle: "SiteSynth - No silos. Just synthesis.",
+  ogDescription:
+    "Where product, brand, and tech finally align. We help companies bridge strategy, design, and engineering to create digital products that scale.",
+  ogImage: "https://synth-phi.vercel.app/assets/og-image-home.jpg",
+  ogImageAlt: "SiteSynth - Strategic Design & Development Company",
+  ogUrl: "https://synth-phi.vercel.app",
+
+  // Twitter Card - Only the unique values
+  twitterTitle: "SiteSynth - No silos. Just synthesis.",
+  twitterDescription:
+    "Where product, brand, and tech finally align. Strategic design & development company.",
+  twitterImage: "https://synth-phi.vercel.app/assets/twitter-card-home.jpg",
+  twitterImageAlt: "SiteSynth - Strategic Design & Development",
+
+  // Page-specific canonical
+  canonical: "https://synth-phi.vercel.app",
+});
+
+// No need for structured data here - it's now global in app.vue
+</script>

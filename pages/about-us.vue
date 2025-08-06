@@ -205,3 +205,76 @@
   />
   <FooterSection />
 </template>
+
+<script setup>
+// SEO Configuration for About Us Page - Only override what's unique
+useSeoMeta({
+  // Page-specific title
+  title: "About Us - SiteSynth | Meet Our Strategic Design & Development Team",
+
+  // Page-specific description
+  description:
+    "Meet the team behind SiteSynth. Based in Sint-Amands, Belgium, we are designers, strategists, and developers working in sync to deliver integrated digital solutions.",
+
+  // Page-specific keywords
+  keywords:
+    "about sitesynth, team, belgium design agency, strategic design team, mayya aprosina, miguel aprossine, marco maffei, design and development team",
+
+  // Open Graph - Only unique values
+  ogTitle: "About SiteSynth - Meet Our Team",
+  ogDescription:
+    "Meet the team behind SiteSynth. Based in Sint-Amands, Belgium, we bridge strategy, design, and engineering.",
+  ogImage: "https://synth-phi.vercel.app/assets/og-image-about.jpg",
+  ogImageAlt: "SiteSynth Team - Strategic Design & Development",
+  ogUrl: "https://synth-phi.vercel.app/about-us",
+
+  // Twitter - Only unique values
+  twitterTitle: "About SiteSynth - Meet Our Team",
+  twitterDescription:
+    "Meet the team behind SiteSynth. Based in Sint-Amands, Belgium, we bridge strategy, design, and engineering.",
+  twitterImage: "https://synth-phi.vercel.app/assets/twitter-card-about.jpg",
+
+  // Page-specific canonical
+  canonical: "https://synth-phi.vercel.app/about-us",
+});
+
+// Structured data for About page
+useHead({
+  script: [
+    {
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "AboutPage",
+        name: "About SiteSynth",
+        description:
+          "Learn about SiteSynth, our team, and our approach to strategic design and development.",
+        url: "https://synth-phi.vercel.app/about-us",
+        mainEntity: {
+          "@type": "Organization",
+          name: "SiteSynth",
+          foundingDate: "2020",
+          foundingLocation: "Sint-Amands, Belgium",
+          employees: [
+            {
+              "@type": "Person",
+              name: "Mayya Aprosina",
+              jobTitle: "CEO & Business Designer",
+            },
+            {
+              "@type": "Person",
+              name: "Miguel Aprossine",
+              jobTitle: "AI & Web3 Visionary Partner",
+            },
+            {
+              "@type": "Person",
+              name: "Marco Maffei",
+              jobTitle: "Full-Stack Engineer",
+            },
+          ],
+        },
+      }),
+    },
+  ],
+});
+</script>
