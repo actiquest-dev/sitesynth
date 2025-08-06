@@ -56,7 +56,7 @@
     id="figma-screenshots"
     leftImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-jam.png"
     leftImgAlt="FigJam Screenshot"
-    rightImgSrc="assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-dev-mode.png"
+    rightImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-dev-mode.png"
     rightImgAlt="Figma Dev Mode Screenshot"
   />
   <TwoColumnsWithImages
