@@ -183,7 +183,7 @@
         position: 'AI & Web3 Visionary Partner',
       },
       {
-        imageSrc: '/assets/miguel-team.png',
+        imageSrc: '/assets/anonymus.png',
         name: 'Wanna Join?',
         nameTag: 'h3',
         nameClass: '',
