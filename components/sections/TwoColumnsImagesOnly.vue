@@ -16,7 +16,7 @@
         <img
           :src="leftImgSrc"
           :alt="leftImgAlt"
-          class="max-w-full h-100 object-cover"
+          class="max-w-full object-cover"
         />
       </div>
 
