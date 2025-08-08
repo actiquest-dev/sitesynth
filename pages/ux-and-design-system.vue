@@ -13,25 +13,28 @@
     rightColumnBgColor="bg-[#161616]"
   >
     <template #left>
-      <div
-        class="px-6 py-24 md:pl-[10rem] md:pr-6 md:border-r border-[#636363]"
-      >
-        <h3 class="text-white text-lg mb-2">WHY YOU NEED FIGMA?</h3>
-        <h2 class="text-white text-4xl font-bold">
-          Design debt is real. So is handoff hell..
-        </h2>
+      <div class="py-24 md:border-r border-[#636363]">
+        <div class="max-w-[600px] ml-auto pr-16">
+          <h3 class="text-white text-lg mb-6">WHY YOU NEED FIGMA?</h3>
+          <h2 class="text-white text-4xl font-bold">
+            Design debt is real. So is handoff hell..
+          </h2>
+        </div>
       </div>
     </template>
 
     <template #right>
-      <div class="px-6 py-24 md:pr-[10rem] md:pl-6">
-        <p class="text-white text-[24px]">
-          When teams move fast without systems, the result is chaos: duplicated
-          components, messy UX, endless revisions, and frustrated developers.
-          <br />
-          We fix that by putting structure where it matters — in the product’s
-          foundation.
-        </p>
+      <div class="py-24">
+        <div class="max-w-[600px] mr-auto pl-16">
+          <h3 class="text-white text-[24px] font-light">
+            When teams move fast without systems, the result is chaos:
+            duplicated components, messy UX, endless revisions, and frustrated
+            developers.
+            <br />
+            We fix that by putting structure where it matters — in the product’s
+            foundation.
+          </h3>
+        </div>
       </div>
     </template>
   </TwoColumnsDesign>

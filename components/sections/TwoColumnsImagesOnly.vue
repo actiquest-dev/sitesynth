@@ -7,7 +7,7 @@
 
     <!-- Content -->
     <div
-      class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 relative z-10"
+      class="max-w-[1248px] mx-auto px-6 grid grid-cols-1 md:grid-cols-2 relative z-10"
     >
       <!-- Left Column -->
       <div

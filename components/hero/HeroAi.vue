@@ -1,13 +1,20 @@
 <template>
-  <section :id="id || undefined" class="relative bg-[#161616] text-white group overflow-hidden bg-cover bg-center bg-no-repeat" :style="backgroundImageStyle">
+  <section
+    :id="id || undefined"
+    class="relative bg-[#161616] text-white group overflow-hidden bg-cover bg-center bg-no-repeat"
+    :style="backgroundImageStyle"
+  >
     <GlowEffect />
 
-    <div class="relative max-w-6xl mx-auto px-6 pt-[16rem] pb-[12rem]">
+    <div class="relative max-w-[1248px] mx-auto px-6 pt-[16rem] pb-[12rem]">
       <!-- Hero -->
       <div class="text-center px-6">
         <h1 class="text-4xl sm:text-5xl font-extrabold mb-10">{{ title }}</h1>
         <p class="text-base sm:text-lg font-medium mb-8">{{ description }}</p>
-        <a :href="buttonLink" class="inline-block mt-8 px-4 py-2 border-[1px] border-white hover:bg-[#8D35FF] hover:text-white hover:border-[#8D35FF] bg-white text-[#161616] transition-colors duration-[1000ms] font-semibold">
+        <a
+          :href="buttonLink"
+          class="inline-block mt-8 px-4 py-2 border-[1px] border-white hover:bg-[#8D35FF] hover:text-white hover:border-[#8D35FF] bg-white text-[#161616] transition-colors duration-[1000ms] font-semibold"
+        >
           <span>{{ buttonText }}</span>
         </a>
       </div>
@@ -16,12 +23,12 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed } from "vue";
 
 const props = defineProps({
   id: {
     type: String,
-    default: ''
+    default: "",
   },
   title: String,
   description: String,
@@ -29,18 +36,17 @@ const props = defineProps({
   buttonLink: String,
   backgroundImage: {
     type: String,
-    default: null
-  }
+    default: null,
+  },
 });
 
 // Computed background image style
 const backgroundImageStyle = computed(() => {
   if (props.backgroundImage) {
     return {
-      backgroundImage: `url(${props.backgroundImage})`
-    }
+      backgroundImage: `url(${props.backgroundImage})`,
+    };
   }
-  return {}
-})
-
+  return {};
+});
 </script>

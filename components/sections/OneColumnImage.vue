@@ -7,7 +7,7 @@
 
     <!-- Content -->
     <div
-      :class="`max-w-6xl mx-auto ${padding} flex justify-center items-center relative z-10`"
+      :class="`max-w-[1248px] px-6 mx-auto ${padding} flex justify-center items-center relative z-10`"
     >
       <img :src="centerImg" :alt="centerImgAlt" class="max-w-full h-auto" />
     </div>

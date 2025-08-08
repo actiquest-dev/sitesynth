@@ -34,30 +34,30 @@
     rightColumnBgColor="bg-[#161616]"
   >
     <template #left>
-      <div
-        class="px-6 py-24 md:pl-[10rem] md:pr-6 md:border-r border-[#636363] bg-[#161616]"
-      >
-        <h2 class="text-white text-3xl sm:text-4xl mb-6">
-          From Musician to Builder.
-        </h2>
-        <p class="text-[#999999] text-normal font-light mb-4">
-          Before founding SiteSynth, I was a musician.
-        </p>
-        <p class="text-[#999999]">
-          I studied at the conservatory, spent years immersed in orchestras, and
-          worked closely with composers, arrangers, and ensembles of all shapes
-          and sizes. And while I eventually moved into technology and
-          development, my passion for music never left.
-        </p>
-        <h3 class="text-white text-2xl mt-4 mb-4">
-          With SynthScore, we’re removing that barrier.
-        </h3>
-        <p class="text-[#999999] text-normal font-light">
-          It’s not just software — it’s a bridge. A way to unify creativity and
-          accessibility. Whether you're a professional composer or a hobbyist
-          with a melody in your head, SynthScore helps turn that spark into
-          something performable — fast.
-        </p>
+      <div class="py-24 md:border-r border-[#636363] bg-[#161616]">
+        <div class="max-w-[600px] ml-auto pr-16">
+          <h2 class="text-white text-3xl sm:text-4xl mb-6">
+            From Musician to Builder.
+          </h2>
+          <p class="text-[#999999] text-normal font-light mb-4">
+            Before founding SiteSynth, I was a musician.
+          </p>
+          <p class="text-[#999999]">
+            I studied at the conservatory, spent years immersed in orchestras,
+            and worked closely with composers, arrangers, and ensembles of all
+            shapes and sizes. And while I eventually moved into technology and
+            development, my passion for music never left.
+          </p>
+          <h3 class="text-white text-2xl mt-4 mb-4">
+            With SynthScore, we’re removing that barrier.
+          </h3>
+          <p class="text-[#999999] text-normal font-light">
+            It’s not just software — it’s a bridge. A way to unify creativity
+            and accessibility. Whether you're a professional composer or a
+            hobbyist with a melody in your head, SynthScore helps turn that
+            spark into something performable — fast.
+          </p>
+        </div>
       </div>
     </template>
 

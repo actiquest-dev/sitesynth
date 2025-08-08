@@ -37,7 +37,7 @@
     id="understand-the-brand"
     text="Understand the Brand"
     sectionClass="py-20 text-left bg-[#DDDDDD]"
-    contentClass="text-[#161616] max-w-6xl mx-auto text-4xl"
+    contentClass="text-[#161616] max-w-[1248px] px-6 mx-auto text-4xl"
   />
 
   <UnderstandBrandSection
@@ -77,7 +77,7 @@
     id="understand-the-brand"
     text="Translate into Product Experience"
     sectionClass="py-20 text-right bg-[#DDDDDD]"
-    contentClass="text-[#161616] max-w-6xl mx-auto text-4xl"
+    contentClass="text-[#161616] max-w-[1248px] px-6 mx-auto text-4xl"
   />
 
   <TranslateSection
@@ -107,7 +107,7 @@
     id="align-across-teams"
     text="Align Across Teams"
     sectionClass="py-20 text-left bg-[#161616]"
-    contentClass="text-white max-w-6xl mx-auto text-4xl"
+    contentClass="text-white max-w-[1248px] px-6 mx-auto text-4xl"
   />
 
   <UnderstandBrandSection

@@ -5,7 +5,7 @@
   >
     <GlowEffect />
     <div :class="`border-t border-b border-[#636363] ${contentBgColor}`">
-      <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 px-6">
+      <div class="max-w-[1248px] mx-auto grid grid-cols-1 md:grid-cols-2 px-6">
         <!-- Image Section -->
         <div class="border-r border-[#636363]">
           <img :src="imageSrc" :alt="imageAlt" :class="`${imagePosition}`" />

@@ -26,31 +26,31 @@
     rightColumnBgColor="bg-[#161616]"
   >
     <template #right>
-      <div
-        class="px-6 py-24 md:pl-[10rem] md:pr-6 md:border-r border-[#636363] bg-[#161616]"
-      >
-        <h2 class="text-white text-3xl sm:text-4xl mb-6">
-          Build what matters. From the inside out.
-        </h2>
-        <p class="text-[#999999] text-normal font-light mb-4">
-          We’re a small, senior team building thoughtful digital products — for
-          clients and for ourselves. We care about clarity, craft, and making
-          things that last.
-        </p>
-        <p class="text-[#999999] text-normal font-light mb-4">
-          We're not just consultants. We're makers, designers, and engineers
-          building our own tools too. That means every project we take on is
-          intentional — and every teammate is trusted from day one.
-        </p>
-        <h3 class="text-white text-2xl mt-[3rem] mb-[3rem]">
-          Build what matters. From the inside out.
-        </h3>
-        <p class="text-[#999999] text-normal font-light">
-          It’s not just software — it’s a bridge. A way to unify creativity and
-          accessibility. Whether you're a professional composer or a hobbyist
-          with a melody in your head, SynthScore helps turn that spark into
-          something performable — fast.
-        </p>
+      <div class="py-24 md:border-r border-[#636363] bg-[#161616]">
+        <div class="max-w-[600px] mr-auto pl-16">
+          <h2 class="text-white text-3xl sm:text-4xl mb-6">
+            Build what matters. From the inside out.
+          </h2>
+          <p class="text-[#999999] text-normal font-light mb-4">
+            We’re a small, senior team building thoughtful digital products —
+            for clients and for ourselves. We care about clarity, craft, and
+            making things that last.
+          </p>
+          <p class="text-[#999999] text-normal font-light mb-4">
+            We're not just consultants. We're makers, designers, and engineers
+            building our own tools too. That means every project we take on is
+            intentional — and every teammate is trusted from day one.
+          </p>
+          <h3 class="text-white text-2xl mt-[3rem] mb-[3rem]">
+            Build what matters. From the inside out.
+          </h3>
+          <p class="text-[#999999] text-normal font-light">
+            It’s not just software — it’s a bridge. A way to unify creativity
+            and accessibility. Whether you're a professional composer or a
+            hobbyist with a melody in your head, SynthScore helps turn that
+            spark into something performable — fast.
+          </p>
+        </div>
       </div>
     </template>
 

@@ -1,33 +1,39 @@
 <template>
-  <section :id="id || undefined" :class="backgroundColor" :style="backgroundImageStyle">
-    <div class="max-w-6xl mx-auto px-6 py-12">
+  <section
+    :id="id || undefined"
+    :class="backgroundColor"
+    :style="backgroundImageStyle"
+  >
+    <div class="max-w-[1248px] mx-auto px-6 py-12">
       <div :class="gridClasses">
-        <div 
-          v-for="(column, index) in columns" 
-          :key="index" 
+        <div
+          v-for="(column, index) in columns"
+          :key="index"
           class="flex flex-col items-start p-6"
         >
           <!-- Icon/Image and Header Row -->
           <div class="flex items-center mb-4">
             <div class="mr-3">
-              <img 
-                v-if="column.imageSrc" 
-                :src="column.imageSrc" 
-                :alt="column.imageAlt || ''" 
+              <img
+                v-if="column.imageSrc"
+                :src="column.imageSrc"
+                :alt="column.imageAlt || ''"
                 class="w-12 h-12 object-contain"
               />
-              <span v-else-if="column.icon" class="text-4xl">{{ column.icon }}</span>
+              <span v-else-if="column.icon" class="text-4xl">
+                {{ column.icon }}
+              </span>
             </div>
-            
+
             <!-- Dynamic Header -->
-            <component 
-              :is="column.headerTag || 'h3'" 
+            <component
+              :is="column.headerTag || 'h3'"
               :class="getHeaderClasses(column.headerTag || 'h3')"
             >
               {{ column.title }}
             </component>
           </div>
-          
+
           <!-- Paragraph -->
           <p class="text-[#999999] leading-relaxed">
             {{ column.description }}
@@ -39,12 +45,12 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed } from "vue";
 
 const props = defineProps({
   id: {
     type: String,
-    default: ''
+    default: "",
   },
   columns: {
     type: Array,
@@ -63,70 +69,70 @@ const props = defineProps({
   },
   columnCount: {
     type: Number,
-    default: null // Auto-detect from columns length
+    default: null, // Auto-detect from columns length
   },
   backgroundColor: {
     type: String,
-    default: 'bg-[#161616]'
+    default: "bg-[#161616]",
   },
   headerTextColor: {
     type: String,
-    default: 'text-white'
+    default: "text-white",
   },
   backgroundImage: {
     type: String,
-    default: null
-  }
-})
+    default: null,
+  },
+});
 
 // Compute grid classes based on column count
 const gridClasses = computed(() => {
-  const count = props.columnCount || props.columns.length
-  
+  const count = props.columnCount || props.columns.length;
+
   if (count === 2) {
     // 2 columns: centered with equal width, space on sides
-    return 'grid grid-cols-1 md:grid-cols-2 md:max-w-4xl md:mx-auto gap-8'
+    return "grid grid-cols-1 md:grid-cols-2 md:max-w-4xl md:mx-auto gap-8";
   } else if (count === 3) {
     // 3 columns: full width with equal distribution
-    return 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'
+    return "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8";
   }
-  
+
   // Default fallback
-  return 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'
-})
+  return "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8";
+});
 
 // Computed style for background image
 const backgroundImageStyle = computed(() => {
   if (props.backgroundImage) {
     return {
       backgroundImage: `url(${props.backgroundImage})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    }
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+    };
   }
-  return {}
-})
+  return {};
+});
 
 // Function to get appropriate CSS classes based on header tag
 const getHeaderClasses = (tag) => {
-  const baseClasses = `${props.headerTextColor} font-bold`
-  
+  const baseClasses = `${props.headerTextColor} font-bold`;
+
   switch (tag) {
-    case 'h1':
-      return `${baseClasses} text-4xl`
-    case 'h2':
-      return `${baseClasses} text-3xl`
-    case 'h3':
-      return `${baseClasses} text-2xl`
-    case 'h4':
-      return `${baseClasses} text-xl`
-    case 'h5':
-      return `${baseClasses} text-lg`
-    case 'h6':
-      return `${baseClasses} text-base`
+    case "h1":
+      return `${baseClasses} text-4xl`;
+    case "h2":
+      return `${baseClasses} text-3xl`;
+    case "h3":
+      return `${baseClasses} text-2xl`;
+    case "h4":
+      return `${baseClasses} text-xl`;
+    case "h5":
+      return `${baseClasses} text-lg`;
+    case "h6":
+      return `${baseClasses} text-base`;
     default:
-      return `${baseClasses} text-2xl`
+      return `${baseClasses} text-2xl`;
   }
-}
+};
 </script>

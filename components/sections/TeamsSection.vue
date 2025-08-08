@@ -4,7 +4,7 @@
     :class="backgroundColor"
     :style="backgroundImageStyle"
   >
-    <div class="max-w-6xl mx-auto px-6 py-12">
+    <div class="max-w-[1248px] mx-auto px-6 py-12">
       <div :class="gridClasses">
         <div
           v-for="(member, index) in teamMembers"

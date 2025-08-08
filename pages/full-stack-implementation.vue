@@ -34,7 +34,7 @@
     id="banner-front-end"
     text="Front-End Engineering"
     sectionClass="py-20 text-left bg-[#161616]"
-    contentClass="text-white max-w-6xl mx-auto text-4xl"
+    contentClass="text-white max-w-[1248px] px-6 mx-auto text-4xl"
   />
   <UnderstandBrandSection
     id="understand-front-end"
@@ -73,7 +73,7 @@
     id="banner-back-end"
     text="Back-End Engineering"
     sectionClass="py-20 text-right bg-[#161616]"
-    contentClass="text-white max-w-6xl mx-auto text-4xl"
+    contentClass="text-white max-w-[1248px] px-6 mx-auto text-4xl"
   />
   <TranslateSection
     id="translate-back-end"
@@ -104,7 +104,7 @@
     id="banner-integrated-dev-collaboration"
     text="Integrated Dev Collaboration"
     sectionClass="py-20 text-left bg-[#DDDDDD]"
-    contentClass="text-[#161616] max-w-6xl mx-auto text-4xl"
+    contentClass="text-[#161616] max-w-[1248px] px-6 mx-auto text-4xl"
   />
 
   <UnderstandBrandSection
@@ -133,7 +133,7 @@
     id="banner-what-you-get"
     text="What You Get"
     sectionClass="py-20 text-center bg-[#DDDDDD]"
-    contentClass="text-[#161616] max-w-6xl mx-auto text-4xl"
+    contentClass="text-[#161616] max-w-[1248px] px-6 mx-auto text-4xl"
   />
 
   <Column

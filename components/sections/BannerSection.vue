@@ -26,7 +26,7 @@ defineProps({
   },
   contentClass: {
     type: String,
-    default: "max-w-6xl mx-auto text-4xl text-white",
+    default: "max-w-[1248px] mx-auto text-4xl text-white",
   },
 });
 </script>

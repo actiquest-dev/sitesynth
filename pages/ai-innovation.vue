@@ -17,24 +17,26 @@
     textColorRight="text-white"
   >
     <template #left>
-      <div
-        class="px-6 py-24 md:pl-[10rem] md:pr-6 md:border-r border-[#636363] bg-[#DDDDDD]"
-      >
-        <h3 class="text-lg mb-2">WHY AI NOW?</h3>
-        <h2 class="text-4xl font-bold mb-4">
-          You don’t need an AI lab. You need traction.
-        </h2>
+      <div class="py-24 md:border-r border-[#636363] bg-[#DDDDDD]">
+        <div class="max-w-[600px] ml-auto pr-16">
+          <h3 class="text-lg mb-2">WHY AI NOW?</h3>
+          <h2 class="text-4xl font-bold mb-4">
+            You don’t need an AI lab. You need traction.
+          </h2>
+        </div>
       </div>
     </template>
 
     <template #right>
-      <div class="px-6 py-24 md:pr-[10rem] md:pl-6 bg-[#161616]">
-        <p class="text-white font-bold mb-4">
-          AI is transforming how teams design, build, and operate — but most
-          companies don’t know where to start. We help you find the right use
-          cases, test fast, and integrate AI meaningfully into your product or
-          process.
-        </p>
+      <div class="py-24 bg-[#161616]">
+        <div class="max-w-[600px] mr-auto pl-16">
+          <p class="text-white font-bold mb-4">
+            AI is transforming how teams design, build, and operate — but most
+            companies don’t know where to start. We help you find the right use
+            cases, test fast, and integrate AI meaningfully into your product or
+            process.
+          </p>
+        </div>
       </div>
     </template>
   </TwoColumnsDesign>
@@ -47,28 +49,30 @@
     textColorRight="text-white"
   >
     <template #left>
-      <div
-        class="px-6 py-24 md:pl-[10rem] md:pr-6 md:border-r border-[#636363] bg-[#191919]"
-      >
-        <h2 class="text-4xl mb-2 text-white">84% 🪄</h2>
-        <h2 class="text-4xl mb-2 text-white">of executives</h2>
-        <p class="text-lg font-bold mb-4 text-white">
-          say AI will give them a competitive advantage — but only 19% have
-          adopted it at scale.
-        </p>
-        <p class="text-[#999999]">— McKinsey Global AI Survey</p>
+      <div class="py-24 md:border-r border-[#636363] bg-[#191919]">
+        <div class="max-w-[600px] ml-auto pr-16">
+          <h2 class="text-4xl mb-2 text-white">84% 🪄</h2>
+          <h2 class="text-4xl mb-2 text-white">of executives</h2>
+          <p class="text-lg font-bold mb-4 text-white">
+            say AI will give them a competitive advantage — but only 19% have
+            adopted it at scale.
+          </p>
+          <p class="text-[#999999]">— McKinsey Global AI Survey</p>
+        </div>
       </div>
     </template>
 
     <template #right>
-      <div class="px-6 py-24 md:pr-[10rem] md:pl-6 bg-[#161616]">
-        <h2 class="text-4xl mb-2 text-white">5x 🚀</h2>
-        <h2 class="text-4xl mb-2 text-white">faster</h2>
-        <p class="text-lg font-bold mb-4 text-white">
-          Companies that adopt AI early grow 50% faster in productivity and
-          customer retention.
-        </p>
-        <p class="text-[#999999]">— BCG AI at Scale Report</p>
+      <div class="py-24 bg-[#161616]">
+        <div class="max-w-[600px] mr-auto pl-16">
+          <h2 class="text-4xl mb-2 text-white">5x 🚀</h2>
+          <h2 class="text-4xl mb-2 text-white">faster</h2>
+          <p class="text-lg font-bold mb-4 text-white">
+            Companies that adopt AI early grow 50% faster in productivity and
+            customer retention.
+          </p>
+          <p class="text-[#999999]">— BCG AI at Scale Report</p>
+        </div>
       </div>
     </template>
   </TwoColumnsDesign>

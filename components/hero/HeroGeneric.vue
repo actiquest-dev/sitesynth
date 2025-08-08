@@ -8,7 +8,7 @@
     <component :is="selectedGlowEffect" />
     <ParticleEffect />
 
-    <div class="relative max-w-6xl mx-auto px-6" :class="paddingClasses">
+    <div class="relative max-w-[1248px] mx-auto px-6" :class="paddingClasses">
       <div class="text-center px-6 max-w-4xl mx-auto">
         <!-- Logo -->
         <div v-if="logo" class="mb-8 flex justify-center">

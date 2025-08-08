@@ -26,24 +26,25 @@
     rightColumnBgColor="bg-[#161616]"
   >
     <template #left>
-      <div
-        class="px-6 py-24 md:pl-[10rem] md:pr-6 md:border-r border-[#636363] bg-[#161616]"
-      >
-        <h2 class="text-white text-3xl sm:text-4xl mb-6">About Us</h2>
-        <p class="text-[#999999] text-normal font-light mb-4">
-          We’re based in Sint‑Amands, Belgium, in a small office within a
-          beautifully restored historical building by the Schelde river. It’s
-          not flashy—but it's meaningful: rooted, quiet, and real.
-        </p>
-        <h3 class="text-white text-2xl mt-[3rem] mb-[3rem]">
-          Easy reach of partners, clients, and collaborators across Europe.
-        </h3>
-        <p class="text-[#999999] text-normal font-light">
-          Strategically located between Antwerp, Brussels, and Ghent, we remain
-          deeply connected to Europe’s major economic hubs—while keeping focus
-          where it matters most. This little town gives us clarity and calm—and
-          the flexibility to move quickly when clients need us.
-        </p>
+      <div class="py-24 md:border-r border-[#636363] bg-[#161616]">
+        <div class="max-w-[600px] ml-auto pr-16">
+          <h2 class="text-white text-3xl sm:text-4xl mb-6">About Us</h2>
+          <p class="text-[#999999] text-normal font-light mb-4">
+            We’re based in Sint‑Amands, Belgium, in a small office within a
+            beautifully restored historical building by the Schelde river. It’s
+            not flashy—but it's meaningful: rooted, quiet, and real.
+          </p>
+          <h3 class="text-white text-2xl mt-[3rem] mb-[3rem]">
+            Easy reach of partners, clients, and collaborators across Europe.
+          </h3>
+          <p class="text-[#999999] text-normal font-light">
+            Strategically located between Antwerp, Brussels, and Ghent, we
+            remain deeply connected to Europe’s major economic hubs—while
+            keeping focus where it matters most. This little town gives us
+            clarity and calm—and the flexibility to move quickly when clients
+            need us.
+          </p>
+        </div>
       </div>
     </template>
 
@@ -67,24 +68,26 @@
     textColorRight="text-white"
   >
     <template #left>
-      <div
-        class="px-6 py-24 md:pl-[10rem] md:pr-6 md:border-r border-[#636363] bg-[#DDDDDD]"
-      >
-        <h3 class="text-lg mb-2">WHY WE EXIST?</h3>
-        <h2 class="text-4xl font-bold mb-4">
-          — we’re a strategic bridge between brand, design, and engineering.
-        </h2>
+      <div class="py-24 md:border-r border-[#636363] bg-[#DDDDDD]">
+        <div class="max-w-[600px] ml-auto pr-16">
+          <h3 class="text-lg mb-2">WHY WE EXIST?</h3>
+          <h2 class="text-4xl font-bold mb-4">
+            — we’re a strategic bridge between brand, design, and engineering.
+          </h2>
+        </div>
       </div>
     </template>
 
     <template #right>
-      <div class="px-6 py-24 md:pr-[10rem] md:pl-6 bg-[#161616]">
-        <p class="text-white font-bold mb-4">
-          Rooted in effectiveness, openness, and craftsmanship. We're a small
-          but dedicated team—designers, strategists, and full-stack
-          developers—working in sync to deliver integrated solutions that break
-          down silos and drive lasting impact.
-        </p>
+      <div class="py-24 bg-[#161616]">
+        <div class="max-w-[600px] mr-auto pl-16">
+          <p class="text-white font-bold mb-4">
+            Rooted in effectiveness, openness, and craftsmanship. We're a small
+            but dedicated team—designers, strategists, and full-stack
+            developers—working in sync to deliver integrated solutions that
+            break down silos and drive lasting impact.
+          </p>
+        </div>
       </div>
     </template>
   </TwoColumnsDesign>
@@ -95,28 +98,30 @@
     rightColumnBgColor="bg-[#161616]"
   >
     <template #right>
-      <div
-        class="px-6 py-24 md:pl-[10rem] md:pr-6 md:border-r border-[#636363] bg-[#161616]"
-      >
-        <h2 class="text-white text-3xl sm:text-4xl mb-6">How We Work</h2>
-        <p class="text-[#999999] text-normal font-light mb-4">
-          We're a small, international team based across Europe — working
-          closely together from Belgium, Italy, Germany, and beyond. All product
-          work is done in-house or with trusted long-term collaborators. We
-          don’t outsource to third-party vendors or offload work to anonymous
-          contractors.
-        </p>
-        <h3 class="text-white text-2xl mt-[3rem] mb-[3rem]">
-          We’re hands-on with client projects
-        </h3>
-        <p class="text-[#999999] text-normal font-light">
-          At SiteSynth, we build with intention. We also invest in our own tools
-          and ventures. This dual focus keeps our thinking sharp and our
-          solutions grounded in real use. We’re curious by nature, open to
-          different industries — from common digital products to specialized,
-          niche domains. That’s what keeps the work fresh, and the outcomes
-          valuable.
-        </p>
+      <div class="py-24 md:border-r border-[#636363] bg-[#161616]">
+        <div class="max-w-[600px] mr-auto pl-16">
+          <h2 class="text-white text-3xl sm:text-4xl mb-6">How We Work</h2>
+          <p class="text-[#999999] text-normal font-light mb-4">
+            We're a small, international team based across Europe — working
+            closely together from Belgium, Italy, Germany, and beyond. All
+            product work is done in-house or with trusted long-term
+            collaborators. We don’t outsource to third-party vendors or offload
+            work to anonymous contractors.
+          </p>
+          <h3 class="text-white text-2xl mt-[3rem] mb-[3rem]">
+            We’re hands-on with client projects
+          </h3>
+          <p class="text-[#999999] text-normal font-light">
+            At SiteSynth, we build with intention. We also invest in our own
+            tools and ventures. This dual focus keeps our thinking sharp and our
+            solutions grounded in real use.
+          </p>
+          <p class="text-[#999999] text-normal font-light mt-4">
+            We’re curious by nature, open to different industries — from common
+            digital products to specialized, niche domains. That’s what keeps
+            the work fresh, and the outcomes valuable.
+          </p>
+        </div>
       </div>
     </template>
 

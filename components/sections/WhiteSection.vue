@@ -5,7 +5,7 @@
     :style="backgroundImageStyle"
   >
     <div
-      class="relative overflow-hidden z-0 testimonial-card max-w-6xl mx-auto text-center px-6 group"
+      class="relative overflow-hidden z-0 testimonial-card max-w-[1248px] mx-auto text-center px-6 group"
     >
       <div
         :class="`${bgInside} border border-[#636363] py-20 px-20 relative overflow-hidden`"
