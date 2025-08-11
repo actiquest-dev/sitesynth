@@ -14,7 +14,7 @@
   >
     <template #left>
       <div class="py-24 md:border-r border-[#636363]">
-        <div class="max-w-[600px] ml-auto pr-16">
+        <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
           <h3 class="text-white text-lg mb-6">WHY YOU NEED FIGMA?</h3>
           <h2 class="text-white text-4xl font-bold">
             Design debt is real. So is handoff hell..
@@ -25,7 +25,7 @@
 
     <template #right>
       <div class="py-24">
-        <div class="max-w-[600px] mr-auto pl-16">
+        <div class="max-w-[600px] mr-auto px-6 md:px-0 md:pl-16">
           <h3 class="text-white text-[24px] font-light">
             When teams move fast without systems, the result is chaos:
             duplicated components, messy UX, endless revisions, and frustrated

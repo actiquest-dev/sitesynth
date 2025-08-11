@@ -27,7 +27,7 @@
   >
     <template #left>
       <div class="py-24 md:border-r border-[#636363] bg-[#161616]">
-        <div class="max-w-[600px] ml-auto pr-16">
+        <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
           <h2 class="text-white text-3xl sm:text-4xl mb-6">About Us</h2>
           <p class="text-[#999999] text-normal font-light mb-4">
             We’re based in Sint‑Amands, Belgium, in a small office within a
@@ -69,7 +69,7 @@
   >
     <template #left>
       <div class="py-24 md:border-r border-[#636363] bg-[#DDDDDD]">
-        <div class="max-w-[600px] ml-auto pr-16">
+        <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
           <h3 class="text-lg mb-2">WHY WE EXIST?</h3>
           <h2 class="text-4xl font-bold mb-4">
             — we’re a strategic bridge between brand, design, and engineering.
@@ -80,7 +80,7 @@
 
     <template #right>
       <div class="py-24 bg-[#161616]">
-        <div class="max-w-[600px] mr-auto pl-16">
+        <div class="max-w-[600px] mr-auto px-6 md:px-0 md:pl-16">
           <p class="text-white font-bold mb-4">
             Rooted in effectiveness, openness, and craftsmanship. We're a small
             but dedicated team—designers, strategists, and full-stack
@@ -99,7 +99,7 @@
   >
     <template #right>
       <div class="py-24 md:border-r border-[#636363] bg-[#161616]">
-        <div class="max-w-[600px] mr-auto pl-16">
+        <div class="max-w-[600px] mr-auto px-6 md:px-0md:pl-16">
           <h2 class="text-white text-3xl sm:text-4xl mb-6">How We Work</h2>
           <p class="text-[#999999] text-normal font-light mb-4">
             We're a small, international team based across Europe — working

@@ -116,25 +116,25 @@
     ]"
     :sections="[
       {
-        title: 'Discover',
+        title: '1. Discover',
         description: 'We dive into your business goals, users, and context.',
         link: '/',
         linkText: 'Tell us your story first',
       },
       {
-        title: 'Define',
+        title: '2. Define',
         description: 'We clarify the challenge and craft a shared direction.',
         link: '/brand-driven-product-strategy/',
         linkText: 'How connect brand and product',
       },
       {
-        title: 'Design',
+        title: '3. Design',
         description: 'Systems, visuals, and flows — always aligned.',
         link: '/ux-and-design-system/',
         linkText: 'How we build design systems',
       },
       {
-        title: 'Deliver',
+        title: '4. Deliver',
         description: 'Bringing designs to life with clarity and collaboration.',
         link: '/full-stack-implementation/',
         linkText: 'How we bring designs to life',
