@@ -51,7 +51,7 @@
     <template #right>
       <div>
         <img
-          src="/assets/new-assets/products-page/product/score-synth/about.png"
+          src="/assets/new-assets/company-page/about-us/about-us.png"
           alt="ScoreSynth Image"
           class="h-full w-full object-cover"
         />
@@ -128,7 +128,7 @@
     <template #left>
       <div>
         <img
-          src="/assets/mayya-studio.jpg"
+          src="/assets/new-assets/company-page/about-us/how-we-work.png"
           alt="ScoreSynth Image"
           class="w-full object-cover"
         />
@@ -153,42 +153,42 @@
     positionTextColor="text-[#999999]"
     :teamMembers="[
       {
-        imageSrc: '/assets/koen-team.png',
+        imageSrc: '/assets/new-assets/company-page/about-us/our-team/koen.png',
         name: 'Koen Vergauwen',
         nameTag: 'h3',
         nameClass: '',
         position: 'Head of Growth',
       },
       {
-        imageSrc: '/assets/mayya-team.png',
+        imageSrc: '/assets/new-assets/company-page/about-us/our-team/mayya.png',
         name: 'Mayya Aprosina',
         nameTag: 'h3',
         nameClass: '',
         position: 'CEO & Business Designer',
       },
       {
-        imageSrc: '/assets/marco.png',
+        imageSrc: '/assets/new-assets/company-page/about-us/our-team/marco.png',
         name: 'Marco Maffei',
         nameTag: 'h3',
         nameClass: '',
         position: 'Full-Stack Engineer',
       },
       {
-        imageSrc: '/assets/anne-team.png',
+        imageSrc: '/assets/new-assets/company-page/about-us/our-team/anna.png',
         name: 'Anna Gorbenko',
         nameTag: 'h3',
         nameClass: '',
         position: 'Content Manager',
       },
       {
-        imageSrc: '/assets/miguel-team.png',
+        imageSrc: '/assets/new-assets/company-page/about-us/our-team/miguel.png',
         name: 'Miguel Aprossine',
         nameTag: 'h3',
         nameClass: '',
         position: 'AI & Web3 Visionary Partner',
       },
       {
-        imageSrc: '/assets/anonymus.png',
+        imageSrc: '/assets/new-assets/company-page/about-us/our-team/unknown.png/anonymus.png',
         name: 'Wanna Join?',
         nameTag: 'h3',
         nameClass: '',
