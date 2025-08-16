@@ -1,7 +1,10 @@
 <style scoped>
 h1 {
-  text-shadow: 0 0 12px #fff, 0 0 22px #7de7ff, 0 0 42px #7de7ff;
   font-weight: 100;
+}
+
+.glow-text {
+  text-shadow: 0 0 12px #fff, 0 0 22px #7de7ff, 0 0 42px #7de7ff;
 }
 </style>
 <template>
@@ -18,7 +21,7 @@ h1 {
     <GlowEffect />
     <ParticleEffect />
     <div class="max-w-[1248px] mx-auto text-center px-6 relative z-10 w-full">
-      <h1 class="text-4xl sm:text-6xl font-extrabold mb-8">{{ title }}</h1>
+      <h1 class="text-4xl sm:text-6xl font-extrabold mb-8" v-html="title"></h1>
       <p class="text-base sm:text-[16px] font-medium mb-8">{{ subtitle }}</p>
     </div>
   </section>
