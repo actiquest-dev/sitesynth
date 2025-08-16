@@ -56,7 +56,7 @@
       'React, Vue, Next.js, Nuxt for frontend development',
       'GitHub / GitLab for version control & code reviews',
     ]"
-    imageSrc="/assets/front-end.png"
+    imageSrc="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/front-end-engineering.png"
   />
   <TestimonialWhite
     id="testimonial-marco"
@@ -78,7 +78,7 @@
   <TranslateSection
     id="translate-back-end"
     imagePosition="h-100 object-cover"
-    imageSrc="/assets/back-end.png"
+    imageSrc="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/back-end-engineering.png"
     imageAlt="Github code"
     bgColor="bg-[#DDDDDD]"
     textColor="text-white"
@@ -126,7 +126,7 @@
       'GitHub Projects or Jira for sprints & tasks',
       'Stripe, Auth0, and 3rd-party APIs for integration work',
     ]"
-    imageSrc="/assets/integration.png"
+    imageSrc="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/integrated-dev-collaboration.png
   />
 
   <BannerSection
@@ -188,7 +188,7 @@
   />
   <WhiteSection
     id="white-section-get-started"
-    bgImage="/assets/full-stack-bg.svg"
+    bgImage="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/below-pattern.svg"
     class="pt-[8rem] pb-[8rem]"
     bgColor="bg-[#DDDDDD]"
     title="Get Started Today"
