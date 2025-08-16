@@ -19,7 +19,7 @@
         <!-- Right Column (2/3) -->
         <div class="md:col-span-2 flex flex-col justify-center px-6">
           <i class="text-6xl fa-solid fa-quote-left" :class="quoteColor"></i>
-          <h3 class="text-2xl font-bold text-white mt-4 mb-6">
+          <h3 class="text-4xl font-black text-white mt-4 mb-6">
             {{ quoteTitle }}
           </h3>
           <p class="text-gray-300">"{{ quoteText }}"</p>

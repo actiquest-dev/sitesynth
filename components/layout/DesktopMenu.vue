@@ -85,7 +85,7 @@
       <NuxtLink
         :href="cta.link"
         :target="cta.target"
-        :class="`border-[1px] border-white ${hoverbg} hover:text-white ${hoverborder} bg-white text-[#161616] px-4 py-2 font-semibold transition-colors duration-[1000ms]`"
+        :class="`border-[1px] border-white ${hoverbg} hover:text-white ${hoverborder} bg-[#161616] text-white px-4 py-2 font-semibold transition-colors duration-[1000ms]`"
       >
         <span>{{ cta.text }}</span>
       </NuxtLink>

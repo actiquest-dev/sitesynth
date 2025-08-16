@@ -1,3 +1,9 @@
+<style scoped>
+h1 {
+  text-shadow: 0 0 12px #fff, 0 0 22px #7de7ff, 0 0 42px #7de7ff;
+  font-weight: 100;
+}
+</style>
 <template>
   <!-- Hero Section -->
   <section

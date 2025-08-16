@@ -18,7 +18,7 @@
           <p :class="`${textColor} my-6`">{{ description }}</p>
 
           <!-- Call-to-Action Buttons -->
-          <div class="flex justify-center gap-4 mt-6">
+          <div class="flex flex-col sm:flex-row justify-center gap-4 mt-6">
             <a
               :href="primaryLink"
               class="px-6 py-2 border-[1px] border-white hover-button bg-white text-[#161616] transition-colors duration-[1000ms] font-semibold"

@@ -7,7 +7,7 @@
     <GlowEffect />
     <div class="max-w-[1248px] px-6 mx-auto grid grid-cols-1 md:grid-cols-2">
       <!-- Left Column -->
-      <div class="border-r border-[#636363] py-12 pr-6">
+      <div class="md:border-r border-[#636363] py-12 md:pr-6">
         <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
           {{ leftTitle }}
         </h2>

@@ -18,7 +18,7 @@
   >
     <template #left>
       <div class="py-24 md:border-r border-[#636363] bg-[#DDDDDD]">
-        <div class="max-w-[600px] ml-auto pr-16">
+        <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
           <h3 class="text-lg mb-2">WHY AI NOW?</h3>
           <h2 class="text-4xl font-bold mb-4">
             You don’t need an AI lab. You need traction.
@@ -29,7 +29,7 @@
 
     <template #right>
       <div class="py-24 bg-[#161616]">
-        <div class="max-w-[600px] mr-auto pl-16">
+        <div class="max-w-[600px] mr-auto px-6 md:px-0 md:pl-16">
           <p class="text-white font-bold mb-4">
             AI is transforming how teams design, build, and operate — but most
             companies don’t know where to start. We help you find the right use
@@ -50,7 +50,7 @@
   >
     <template #left>
       <div class="py-24 md:border-r border-[#636363] bg-[#191919]">
-        <div class="max-w-[600px] ml-auto pr-16">
+        <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
           <h2 class="text-4xl mb-2 text-white">84% 🪄</h2>
           <h2 class="text-4xl mb-2 text-white">of executives</h2>
           <p class="text-lg font-bold mb-4 text-white">
@@ -64,7 +64,7 @@
 
     <template #right>
       <div class="py-24 bg-[#161616]">
-        <div class="max-w-[600px] mr-auto pl-16">
+        <div class="max-w-[600px] mr-auto px-6 md:px-0 md:pl-16">
           <h2 class="text-4xl mb-2 text-white">5x 🚀</h2>
           <h2 class="text-4xl mb-2 text-white">faster</h2>
           <p class="text-lg font-bold mb-4 text-white">

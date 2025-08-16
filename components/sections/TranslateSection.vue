@@ -7,12 +7,12 @@
     <div :class="`border-t border-b border-[#636363] ${contentBgColor}`">
       <div class="max-w-[1248px] mx-auto grid grid-cols-1 md:grid-cols-2 px-6">
         <!-- Image Section -->
-        <div class="border-r border-[#636363]">
+        <div class="md:border-r border-[#636363]">
           <img :src="imageSrc" :alt="imageAlt" :class="`${imagePosition}`" />
         </div>
 
         <!-- Content Section -->
-        <div class="py-12 pl-8">
+        <div class="py-12 md:pl-8">
           <h2 :class="`text-2xl font-semibold pb-4 ${textColor}`">
             {{ mainTitle }}
           </h2>
