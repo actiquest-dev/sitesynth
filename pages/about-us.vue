@@ -181,14 +181,16 @@
         position: 'Content Manager',
       },
       {
-        imageSrc: '/assets/new-assets/company-page/about-us/our-team/miguel.png',
+        imageSrc:
+          '/assets/new-assets/company-page/about-us/our-team/miguel.png',
         name: 'Miguel Aprossine',
         nameTag: 'h3',
         nameClass: '',
         position: 'AI & Web3 Visionary Partner',
       },
       {
-        imageSrc: '/assets/new-assets/company-page/about-us/our-team/unknown.png/anonymus.png',
+        imageSrc:
+          '/assets/new-assets/company-page/about-us/our-team/unknown.png',
         name: 'Wanna Join?',
         nameTag: 'h3',
         nameClass: '',
