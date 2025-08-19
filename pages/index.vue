@@ -2,7 +2,7 @@
   <HeaderSection />
   <HeroIndex
     id="hero-index"
-    title="No silos. Just synthesis."
+    title="No silos. <span class='text-glowing'>Just synthesis.</span>"
     subtitle="Where product, brand, and tech finally align"
     backgroundImage="/assets/new-assets/home-page/home/hero-section/BGGradient.svg"
   />
