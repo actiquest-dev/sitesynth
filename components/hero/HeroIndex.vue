@@ -1,7 +1,19 @@
 <style>
 .text-glowing {
+  position: relative;
+  color: inherit;
+  z-index: 1;
   text-shadow: 0 0 12px #fff, 0 0 22px #7de7ff, 0 0 42px #7de7ff;
-  font-weight: 100;
+  animation: glowPulse 1.4s ease-in-out infinite alternate;
+}
+
+@keyframes glowPulse {
+  0% {
+    text-shadow: 0 0 12px #fff, 0 0 22px #7de7ff, 0 0 42px #7de7ff;
+  }
+  100% {
+    text-shadow: 0 0 24px #fff, 0 0 44px #76d3fe, 0 0 68px #b3fcff;
+  }
 }
 </style>
 <template>
