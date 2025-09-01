@@ -67,6 +67,39 @@
 
   <BannerSection text="Our Positions" />
 
+  <JobOpportunity
+    :jobs="[
+      {
+        title: 'Frontend Developer',
+        description:
+          'Join our team to build amazing user interfaces with Vue.js and Nuxt.js',
+        link: 'https://example.com/apply/frontend',
+        image: '/assets/new-assets/company-page/carreers/logo-for-position.svg',
+        titleTag: 'h3',
+        descriptionTag: 'p',
+        titleClass: 'text-white text-2xl font-semibold mb-4',
+        descriptionClass: 'text-[#CCCCCC] text-base',
+      },
+      {
+        title: 'Backend Developer',
+        description: 'Work on scalable APIs and server architecture',
+        link: 'https://example.com/apply/backend',
+        image: '/assets/new-assets/company-page/carreers/logo-for-position.svg',
+        titleClass: 'text-white text-2xl font-semibold mb-4',
+        descriptionClass: 'text-[#CCCCCC] text-base',
+      },
+      {
+        title: 'Don\'t see a role that\'s right for you? ',
+        description: 'Apply anyways!',
+        link: 'https://example.com/apply/backend',
+        image: '/assets/new-assets/company-page/carreers/element-for-cta.svg',
+        bgColor: 'bg-[#dddddd]',
+        titleClass: 'text-[#161616] text-2xl font-semibold mb-4',
+        descriptionClass: 'text-[#161616] text-base',
+      },
+    ]"
+  />
+
   <BannerSection text="Our Culture, Your Benefits" />
   <Column
     id="what-you-get"

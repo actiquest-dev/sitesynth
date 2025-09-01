@@ -19,6 +19,26 @@
       },
     ]"
   />
+  <ValuesSection
+    :values="[
+      {
+        buttonText: 'Do remarkable work',
+        buttonClass: 'text-white',
+      },
+      {
+        buttonText: 'Excel together',
+        buttonClass: 'text-white',
+      },
+      {
+        buttonText: 'Embrace change',
+        buttonClass: 'text-white',
+      },
+      {
+        buttonText: 'Stay grounded',
+        buttonClass: 'text-white',
+      },
+    ]"
+  />
   <TwoColumnsDesign
     glowEffect="GlowRed"
     sectionBgColor="bg-[#161616]"
@@ -98,7 +118,7 @@
     rightColumnBgColor="bg-[#161616]"
   >
     <template #right>
-      <div class="py-24 md:border-r border-[#636363] bg-[#161616]">
+      <div class="pt-24 md:border-r border-[#636363] bg-[#161616]">
         <div class="max-w-[600px] mr-auto px-6 md:px-0md:pl-16">
           <h2 class="text-white text-3xl sm:text-4xl mb-6">How We Work</h2>
           <p class="text-[#999999] text-normal font-light mb-4">
