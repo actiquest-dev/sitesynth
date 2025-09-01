@@ -78,7 +78,7 @@
   </TwoColumnsDesign>
   <Testimonial
     id="testimonial-miguel"
-    imageSrc="/assets/miguel.png"
+    imageSrc="/assets/new-assets/solutions-page/solutions/ai-infused-innovation-and-rd/quote/miguel-photo.png"
     personName="Miguel Aprossine "
     personTitle="AI & Web3 Visionary Partner"
     quoteTitle="AI isn’t here to replace your team"
@@ -194,7 +194,7 @@
 
   <WhiteSection
     id="get-started-today"
-    bgImage="/assets/HeroAi.svg"
+    bgImage="/assets/new-assets/solutions-page/solutions/ai-infused-innovation-and-rd/below-pattern.svg"
     class="pt-[8rem] pb-[8rem]"
     title="Get Started Today"
     description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you’re becoming."
