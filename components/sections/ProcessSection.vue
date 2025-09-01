@@ -22,8 +22,11 @@
             @click="toggle(index)"
           >
             {{ section.title }}
-            <span :class="`${accentColor} toggle-btn`">
-              {{ openIndex === index ? "−" : "+" }}
+            <span 
+              v-if="openIndex !== index"
+              :class="`${accentColor} toggle-btn transition-opacity duration-300`"
+            >
+              +
             </span>
           </h3>
           <div
@@ -52,6 +55,7 @@
 
       <!-- Right Column (Image) -->
       <div
+        v-if="getCurrentImageSrc"
         :class="`${imageClass} relative`"
         :style="{ minHeight: containerHeight + 'px' }"
       >
@@ -92,7 +96,8 @@ const openIndex = ref(0);
 const containerHeight = ref(400); // Default height
 
 function toggle(idx) {
-  openIndex.value = openIndex.value === idx ? -1 : idx;
+  // Always switch to the clicked section (GitHub behavior)
+  openIndex.value = idx;
 }
 
 // Function to update container height based on loaded images
@@ -115,15 +120,15 @@ function updateContainerHeight(event) {
 const getCurrentImageSrc = computed(() => {
   if (props.images && props.images.length > 0) {
     const currentImage = props.images[openIndex.value];
-    return currentImage ? currentImage.src : props.imageSrc || "";
+    return currentImage ? currentImage.src : null;
   }
-  return props.imageSrc || "";
+  return props.imageSrc || null;
 });
 
 const getCurrentImageAlt = computed(() => {
   if (props.images && props.images.length > 0) {
     const currentImage = props.images[openIndex.value];
-    return currentImage ? currentImage.alt : props.imageAlt || "";
+    return currentImage ? currentImage.alt : "";
   }
   return props.imageAlt || "";
 });

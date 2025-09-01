@@ -97,7 +97,6 @@
 
   <ProcessSection
     accentColor="text-[#AA3733]"
-    imageSrc="/assets/why-1.png"
     imageClass="px-10 py-10"
     imageAlt="Synth"
     :images="[

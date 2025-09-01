@@ -93,7 +93,6 @@
   />
   <ProcessSection
     id="process-what-we-offer"
-    imageSrc="/assets/new-assets/home-page/home/what-we-offer/Discover.png"
     imageClass=""
     imageAlt="Synth"
     :images="[
