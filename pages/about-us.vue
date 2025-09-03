@@ -99,7 +99,7 @@
     </template>
 
     <template #right>
-      <div class="py-24 bg-[#161616]">
+      <div class="bg-[#161616] flex items-center justify-center">
         <div class="max-w-[600px] mr-auto px-6 md:px-0 md:pl-16">
           <p class="text-white font-bold mb-4">
             Rooted in effectiveness, openness, and craftsmanship. We're a small

@@ -22,7 +22,7 @@
             @click="toggle(index)"
           >
             {{ section.title }}
-            <span 
+            <span
               v-if="openIndex !== index"
               :class="`${accentColor} toggle-btn transition-opacity duration-300`"
             >
