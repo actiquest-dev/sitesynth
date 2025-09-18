@@ -1,24 +1,27 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-
-  compatibilityDate: '2025-05-15',
+  compatibilityDate: "2025-05-15",
 
   devtools: { enabled: true },
 
-  modules: ['@nuxtjs/tailwindcss', '@nuxt/image', '@nuxtjs/sitemap', '@nuxtjs/robots', '@zadigetvoltaire/nuxt-gtm'],
-
-  components: [
-    { path: '~/components', pathPrefix: false }
+  modules: [
+    "@nuxtjs/tailwindcss",
+    "@nuxt/image",
+    "@nuxtjs/sitemap",
+    "@nuxtjs/robots",
+    "@zadigetvoltaire/nuxt-gtm",
   ],
+
+  components: [{ path: "~/components", pathPrefix: false }],
 
   ssr: true, // optional, true by default but can be explicit
 
   nitro: {
-    preset: 'vercel', // ✅ change from 'static' to 'vercel'
+    preset: "vercel", // ✅ change from 'static' to 'vercel'
   },
 
   app: {
-    baseURL: '/', // ✅ change from '/Synth/' to '/'
+    baseURL: "/", // ✅ change from '/Synth/' to '/'
     // ❌ remove `buildAssetsDir` unless you specifically need a custom one
   },
 
@@ -27,15 +30,16 @@ export default defineNuxtConfig({
     brevoApiKey: process.env.BREVO_API_KEY,
   },
 
+  site: {
+    url: "https://synth-phi.vercel.app",
+  },
   sitemap: {
-    siteUrl: 'https://synth-phi.vercel.app',
     autoLastmod: true,
   },
 
   gtm: {
-    id: 'GTM-T6LHVCGC',
+    id: "GTM-T6LHVCGC",
     enableRouterSync: true,
     debug: true,
-  }
-
-})
+  },
+});

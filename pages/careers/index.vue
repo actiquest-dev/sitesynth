@@ -3,7 +3,7 @@
   <HeroGeneric
     backgroundImage=""
     backgroundPosition="bg-right-bottom"
-    paddingClasses="pt-[16rem] h-[100vh]"
+    paddingClasses="flex items-center justify-center h-[100vh]"
     glowEffect="GlowBlue"
     :content="[
       {

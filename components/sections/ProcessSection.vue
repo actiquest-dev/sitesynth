@@ -5,19 +5,19 @@
   >
     <div class="max-w-[1248px] mx-auto px-6 grid grid-cols-1 md:grid-cols-2">
       <!-- Left Column (Expandable Sections) -->
-      <div class="border-r border-[#636363] py-12 pr-12">
+      <div class="my-auto pr-12">
         <div
           v-for="(section, index) in sections"
           :key="index"
-          class="toggle-section border-t border-[#636363] pt-4 mt-4"
+          class="toggle-section border-t border-[#636363] pt-5 mt-4"
           :class="index === 0 ? 'border-t-0' : ''"
         >
           <h3
             :class="[
-              'flex items-center justify-between cursor-pointer transition-all duration-300 ease-out',
+              'flex items-center justify-between cursor-pointer',
               openIndex === index
                 ? 'text-white text-2xl font-bold'
-                : 'text-[#636363] text-xl font-semibold',
+                : 'text-[#636363] text-2xl font-semibold',
             ]"
             @click="toggle(index)"
           >
@@ -56,7 +56,7 @@
       <!-- Right Column (Image) -->
       <div
         v-if="getCurrentImageSrc"
-        :class="`${imageClass} relative`"
+        :class="`${imageClass} relative border-l border-[#636363]`"
         :style="{ minHeight: containerHeight + 'px' }"
       >
         <transition name="image-fade" mode="out-in" appear>
