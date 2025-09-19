@@ -4,6 +4,7 @@
     id="ux-ui-designer-details"
     glowEffect="GlowBlue"
     sectionBgColor="bg-[#191919] pt-[8rem]"
+    image="/assets/career-big.svg"
   >
     <template #content>
       <p class="text-[#7B38FC] mb-8">Full Time | Remote</p>

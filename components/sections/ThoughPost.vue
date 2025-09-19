@@ -4,6 +4,12 @@
     :class="`group relative overflow-hidden border-t border-b border-[#636363] ${sectionBgColor}`"
   >
     <component :is="selectedGlowEffect" />
+    <img
+      v-if="image"
+      :src="image"
+      alt="ThoughPost image"
+      class="absolute w-[700px] right-0 bottom-[-50px] z-0 object-cover pointer-events-none"
+    />
     <!-- Content -->
     <div class="mx-auto max-w-4xl px-6 py-16 relative z-10">
       <!-- Single Column Content -->
@@ -30,6 +36,10 @@ const props = defineProps({
   glowEffect: {
     type: String,
     default: "GlowEffect",
+  },
+  image: {
+    type: String,
+    default: "",
   },
 });
 
