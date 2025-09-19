@@ -196,17 +196,13 @@ const navItems = [
     ],
   },
   {
-    label: "About Us",
-    link: "/about-us",
-  },
-  {
     label: "Careers",
     link: "/careers",
     dropdownWidth: "w-[300px]",
     subItems: [
       {
         label: "Full Stack Developer",
-        link: "/careers/front-end-developer",
+        link: "/careers/full-stack-developer",
       },
       {
         label: "UX/UI Designer",
@@ -217,6 +213,10 @@ const navItems = [
         link: "/careers/marketing-manager",
       },
     ],
+  },
+  {
+    label: "About Us",
+    link: "/about-us",
   },
 ];
 
