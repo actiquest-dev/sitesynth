@@ -5,21 +5,42 @@
     @mousemove="handleMouseMove"
     @mouseleave="resetToAutoSlide"
   >
-    <div class="mx-auto px-6 py-12 overflow-hidden">
+    <div class="hero-tags-holder overflow-hidden py-12">
       <div
-        class="flex gap-6 transition-transform duration-1000 ease-out"
-        :style="{ transform: `translateX(${sliderPosition}px)` }"
+        class="hero-tags-wrapper flex gap-6 whitespace-nowrap"
+        :style="{
+          willChange: 'transform',
+          transform: `translate3d(${sliderPosition}%, 0px, 0px)`,
+          transformStyle: 'preserve-3d',
+        }"
       >
-        <div
-          v-for="(value, index) in values"
-          :key="index"
-          class="button-container flex-shrink-0"
-        >
+        <div class="hero-tags-container flex gap-6">
+          <!-- First set of tags -->
           <div
-            :class="[value.buttonClass, value.bgColor]"
-            class="animated-button px-20 py-8 rounded-full border-2 border-white font-semibold text-4xl whitespace-nowrap"
+            v-for="(value, index) in values"
+            :key="`first-${index}`"
+            class="hero-tags flex-shrink-0"
           >
-            {{ value.buttonText }}
+            <div
+              :class="[value.buttonClass, value.bgColor]"
+              class="hero-tag-text px-20 py-8 rounded-full border-2 border-white font-semibold text-4xl whitespace-nowrap"
+            >
+              {{ value.buttonText }}
+            </div>
+          </div>
+
+          <!-- Duplicate set for infinite loop -->
+          <div
+            v-for="(value, index) in values"
+            :key="`second-${index}`"
+            class="hero-tags flex-shrink-0"
+          >
+            <div
+              :class="[value.buttonClass, value.bgColor]"
+              class="hero-tag-text px-20 py-8 rounded-full border-2 border-white font-semibold text-4xl whitespace-nowrap"
+            >
+              {{ value.buttonText }}
+            </div>
           </div>
         </div>
       </div>
@@ -41,28 +62,34 @@ const props = defineProps({
   },
   values: {
     type: Array,
-    required: true, // Ensure the parent provides this prop
+    required: true,
   },
 });
 
 const sliderPosition = ref(0);
 const isHovering = ref(false);
-let autoSlideInterval = null;
+const mouseInfluence = ref(0);
+let animationFrame = null;
 
-// Auto slide function (slow drift to the right)
-const startAutoSlide = () => {
-  autoSlideInterval = setInterval(() => {
-    if (!isHovering.value) {
-      sliderPosition.value += 2; // Slow persistent movement to the right
-    }
-  }, 50);
-};
-
-const stopAutoSlide = () => {
-  if (autoSlideInterval) {
-    clearInterval(autoSlideInterval);
-    autoSlideInterval = null;
+// Smooth animation loop
+const animate = () => {
+  if (!isHovering.value) {
+    // Auto-slide: slow drift to the left
+    sliderPosition.value -= 0.05;
+  } else {
+    // Mouse influence: faster movement based on mouse position
+    sliderPosition.value -= 0.05 + mouseInfluence.value;
   }
+
+  // Reset position for infinite loop (when first set is completely off-screen)
+  if (sliderPosition.value <= -100) {
+    sliderPosition.value = 0;
+  }
+  if (sliderPosition.value >= 0) {
+    sliderPosition.value = -100;
+  }
+
+  animationFrame = requestAnimationFrame(animate);
 };
 
 const handleMouseMove = (event) => {
@@ -73,29 +100,26 @@ const handleMouseMove = (event) => {
   const containerWidth = rect.width;
   const centerX = containerWidth / 2;
 
-  // Calculate direction and intensity based on mouse position
+  // Calculate influence: negative = move left faster, positive = move right (slower)
   const deltaX = mouseX - centerX;
-  const intensity = Math.abs(deltaX) / centerX; // 0 to 1
-  const maxSpeed = 10;
+  const normalizedDelta = deltaX / centerX; // -1 to 1
 
-  if (deltaX < 0) {
-    // Mouse on left side - move left
-    sliderPosition.value -= maxSpeed * intensity;
-  } else {
-    // Mouse on right side - move right
-    sliderPosition.value += maxSpeed * intensity;
-  }
+  // Scale the influence
+  mouseInfluence.value = normalizedDelta * 0.2; // Adjust multiplier for sensitivity
 };
 
 const resetToAutoSlide = () => {
   isHovering.value = false;
+  mouseInfluence.value = 0;
 };
 
 onMounted(() => {
-  startAutoSlide();
+  animate();
 });
 
 onUnmounted(() => {
-  stopAutoSlide();
+  if (animationFrame) {
+    cancelAnimationFrame(animationFrame);
+  }
 });
 </script>
