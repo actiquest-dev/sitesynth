@@ -70,10 +70,10 @@
   <JobOpportunity
     :jobs="[
       {
-        title: 'Frontend Developer',
+        title: 'Full Stack Developer',
         description:
-          'Join our team to build amazing user interfaces with Vue.js and Nuxt.js',
-        link: 'https://example.com/apply/frontend',
+          'Join our team to build amazing user interfaces with Javascript, React, Vue, Nuxt, Next, Node.js and PHP',
+        link: '/careers/full-stack-developer',
         image: '/assets/new-assets/company-page/carreers/logo-for-position.svg',
         titleTag: 'h3',
         descriptionTag: 'p',
@@ -81,9 +81,17 @@
         descriptionClass: 'text-[#CCCCCC] text-base',
       },
       {
-        title: 'Backend Developer',
-        description: 'Work on scalable APIs and server architecture',
-        link: 'https://example.com/apply/backend',
+        title: 'Ux/Ui Designer',
+        description: 'Work on user interfaces and user experiences',
+        link: '/careers/ux-ui-designer',
+        image: '/assets/new-assets/company-page/carreers/logo-for-position.svg',
+        titleClass: 'text-white text-2xl font-semibold mb-4',
+        descriptionClass: 'text-[#CCCCCC] text-base',
+      },
+      {
+        title: 'Marketing Manager',
+        description: 'Drive our marketing strategy and execution',
+        link: '/careers/marketing-manager',
         image: '/assets/new-assets/company-page/carreers/logo-for-position.svg',
         titleClass: 'text-white text-2xl font-semibold mb-4',
         descriptionClass: 'text-[#CCCCCC] text-base',
@@ -91,7 +99,7 @@
       {
         title: 'Don\'t see a role that\'s right for you? ',
         description: 'Apply anyways!',
-        link: 'https://example.com/apply/backend',
+        link: 'mailto:hello@synthscore.com',
         image: '/assets/new-assets/company-page/carreers/element-for-cta.svg',
         bgColor: 'bg-[#dddddd]',
         titleClass: 'text-[#161616] text-2xl font-semibold mb-4',
