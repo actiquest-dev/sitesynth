@@ -133,6 +133,7 @@ const navItems = [
     link: "#",
     subItems: [
       { label: "About Us", link: "/about-us" },
+      { label: "Contact Us", link: "/contact-us" },
       { label: "Careers", link: "/careers" },
     ],
   },

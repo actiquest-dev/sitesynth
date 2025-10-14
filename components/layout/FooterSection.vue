@@ -100,6 +100,7 @@ const footerData = {
       title: "Company",
       links: [
         { text: "About us", url: "/about-us" },
+        { text: "Contact us", url: "/contact-us" },
         { text: "Careers", url: "/careers" },
         { text: "Score Synth", url: "/scoresynth/" },
       ],

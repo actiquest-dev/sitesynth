@@ -215,8 +215,19 @@ const navItems = [
     ],
   },
   {
-    label: "About Us",
-    link: "/about-us",
+    label: "Info",
+    link: "#",
+    dropdownWidth: "w-[300px]",
+    subItems: [
+      {
+        label: "About us",
+        link: "/about-us",
+      },
+      {
+        label: "Contact us",
+        link: "/contact-us",
+      },
+    ],
   },
 ];
 
