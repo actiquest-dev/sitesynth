@@ -20,7 +20,8 @@
     "@tsparticles/vue3": "^3.0.1",
     "nuxt": "^3.17.5",
     "vue": "^3.5.16",
-    "vue-router": "^4.5.1"
+    "vue-router": "^4.5.1",
+    "vue-tel-input": "^9.5.0"
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^7.0.0-beta.0",
