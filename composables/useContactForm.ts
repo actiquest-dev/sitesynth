@@ -87,11 +87,14 @@ export const useContactForm = () => {
         },
         body: JSON.stringify({ ...formData })
       })
+      
       const data = await response.json()
 
       if (data.success) {
         state.submitMessage = data.message
         resetForm()
+      } else {
+        state.submitError = data.error || 'Failed to send message. Please try again.'
       }
     } catch (error: any) {
       console.error('Form submission error:', error)

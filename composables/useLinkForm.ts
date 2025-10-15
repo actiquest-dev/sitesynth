@@ -64,6 +64,7 @@ export const useLinkForm = () => {
         },
         body: JSON.stringify({ link: formData.link })
       })
+      
       const data = await response.json()
 
       if (data.success) {

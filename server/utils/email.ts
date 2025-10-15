@@ -6,16 +6,16 @@ interface EmailOptions {
 }
 
 export async function sendBrevoEmail(options: EmailOptions) {
-  const brevoApiKey = process.env.BREVO_API_KEY;
+  const brevoApiKey = process.env.BREVO_API_KEY
+  
   if (!brevoApiKey) {
-    throw new Error('Brevo API key not configured');
+    throw new Error('Brevo API key not configured')
   }
 
-  // Always use SiteSynth sender
-  const sender = {
+  const defaultSender = {
     name: 'SiteSynth',
     email: 'hello@sitesynth.com',
-  };
+  }
 
   const response = await fetch('https://api.brevo.com/v3/smtp/email', {
     method: 'POST',
@@ -25,17 +25,19 @@ export async function sendBrevoEmail(options: EmailOptions) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      sender,
+      sender: options.sender || defaultSender,
       to: options.to,
       subject: options.subject,
       htmlContent: options.htmlContent,
     }),
-  });
+  })
+
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || 'Failed to send email');
+    const errorData = await response.json().catch(() => ({}))
+    throw new Error(errorData.message || 'Failed to send email')
   }
-  return await response.json();
+
+  return await response.json()
 }
 
 // Convenience function for link submissions
