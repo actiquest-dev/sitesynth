@@ -159,7 +159,7 @@
     quoteTitle="A clear why shapes everything that follows."
     quoteText="Understanding why your brand exists — beyond products or features — gives every decision direction. It’s the foundation for building digital experiences that feel aligned, intentional, and real."
     ctaText="Get in touch"
-    ctaLink="#"
+    ctaLink="contact-us"
     class="pb-[8rem] pt-[8rem]"
     glowEffect="GlowRed"
   />

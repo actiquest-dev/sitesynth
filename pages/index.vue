@@ -224,7 +224,7 @@
     quoteTitle="Simplicity takes effort"
     quoteText="It takes real effort to cut through the noise and get to what matters. But that’s where momentum begins. At SiteSynth, we believe clarity is a competitive advantage. That’s why we work to make the complex simple — and the simple successful."
     ctaText="Get in touch"
-    ctaLink="#"
+    ctaLink="contact-us"
     class="pb-[8rem] pt-[8rem]"
   />
   <FooterSection />

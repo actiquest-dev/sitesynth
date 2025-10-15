@@ -66,7 +66,7 @@
     quoteTitle="Ideas are cheap. Shipping is rare. We focus on the rare."
     quoteText="Anyone can brainstorm. We’re here to build — and get it live."
     ctaText="Get in touch"
-    ctaLink="#"
+    ctaLink="/contact-us"
     class="pb-[8rem] pt-[8rem]"
   />
   <BannerSection

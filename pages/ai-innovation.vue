@@ -84,7 +84,7 @@
     quoteTitle="AI isn’t here to replace your team"
     quoteText="We use AI to cut the noise, speed up workflows, and reveal smarter ways to build. It’s not about hype — it’s about helping real teams move faster with less friction."
     ctaText="Get in touch"
-    ctaLink="#"
+    ctaLink="/contact-us"
     class="pt-[8rem]"
   />
   <BannerSection text="What We Offer" />
