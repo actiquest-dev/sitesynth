@@ -1,5 +1,5 @@
 import { defineEventHandler, setResponseStatus } from 'h3'
-import { LinkService } from '../services/linkService'
+import { ContactService } from '../services/contactService'
 
 export default defineEventHandler(async (event) => {
   if (event.method !== 'POST') {
@@ -7,5 +7,5 @@ export default defineEventHandler(async (event) => {
     return { error: 'Method Not Allowed' }
   }
 
-  return await LinkService.handleLinkRequest(event)
+  return await ContactService.handleContactRequest(event)
 })

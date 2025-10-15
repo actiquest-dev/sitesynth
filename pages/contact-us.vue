@@ -1,7 +1,5 @@
 <script setup>
-import { ref } from "vue";
-
-const phone = ref("");
+const { formData, state, handleSubmit } = useContactForm();
 </script>
 
 <template>
@@ -32,10 +30,24 @@ const phone = ref("");
     <template #right>
       <div class="py-24 md:border-r border-[#636363] bg-[#161616]">
         <div class="max-w-[600px] mr-auto px-6 md:px-0 md:pl-16">
-          <form class="space-y-8">
+          <form class="space-y-8" @submit="handleSubmit">
             <h2 class="text-white text-3xl sm:text-4xl mb-6">
               Tell us how we can help
             </h2>
+
+            <!-- Success/Error Messages -->
+            <div
+              v-if="state.submitMessage"
+              class="p-4 bg-green-600/20 border border-green-500 rounded-lg"
+            >
+              <p class="text-green-400 text-sm">{{ state.submitMessage }}</p>
+            </div>
+            <div
+              v-if="state.submitError"
+              class="p-4 bg-red-600/20 border border-red-500 rounded-lg"
+            >
+              <p class="text-red-400 text-sm">{{ state.submitError }}</p>
+            </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label class="block text-[#999999] mb-2" for="fullName">
@@ -45,6 +57,8 @@ const phone = ref("");
                   id="fullName"
                   name="fullName"
                   type="text"
+                  v-model="formData.fullName"
+                  required
                   class="w-full bg-[#232323] border border-[#333] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#8CB0FF]"
                 />
               </div>
@@ -56,6 +70,7 @@ const phone = ref("");
                   id="company"
                   name="company"
                   type="text"
+                  v-model="formData.company"
                   class="w-full bg-[#232323] border border-[#333] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#8CB0FF]"
                 />
               </div>
@@ -69,6 +84,8 @@ const phone = ref("");
                   id="email"
                   name="email"
                   type="email"
+                  v-model="formData.email"
+                  required
                   class="w-full bg-[#232323] border border-[#333] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#8CB0FF]"
                 />
               </div>
@@ -78,7 +95,7 @@ const phone = ref("");
                 </label>
                 <ClientOnly>
                   <PhoneInput
-                    v-model="phone"
+                    v-model="formData.phone"
                     :input-options="{
                       placeholder: 'Enter phone',
                       id: 'phone',
@@ -94,6 +111,7 @@ const phone = ref("");
                     <input
                       type="tel"
                       placeholder="Enter phone"
+                      v-model="formData.phone"
                       class="w-full bg-[#232323] border border-[#333] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#8CB0FF]"
                     />
                   </template>
@@ -105,6 +123,8 @@ const phone = ref("");
               <select
                 id="topic"
                 name="topic"
+                v-model="formData.topic"
+                required
                 class="w-full bg-[#232323] border border-[#333] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#8CB0FF]"
               >
                 <option value="">Select a topic</option>
@@ -122,6 +142,8 @@ const phone = ref("");
                 id="message"
                 name="message"
                 rows="4"
+                v-model="formData.message"
+                required
                 class="w-full bg-[#232323] border border-[#333] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#8CB0FF]"
               ></textarea>
             </div>
@@ -131,6 +153,7 @@ const phone = ref("");
                   id="consent"
                   name="consent"
                   type="checkbox"
+                  v-model="formData.consent"
                   required
                   class="accent-[#8CB0FF] w-5 h-5 mr-3 focus:outline-none focus:ring-2 focus:ring-[#8CB0FF]"
                 />
@@ -140,9 +163,10 @@ const phone = ref("");
               </div>
               <button
                 type="submit"
-                class="px-6 py-2 border-1 border-white hover:bg-white hover:text-[#161616] hover:border-white bg-[#161616] text-white transition-colors duration-[1000ms] font-semibold cursor-pointer"
+                :disabled="state.isSubmitting"
+                class="px-6 py-2 border-1 border-white hover:bg-white hover:text-[#161616] hover:border-white bg-[#161616] text-white transition-colors duration-[1000ms] font-semibold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Send Message
+                {{ state.isSubmitting ? "Sending..." : "Send Message" }}
               </button>
             </div>
           </form>
