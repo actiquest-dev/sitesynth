@@ -231,5 +231,5 @@ const navItems = [
   },
 ];
 
-const cta = { text: "Get started", link: "#" };
+const cta = { text: "Get started", link: "/contact-us" };
 </script>

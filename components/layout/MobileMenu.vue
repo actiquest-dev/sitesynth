@@ -158,7 +158,7 @@ const navItems = [
 ];
 
 // CTA
-const cta = { text: "Get started", link: "#" };
+const cta = { text: "Get started", link: "/contact-use" };
 
 // SOCIAL ICONS
 const socials = [
