@@ -80,18 +80,22 @@ export const useContactForm = () => {
     state.isSubmitting = true
 
     try {
-      const response = await $fetch<ApiResponse>('/api/contact', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
-        body: { ...formData }
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...formData })
       })
+      const data = await response.json()
 
-      if (response.success) {
-        state.submitMessage = response.message
+      if (data.success) {
+        state.submitMessage = data.message
         resetForm()
       }
     } catch (error: any) {
       console.error('Form submission error:', error)
-      state.submitError = error.data?.error || 'Failed to send message. Please try again.'
+      state.submitError = error?.message || 'Failed to send message. Please try again.'
     } finally {
       state.isSubmitting = false
     }

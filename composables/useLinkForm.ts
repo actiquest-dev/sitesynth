@@ -57,20 +57,24 @@ export const useLinkForm = () => {
     state.isSubmitting = true
 
     try {
-      const response = await $fetch<LinkApiResponse>('/api/send-link', {
+      const response = await fetch('/api/send-link', {
         method: 'POST',
-        body: { link: formData.link }
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ link: formData.link })
       })
+      const data = await response.json()
 
-      if (response.success) {
-        state.message = response.message || 'Link submitted successfully!'
+      if (data.success) {
+        state.message = data.message || 'Link submitted successfully!'
         resetForm()
       } else {
-        state.message = response.error || 'Something went wrong'
+        state.message = data.error || 'Something went wrong'
       }
     } catch (error: any) {
       console.error('Link submission error:', error)
-      state.message = error.data?.error || 'Failed to submit link. Please try again.'
+      state.message = error?.message || 'Failed to submit link. Please try again.'
     } finally {
       state.isSubmitting = false
     }

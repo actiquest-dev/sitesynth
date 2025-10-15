@@ -6,37 +6,42 @@ interface EmailOptions {
 }
 
 export async function sendBrevoEmail(options: EmailOptions) {
-  const brevoApiKey = process.env.BREVO_API_KEY
-  
+  const brevoApiKey = process.env.BREVO_API_KEY;
   if (!brevoApiKey) {
-    throw new Error('Brevo API key not configured')
+    throw new Error('Brevo API key not configured');
   }
 
-  const defaultSender = {
+  // Always use SiteSynth sender
+  const sender = {
     name: 'SiteSynth',
     email: 'hello@sitesynth.com',
-  }
+  };
 
-  return await $fetch('https://api.brevo.com/v3/smtp/email', {
+  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'api-key': brevoApiKey,
       'Content-Type': 'application/json',
     },
-    body: {
-      sender: options.sender || defaultSender,
+    body: JSON.stringify({
+      sender,
       to: options.to,
       subject: options.subject,
       htmlContent: options.htmlContent,
-    },
-  })
+    }),
+  });
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || 'Failed to send email');
+  }
+  return await response.json();
 }
 
 // Convenience function for link submissions
 export async function sendLinkSubmission(link: string) {
   return await sendBrevoEmail({
-    to: [{ email: 'marco@tech-paw.com', name: 'SiteSynth Team' }],
+    to: [{ email: 'hello@sitesynth.com', name: 'SiteSynth Team' }],
     subject: 'New Link Submission',
     htmlContent: `<p><strong>Link:</strong> ${link}</p>`,
   })
@@ -65,7 +70,7 @@ export async function sendContactSubmission(formData: {
   `
 
   return await sendBrevoEmail({
-    to: [{ email: 'marco@tech-paw.com', name: 'SiteSynth Team' }],
+    to: [{ email: 'hello@sitesynth.com', name: 'SiteSynth Team' }],
     subject: `New Contact Form Submission from ${formData.fullName}`,
     htmlContent,
   })
