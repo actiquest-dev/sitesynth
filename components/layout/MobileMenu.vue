@@ -129,12 +129,12 @@ const navItems = [
     ],
   },
   {
-    label: "Company",
-    link: "#",
-    subItems: [
-      { label: "About Us", link: "/about-us" },
-      { label: "Careers", link: "/careers" },
-    ],
+    label: "About Us",
+    link: "/about-us",
+  },
+  {
+    label: "Careers",
+    link: "/careers",
   },
 ];
 
