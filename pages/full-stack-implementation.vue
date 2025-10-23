@@ -126,15 +126,15 @@
       'GitHub Projects or Jira for sprints & tasks',
       'Stripe, Auth0, and 3rd-party APIs for integration work',
     ]"
-    imageSrc="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/integrated-dev-collaboration.png
+    imageSrc="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/integrated-dev-collaboration.png"
   />
 
   <BannerSection
-    id="banner-what-you-get"
-    text="What You Get"
-    sectionClass="py-20 text-center bg-[#DDDDDD]"
-    contentClass="text-[#161616] max-w-[1248px] px-6 mx-auto text-4xl"
-  />
+  id="banner-what-you-get"
+  text="What You Get"
+  sectionClass="py-20 text-center bg-[#DDDDDD]"
+  contentClass="text-[#161616] max-w-[1248px] px-6 mx-auto text-4xl"
+/>
 
   <Column
     id="column-what-you-get"

@@ -9,9 +9,9 @@
         >
           <GlowEffect />
 
-          <!-- Gradient Background (appears on hover) -->
+          <!-- Gradient Background (always visible) -->
           <div 
-            class="gradient-bg absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+            class="gradient-bg absolute inset-0 opacity-100 transition-opacity duration-300 pointer-events-none"
             :style="getGradientStyle(index)"
           ></div>
 
@@ -46,23 +46,16 @@ defineProps({
 const getGradientStyle = (index) => {
   const gradients = [
     'url(/assets/gradients/gradient-bottom-left.svg)',
+    'url(/assets/gradients/gradient-top-left.svg)',
     'url(/assets/gradients/gradient-bottom-right.svg)',
     'url(/assets/gradients/gradient-top-right.svg)',
-    'url(/assets/gradients/gradient-top-left.svg)',
-  ];
-  
-  const positions = [
-    'left bottom',
-    'right bottom',
-    'right top',
-    'left top',
   ];
   
   return {
     backgroundImage: gradients[index % 4],
-    backgroundPosition: positions[index % 4],
+    backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
-    backgroundSize: 'contain',
+    backgroundSize: 'cover',
   };
 };
 </script>
