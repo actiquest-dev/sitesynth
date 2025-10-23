@@ -2,10 +2,11 @@
   <section :id="id || undefined" class="border-t border-[#636363] bg-[#161616]">
     <div class="max-w-[1248px] mx-auto px-6">
       <div class="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-        <div
+        <NuxtLink
           v-for="(offer, index) in offers"
           :key="index"
-          class="column-box group relative overflow-hidden z-0 border-l border-r border-[#636363] p-6 py-12 cursor-pointer bg-[#161616] hover:bg-white/10 transition-colors duration-300"
+          :to="offer.link"
+          class="column-box group relative overflow-hidden z-0 border-l border-r border-[#636363] p-6 py-12 cursor-pointer bg-[#161616] hover:bg-white/10 transition-colors duration-300 block no-underline"
         >
           <GlowEffect />
 
@@ -27,7 +28,7 @@
             </h3>
             <p class="text-[#999999] mt-2">{{ offer.description }}</p>
           </div>
-        </div>
+        </NuxtLink>
       </div>
     </div>
   </section>

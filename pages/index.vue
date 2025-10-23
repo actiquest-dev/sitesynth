@@ -78,7 +78,7 @@
         title: 'Full-Stack Implementation Support',
         description:
           'From prototypes to production, we collaborate closely with your dev team — or bring our own.',
-        link: '/full-stack-implementation-support/',
+        link: '/full-stack-implementation/',
       },
       {
         imageSrc:
@@ -87,7 +87,7 @@
         title: 'AI-Infused Innovation & R&D',
         description:
           'We bring forward-thinking, AI-powered tooling into the design and development process.',
-        link: '/ai-infused-innovation/',
+        link: '/ai-innovation/',
       },
     ]"
   />
