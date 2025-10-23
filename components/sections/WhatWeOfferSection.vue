@@ -9,16 +9,24 @@
         >
           <GlowEffect />
 
+          <!-- Gradient Background (appears on hover) -->
+          <div 
+            class="gradient-bg absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+            :style="getGradientStyle(index)"
+          ></div>
+
           <!-- Content -->
-          <img
-            :src="offer.imageSrc"
-            :alt="offer.imageAlt"
-            class="mb-4 w-auto max-w-full"
-          />
-          <h3 class="text-xl font-semibold text-white pt-6 pb-8">
-            {{ offer.title }}
-          </h3>
-          <p class="text-[#999999] mt-2">{{ offer.description }}</p>
+          <div class="relative z-10">
+            <img
+              :src="offer.imageSrc"
+              :alt="offer.imageAlt"
+              class="mb-4 w-auto max-w-full"
+            />
+            <h3 class="text-xl font-semibold text-white pt-6 pb-8">
+              {{ offer.title }}
+            </h3>
+            <p class="text-[#999999] mt-2">{{ offer.description }}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -33,4 +41,28 @@ defineProps({
   },
   offers: Array,
 });
+
+// Function to get gradient background style for each card
+const getGradientStyle = (index) => {
+  const gradients = [
+    'url(/assets/gradients/gradient-bottom-left.svg)',
+    'url(/assets/gradients/gradient-bottom-right.svg)',
+    'url(/assets/gradients/gradient-top-right.svg)',
+    'url(/assets/gradients/gradient-top-left.svg)',
+  ];
+  
+  const positions = [
+    'left bottom',
+    'right bottom',
+    'right top',
+    'left top',
+  ];
+  
+  return {
+    backgroundImage: gradients[index % 4],
+    backgroundPosition: positions[index % 4],
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'contain',
+  };
+};
 </script>
