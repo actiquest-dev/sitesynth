@@ -102,13 +102,13 @@ const footerData = {
         { text: "About us", url: "/about-us" },
         { text: "Contact us", url: "/contact-us" },
         { text: "Careers", url: "/careers" },
-        { text: "Score Synth", url: "/scoresynth/" },
+        { text: "ScoreSynth", url: "/scoresynth/" },
       ],
     },
     {
       title: "Contact us",
       links: [
-        { text: "+32 498 47 77 04", url: "tel:+32498477704" },
+        { text: "+32 480 68 02 01", url: "tel:+32480680201" },
         { text: "Info@sitesynth.com", url: "mailto:info@sitesynth.com" },
       ],
     },

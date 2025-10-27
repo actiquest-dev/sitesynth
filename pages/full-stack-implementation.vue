@@ -130,11 +130,11 @@
   />
 
   <BannerSection
-    id="banner-what-you-get"
-    text="What You Get"
-    sectionClass="py-20 text-center bg-[#DDDDDD]"
-    contentClass="text-[#161616] max-w-[1248px] px-6 mx-auto text-4xl"
-  />
+  id="banner-what-you-get"
+  text="What You Get"
+  sectionClass="py-20 text-center bg-[#DDDDDD]"
+  contentClass="text-[#161616] max-w-[1248px] px-6 mx-auto text-4xl"
+/>
 
   <Column
     id="column-what-you-get"

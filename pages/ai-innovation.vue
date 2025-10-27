@@ -136,7 +136,7 @@
     }"
     :rightContent="{
       image: {
-        src: '/assets/new-assets/solutions-page/solutions/ai-infused-innovation-and-rd/cta/MembriaImage.png',
+        src: '/assets/new-assets/solutions-page/solutions/ai-infused-innovation-and-rd/cta/membria-image.png',
         alt: 'Membria Screenshot',
         class: 'w-full h-auto rounded-lg',
       },
