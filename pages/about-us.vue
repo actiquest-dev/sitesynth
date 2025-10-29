@@ -40,7 +40,7 @@
     ]"
   />
   <TwoColumnsDesign
-    glowEffect="GlowRed"
+    glowEffect="GlowBlue"
     sectionBgColor="bg-[#161616]"
     leftColumnBgColor="bg-[#161616]"
     rightColumnBgColor="bg-[#161616]"
