@@ -109,7 +109,7 @@ const footerData = {
       title: "Contact us",
       links: [
         { text: "+32 480 68 02 01", url: "tel:+32480680201" },
-        { text: "Info@sitesynth.com", url: "mailto:info@sitesynth.com" },
+        { text: "hello@sitesynth.com", url: "mailto:hello@sitesynth.com" },
       ],
     },
   ],
