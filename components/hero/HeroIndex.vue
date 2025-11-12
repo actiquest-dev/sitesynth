@@ -14,17 +14,17 @@ h1 :deep(.glow-text) {
 @keyframes pulse-glow {
   0%, 100% {
     text-shadow: 
-      0 0 10px #FC65FF,
-      0 0 20px #FC65FF,
-      0 0 30px #FC65FF,
+      0 0 10px #C89BFF,
+      0 0 20px #C89BFF,
+      0 0 30px #C89BFF,
       0 0 40px #8000FF,
       0 0 70px #8000FF;
   }
   50% {
     text-shadow: 
-      0 0 20px #FC65FF,
-      0 0 30px #FC65FF,
-      0 0 40px #FC65FF,
+      0 0 20px #C89BFF,
+      0 0 30px #C89BFF,
+      0 0 40px #C89BFF,
       0 0 60px #8000FF,
       0 0 90px #8000FF,
       0 0 110px #8000FF;
