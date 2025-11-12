@@ -9,27 +9,6 @@ h1 :deep(.glow-text) {
   animation: pulse-glow 2s ease-in-out infinite;
   display: inline-block;
 }
-
-/* Анимация пульсации свечения */
-@keyframes pulse-glow {
-  0%, 100% {
-    text-shadow: 
-      0 0 10px #7de7ff,
-      0 0 20px #7de7ff,
-      0 0 30px #7de7ff,
-      0 0 40px #00d4ff,
-      0 0 70px #00d4ff;
-  }
-  50% {
-    text-shadow: 
-      0 0 20px #7de7ff,
-      0 0 30px #7de7ff,
-      0 0 40px #7de7ff,
-      0 0 60px #00d4ff,
-      0 0 90px #00d4ff,
-      0 0 110px #00d4ff;
-  }
-}
 </style>
 <template>
   <!-- Hero Section -->
