@@ -61,15 +61,16 @@ const getGradientStyle = (index) => {
 };
 </script>
 <style scoped>
+/* Увеличиваем glow эффект только в этом компоненте */
 :deep(.glow) {
   background: radial-gradient(circle at var(--pos, 50% 50%),
-      rgba(0, 102, 255, 0.5) 0%,
-      rgba(0, 102, 255, 0.5) 5%,
-      rgba(0, 150, 255, 0.4) 5%,
-      rgba(0, 150, 255, 0.3) 50%,
-      transparent 100%);  /* МАКСИМУМ! */
-  mask-image: radial-gradient(circle at var(--pos, 50% 50%), black 0%, transparent 70%);
-  -webkit-mask-image: radial-gradient(circle at var(--pos, 50% 50%), black 0%, transparent 60%);
-  filter: blur(60px);  /* ОЧЕНЬ размытый */
+      rgba(0, 102, 255, 0.4) 0%,
+      rgba(0, 102, 255, 0.4) 3%,
+      rgba(166, 32, 255, 0.3) 3%,
+      rgba(166, 32, 255, 0.3) 40%,
+      transparent 80%);  /* Было 50%, стало 80% - эффект больше */
+  mask-image: radial-gradient(circle at var(--pos, 50% 50%), black 0%, transparent 50%);  /* Было 30%, стало 50% */
+  -webkit-mask-image: radial-gradient(circle at var(--pos, 50% 50%), black 0%, transparent 40%);  /* Было 20%, стало 40% */
+  filter: blur(40px);  /* Было 20px, стало 40px - более размытый */
 }
 </style>
