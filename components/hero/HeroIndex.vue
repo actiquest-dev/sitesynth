@@ -12,7 +12,7 @@ h1 :deep(.glow-text) {
 
 /* Анимация пульсации свечения */
 @keyframes pulse-glow {
-  0%, 50% {
+  0%, 100% {
     text-shadow: 
       0 0 10px #C89BFF,
       0 0 20px #C89BFF,
