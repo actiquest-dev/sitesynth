@@ -1,5 +1,8 @@
 <template>
-  <section :id="id || undefined" class="border-t border-[#636363] bg-[#161616]">
+<section 
+  :id="id || undefined" 
+    <div class="max-w-[1248px] mx-auto px-6">
+  class="what-we-offer-section border-t border-[#363636] bg-[#161616]"
     <div class="max-w-[1248px] mx-auto px-6">
       <div class="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         <NuxtLink
