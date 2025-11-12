@@ -70,7 +70,7 @@ const getGradientStyle = (index) => {
       rgba(166, 32, 255, 0.3) 40%,
       transparent 80%);  /* Было 50%, стало 80% - эффект больше */
   mask-image: radial-gradient(circle at var(--pos, 80% 80%), black 0%, transparent 80%);  /* Было 30%, стало 50% */
-  -webkit-mask-image: radial-gradient(circle at var(--pos, 50% 50%), black 0%, transparent 40%);  /* Было 20%, стало 40% */
-  filter: blur(40px);  /* Было 20px, стало 40px - более размытый */
+  -webkit-mask-image: radial-gradient(circle at var(--pos, 50% 50%), black 0%, transparent 80%);  /* Было 20%, стало 40% */
+  filter: blur(90px);  /* Было 20px, стало 40px - более размытый */
 }
 </style>
