@@ -17,17 +17,17 @@ h1 :deep(.glow-text) {
       0 0 10px #FC65FF,
       0 0 20px #FC65FF,
       0 0 30px #FC65FF,
-      0 0 40px #FC65FF,
-      0 0 70px #FC65FF;
+      0 0 40px #8000FF,
+      0 0 70px #8000FF;
   }
   50% {
     text-shadow: 
       0 0 20px #FC65FF,
       0 0 30px #FC65FF,
       0 0 40px #FC65FF,
-      0 0 60px #A55BFF,
-      0 0 90px #A55BFF,
-      0 0 110px #A55BFF;
+      0 0 60px #8000FF,
+      0 0 90px #8000FF,
+      0 0 110px #8000FF;
   }
 }
 </style>
