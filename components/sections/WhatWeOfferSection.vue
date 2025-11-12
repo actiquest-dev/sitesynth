@@ -8,7 +8,7 @@
           :to="offer.link"
           class="column-box group relative overflow-hidden z-0 border-l border-r border-[#636363] p-6 py-12 cursor-pointer bg-[#161616] hover:bg-white/10 transition-colors duration-300 block no-underline"
         >
-          <GlowEffect />
+          <GlowBlue />
 
           <!-- Gradient Background (always visible) -->
           <div 
@@ -71,6 +71,6 @@ const getGradientStyle = (index) => {
       transparent 80%);  /* Было 50%, стало 80% - эффект больше */
   mask-image: radial-gradient(circle at var(--pos, 50% 50%), black 0%, transparent 50%);  /* Было 30%, стало 50% */
   -webkit-mask-image: radial-gradient(circle at var(--pos, 50% 50%), black 0%, transparent 40%);  /* Было 20%, стало 40% */
-  filter: blur(40px);  /* Было 20px, стало 40px - более размытый */
+  filter: blur(60px);  /* Было 20px, стало 40px - более размытый */
 }
 </style>
