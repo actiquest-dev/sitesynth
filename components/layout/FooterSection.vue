@@ -115,7 +115,7 @@ const footerData = {
   ],
   footerLinks: {
     privacy: "#",
-    copyright: "© 2025 SyteSynth & Tech Paw | All rights reserved.",
+    copyright: "© 2025 SiteSynth & Tech Paw | All rights reserved.",
   },
 };
 </script>
