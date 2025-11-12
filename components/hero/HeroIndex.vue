@@ -4,8 +4,8 @@ h1 {
   font-weight: 100;
 }
 
-/* Класс для светящегося текста с пульсацией */
-.glow-text {
+/* Используем :deep() для v-html контента */
+h1 :deep(.glow-text) {
   animation: pulse-glow 2s ease-in-out infinite;
   display: inline-block;
 }
