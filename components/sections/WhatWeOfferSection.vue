@@ -8,8 +8,9 @@
           :to="offer.link"
           class="column-box group relative overflow-hidden z-0 border-l border-r border-[#636363] p-6 py-12 cursor-pointer bg-[#161616] hover:bg-white/10 transition-colors duration-300 block no-underline"
         >
-          <GlowEffect />
-
+        <div class="glow-wrapper-large">
+  <GlowEffect />
+</div>
           <!-- Gradient Background (always visible) -->
           <div 
             class="gradient-bg absolute inset-0 opacity-100 transition-opacity duration-300 pointer-events-none"
@@ -60,3 +61,8 @@ const getGradientStyle = (index) => {
   };
 };
 </script>
+<style scoped>
+.glow-wrapper-large {
+  transform: scale(2); /* Увеличить в 2 раза */
+}
+</style>
