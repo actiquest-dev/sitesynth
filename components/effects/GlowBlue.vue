@@ -48,13 +48,12 @@ onBeforeUnmount(() => {
 <style scoped>
 .glow {
   background: radial-gradient(circle at var(--pos, 50% 50%),
-      rgba(0, 51, 255, 0.31) 0%,
-      rgba(0, 102, 255, 0.4) 31%,
+      rgba(68, 0, 255, 0.31) 0%,
+      rgba(68, 0, 255, 0.4) 31%,
       transparent 50%);
   mask-image: radial-gradient(circle at var(--pos, 50% 50%), black 0%, transparent 30%);
   -webkit-mask-image: radial-gradient(circle at var(--pos, 50% 50%), black 0%, transparent 20%);
   filter: blur(20px);
   transition: opacity 0.3s ease;
 }
-
 </style>
