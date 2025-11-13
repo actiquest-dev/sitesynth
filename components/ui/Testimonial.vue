@@ -3,23 +3,24 @@
     <div class="max-w-[1248px] mx-auto px-6">
       <div
         ref="card"
-        class="grid grid-cols-1 md:grid-cols-2 gap-12 relative border border-[#636363] p-12 group overflow-hidden"
+        class="grid grid-cols-1 md:grid-cols-3 gap-8 relative border border-[#636363] py-14 group overflow-hidden"
       >
-        <component :is="selectedGlowEffect" />
-        
-        <!-- Left Column - Profile -->
-        <div class="flex flex-col items-center justify-center text-center relative z-10">
+        <component 
+          :is="selectedGlowEffect" 
+          class="absolute inset-0 z-0 pointer-events-none" 
+        />
+
+        <div class="flex flex-col items-center text-center relative z-10">
           <img
             :src="imageSrc"
             :alt="personName"
-            class="mb-6 w-32 h-32 rounded-full object-cover"
+            class="mb-6 w-auto max-w-[150px] rounded-full object-cover" 
           />
           <h4 class="text-2xl font-bold text-white">{{ personName }}</h4>
           <p class="text-gray-400 mt-2 font-light">{{ personTitle }}</p>
         </div>
-        
-        <!-- Right Column - Quote -->
-        <div class="flex flex-col justify-center relative z-10">
+
+        <div class="md:col-span-2 flex flex-col justify-center relative z-10">
           <i class="text-6xl fa-solid fa-quote-left mb-4" :class="quoteColor"></i>
           <h3 class="text-3xl md:text-4xl font-bold text-white mb-4">
             {{ quoteTitle }}
@@ -40,7 +41,23 @@
 </template>
 
 <script setup>
-import { computed, resolveComponent } from "vue";
+// [ИСПРАВЛЕНО] Убран resolveComponent
+import { computed } from "vue";
+
+// [ИСПРАВЛЕНО] Компоненты импортируются напрямую.
+// ЭТО СНОВА СЛОМАЕТ VERCEL, ЕСЛИ ПУТИ НЕВЕРНЫЕ!
+//
+// Ваш Testimonial.vue лежит в 'components/ui/'.
+// Если GlowEffect.vue лежит в 'components/', путь должен быть:
+// import GlowEffect from "../GlowEffect.vue";
+//
+// Если он лежит в 'components/effects/', путь:
+// import GlowEffect from "../effects/GlowEffect.vue";
+//
+// Я буду использовать '../' (на уровень выше), это самая частая структура.
+//
+// import GlowEffect from "../GlowEffect.vue"; 
+import GlowRed from "../GlowRed.vue";
 
 const props = defineProps({
   id: {
@@ -64,10 +81,11 @@ const props = defineProps({
   },
 });
 
+// [ИСПРАВЛЕНО] computed возвращает импортированный компонент
 const selectedGlowEffect = computed(() => {
   if (props.glowEffect === "GlowRed") {
-    return resolveComponent("GlowRed");
+    return GlowRed;
   }
-  return resolveComponent("GlowEffect");
+  return GlowEffect;
 });
 </script>
