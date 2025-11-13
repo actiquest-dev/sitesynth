@@ -1,22 +1,6 @@
 <template>
-  <section 
-    :id="id || undefined" 
-    :class="sectionClass"
-    class="relative overflow-hidden"
-  >
-    <!-- Gradient Background (optional) -->
-    <div 
-      v-if="showGradient"
-      class="absolute inset-0 pointer-events-none"
-      :style="{
-        backgroundImage: 'url(/assets/gradients/gradient-for-banner-section.svg)',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover',
-      }"
-    ></div>
-
-    <component :is="tag" :class="contentClass" class="relative z-10">
+  <section :id="id || undefined" :class="sectionClass">
+    <component :is="tag" :class="contentClass">
       <span v-html="text"></span>
     </component>
   </section>
@@ -43,10 +27,6 @@ defineProps({
   contentClass: {
     type: String,
     default: "max-w-[1248px] mx-auto text-4xl text-white",
-  },
-  showGradient: {
-    type: Boolean,
-    default: false,
   },
 });
 </script>
