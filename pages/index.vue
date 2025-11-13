@@ -141,12 +141,11 @@
     ]"
   />
 
- <BannerSection 
-  id="banner-new-ai-product" 
-  tag="h2" 
-  text="New AI product we are working on" 
-  :showGradient="true"
-/>
+  <BannerSection
+    id="banner-new-ai-product"
+    tag="h2"
+    text="New AI product we are working on"
+  />
 
   <TwoColumnSection
     id="two-column-score-synth"
