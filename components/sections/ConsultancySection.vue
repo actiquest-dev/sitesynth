@@ -12,9 +12,8 @@
         backgroundImage: 'url(/assets/gradients/blur-sphere-free.svg)',
         backgroundPosition: 'bottom right',
         backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover',
-        width: '100%',
-        height: '100%',
+        backgroundSize: 'auto',
+        backgroundAttachment: 'fixed'
       }"
     ></div>
     
