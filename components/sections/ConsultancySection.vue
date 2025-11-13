@@ -6,16 +6,12 @@
     <GlowEffect />
     
     <!-- Background SVG - fixed to corner -->
-    <div 
+    <img 
+      src="/assets/gradients/blur-sphere-free.svg"
+      alt=""
       class="absolute bottom-0 right-0 pointer-events-none opacity-30"
-      :style="{
-        backgroundImage: 'url(/assets/gradients/blur-sphere-free.svg)',
-        backgroundPosition: 'bottom right',
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'auto',
-        backgroundAttachment: 'fixed',
-      }"
-    ></div>
+      style="width: auto; height: auto;"
+    />
     
     <!-- Content -->
     <div
