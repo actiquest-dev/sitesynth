@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, resolveComponent } from "vue";
 
 const props = defineProps({
   id: {
@@ -60,16 +60,15 @@ const props = defineProps({
   },
   hoverbg: {
     type: String,
-    default: "hover:bg-[#8D35FF]", // Purple as default
+    default: "hover:bg-[#8D35FF]",
   },
   hoverborder: {
     type: String,
-    default: "hover:border-[#8D35FF]", // Purple as default
+    default: "hover:border-[#8D35FF]",
   },
 });
 
 const selectedGlowEffect = computed(() => {
-  // Dynamically import the component based on the prop
   if (props.glowEffect === "GlowRed") {
     return resolveComponent("GlowRed");
   }
