@@ -9,7 +9,7 @@
         
         <!-- Gradient Background -->
         <div 
-          class="absolute inset-0 pointer-events-none"
+          class="absolute inset-0 pointer-events-none opacity-100"
           :style="{
             backgroundImage: 'url(/assets/gradients/gradient-for-banner-section.svg)',
             backgroundPosition: 'center',
