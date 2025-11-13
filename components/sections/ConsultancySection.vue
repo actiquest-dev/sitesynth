@@ -9,8 +9,8 @@
     <img 
       src="/assets/gradients/blur-sphere-free.svg"
       alt=""
-      class="absolute bottom-0 right-0 pointer-events-none opacity-100"
-      style="width: auto; height: auto;"
+      class="absolute bottom-0 pointer-events-none opacity-100"
+      style="width: auto; height: auto; right: -100px;"
     />
     
     <!-- Content -->
