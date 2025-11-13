@@ -49,16 +49,18 @@
           </div>
           
           <!-- Link -->
-          <a
+           <a
             :href="leftContent.link.href"
             :target="leftContent.link.target"
-            class="text-[#8CB0FF] mt-6 w-auto max-w-max py-2 font-semibold inline-flex items-center gap-2 group/link"
+            class="text-[#8CB0FF] mt-6 w-auto max-w-max py-2 font-semibold inline-flex items-center gap-2 group/link relative"
           >
             <span>{{ leftContent.link.text }}</span>
             <i
               class="fa-solid fa-chevron-right relative top-[2px] transition-transform duration-300 group-hover/link:translate-x-1"
               aria-hidden="true"
             ></i>
+            <!-- Animated underline -->
+            <div class="absolute bottom-0 left-0 h-[2px] bg-[#8CB0FF] w-0 group-hover/link:w-full transition-all duration-300"></div>
           </a>
         </div>
         
