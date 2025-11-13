@@ -11,7 +11,7 @@
           <img
             :src="imageSrc"
             :alt="personName"
-            class="mb-4 w-auto max-w-[150px]"
+            class="mb-6 w-32 h-32 rounded-full object-cover"
           />
           <h4 class="text-xl font-semibold text-white">{{ personName }}</h4>
           <p class="text-gray-300 mt-2">{{ personTitle }}</p>
