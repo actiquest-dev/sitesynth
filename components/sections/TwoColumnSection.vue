@@ -6,9 +6,20 @@
         class="grid grid-cols-1 md:grid-cols-2 gap-8 relative border border-[#636363] group overflow-hidden"
       >
         <GlowEffect />
+        
+        <!-- Gradient Background -->
+        <div 
+          class="absolute inset-0 pointer-events-none"
+          :style="{
+            backgroundImage: 'url(/assets/gradients/gradient-for-banner-section.svg)',
+            backgroundPosition: 'bottom left',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: '50% 50%',
+          }"
+        ></div>
 
         <!-- Left Column (1/2) -->
-        <div :class="`flex flex-col justify-center ${leftPadding}`">
+        <div :class="`flex flex-col justify-center ${leftPadding} relative z-10`">
           <!-- Image and Text Row -->
           <div class="flex items-center gap-4 mb-6">
             <img
@@ -25,7 +36,6 @@
               </component>
             </div>
           </div>
-
           <!-- Dynamic Text Elements -->
           <div
             v-for="(textItem, index) in leftContent.textElements"
@@ -36,9 +46,8 @@
               {{ textItem.content }}
             </component>
           </div>
-
           <!-- Link -->
-          <a
+          
             :href="leftContent.link.href"
             :target="leftContent.link.target"
             class="text-[#8CB0FF] mt-6 w-auto max-w-max py-2 font-semibold inline-block"
@@ -50,10 +59,9 @@
             ></i>
           </a>
         </div>
-
         <!-- Right Column (1/2) -->
         <div
-          :class="`flex flex-col justify-center items-center ${rightPadding}`"
+          :class="`flex flex-col justify-center items-center ${rightPadding} relative z-10`"
         >
           <img
             :src="rightContent.image.src"
@@ -75,21 +83,10 @@ defineProps({
   leftContent: {
     type: Object,
     required: true,
-    // Structure:
-    // {
-    //   image: { src: String, alt: String },
-    //   imageText: { tag: String, content: String },
-    //   textElements: [{ tag: String, content: String }],
-    //   link: { href: String, text: String, target?: String }
-    // }
   },
   rightContent: {
     type: Object,
     required: true,
-    // Structure:
-    // {
-    //   image: { src: String, alt: String, class?: String }
-    // }
   },
   leftPadding: {
     type: String,
@@ -103,7 +100,6 @@ defineProps({
 
 const getTextClasses = (tag) => {
   const baseClasses = "text-white";
-
   switch (tag) {
     case "h1":
       return `${baseClasses} text-4xl font-bold mb-4`;
