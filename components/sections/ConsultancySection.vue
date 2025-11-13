@@ -7,13 +7,13 @@
     
     <!-- Background SVG - fixed to corner -->
     <div 
-      class="absolute bottom-0 right-0 pointer-events-none opacity-40"
+      class="absolute bottom-0 right-0 pointer-events-none opacity-30"
       :style="{
         backgroundImage: 'url(/assets/gradients/blur-sphere-free.svg)',
         backgroundPosition: 'bottom right',
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'auto',
-        backgroundAttachment: 'fixed'
+        backgroundAttachment: 'fixed',
       }"
     ></div>
     
