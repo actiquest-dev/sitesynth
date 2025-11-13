@@ -17,7 +17,7 @@
             backgroundSize: '50% 50%',
           }"
         ></div>
-
+        
         <!-- Left Column (1/2) -->
         <div :class="`flex flex-col justify-center ${leftPadding} relative z-10`">
           <!-- Image and Text Row -->
@@ -36,6 +36,7 @@
               </component>
             </div>
           </div>
+          
           <!-- Dynamic Text Elements -->
           <div
             v-for="(textItem, index) in leftContent.textElements"
@@ -46,8 +47,9 @@
               {{ textItem.content }}
             </component>
           </div>
-          <!-- Link -->
           
+          <!-- Link -->
+          <a
             :href="leftContent.link.href"
             :target="leftContent.link.target"
             class="text-[#8CB0FF] mt-6 w-auto max-w-max py-2 font-semibold inline-block"
@@ -59,6 +61,7 @@
             ></i>
           </a>
         </div>
+        
         <!-- Right Column (1/2) -->
         <div
           :class="`flex flex-col justify-center items-center ${rightPadding} relative z-10`"
