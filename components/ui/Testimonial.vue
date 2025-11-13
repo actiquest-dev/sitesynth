@@ -5,9 +5,9 @@
         ref="card"
         class="grid grid-cols-1 md:grid-cols-3 gap-8 relative border border-[#636363] py-14 group overflow-hidden"
       >
-        <component :is="selectedGlowEffect" class="absolute inset-0 z-0 pointer-events-none" />
+        <component :is="selectedGlowEffect" />
         <!-- Left Column (1/3) -->
-        <div class="flex flex-col items-center text-center relative z-10">
+        <div class="flex flex-col items-center text-center">
           <img
             :src="imageSrc"
             :alt="personName"
@@ -17,7 +17,7 @@
           <p class="text-gray-300 mt-2">{{ personTitle }}</p>
         </div>
         <!-- Right Column (2/3) -->
-        <div class="md:col-span-2 flex flex-col justify-center px-6 relative z-10">
+        <div class="md:col-span-2 flex flex-col justify-center px-6">
           <i class="text-6xl fa-solid fa-quote-left" :class="quoteColor"></i>
           <h3 class="text-4xl font-black text-white mt-4 mb-6">
             {{ quoteTitle }}
@@ -25,7 +25,7 @@
           <p class="text-gray-300">"{{ quoteText }}"</p>
           <a
             :href="ctaLink"
-            :class=`border-[1px] border-white ${hoverbg} hover:text-white ${hoverborder} bg-white text-[#161616] mt-6 w-auto max-w-max px-4 py-2 font-semibold transition-colors duration-[1000ms]`"
+            :class="`border-[1px] border-white ${hoverbg} hover:text-white ${hoverborder} bg-white text-[#161616] mt-6 w-auto max-w-max px-4 py-2 font-semibold transition-colors duration-[1000ms]`"
           >
             <span>{{ ctaText }}</span>
           </a>
@@ -34,6 +34,7 @@
     </div>
   </section>
 </template>
+
 <script setup>
 import { computed, resolveComponent } from "vue";
 
