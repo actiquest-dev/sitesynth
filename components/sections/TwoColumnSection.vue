@@ -25,7 +25,7 @@
             <img
               :src="leftContent.image.src"
               :alt="leftContent.image.alt"
-              class="w-auto max-w-[80px] h-auto flex-shrink-0"
+              class="w-auto max-w-[80px] h-auto flex-shrink-0 -translate-y-2"
             />
             <div>
               <component
