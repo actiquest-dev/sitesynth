@@ -52,11 +52,11 @@
           <a
             :href="leftContent.link.href"
             :target="leftContent.link.target"
-            class="text-[#8CB0FF] mt-6 w-auto max-w-max py-2 font-semibold inline-block"
+            class="text-[#8CB0FF] mt-6 w-auto max-w-max py-2 font-semibold inline-flex items-center gap-2 group/link"
           >
             <span>{{ leftContent.link.text }}</span>
             <i
-              class="fa-solid fa-chevron-right relative top-[2px]"
+              class="fa-solid fa-chevron-right relative top-[2px] transition-transform duration-300 group-hover/link:translate-x-1"
               aria-hidden="true"
             ></i>
           </a>
