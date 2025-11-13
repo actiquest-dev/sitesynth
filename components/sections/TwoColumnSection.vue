@@ -1,6 +1,6 @@
 <template>
   <section :id="id || undefined" class="bg-[#161616] flex justify-center">
-    <div class="max-w-[1248px] mx-auto px-6">
+    <div class="w-full">
       <div
         ref="card"
         class="grid grid-cols-1 md:grid-cols-2 gap-8 relative border border-[#636363] group overflow-hidden"
