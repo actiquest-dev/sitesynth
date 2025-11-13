@@ -12,7 +12,7 @@
           class="absolute inset-0 pointer-events-none"
           :style="{
             backgroundImage: 'url(/assets/gradients/gradient-for-banner-section.svg)',
-            backgroundPosition: 'bottom left',
+            backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
           }"
@@ -21,11 +21,11 @@
         <!-- Left Column (1/2) -->
         <div :class="`flex flex-col justify-center ${leftPadding} relative z-10`">
           <!-- Image and Text Row -->
-          <div class="flex items-center gap-4 mb-6">
+          <div class="flex items-center justify-center gap-6 mb-6">
             <img
               :src="leftContent.image.src"
               :alt="leftContent.image.alt"
-              class="w-auto max-w-[80px] h-auto"
+              class="w-auto max-w-[140px] h-auto flex-shrink-0"
             />
             <div>
               <component
@@ -49,7 +49,7 @@
           </div>
           
           <!-- Link -->
-           <a
+          <a
             :href="leftContent.link.href"
             :target="leftContent.link.target"
             class="text-[#8CB0FF] mt-6 w-auto max-w-max py-2 font-semibold inline-flex items-center gap-2 group/link relative"
