@@ -3,39 +3,35 @@
     <div class="max-w-[1248px] mx-auto px-6">
       <div
         ref="card"
-        class="grid grid-cols-1 md:grid-cols-3 gap-8 relative border border-[#636363] py-14 group overflow-hidden"
+        class="grid grid-cols-1 md:grid-cols-2 gap-12 relative border border-[#636363] p-12 group overflow-hidden"
       >
-        <component :is="selectedGlowEffect" class="absolute inset-0 z-0 pointer-events-none" />
-
-        <div class="flex flex-col items-center text-center relative z-10">
+        <component :is="selectedGlowEffect" />
+        
+        <!-- Left Column - Profile -->
+        <div class="flex flex-col items-center justify-center text-center relative z-10">
           <img
             :src="imageSrc"
             :alt="personName"
-            class="mb-4 w-auto max-w-[150px]"
+            class="mb-6 w-32 h-32 rounded-full object-cover"
           />
-          <h4 class="text-xl font-semibold text-white">{{ personName }}</h4>
-          <p class="text-gray-300 mt-2">{{ personTitle }}</p>
+          <h4 class="text-2xl font-bold text-white">{{ personName }}</h4>
+          <p class="text-gray-400 mt-2 font-light">{{ personTitle }}</p>
         </div>
-
-        <div class="md:col-span-2 flex flex-col justify-center px-6 relative z-10">
-          <i class="text-6xl fa-solid fa-quote-left" :class="quoteColor"></i>
-          <h3 class="text-4xl font-black text-white mt-4 mb-6">
+        
+        <!-- Right Column - Quote -->
+        <div class="flex flex-col justify-center relative z-10">
+          <i class="text-6xl fa-solid fa-quote-left mb-4" :class="quoteColor"></i>
+          <h3 class="text-3xl md:text-4xl font-bold text-white mb-4">
             {{ quoteTitle }}
           </h3>
-          <p class="text-gray-300">"{{ quoteText }}"</p>
-
+          <p class="text-gray-300 mb-6 leading-relaxed text-lg">
+            {{ quoteText }}
+          </p>
           <a
             :href="ctaLink"
-            :class="[
-              'border-[1px] border-white bg-white text-[#161616] mt-6 w-auto max-w-max px-4 py-2 font-semibold transition-colors duration-[1000ms]',
-              {
-                'hover:bg-[#8D35FF] hover:border-[#8D35FF] hover:text-white': props.colorScheme === 'purple',
-                'hover:bg-red-500 hover:border-red-500 hover:text-white': props.colorScheme === 'red',
-                // Добавьте другие цветовые схемы здесь
-              }
-            ]"
+            :class="`border border-white text-white px-6 py-2 font-semibold w-fit hover:bg-white hover:text-[#161616] transition-all duration-300`"
           >
-            <span>{{ ctaText }}</span>
+            {{ ctaText }}
           </a>
         </div>
       </div>
@@ -44,13 +40,7 @@
 </template>
 
 <script setup>
-// [ИСПРАВЛЕНО] resolveComponent удален
-import { computed } from "vue";
-
-// [ИСПРАВЛЕНО] Компоненты импортируются напрямую
-// ВАЖНО: Убедитесь, что пути './GlowEffect.vue' и './GlowRed.vue' верны!
-import GlowEffect from "./GlowEffect.vue";
-import GlowRed from "./GlowRed.vue";
+import { computed, resolveComponent } from "vue";
 
 const props = defineProps({
   id: {
@@ -72,18 +62,12 @@ const props = defineProps({
     type: String,
     default: "text-[#A620FF]",
   },
-  // [ИСПРАВЛЕНО] Заменено на colorScheme
-  colorScheme: {
-    type: String,
-    default: 'purple', // 'purple' или 'red' и т.д.
-  },
 });
 
-// [ИСПРАВЛЕНО] computed теперь возвращает сам импортированный компонент
 const selectedGlowEffect = computed(() => {
   if (props.glowEffect === "GlowRed") {
-    return GlowRed; // Возвращаем компонент
+    return resolveComponent("GlowRed");
   }
-  return GlowEffect; // Возвращаем компонент по умолчанию
+  return resolveComponent("GlowEffect");
 });
 </script>
