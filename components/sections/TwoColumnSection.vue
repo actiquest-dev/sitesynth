@@ -1,6 +1,6 @@
 <template>
   <section :id="id || undefined" class="bg-[#161616] flex justify-center">
-    <div class="w-full">
+    <div class="max-w-[1248px] mx-auto px-6 w-full">
       <div
         ref="card"
         class="grid grid-cols-1 md:grid-cols-2 gap-8 relative border border-[#636363] group overflow-hidden"
@@ -14,7 +14,7 @@
             backgroundImage: 'url(/assets/gradients/gradient-for-banner-section.svg)',
             backgroundPosition: 'bottom left',
             backgroundRepeat: 'no-repeat',
-            backgroundSize: '50% 50%',
+            backgroundSize: 'cover',
           }"
         ></div>
         
