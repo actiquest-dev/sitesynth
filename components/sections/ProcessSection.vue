@@ -13,25 +13,22 @@
           :class="index === 0 ? 'border-t-0' : ''"
         >
           <h3
-  @click="toggle(index)"
-  :class="[
-    'flex items-center justify-between cursor-pointer transition-colors duration-200',
-    openIndex === index
-      ? 'text-white font-bold'
-      : 'text-[#636363] group-hover:text-white font-semibold'
-  ]"
->
-  {{ section.title }}
-  <span
-    v-if="openIndex !== index"
-    :class="[
-      `${accentColor}`,
-      'toggle-btn transition-opacity duration-300'
-    ]"
-  >
-    +
-  </span>
-</h3>
+            :class="[
+              'flex items-center justify-between cursor-pointer',
+              openIndex === index
+                ? 'text-white text-2xl font-bold'
+                : 'text-[#636363] text-2xl font-semibold',
+            ]"
+            @click="toggle(index)"
+          >
+            {{ section.title }}
+            <span
+              v-if="openIndex !== index"
+              :class="`${accentColor} toggle-btn transition-opacity duration-300`"
+            >
+              +
+            </span>
+          </h3>
 
           <!-- Плавная анимация как у GitHub -->
           <div
@@ -174,4 +171,3 @@ const getCurrentImageAlt = computed(() => {
   opacity: 1;
 }
 </style>
-
