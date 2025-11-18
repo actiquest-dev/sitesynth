@@ -148,10 +148,10 @@
   />
 
   <TwoColumnSection
-    id="two-column-score-synth"
-    class="pb-20"
-    leftPadding="pl-[4rem] pt-[2rem] md:pt-[0rem]"
-    rightPadding=""
+  id="two-column-score-synth"
+  class="mb-32"
+  leftPadding="pl-[4rem] pt-[2rem] md:pt-[0rem]"
+  rightPadding=""
     :leftContent="{
       image: { src: '/assets/ScoreSynth.svg', alt: 'Innovation Icon' },
       imageText: { tag: 'h3', content: 'ScoreSynth' },
