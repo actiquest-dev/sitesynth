@@ -9,17 +9,17 @@
         <div
           v-for="(section, index) in sections"
           :key="index"
-          class="toggle-section border-t border-[#636363] pt-5 mt-4"
+          class="toggle-section group border-t border-[#636363] pt-5 mt-4"
           :class="index === 0 ? 'border-t-0' : ''"
         >
           <h3
+            @click="toggle(index)"
             :class="[
-              'flex items-center justify-between cursor-pointer',
+              'flex items-center justify-between cursor-pointer transition-colors duration-200',
               openIndex === index
                 ? 'text-white text-2xl font-bold'
-                : 'text-[#636363] text-2xl font-semibold',
+                : 'text-[#636363] text-2xl font-semibold group-hover:text-white',
             ]"
-            @click="toggle(index)"
           >
             {{ section.title }}
             <span
@@ -115,7 +115,6 @@ const contentHeights = ref([]);
 // запоминаем реальные высоты блоков
 function setContentRef(el, idx) {
   if (el) {
-    // scrollHeight даёт «натуральную» высоту контента
     contentHeights.value[idx] = el.scrollHeight;
   }
 }
@@ -171,3 +170,4 @@ const getCurrentImageAlt = computed(() => {
   opacity: 1;
 }
 </style>
+
