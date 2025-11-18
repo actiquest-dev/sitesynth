@@ -1,7 +1,7 @@
 <template>
  <section
   :id="id || undefined"
-  class="bg-[#161616] flex justify-center pb-32"
+  class="bg-[#161616] flex justify-center pb-40"
 >
     <div class="max-w-[1248px] mx-auto px-6 w-full">
       <div
