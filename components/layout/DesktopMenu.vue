@@ -6,7 +6,7 @@
         <NuxtLink
           :href="item.link"
           :target="item.target"
-        :class="[
+:class="[
     'font-medium flex items-center space-x-3 transition-colors duration-200 hover:text-[#d9d9d9]',
     isCurrentParent(item) ? 'current' : '',
 ]"
