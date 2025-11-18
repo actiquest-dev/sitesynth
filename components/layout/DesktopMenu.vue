@@ -7,7 +7,7 @@
           :href="item.link"
           :target="item.target"
           :class="[
-            'font-medium transition-colors duration-1000 flex items-center space-x-1 group',
+            'font-medium transition-colors duration-1000 flex items-center space-x-3 group',
             isCurrentParent(item) ? 'current' : '',
           ]"
         >
