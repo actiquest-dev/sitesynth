@@ -44,7 +44,7 @@
   :class="[
     accentColor,
     'font-semibold mt-4 inline-flex items-center gap-2',
-    'relative group/link pb-8 transition-colors duration-300'
+    'relative group/link py-2 transition-colors duration-300'
   ]"
 >
   <span>{{ section.linkText }}</span>
