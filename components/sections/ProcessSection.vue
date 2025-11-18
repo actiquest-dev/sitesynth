@@ -38,17 +38,27 @@
             "
           >
             <p class="text-[#999999] mt-2">{{ section.description }}</p>
-            <a
-              v-if="section.link"
-              :href="section.link"
-              :class="`${accentColor} font-semibold mt-4 inline-block pb-8 transition-colors duration-300`"
-            >
-              {{ section.linkText }}
-              <i
-                class="fa-solid fa-chevron-right relative top-[2px]"
-                aria-hidden="true"
-              ></i>
-            </a>
+      <a
+  v-if="section.link"
+  :href="section.link"
+  :class="[
+    accentColor,
+    'font-semibold mt-4 inline-flex items-center gap-2',
+    'relative group/link pb-8 transition-colors duration-300'
+  ]"
+>
+  <span>{{ section.linkText }}</span>
+
+  <i
+    class="fa-solid fa-chevron-right relative top-[2px] transition-transform duration-300 group-hover/link:translate-x-1"
+    aria-hidden="true"
+  ></i>
+
+  <!-- underline -->
+  <div
+    class="absolute bottom-0 left-0 h-[2px] bg-[#8CB0FF] w-0 group-hover/link:w-full transition-all duration-300"
+  ></div>
+</a>
           </div>
         </div>
       </div>
