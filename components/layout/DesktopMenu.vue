@@ -6,11 +6,10 @@
         <NuxtLink
           :href="item.link"
           :target="item.target"
-          :class="[
-            'font-medium transition-colors duration-1000 flex items-center space-x-3 group',
-            isCurrentParent(item) ? 'current' : '',
-          ]"
-        >
+        :class="[
+    'font-medium flex items-center space-x-3 transition-colors duration-200 hover:text-[#d9d9d9]',
+    isCurrentParent(item) ? 'current' : '',
+]"
           <span :class="isCurrentParent(item) ? 'underline' : ''">
             {{ item.label }}
           </span>
