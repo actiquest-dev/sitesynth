@@ -173,7 +173,11 @@
       },
     }"
   />
-
+<BannerSection
+    id="banner-new-ai-product"
+    tag="h2"
+    text="What makes us different from others?"
+  />
   <ConsultancySection
     id="consultancy-typical"
     leftTitle="Typical Consultancy"
