@@ -29,36 +29,40 @@
               +
             </span>
           </h3>
+
+          <!-- Плавная анимация как у GitHub -->
           <div
-            class="toggle-content transition-all duration-600 ease-out overflow-hidden"
-            :class="
-              openIndex === index
-                ? 'max-h-[500px] opacity-100'
-                : 'max-h-0 opacity-0'
-            "
+            :ref="el => setContentRef(el, index)"
+            class="overflow-hidden transition-[max-height,opacity,transform] duration-300 ease-out"
+            :style="{
+              maxHeight: openIndex === index ? (contentHeights[index] || 0) + 'px' : '0px',
+              opacity: openIndex === index ? 1 : 0,
+              transform: openIndex === index ? 'translateY(0)' : 'translateY(-4px)'
+            }"
           >
-            <p class="text-[#999999] mt-2">{{ section.description }}</p>
-      <a
-  v-if="section.link"
-  :href="section.link"
-  :class="[
-    accentColor,
-    'font-semibold mt-6 inline-flex items-center gap-2',
-    'relative group/link py-2 transition-colors duration-300'
-  ]"
->
-  <span>{{ section.linkText }}</span>
+            <p class="text-[#999999] mt-2">
+              {{ section.description }}
+            </p>
 
-  <i
-    class="fa-solid fa-chevron-right relative top-[2px] transition-transform duration-300 group-hover/link:translate-x-1"
-    aria-hidden="true"
-  ></i>
+            <a
+              v-if="section.link"
+              :href="section.link"
+              :class="[
+                accentColor,
+                'font-semibold mt-4 inline-flex items-center gap-2',
+                'relative group/link py-2 transition-colors duration-300'
+              ]"
+            >
+              <span>{{ section.linkText }}</span>
+              <i
+                class="fa-solid fa-chevron-right relative top-[2px] transition-transform duration-300 group-hover/link:translate-x-1"
+                aria-hidden="true"
+              ></i>
 
-  <!-- underline -->
-  <div
-    class="absolute bottom-0 left-0 h-[2px] bg-[#8CB0FF] w-0 group-hover/link:w-full transition-all duration-300"
-  ></div>
-</a>
+              <div
+                class="absolute bottom-0 left-0 h-[2px] bg-[#8CB0FF] w-0 group-hover/link:w-full transition-all duration-300"
+              ></div>
+            </a>
           </div>
         </div>
       </div>
@@ -103,33 +107,40 @@ const props = defineProps({
 });
 
 const openIndex = ref(0);
-const containerHeight = ref(400); // Default height
+const containerHeight = ref(400);
 
-function toggle(idx) {
-  // Always switch to the clicked section (GitHub behavior)
-  openIndex.value = idx;
+// высоты контента аккордеона
+const contentHeights = ref([]);
+
+// запоминаем реальные высоты блоков
+function setContentRef(el, idx) {
+  if (el) {
+    // scrollHeight даёт «натуральную» высоту контента
+    contentHeights.value[idx] = el.scrollHeight;
+  }
 }
 
-// Function to update container height based on loaded images
+function toggle(idx) {
+  // как на GitHub: повторный клик закрывает
+  openIndex.value = openIndex.value === idx ? -1 : idx;
+}
+
 function updateContainerHeight(event) {
   const img = event.target;
   const naturalHeight = img.naturalHeight;
   const naturalWidth = img.naturalWidth;
   const containerWidth = img.offsetWidth;
 
-  // Calculate the height the image would have at the container width
   const scaledHeight = (naturalHeight / naturalWidth) * containerWidth;
 
-  // Update container height to accommodate the tallest image
   if (scaledHeight > containerHeight.value) {
     containerHeight.value = scaledHeight;
   }
 }
 
-// Computed properties for dynamic image handling
 const getCurrentImageSrc = computed(() => {
   if (props.images && props.images.length > 0) {
-    const currentImage = props.images[openIndex.value];
+    const currentImage = props.images[openIndex.value] || props.images[0];
     return currentImage ? currentImage.src : null;
   }
   return props.imageSrc || null;
@@ -137,7 +148,7 @@ const getCurrentImageSrc = computed(() => {
 
 const getCurrentImageAlt = computed(() => {
   if (props.images && props.images.length > 0) {
-    const currentImage = props.images[openIndex.value];
+    const currentImage = props.images[openIndex.value] || props.images[0];
     return currentImage ? currentImage.alt : "";
   }
   return props.imageAlt || "";
@@ -145,7 +156,6 @@ const getCurrentImageAlt = computed(() => {
 </script>
 
 <style scoped>
-/* Simple, clean image opacity transition */
 .image-fade-enter-active,
 .image-fade-leave-active {
   transition: opacity 0.5s ease-in-out;
@@ -161,3 +171,4 @@ const getCurrentImageAlt = computed(() => {
   opacity: 1;
 }
 </style>
+
