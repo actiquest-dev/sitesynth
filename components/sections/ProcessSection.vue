@@ -43,7 +43,7 @@
   :href="section.link"
   :class="[
     accentColor,
-    'font-semibold mt-4 inline-flex items-center gap-2',
+    'font-semibold mt-6 inline-flex items-center gap-2',
     'relative group/link py-2 transition-colors duration-300'
   ]"
 >
