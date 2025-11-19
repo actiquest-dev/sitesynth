@@ -5,14 +5,16 @@
 <script setup>
 import { useRoute } from "vue-router";
 import "~/assets/style.scss";
-import { useHead } from "#imports";
+import { useHead, useRuntimeConfig } from "#imports";
 import { computed } from "vue";
 
 const route = useRoute();
 
 // Computed canonical URL that updates with route changes
+const config = useRuntimeConfig();
+// Default base URL (can be overridden with SITE_URL env var)
+const baseUrl = config.public?.siteUrl;
 const canonicalUrl = computed(() => {
-  const baseUrl = "https://synth-phi.vercel.app";
   // Remove trailing slash and ensure proper formatting
   const path = route.path === "/" ? "" : route.path;
   return `${baseUrl}${path}`;
@@ -85,9 +87,9 @@ useHead({
         legalName: "SiteSynth Mayya Approsine Antwerp",
         description:
           "Strategic design and development company that bridges product, brand, and tech to create scalable digital solutions.",
-        url: "https://synth-phi.vercel.app",
-        logo: "https://synth-phi.vercel.app/assets/logo.png",
-        image: "https://synth-phi.vercel.app/assets/og-image-home.jpg",
+        url: baseUrl,
+        logo: `${baseUrl}/assets/logo.png`,
+        image: `${baseUrl}/assets/og-image-home.jpg`,
         sameAs: [
           "https://www.linkedin.com/company/sitesynth",
           "https://twitter.com/sitesynth",

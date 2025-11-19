@@ -141,3 +141,46 @@
   />
   <FooterSection />
 </template>
+
+<script setup>
+// SEO Configuration for UX & Design System page
+const siteUrl = useRuntimeConfig().public?.siteUrl;
+useSeoMeta({
+  title:
+    "UX & Design Systems - SiteSynth | Scalable Design Systems & UX Architecture",
+  description:
+    "We build scalable design systems and UX architecture that let teams move faster, stay consistent, and hand off clearly to engineering.",
+  keywords:
+    "design systems, ux architecture, figma, design tokens, component libraries, design handoff, zeroheight, storybook",
+
+  ogTitle: "UX & Design Systems - SiteSynth",
+  ogDescription:
+    "Scalable design systems and UX architecture that let teams move faster and ship with confidence.",
+  ogImage: `${siteUrl}/assets/og-image-home.jpg`,
+  ogImageAlt: "SiteSynth - UX & Design Systems",
+  ogUrl: `${siteUrl}/ux-and-design-system`,
+
+  twitterTitle: "UX & Design Systems - SiteSynth",
+  twitterDescription:
+    "Scalable design systems and UX architecture that let teams move faster and ship with confidence.",
+  twitterImage: `${siteUrl}/assets/twitter-card-home.jpg`,
+
+  canonical: `${siteUrl}/ux-and-design-system`,
+});
+
+useHead({
+  script: [
+    {
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "UX & Design Systems - SiteSynth",
+        description:
+          "We build scalable design systems and UX architecture that let teams move faster, stay consistent, and hand off clearly to engineering.",
+        url: `${siteUrl}/ux-and-design-system`,
+      }),
+    },
+  ],
+});
+</script>

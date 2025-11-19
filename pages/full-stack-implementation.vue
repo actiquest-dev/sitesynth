@@ -130,11 +130,11 @@
   />
 
   <BannerSection
-  id="banner-what-you-get"
-  text="What You Get"
-  sectionClass="py-20 text-center bg-[#DDDDDD]"
-  contentClass="text-[#161616] max-w-[1248px] px-6 mx-auto text-4xl"
-/>
+    id="banner-what-you-get"
+    text="What You Get"
+    sectionClass="py-20 text-center bg-[#DDDDDD]"
+    contentClass="text-[#161616] max-w-[1248px] px-6 mx-auto text-4xl"
+  />
 
   <Column
     id="column-what-you-get"
@@ -200,3 +200,45 @@
   />
   <FooterSection />
 </template>
+
+<script setup>
+// SEO Configuration for Full-Stack Implementation page
+const siteUrl = useRuntimeConfig().public?.siteUrl;
+useSeoMeta({
+  title: "Full-Stack Implementation - SiteSynth | Production-Ready Engineering",
+  description:
+    "Production-ready engineering: front-end, back-end, and integrated developer collaboration to ship reliable, scalable digital products.",
+  keywords:
+    "full-stack engineering, implementation support, production-ready, backend, frontend, APIs, dev collaboration",
+
+  ogTitle: "Full-Stack Implementation - Production-Ready Engineering",
+  ogDescription:
+    "Production-ready engineering: front-end, back-end, and integrated developer collaboration to ship reliable, scalable digital products.",
+  ogImage: `${siteUrl}/assets/og-image-home.jpg`,
+  ogImageAlt: "SiteSynth - Full-Stack Implementation",
+  ogUrl: `${siteUrl}/full-stack-implementation`,
+
+  twitterTitle: "Full-Stack Implementation - SiteSynth",
+  twitterDescription:
+    "Production-ready engineering: front-end, back-end, and integrated developer collaboration to ship reliable, scalable digital products.",
+  twitterImage: `${siteUrl}/assets/twitter-card-home.jpg`,
+
+  canonical: `${siteUrl}/full-stack-implementation`,
+});
+
+useHead({
+  script: [
+    {
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "Full-Stack Implementation - SiteSynth",
+        description:
+          "Production-ready engineering services: front-end and back-end development, APIs, and integrated dev collaboration to help teams ship.",
+        url: `${siteUrl}/full-stack-implementation`,
+      }),
+    },
+  ],
+});
+</script>

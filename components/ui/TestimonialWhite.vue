@@ -7,11 +7,14 @@
       >
         <GlowEffect />
         <!-- Left Column (1/3) -->
-        <div class="flex flex-col items-center text-center">
+        <!-- Center vertically and ensure image sits above the glow overlay -->
+        <div
+          class="flex flex-col justify-center items-center text-center relative z-10"
+        >
           <img
             :src="imageSrc"
             :alt="personName"
-            class="mb-4 w-auto max-w-[150px]"
+            class="mb-4 w-auto max-w-[150px] relative z-20"
           />
           <h4 class="text-xl font-semibold text-[#161616]">{{ personName }}</h4>
           <p class="text-[#636363] mt-2">{{ personTitle }}</p>

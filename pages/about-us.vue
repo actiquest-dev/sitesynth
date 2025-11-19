@@ -235,6 +235,7 @@
 
 <script setup>
 // SEO Configuration for About Us Page - Only override what's unique
+const siteUrl = useRuntimeConfig().public?.siteUrl;
 useSeoMeta({
   // Page-specific title
   title: "About Us - SiteSynth | Meet Our Strategic Design & Development Team",
@@ -251,18 +252,18 @@ useSeoMeta({
   ogTitle: "About SiteSynth - Meet Our Team",
   ogDescription:
     "Meet the team behind SiteSynth. Based in Sint-Amands, Belgium, we bridge strategy, design, and engineering.",
-  ogImage: "https://synth-phi.vercel.app/assets/og-image-about.jpg",
+  ogImage: `${siteUrl}/assets/og-image-about.jpg`,
   ogImageAlt: "SiteSynth Team - Strategic Design & Development",
-  ogUrl: "https://synth-phi.vercel.app/about-us",
+  ogUrl: `${siteUrl}/about-us`,
 
   // Twitter - Only unique values
   twitterTitle: "About SiteSynth - Meet Our Team",
   twitterDescription:
     "Meet the team behind SiteSynth. Based in Sint-Amands, Belgium, we bridge strategy, design, and engineering.",
-  twitterImage: "https://synth-phi.vercel.app/assets/twitter-card-about.jpg",
+  twitterImage: `${siteUrl}/assets/twitter-card-about.jpg`,
 
   // Page-specific canonical
-  canonical: "https://synth-phi.vercel.app/about-us",
+  canonical: `${siteUrl}/about-us`,
 });
 
 // Structured data for About page
@@ -276,7 +277,7 @@ useHead({
         name: "About SiteSynth",
         description:
           "Learn about SiteSynth, our team, and our approach to strategic design and development.",
-        url: "https://synth-phi.vercel.app/about-us",
+        url: `${siteUrl}/about-us`,
         mainEntity: {
           "@type": "Organization",
           name: "SiteSynth",

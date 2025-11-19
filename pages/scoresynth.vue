@@ -214,3 +214,45 @@
   />
   <FooterSection />
 </template>
+
+<script setup>
+// SEO Configuration for ScoreSynth product page
+const siteUrl = useRuntimeConfig().public?.siteUrl;
+useSeoMeta({
+  title: "ScoreSynth - AI Music Scoring by SiteSynth",
+  description:
+    "ScoreSynth transforms audio or MIDI into professional orchestral sheet music using AI-powered transcription, orchestration, and export to MusicXML/PDF.",
+  keywords:
+    "scoresynth, music transcription, ai music, orchestration, musicxml, sheet music, audio to score",
+
+  ogTitle: "ScoreSynth - Turn ideas into full scores",
+  ogDescription:
+    "AI-powered tool to transcribe, arrange, and score music into professional orchestral sheet music from audio or MIDI.",
+  ogImage: `${siteUrl}/assets/og-scoresynth.jpg`,
+  ogImageAlt: "ScoreSynth - AI Music Scoring",
+  ogUrl: `${siteUrl}/scoresynth`,
+
+  twitterTitle: "ScoreSynth - AI Music Scoring",
+  twitterDescription:
+    "Turn audio or MIDI into professionally arranged scores with ScoreSynth — fast, accurate, and ready for performance.",
+  twitterImage: `${siteUrl}/assets/twitter-card-home.jpg`,
+
+  canonical: `${siteUrl}/scoresynth`,
+});
+
+useHead({
+  script: [
+    {
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "ScoreSynth - AI Music Scoring",
+        description:
+          "ScoreSynth transforms audio or MIDI into professional orchestral sheet music using AI-powered transcription and orchestration.",
+        url: `${siteUrl}/scoresynth`,
+      }),
+    },
+  ],
+});
+</script>

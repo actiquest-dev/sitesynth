@@ -186,11 +186,6 @@
 </template>
 
 <script setup>
-import HeaderSection from "~/components/layout/HeaderSection.vue";
-import FooterSection from "~/components/layout/FooterSection.vue";
-import HeroGeneric from "~/components/hero/HeroGeneric.vue";
-import ThoughPost from "~/components/sections/ThoughPost.vue";
-
 // SEO Meta
 useHead({
   title: "Marketing Manager - Join SiteSynth",

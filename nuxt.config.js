@@ -28,17 +28,22 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // The private keys which are only available on server-side
     brevoApiKey: process.env.BREVO_API_KEY,
+    // Public runtime config (available on client & server)
+    public: {
+      siteUrl: process.env.SITE_URL || "https://www.sitesynth.com",
+    },
   },
 
+  // Canonical site url used by sitemap/plugins. Prefer SITE_URL env var.
   site: {
-    url: "https://synth-phi.vercel.app",
+    url: process.env.SITE_URL || "https://www.sitesynth.com",
   },
   sitemap: {
     autoLastmod: true,
   },
 
   gtm: {
-    id: "GTM-T6LHVCGC",
+    id: "GTM-5N4FRNDR",
     enableRouterSync: true,
     debug: true,
   },

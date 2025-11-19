@@ -196,3 +196,45 @@
   />
   <FooterSection />
 </template>
+
+<script setup>
+// SEO Configuration for Brand-Driven Product Strategy page
+const siteUrl = useRuntimeConfig().public?.siteUrl;
+useSeoMeta({
+  title: "Brand-Driven Product Strategy - SiteSynth | Align Brand & Product",
+  description:
+    "Align your brand with product strategy: we translate brand voice, values, and purpose into product experiences that feel intentional and drive results.",
+  keywords:
+    "brand strategy, product strategy, brand-driven product, messaging framework, design strategy, cross-team alignment",
+
+  ogTitle: "Brand-Driven Product Strategy - SiteSynth",
+  ogDescription:
+    "We embed your brand’s voice into product experiences — aligning design, product, and marketing for consistent, strategic outcomes.",
+  ogImage: `${siteUrl}/assets/og-image-home.jpg`,
+  ogImageAlt: "Brand-Driven Product Strategy - SiteSynth",
+  ogUrl: `${siteUrl}/brand-driven-product-strategy`,
+
+  twitterTitle: "Brand-Driven Product Strategy - SiteSynth",
+  twitterDescription:
+    "Translate your brand into product experiences that are consistent, scalable, and ready to ship.",
+  twitterImage: `${siteUrl}/assets/twitter-card-home.jpg`,
+
+  canonical: `${siteUrl}/brand-driven-product-strategy`,
+});
+
+useHead({
+  script: [
+    {
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Service",
+        name: "Brand-Driven Product Strategy",
+        description:
+          "Services to align brand and product strategy: discovery, UX translation, messaging frameworks, and cross-team alignment.",
+        url: `${siteUrl}/brand-driven-product-strategy`,
+      }),
+    },
+  ],
+});
+</script>

@@ -232,6 +232,8 @@
 
 <script setup>
 // SEO Configuration for Home Page - Only override what's unique
+const siteUrl = useRuntimeConfig().public?.siteUrl;
+// Use siteUrl from runtime config for images and canonical links
 useSeoMeta({
   // Override the default title with homepage-specific version
   title:
@@ -249,19 +251,19 @@ useSeoMeta({
   ogTitle: "SiteSynth - No silos. Just synthesis.",
   ogDescription:
     "Where product, brand, and tech finally align. We help companies bridge strategy, design, and engineering to create digital products that scale.",
-  ogImage: "https://synth-phi.vercel.app/assets/og-image-home.jpg",
+  ogImage: `${siteUrl}/assets/og-image-home.jpg`,
   ogImageAlt: "SiteSynth - Strategic Design & Development Company",
-  ogUrl: "https://synth-phi.vercel.app",
+  ogUrl: siteUrl,
 
   // Twitter Card - Only the unique values
   twitterTitle: "SiteSynth - No silos. Just synthesis.",
   twitterDescription:
     "Where product, brand, and tech finally align. Strategic design & development company.",
-  twitterImage: "https://synth-phi.vercel.app/assets/twitter-card-home.jpg",
+  twitterImage: `${siteUrl}/assets/twitter-card-home.jpg`,
   twitterImageAlt: "SiteSynth - Strategic Design & Development",
 
   // Page-specific canonical
-  canonical: "https://synth-phi.vercel.app",
+  canonical: siteUrl,
 });
 
 // No need for structured data here - it's now global in app.vue

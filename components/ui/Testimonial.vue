@@ -5,19 +5,27 @@
         ref="card"
         class="grid grid-cols-1 md:grid-cols-3 gap-8 relative border border-[#636363] py-14 group overflow-hidden"
       >
-        <component :is="selectedGlowEffect" class="absolute inset-0 z-0 pointer-events-none" />
+        <component
+          :is="selectedGlowEffect"
+          class="absolute inset-0 z-0 pointer-events-none"
+        />
         <!-- Left Column (1/3) -->
-        <div class="flex flex-col items-center text-center">
+        <!-- Added vertical centering and z-index to keep the image above the glow overlay -->
+        <div
+          class="flex flex-col justify-center items-center text-center relative z-10"
+        >
           <img
             :src="imageSrc"
             :alt="personName"
-            class="mb-4 w-auto max-w-[150px]"
+            class="mb-4 w-auto max-w-[150px] relative z-20"
           />
           <h4 class="text-xl font-semibold text-white">{{ personName }}</h4>
           <p class="text-gray-300 mt-2">{{ personTitle }}</p>
         </div>
         <!-- Right Column (2/3) -->
-       <div class="md:col-span-2 flex flex-col justify-center px-6 relative z-10">
+        <div
+          class="md:col-span-2 flex flex-col justify-center px-6 relative z-10"
+        >
           <i class="text-6xl fa-solid fa-quote-left" :class="quoteColor"></i>
           <h3 class="text-4xl font-black text-white mt-4 mb-6">
             {{ quoteTitle }}

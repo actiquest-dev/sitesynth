@@ -1,5 +1,45 @@
 <script setup>
 const { formData, state, handleSubmit } = useContactForm();
+
+// SEO Configuration for Contact page
+const siteUrl = useRuntimeConfig().public?.siteUrl;
+useSeoMeta({
+  title: "Contact Us - SiteSynth | Let's build something meaningful",
+  description:
+    "Get in touch with SiteSynth to start a project, explore partnerships, or join our team. We’re based in Belgium and work globally.",
+  keywords:
+    "contact, sitesynth, get in touch, hire, partnership, careers, contact us",
+
+  ogTitle: "Contact SiteSynth - Let's build something meaningful",
+  ogDescription:
+    "Get in touch with SiteSynth to start a project, explore partnerships, or join our team.",
+  ogImage: `${siteUrl}/assets/og-image-home.jpg`,
+  ogImageAlt: "Contact SiteSynth",
+  ogUrl: `${siteUrl}/contact-us`,
+
+  twitterTitle: "Contact SiteSynth",
+  twitterDescription:
+    "Get in touch with SiteSynth to start a project, explore partnerships, or join our team.",
+  twitterImage: `${siteUrl}/assets/twitter-card-home.jpg`,
+
+  canonical: `${siteUrl}/contact-us`,
+});
+
+useHead({
+  script: [
+    {
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "ContactPage",
+        name: "Contact SiteSynth",
+        description:
+          "Contact SiteSynth to start a project, explore partnerships, or join our team.",
+        url: `${siteUrl}/contact-us`,
+      }),
+    },
+  ],
+});
 </script>
 
 <template>
