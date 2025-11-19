@@ -68,14 +68,14 @@
       <!-- Single Link -->
       <template v-else>
         <NuxtLink
-          :href="item.link"
-          :target="item.target"
-          :class="[
-            'hover:text-[#8CB0FF] font-medium transition-colors duration-1000',
-            isCurrentPage(item.link) ? 'current' : '',
-          ]"
-        >
-          {{ item.label }}
+            :href="item.link"
+  :target="item.target"
+  :class="[
+    'font-medium transition-colors duration-200 hover:text-[rgb(217,217,217)]',
+    isCurrentPage(item.link) ? 'current' : ''
+  ]"
+>
+  {{ item.label }}
         </NuxtLink>
       </template>
     </div>
