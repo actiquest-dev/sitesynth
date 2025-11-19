@@ -158,6 +158,7 @@ const navItems = [
       },
     ],
   },
+
   {
     label: "Solutions",
     link: "#",
@@ -167,16 +168,14 @@ const navItems = [
         imageSrc:
           "/assets/new-assets/Menu/Solutions/gray/Brand-Driven Product Strategy.svg",
         label: "Brand-Driven Product Strategy",
-        description:
-          "Align product design with your brand’s identity and goals.",
+        description: "Align product design with your brand’s identity and goals.",
         link: "/brand-driven-product-strategy",
       },
       {
         imageSrc:
           "/assets/new-assets/Menu/Solutions/gray/UX & Design Systems.svg",
         label: "UX & Design Systems",
-        description:
-          "Build consistent, scalable, and user-friendly interfaces.",
+        description: "Build consistent, scalable, and user-friendly interfaces.",
         link: "/ux-and-design-system",
       },
       {
@@ -195,25 +194,22 @@ const navItems = [
       },
     ],
   },
- 
+
+  // ⬇️ Company / Info BEFORE Careers
   {
-    label: "Company",
+    label: "Info",
     link: "#",
     dropdownWidth: "w-[300px]",
     subItems: [
-      {
-        label: "About us",
-        link: "/about-us",
-      },
-      {
-        label: "Contact us",
-        link: "/contact-us",
-      },
-       {
-    label: "Careers",
-    link: "/careers",
-  },
+      { label: "About us", link: "/about-us" },
+      { label: "Contact us", link: "/contact-us" }
     ],
+  },
+
+  // ⬇️ Careers — NO subItems
+  {
+    label: "Careers",
+    link: "/careers"
   },
 ];
 
