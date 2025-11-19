@@ -195,10 +195,7 @@ const navItems = [
       },
     ],
   },
-  {
-    label: "Careers",
-    link: "/careers",
-  },
+ 
   {
     label: "Company",
     link: "#",
@@ -212,6 +209,10 @@ const navItems = [
         label: "Contact us",
         link: "/contact-us",
       },
+       {
+    label: "Careers",
+    link: "/careers",
+  },
     ],
   },
 ];
