@@ -14,9 +14,9 @@
     />
     
     <!-- Content -->
-    <div
-      class="max-w-[1400px] mx-auto px-6 grid grid-cols-1 md:grid-cols-2 relative z-10"
-    >
+   <div
+  class="max-w-[1248px] mx-auto px-6 grid grid-cols-1 md:grid-cols-2 relative z-10"
+>
       <!-- Left Column -->
       <div class="py-16 md:pr-12 md:border-r border-[#636363]">
         <h2 class="text-3xl font-bold text-white">{{ leftTitle }}</h2>
