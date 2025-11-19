@@ -197,7 +197,7 @@ const navItems = [
 
   // ⬇️ Company / Info BEFORE Careers
   {
-    label: "Info",
+    label: "Company",
     link: "#",
     dropdownWidth: "w-[300px]",
     subItems: [
