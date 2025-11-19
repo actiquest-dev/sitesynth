@@ -3,21 +3,21 @@
     <div v-for="(item, index) in navItems" :key="index" class="relative group">
       <template v-if="item.subItems">
         <!-- Dropdown Trigger -->
-        <NuxtLink
-          :href="item.link"
-          :target="item.target"
-          :class="[
-            'font-medium transition-colors duration-1000 flex items-center space-x-3 group',
-            isCurrentParent(item) ? 'current' : '',
-          ]"
-        >
-          <span :class="isCurrentParent(item) ? 'underline' : ''">
-            {{ item.label }}
-          </span>
-          <i
-            class="fas fa-chevron-down transform transition-transform duration-300 group-hover:rotate-180"
-          ></i>
-        </NuxtLink>
+<NuxtLink
+  :href="item.link"
+  :target="item.target"
+  :class="[
+    'font-medium flex items-center space-x-3 transition-colors duration-200 hover:text-[rgb(217,217,217)]',
+    isCurrentParent(item) ? 'current' : ''
+  ]"
+>
+  <span :class="isCurrentParent(item) ? 'underline' : ''">
+    {{ item.label }}
+  </span>
+  <i
+    class="fas fa-chevron-down transform transition-transform duration-300 group-hover:rotate-180"
+  ></i>
+</NuxtLink>
 
         <!-- Dropdown Panel with Dynamic Width -->
         <div
