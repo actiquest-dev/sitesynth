@@ -27,7 +27,6 @@ useHead({
   meta: [
     { name: "viewport", content: "width=device-width, initial-scale=1.0" },
     { charset: "utf-8" },
-    { name: "robots", content: "no index, no follow" }, // Default to allow indexing
     { name: "author", content: "SiteSynth" },
     { name: "generator", content: "Nuxt 3" },
 
