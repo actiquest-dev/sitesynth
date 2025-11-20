@@ -1,27 +1,26 @@
 <template>
   <section class="relative bg-[#161616] text-white overflow-hidden">
+    <!-- Glow-эффект как в HeroGeneric -->
     <component :is="selectedGlowEffect" />
+    <!-- Звёздочки/частицы, если компонент уже есть в проекте -->
     <ParticleEffect />
 
     <div class="relative max-w-[1248px] mx-auto px-6 pt-[12rem] pb-24">
-      <!-- Dynamic Content -->
+      <!-- Заголовок и подпись (контент через props, как в HeroGeneric) -->
       <div class="text-center max-w-4xl mx-auto">
         <div
           v-for="(item, index) in content"
           :key="index"
           :class="item.margin || 'mb-6'"
         >
-          <component
-            :is="item.tag"
-            :class="getClasses(item.tag)"
-          >
+          <component :is="item.tag" :class="getClasses(item.tag)">
             <span v-if="item.html" v-html="item.text"></span>
             <span v-else>{{ item.text }}</span>
           </component>
         </div>
       </div>
 
-      <!-- Pills -->
+      <!-- Таблетки -->
       <div class="mt-12 flex flex-wrap justify-center gap-4 max-w-3xl mx-auto">
         <div
           v-for="(tag, index) in tags"
@@ -45,26 +44,49 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, computed } from "vue";
-import ParticleEffect from "@/components/effects/ParticleEffect.vue";
+import { computed, defineAsyncComponent } from "vue";
 
 const props = defineProps({
-  content: Array,
+  content: {
+    type: Array,
+    required: true,
+  },
   glowEffect: {
     type: String,
-    default: "GlowBlue"
-  }
+    default: "GlowBlue",
+  },
 });
 
-// dynamic glow component loading
+// динамический импорт Glow-эффекта
 const selectedGlowEffect = computed(() =>
   defineAsyncComponent(() =>
     import(`@/components/effects/${props.glowEffect}.vue`)
   )
 );
 
-// Pills
+// таблетки под заголовком
 const tags = [
   { label: "Dev Handoff", variant: "primary" },
   { label: "Embedded Support", variant: "secondary" },
-  { label: "Dev Handoff", variant: "pr
+  { label: "Dev Handoff", variant: "primary" },
+  { label: "Embedded Support", variant: "secondary" },
+  { label: "CI/CD Friendly", variant: "secondary" },
+  { label: "Launch Assistance", variant: "primary" },
+  { label: "CI/CD Friendly", variant: "secondary" },
+  { label: "Launch Assistance", variant: "primary" },
+];
+
+// стили текста, похожие на HeroGeneric
+const getClasses = (tag) => {
+  switch (tag) {
+    case "h1":
+      return "text-4xl sm:text-5xl font-extrabold leading-tight";
+    case "h2":
+      return "text-3xl sm:text-4xl font-bold";
+    case "p":
+      return "text-base sm:text-lg text-[#d4d4d4]";
+    default:
+      return "text-white";
+  }
+};
+</script>
