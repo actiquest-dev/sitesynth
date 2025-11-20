@@ -72,7 +72,7 @@ yarn preview
 bun run preview
 ```
 
-# allow * as index and follow
+# ahrefs
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
 
