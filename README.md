@@ -72,7 +72,7 @@ yarn preview
 bun run preview
 ```
 
-# ahrefs
+# merge
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
 
