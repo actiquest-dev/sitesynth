@@ -12,10 +12,11 @@
     {
       tag: 'p',
       text: 'Meet the people guiding our vision and driving our work forward.',
-      margin: 'mb-0'
-    }
+      margin: 'mb-0',
+    },
   ]"
 />
+
   <TwoColumnsDesign
     glowEffect="GlowBlue"
     sectionBgColor="bg-[#161616]"
