@@ -1,25 +1,28 @@
 <template>
   <section class="relative bg-[#161616] text-white overflow-hidden">
-    <!-- фон как у других секций -->
-    <GlowBlue />
+    <component :is="selectedGlowEffect" />
     <ParticleEffect />
 
-    <div class="relative max-w-[1248px] mx-auto px-6 pt-[10rem] pb-24 min-h-[80vh]">
-      <!-- Заголовок + подпись -->
+    <div class="relative max-w-[1248px] mx-auto px-6 pt-[12rem] pb-24">
+      <!-- Dynamic Content -->
       <div class="text-center max-w-4xl mx-auto">
-        <h1 class="text-4xl sm:text-5xl font-extrabold mb-8 leading-tight">
-          We started small — on <br class="hidden sm:inline" />
-          purpose.
-        </h1>
-        <p class="text-base sm:text-lg text-[#d4d4d4]">
-          Meet the people guiding our vision and driving our work forward.
-        </p>
+        <div
+          v-for="(item, index) in content"
+          :key="index"
+          :class="item.margin || 'mb-6'"
+        >
+          <component
+            :is="item.tag"
+            :class="getClasses(item.tag)"
+          >
+            <span v-if="item.html" v-html="item.text"></span>
+            <span v-else>{{ item.text }}</span>
+          </component>
+        </div>
       </div>
 
-      <!-- “Таблетки” в две строки -->
-      <div
-        class="mt-12 flex flex-wrap justify-center gap-4 max-w-3xl mx-auto"
-      >
+      <!-- Pills -->
+      <div class="mt-12 flex flex-wrap justify-center gap-4 max-w-3xl mx-auto">
         <div
           v-for="(tag, index) in tags"
           :key="index"
@@ -27,11 +30,11 @@
             'rounded-full',
             tag.variant === 'primary'
               ? 'bg-gradient-to-r from-[#2F46FF] via-[#8D35FF] to-[#FF7AF2] p-[1px]'
-              : 'border border-[#FFFFFF33]'
+              : 'border border-[#FFFFFF22]'
           ]"
         >
           <div
-            class="rounded-full bg-[#161616] px-8 py-3 text-sm font-medium text-white/90 flex items-center justify-center"
+            class="rounded-full bg-[#161616] px-8 py-3 text-sm font-medium text-white/90"
           >
             {{ tag.label }}
           </div>
@@ -42,18 +45,26 @@
 </template>
 
 <script setup>
-import GlowBlue from "@/components/effects/GlowBlue.vue";
+import { defineAsyncComponent, computed } from "vue";
 import ParticleEffect from "@/components/effects/ParticleEffect.vue";
 
-// Тексты “таблеток” и тип оформления
+const props = defineProps({
+  content: Array,
+  glowEffect: {
+    type: String,
+    default: "GlowBlue"
+  }
+});
+
+// dynamic glow component loading
+const selectedGlowEffect = computed(() =>
+  defineAsyncComponent(() =>
+    import(`@/components/effects/${props.glowEffect}.vue`)
+  )
+);
+
+// Pills
 const tags = [
   { label: "Dev Handoff", variant: "primary" },
   { label: "Embedded Support", variant: "secondary" },
-  { label: "Dev Handoff", variant: "primary" },
-  { label: "Embedded Support", variant: "secondary" },
-  { label: "CI/CD Friendly", variant: "secondary" },
-  { label: "Launch Assistance", variant: "primary" },
-  { label: "CI/CD Friendly", variant: "secondary" },
-  { label: "Launch Assistance", variant: "primary" },
-];
-</script>
+  { label: "Dev Handoff", variant: "pr
