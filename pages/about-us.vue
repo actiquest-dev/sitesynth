@@ -1,44 +1,21 @@
 <template>
   <HeaderSection />
-  <HeroGeneric
-    backgroundImage=""
-    backgroundPosition="bg-right-bottom"
-    paddingClasses="pt-[16rem] h-[100vh]"
-    glowEffect="GlowBlue"
-    :content="[
-      {
-        tag: 'h1',
-        text: 'We started small — on <br/> purpose.',
-        margin: 'mb-8',
-        html: true,
-      },
-      {
-        tag: 'p',
-        text: 'SiteSynth was born from a simple idea: tech, design, and strategy work better when they actually talk to each other.',
-        margin: 'mb-0',
-      },
-    ]"
-  />
-  <ValuesSection
-    :values="[
-      {
-        buttonText: 'Do remarkable work',
-        buttonClass: 'text-white',
-      },
-      {
-        buttonText: 'Excel together',
-        buttonClass: 'text-white',
-      },
-      {
-        buttonText: 'Embrace change',
-        buttonClass: 'text-white',
-      },
-      {
-        buttonText: 'Stay grounded',
-        buttonClass: 'text-white',
-      },
-    ]"
-  />
+<AboutHero
+  glowEffect="GlowBlue"
+  :content="[
+    {
+      tag: 'h1',
+      text: 'We started small — on <br/> purpose.',
+      margin: 'mb-8',
+      html: true,
+    },
+    {
+      tag: 'p',
+      text: 'Meet the people guiding our vision and driving our work forward.',
+      margin: 'mb-0'
+    }
+  ]"
+/>
   <TwoColumnsDesign
     glowEffect="GlowBlue"
     sectionBgColor="bg-[#161616]"
