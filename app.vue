@@ -1,4 +1,5 @@
 <template>
+  <Analytics />
   <NuxtPage />
 </template>
 
@@ -7,6 +8,7 @@ import { useRoute } from "vue-router";
 import "~/assets/style.scss";
 import { useHead, useRuntimeConfig } from "#imports";
 import { computed } from "vue";
+import { Analytics } from "@vercel/analytics/nuxt";
 
 const route = useRoute();
 
