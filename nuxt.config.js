@@ -23,6 +23,16 @@ export default defineNuxtConfig({
   app: {
     baseURL: "/", // ✅ change from '/Synth/' to '/'
     // ❌ remove `buildAssetsDir` unless you specifically need a custom one
+    // Add global head meta tags (site-wide). This includes Ahrefs verification.
+    head: {
+      meta: [
+        {
+          name: "ahrefs-site-verification",
+          content:
+            "0fd5ac2fe7fed2e5e1ed9880e6047013d1627cffdd552e885f66a53b170ad488",
+        },
+      ],
+    },
   },
 
   runtimeConfig: {
