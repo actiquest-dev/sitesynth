@@ -1,2 +1,4 @@
-User-Agent: *
-Disallow: /
+# Allow all crawlers (empty Disallow means allow all paths).
+# If you need to block staging/dev, set this file differently in those envs
+User-agent: *
+Disallow:
