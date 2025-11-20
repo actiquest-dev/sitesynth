@@ -72,6 +72,8 @@ yarn preview
 bun run preview
 ```
 
-# test
+# allow * as index and follow
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+
