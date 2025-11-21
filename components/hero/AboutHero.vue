@@ -120,44 +120,46 @@ const getClasses = (tag) => {
 
 /* ---------- МЯГКАЯ АНИМАЦИЯ УГЛОВ И ПОЯВЛЕНИЕ ---------- */
 
-/* Внешняя оболочка таблетки */
+/* Внешняя оболочка таблетки: старт — полностью круглая */
 .tag-pill {
+  border-radius: 9999px;
   transition:
-    border-radius 450ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 450ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 450ms cubic-bezier(0.22, 1, 0.36, 1);
+    border-radius 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Внутренняя часть: появление + лёгкий пульс */
+/* Внутренняя часть: тоже круглая в покое + появление */
 .tag-pill-inner {
+  border-radius: 9999px;
   opacity: 0;
   transform: translateY(10px);
   transition:
-    border-radius 450ms cubic-bezier(0.33, 1, 0.68, 1),
-    background-color 450ms cubic-bezier(0.33, 1, 0.68, 1),
-    box-shadow 450ms cubic-bezier(0.33, 1, 0.68, 1),
-    transform 450ms cubic-bezier(0.33, 1, 0.68, 1);
+    border-radius 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
   animation:
     fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards,
     softPulse 4s ease-in-out infinite;
   animation-delay: calc(var(--i) * 90ms);
 }
 
-/* Hover: углы становятся более острыми + лёгкий подъём */
+/* Hover: углы становятся почти “прямыми” и поднимаются */
 .tag-pill:hover {
-  border-radius: 10px;
+  border-radius: 6px;          /* ← вот здесь они “ломаются” */
   transform: translateY(-3px);
   box-shadow: 0 0 18px rgba(144, 144, 255, 0.32);
 }
 
 .tag-pill:hover .tag-pill-inner {
-  border-radius: 10px;
+  border-radius: 6px;          /* ← внутренний повторяет ту же форму */
   background-color: #181818;
   box-shadow: 0 0 18px rgba(144, 144, 255, 0.32);
   transform: translateY(0);
 }
 
-/* Плавное появление вверх */
+/* Плавное появление */
 @keyframes fadeUp {
   0% {
     opacity: 0;
@@ -169,7 +171,7 @@ const getClasses = (tag) => {
   }
 }
 
-/* Мягкий пульс света */
+/* Мягкий пульс (можно оставить как есть) */
 @keyframes softPulse {
   0% {
     box-shadow: 0 0 0 rgba(144, 144, 255, 0);
