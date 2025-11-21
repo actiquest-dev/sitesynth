@@ -1,12 +1,13 @@
 <template>
   <section class="relative bg-[#161616] text-white overflow-hidden">
-    <!-- Glow-эффект как в HeroGeneric -->
+    <!-- Glow-эффект -->
     <component :is="selectedGlowEffect" />
-    <!-- Звёздочки/частицы, если компонент уже есть в проекте -->
+
+    <!-- Частицы / звёзды (если у тебя уже есть такой компонент) -->
     <ParticleEffect />
 
     <div class="relative max-w-[1248px] mx-auto px-6 pt-[12rem] pb-24">
-      <!-- Заголовок и подпись (контент через props, как в HeroGeneric) -->
+      <!-- Заголовок + подпись -->
       <div class="text-center max-w-4xl mx-auto">
         <div
           v-for="(item, index) in content"
@@ -26,14 +27,16 @@
           v-for="(tag, index) in tags"
           :key="index"
           :class="[
-            'rounded-full',
-            tag.variant === 'primary'
-              ? 'bg-gradient-to-r from-[#2F46FF] via-[#8D35FF] to-[#FF7AF2] p-[1px]'
-              : 'border border-[#FFFFFF22]'
+            // базовое поведение таблетки
+            'group rounded-full border-[2px] p-[3px] cursor-default',
+            'transition-all duration-300 hover:rounded-md hover:-translate-y-[2px]',
+            'hover:shadow-[0_0_18px_rgba(144,144,255,0.35)]',
+            tag.strokeClass,
           ]"
         >
           <div
-            class="rounded-full bg-[#161616] px-8 py-3 text-sm font-medium text-white/90"
+            class="rounded-full bg-[#161616] px-8 py-3 text-sm font-medium text-white/90 
+                   transition-all duration-300 group-hover:rounded-md group-hover:bg-[#181818]"
           >
             {{ tag.label }}
           </div>
@@ -45,6 +48,7 @@
 
 <script setup>
 import { computed, defineAsyncComponent } from "vue";
+import ParticleEffect from "@/components/effects/ParticleEffect.vue";
 
 const props = defineProps({
   content: {
@@ -57,7 +61,7 @@ const props = defineProps({
   },
 });
 
-// динамический импорт Glow-эффекта
+// динамический импорт glow-эффекта
 const selectedGlowEffect = computed(() =>
   defineAsyncComponent(() =>
     import(`@/components/effects/${props.glowEffect}.vue`)
@@ -66,17 +70,17 @@ const selectedGlowEffect = computed(() =>
 
 // таблетки под заголовком
 const tags = [
-  { label: "Dev Handoff", variant: "primary" },
-  { label: "Embedded Support", variant: "secondary" },
-  { label: "Dev Handoff", variant: "primary" },
-  { label: "Embedded Support", variant: "secondary" },
-  { label: "CI/CD Friendly", variant: "secondary" },
-  { label: "Launch Assistance", variant: "primary" },
-  { label: "CI/CD Friendly", variant: "secondary" },
-  { label: "Launch Assistance", variant: "primary" },
+  { label: "Dev Handoff", strokeClass: "stroke-blue" },      // 0900FF
+  { label: "Embedded Support", strokeClass: "stroke-purple" }, // 7B38FC
+  { label: "CI/CD Friendly", strokeClass: "stroke-magenta" },  // A620FF
+  { label: "Launch Assistance", strokeClass: "stroke-red" },   // AA3733
+  { label: "Dev Handoff", strokeClass: "stroke-blue" },
+  { label: "Embedded Support", strokeClass: "stroke-purple" },
+  { label: "CI/CD Friendly", strokeClass: "stroke-magenta" },
+  { label: "Launch Assistance", strokeClass: "stroke-red" },
 ];
 
-// стили текста, похожие на HeroGeneric
+// стили текста (как в HeroGeneric)
 const getClasses = (tag) => {
   switch (tag) {
     case "h1":
@@ -90,3 +94,25 @@ const getClasses = (tag) => {
   }
 };
 </script>
+
+<style scoped>
+.stroke-blue {
+  border-color: #0900ff;
+  border-style: solid;
+}
+
+.stroke-purple {
+  border-color: #7b38fc;
+  border-style: solid;
+}
+
+.stroke-magenta {
+  border-color: #a620ff;
+  border-style: solid;
+}
+
+.stroke-red {
+  border-color: #aa3733;
+  border-style: solid;
+}
+</style>
