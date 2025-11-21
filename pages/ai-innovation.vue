@@ -76,7 +76,7 @@
       </div>
     </template>
   </TwoColumnsDesign>
-  <Testimonial
+ <Testimonial
     id="testimonial-miguel"
     imageSrc="/new-assets/people-for-CTA/Miguel.png"
     personName="Miguel Aprossine "
