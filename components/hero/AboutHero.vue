@@ -32,11 +32,13 @@
             tag.strokeClass,
           ]"
         >
-          <div
-            class="tag-pill-inner rounded-full bg-[#161616] px-8 py-3 text-sm font-medium text-white/90"
-          >
-            {{ tag.label }}
-          </div>
+        <div
+  class="tag-pill-inner rounded-full bg-[#161616] px-12 py-2 
+         text-lg font-medium text-white/90
+         transition-all duration-300 group-hover:rounded-md group-hover:bg-[#181818]"
+>
+  {{ tag.label }}
+</div>
         </div>
       </div>
     </div>
