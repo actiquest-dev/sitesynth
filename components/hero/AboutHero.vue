@@ -3,7 +3,7 @@
     <!-- Glow-эффект -->
     <component :is="selectedGlowEffect" />
 
-    <!-- Частицы / звёзды (если у тебя уже есть такой компонент) -->
+    <!-- Частицы / звёзды -->
     <ParticleEffect />
 
     <div class="relative max-w-[1248px] mx-auto px-6 pt-[12rem] pb-24">
@@ -26,16 +26,16 @@
         <div
           v-for="(tag, index) in tags"
           :key="index"
+          :style="{ '--i': index }"
           :class="[
             // базовое поведение таблетки
-            'group rounded-full border-[2px] p-[3px] cursor-default',
+            'group tag-pill rounded-full border-[2px] p-[3px] cursor-default',
             'transition-all duration-300 hover:rounded-md hover:-translate-y-[2px]',
-            'hover:shadow-[0_0_18px_rgba(144,144,255,0.35)]',
             tag.strokeClass,
           ]"
         >
           <div
-            class="rounded-full bg-[#161616] px-8 py-3 text-sm font-medium text-white/90 
+            class="tag-pill-inner rounded-full bg-[#161616] px-8 py-3 text-sm font-medium text-white/90 
                    transition-all duration-300 group-hover:rounded-md group-hover:bg-[#181818]"
           >
             {{ tag.label }}
@@ -68,16 +68,16 @@ const selectedGlowEffect = computed(() =>
   )
 );
 
-// таблетки под заголовком
+// таблетки под заголовком (value-пилюли SiteSynth)
 const tags = [
-  { label: "Dev Handoff", strokeClass: "stroke-blue" },      // 0900FF
-  { label: "Embedded Support", strokeClass: "stroke-purple" }, // 7B38FC
-  { label: "CI/CD Friendly", strokeClass: "stroke-magenta" },  // A620FF
-  { label: "Launch Assistance", strokeClass: "stroke-red" },   // AA3733
-  { label: "Dev Handoff", strokeClass: "stroke-blue" },
-  { label: "Embedded Support", strokeClass: "stroke-purple" },
-  { label: "CI/CD Friendly", strokeClass: "stroke-magenta" },
-  { label: "Launch Assistance", strokeClass: "stroke-red" },
+  { label: "Product-First", strokeClass: "stroke-blue" },
+  { label: "Design-Led", strokeClass: "stroke-purple" },
+  { label: "Senior-Only Team", strokeClass: "stroke-magenta" },
+  { label: "Tech & Brand Aligned", strokeClass: "stroke-red" },
+  { label: "Docs Included", strokeClass: "stroke-blue" },
+  { label: "Transparent Scope", strokeClass: "stroke-purple" },
+  { label: "Clean Handoff", strokeClass: "stroke-magenta" },
+  { label: "AI-Ready Stack", strokeClass: "stroke-red" },
 ];
 
 // стили текста (как в HeroGeneric)
@@ -115,4 +115,46 @@ const getClasses = (tag) => {
   border-color: #aa3733;
   border-style: solid;
 }
+
+/* Мягкое поочередное появление + пульс */
+.tag-pill-inner {
+  opacity: 0;
+  transform: translateY(8px);
+  animation:
+    fadeUp 0.55s ease forwards,
+    softPulse 4s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 90ms);
+}
+
+/* Усиленное свечение и лёгкий подъём при ховере */
+.group:hover .tag-pill-inner {
+  box-shadow: 0 0 18px rgba(144, 144, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Плавное появление */
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Мягкий пульс через box-shadow */
+@keyframes softPulse {
+  0% {
+    box-shadow: 0 0 0 rgba(144, 144, 255, 0);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(144, 144, 255, 0.22);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(144, 144, 255, 0);
+  }
+}
 </style>
+
