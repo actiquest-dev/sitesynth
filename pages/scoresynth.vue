@@ -207,9 +207,9 @@
     title="Get Started Today"
     description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you’re becoming."
     primaryText="Start a Project"
-    primaryLink="#"
+    primaryLink="/contact-us"
     secondaryText="Book a Call"
-    secondaryLink="#"
+    secondaryLink="/contact-us"
     glowEffect="GlowRed"
   />
   <FooterSection />

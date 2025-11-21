@@ -1,21 +1,21 @@
 <template>
   <HeaderSection />
-<AboutHero
-  glowEffect="GlowBlue"
-  :content="[
-    {
-      tag: 'h1',
-      text: 'We started small — on <br/> purpose.',
-      margin: 'mb-8',
-      html: true,
-    },
-    {
-      tag: 'p',
-      text: 'Meet the people guiding our vision and driving our work forward.',
-      margin: 'mb-0',
-    },
-  ]"
-/>
+  <AboutHero
+    glowEffect="GlowBlue"
+    :content="[
+      {
+        tag: 'h1',
+        text: 'We started small — on <br/> purpose.',
+        margin: 'mb-8',
+        html: true,
+      },
+      {
+        tag: 'p',
+        text: 'Meet the people guiding our vision and driving our work forward.',
+        margin: 'mb-0',
+      },
+    ]"
+  />
 
   <TwoColumnsDesign
     glowEffect="GlowBlue"
@@ -204,9 +204,9 @@
     title="Get Started Today"
     description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you’re becoming."
     primaryText="Start a Project"
-    primaryLink="#"
+    primaryLink="/contact-us"
     secondaryText="Book a Call"
-    secondaryLink="#"
+    secondaryLink="/contact-us"
   />
   <FooterSection />
 </template>
