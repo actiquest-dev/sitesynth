@@ -71,12 +71,12 @@ const selectedGlowEffect = computed(() =>
 // таблетки под заголовком (value-пилюли SiteSynth)
 const tags = [
   { label: "Product-First", strokeClass: "stroke-blue" },
-  { label: "Design-Led", strokeClass: "stroke-purple" },
+  { label: "Design-Led", strokeClass: "stroke-white" },
   { label: "Senior-Only Team", strokeClass: "stroke-magenta" },
-  { label: "Tech & Brand Aligned", strokeClass: "stroke-red" },
-  { label: "Docs Included", strokeClass: "stroke-blue" },
+  { label: "Tech & Brand Aligned", strokeClass: "white-red" },
+  { label: "Docs Included", strokeClass: "stroke-white" },
   { label: "Transparent Scope", strokeClass: "stroke-purple" },
-  { label: "Clean Handoff", strokeClass: "stroke-magenta" },
+  { label: "Clean Handoff", strokeClass: "stroke-white" },
   { label: "AI-Ready Stack", strokeClass: "stroke-red" },
 ];
 
@@ -115,7 +115,11 @@ const getClasses = (tag) => {
   border-color: #aa3733;
   border-style: solid;
 }
-
+  
+.stroke-white {
+  border-color: #FFFFFF;
+  border-style: solid;
+}
 /* Мягкое поочередное появление + пульс */
 .tag-pill-inner {
   opacity: 0;
