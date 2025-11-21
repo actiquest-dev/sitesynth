@@ -28,15 +28,12 @@
           :key="index"
           :style="{ '--i': index }"
           :class="[
-            // базовое поведение таблетки
-            'group tag-pill rounded-full border-[2px] p-[3px] cursor-default',
-            'transition-all duration-300 hover:rounded-md hover:-translate-y-[2px]',
+            'group tag-pill cursor-default border-[2px] rounded-full p-[3px]',
             tag.strokeClass,
           ]"
         >
           <div
-            class="tag-pill-inner rounded-full bg-[#161616] px-8 py-3 text-sm font-medium text-white/90 
-                   transition-all duration-300 group-hover:rounded-md group-hover:bg-[#181818]"
+            class="tag-pill-inner rounded-full bg-[#161616] px-8 py-3 text-sm font-medium text-white/90"
           >
             {{ tag.label }}
           </div>
@@ -73,7 +70,7 @@ const tags = [
   { label: "Product-First", strokeClass: "stroke-blue" },
   { label: "Design-Led", strokeClass: "stroke-white" },
   { label: "Senior-Only Team", strokeClass: "stroke-magenta" },
-  { label: "Tech & Brand Aligned", strokeClass: "white-red" },
+  { label: "Tech & Brand Aligned", strokeClass: "stroke-red" },
   { label: "Docs Included", strokeClass: "stroke-white" },
   { label: "Transparent Scope", strokeClass: "stroke-purple" },
   { label: "Clean Handoff", strokeClass: "stroke-white" },
@@ -121,38 +118,46 @@ const getClasses = (tag) => {
   border-style: solid;
 }
 
-/* -------------------------
-   M O T I O N  U P G R A D E 
-   ------------------------- */
+/* ---------- МЯГКАЯ АНИМАЦИЯ УГЛОВ И ПОЯВЛЕНИЕ ---------- */
 
-/* Плавное появление */
+/* Внешняя оболочка таблетки */
 .tag-pill {
-  transition: all 450ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition:
+    border-radius 450ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 450ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 450ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* Внутренняя часть: появление + лёгкий пульс */
 .tag-pill-inner {
   opacity: 0;
   transform: translateY(10px);
-  transition: all 450ms cubic-bezier(0.33, 1, 0.68, 1); /* мягче */
+  transition:
+    border-radius 450ms cubic-bezier(0.33, 1, 0.68, 1),
+    background-color 450ms cubic-bezier(0.33, 1, 0.68, 1),
+    box-shadow 450ms cubic-bezier(0.33, 1, 0.68, 1),
+    transform 450ms cubic-bezier(0.33, 1, 0.68, 1);
   animation:
-    fadeUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+    fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards,
     softPulse 4s ease-in-out infinite;
-  animation-delay: calc(var(--i) * 80ms);
+  animation-delay: calc(var(--i) * 90ms);
 }
 
-/* Hover — мягкие углы + лёгкий подъём */
-.group:hover .tag-pill {
+/* Hover: углы становятся более острыми + лёгкий подъём */
+.tag-pill:hover {
   border-radius: 10px;
   transform: translateY(-3px);
+  box-shadow: 0 0 18px rgba(144, 144, 255, 0.32);
 }
 
-.group:hover .tag-pill-inner {
+.tag-pill:hover .tag-pill-inner {
   border-radius: 10px;
   background-color: #181818;
-  box-shadow: 0 0 18px rgba(144, 144, 255, 0.28);
+  box-shadow: 0 0 18px rgba(144, 144, 255, 0.32);
+  transform: translateY(0);
 }
 
-/* FadeUp */
+/* Плавное появление вверх */
 @keyframes fadeUp {
   0% {
     opacity: 0;
@@ -160,11 +165,11 @@ const getClasses = (tag) => {
   }
   100% {
     opacity: 1;
-    transform: translateY(0px);
+    transform: translateY(0);
   }
 }
 
-/* Мягкий Ambient Pulse */
+/* Мягкий пульс света */
 @keyframes softPulse {
   0% {
     box-shadow: 0 0 0 rgba(144, 144, 255, 0);
@@ -177,4 +182,5 @@ const getClasses = (tag) => {
   }
 }
 </style>
+
 
