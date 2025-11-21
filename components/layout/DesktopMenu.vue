@@ -3,21 +3,21 @@
     <div v-for="(item, index) in navItems" :key="index" class="relative group">
       <template v-if="item.subItems">
         <!-- Dropdown Trigger -->
-<NuxtLink
-  :href="item.link"
-  :target="item.target"
-  :class="[
-    'font-medium flex items-center space-x-3 transition-colors duration-200 hover:text-[rgb(217,217,217)]',
-    isCurrentParent(item) ? 'current' : ''
-  ]"
->
-  <span :class="isCurrentParent(item) ? 'underline' : ''">
-    {{ item.label }}
-  </span>
-  <i
-    class="fas fa-chevron-down transform transition-transform duration-300 group-hover:rotate-180"
-  ></i>
-</NuxtLink>
+        <NuxtLink
+          :href="item.link"
+          :target="item.target"
+          :class="[
+            'font-medium flex items-center space-x-3 transition-colors duration-200 hover:text-[rgb(217,217,217)]',
+            isCurrentParent(item) ? 'current' : '',
+          ]"
+        >
+          <span :class="isCurrentParent(item) ? 'underline' : ''">
+            {{ item.label }}
+          </span>
+          <i
+            class="fas fa-chevron-down transform transition-transform duration-300 group-hover:rotate-180"
+          ></i>
+        </NuxtLink>
 
         <!-- Dropdown Panel with Dynamic Width -->
         <div
@@ -62,20 +62,44 @@
               </NuxtLink>
             </li>
           </ul>
+          <!-- noscript fallback for crawlers / non-JS clients: expose links in raw HTML -->
+          <noscript>
+            <div class="p-4 space-y-2 bg-[#1E1E1E] rounded-b-lg">
+              <a href="/scoresynth/" class="block text-white hover:underline">
+                ScoreSynth
+              </a>
+              <a
+                href="https://membria.xyz/"
+                target="_blank"
+                rel="noopener"
+                class="block text-white hover:underline"
+              >
+                Membria
+              </a>
+              <a
+                href="https://ailivepod.framer.website/"
+                target="_blank"
+                rel="noopener"
+                class="block text-white hover:underline"
+              >
+                AI Live Pod
+              </a>
+            </div>
+          </noscript>
         </div>
       </template>
 
       <!-- Single Link -->
       <template v-else>
         <NuxtLink
-            :href="item.link"
-  :target="item.target"
-  :class="[
-    'font-medium transition-colors duration-200 hover:text-[rgb(217,217,217)]',
-    isCurrentPage(item.link) ? 'current' : ''
-  ]"
->
-  {{ item.label }}
+          :href="item.link"
+          :target="item.target"
+          :class="[
+            'font-medium transition-colors duration-200 hover:text-[rgb(217,217,217)]',
+            isCurrentPage(item.link) ? 'current' : '',
+          ]"
+        >
+          {{ item.label }}
         </NuxtLink>
       </template>
     </div>
@@ -168,14 +192,16 @@ const navItems = [
         imageSrc:
           "/assets/new-assets/Menu/Solutions/gray/Brand-Driven Product Strategy.svg",
         label: "Brand-Driven Product Strategy",
-        description: "Align product design with your brand’s identity and goals.",
+        description:
+          "Align product design with your brand’s identity and goals.",
         link: "/brand-driven-product-strategy",
       },
       {
         imageSrc:
           "/assets/new-assets/Menu/Solutions/gray/UX & Design Systems.svg",
         label: "UX & Design Systems",
-        description: "Build consistent, scalable, and user-friendly interfaces.",
+        description:
+          "Build consistent, scalable, and user-friendly interfaces.",
         link: "/ux-and-design-system",
       },
       {
@@ -202,14 +228,14 @@ const navItems = [
     dropdownWidth: "w-[300px]",
     subItems: [
       { label: "About us", link: "/about-us" },
-      { label: "Contact us", link: "/contact-us" }
+      { label: "Contact us", link: "/contact-us" },
     ],
   },
 
   // ⬇️ Careers — NO subItems
   {
     label: "Careers",
-    link: "/careers"
+    link: "/careers",
   },
 ];
 
