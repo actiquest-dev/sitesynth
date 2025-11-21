@@ -35,7 +35,7 @@
         <div
   class="tag-pill-inner rounded-full bg-[#161616] px-12 py-2 
          text-lg font-medium text-white/90
-         transition-all duration-300 group-hover:rounded-md group-hover:bg-[#181818]"
+         transition-all duration-300 group-hover:bg-[#181818]"
 >
   {{ tag.label }}
 </div>
@@ -120,25 +120,22 @@ const getClasses = (tag) => {
   border-style: solid;
 }
 
-/* ---------- МЯГКАЯ АНИМАЦИЯ УГЛОВ И ПОЯВЛЕНИЕ ---------- */
+/* ---------- ТАБЛЕТКИ БЕЗ АНИМАЦИИ УГЛОВ ---------- */
 
-/* Внешняя оболочка таблетки: старт — полностью круглая */
-  
+/* Внешняя оболочка таблетки */
 .tag-pill {
   border-radius: 9999px;
   transition:
-    border-radius 380ms cubic-bezier(0.22, 1, 0.36, 1),
     transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Внутренняя часть: тоже круглая в покое + появление */
+/* Внутренняя часть: круглая + появление */
 .tag-pill-inner {
   border-radius: 9999px;
   opacity: 0;
   transform: translateY(10px);
   transition:
-    border-radius 380ms cubic-bezier(0.22, 1, 0.36, 1),
     background-color 380ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1),
     transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -148,15 +145,13 @@ const getClasses = (tag) => {
   animation-delay: calc(var(--i) * 90ms);
 }
 
-/* Hover: углы становятся почти "прямыми" и поднимаются - ПЛАВНАЯ АНИМАЦИЯ */
+/* Hover: только поднимается и меняет фон */
 .tag-pill:hover {
-  border-radius: 12px;         /* ← плавный переход вместо резкого 6px */
   transform: translateY(-3px);
   box-shadow: 0 0 18px rgba(144, 144, 255, 0.32);
 }
 
 .tag-pill:hover .tag-pill-inner {
-  border-radius: 12px;         /* ← внутренний повторяет ту же форму */
   background-color: #181818;
   box-shadow: 0 0 18px rgba(144, 144, 255, 0.32);
   transform: translateY(0);
@@ -174,7 +169,7 @@ const getClasses = (tag) => {
   }
 }
 
-/* Мягкий пульс (можно оставить как есть) */
+/* Мягкий пульс */
 @keyframes softPulse {
   0% {
     box-shadow: 0 0 0 rgba(144, 144, 255, 0);
