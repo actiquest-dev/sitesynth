@@ -115,46 +115,62 @@ const getClasses = (tag) => {
   border-color: #aa3733;
   border-style: solid;
 }
-  
+
 .stroke-white {
-  border-color: #FFFFFF;
+  border-color: #ffffff;
   border-style: solid;
 }
-/* Мягкое поочередное появление + пульс */
-.tag-pill-inner {
-  opacity: 0;
-  transform: translateY(8px);
-  animation:
-    fadeUp 0.55s ease forwards,
-    softPulse 4s ease-in-out infinite;
-  animation-delay: calc(var(--i) * 90ms);
-}
 
-/* Усиленное свечение и лёгкий подъём при ховере */
-.group:hover .tag-pill-inner {
-  box-shadow: 0 0 18px rgba(144, 144, 255, 0.35);
-  transform: translateY(-1px);
-}
+/* -------------------------
+   M O T I O N  U P G R A D E 
+   ------------------------- */
 
 /* Плавное появление */
+.tag-pill {
+  transition: all 450ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tag-pill-inner {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 450ms cubic-bezier(0.33, 1, 0.68, 1); /* мягче */
+  animation:
+    fadeUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+    softPulse 4s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 80ms);
+}
+
+/* Hover — мягкие углы + лёгкий подъём */
+.group:hover .tag-pill {
+  border-radius: 10px;
+  transform: translateY(-3px);
+}
+
+.group:hover .tag-pill-inner {
+  border-radius: 10px;
+  background-color: #181818;
+  box-shadow: 0 0 18px rgba(144, 144, 255, 0.28);
+}
+
+/* FadeUp */
 @keyframes fadeUp {
   0% {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(12px);
   }
   100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0px);
   }
 }
 
-/* Мягкий пульс через box-shadow */
+/* Мягкий Ambient Pulse */
 @keyframes softPulse {
   0% {
     box-shadow: 0 0 0 rgba(144, 144, 255, 0);
   }
   50% {
-    box-shadow: 0 0 12px rgba(144, 144, 255, 0.22);
+    box-shadow: 0 0 14px rgba(144, 144, 255, 0.22);
   }
   100% {
     box-shadow: 0 0 0 rgba(144, 144, 255, 0);
