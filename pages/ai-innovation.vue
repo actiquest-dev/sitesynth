@@ -164,7 +164,7 @@
       },
       {
         icon: '⚡',
-        title: '🎯 Pattern Usage Guidelines',
+        title: 'Pattern Usage Guidelines',
         headerTag: 'h3',
         description:
           'Know exactly when and how to use each pattern — no guessing, no inconsistency.',
