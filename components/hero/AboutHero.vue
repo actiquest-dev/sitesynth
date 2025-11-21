@@ -123,6 +123,7 @@ const getClasses = (tag) => {
 /* ---------- МЯГКАЯ АНИМАЦИЯ УГЛОВ И ПОЯВЛЕНИЕ ---------- */
 
 /* Внешняя оболочка таблетки: старт — полностью круглая */
+  
 .tag-pill {
   border-radius: 9999px;
   transition:
@@ -147,15 +148,15 @@ const getClasses = (tag) => {
   animation-delay: calc(var(--i) * 90ms);
 }
 
-/* Hover: углы становятся почти “прямыми” и поднимаются */
+/* Hover: углы становятся почти "прямыми" и поднимаются - ПЛАВНАЯ АНИМАЦИЯ */
 .tag-pill:hover {
-  border-radius: 6px;          /* ← вот здесь они “ломаются” */
+  border-radius: 12px;         /* ← плавный переход вместо резкого 6px */
   transform: translateY(-3px);
   box-shadow: 0 0 18px rgba(144, 144, 255, 0.32);
 }
 
 .tag-pill:hover .tag-pill-inner {
-  border-radius: 6px;          /* ← внутренний повторяет ту же форму */
+  border-radius: 12px;         /* ← внутренний повторяет ту же форму */
   background-color: #181818;
   box-shadow: 0 0 18px rgba(144, 144, 255, 0.32);
   transform: translateY(0);
