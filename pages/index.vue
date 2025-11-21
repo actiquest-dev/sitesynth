@@ -218,7 +218,7 @@
   />
   <Testimonial
     id="testimonial-koen"
-    imageSrc="assets/new-assets/home-page/home/quote/koen-photo.png"
+    imageSrc="/assets/new-assets/people-for-CTA/Koen.png"
     personName="Koen Vergauwen"
     personTitle="Head of Growth"
     quoteTitle="Simplicity takes effort"
