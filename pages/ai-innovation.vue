@@ -205,3 +205,45 @@
   />
   <FooterSection />
 </template>
+
+<script setup>
+// SEO Configuration for AI Innovation page
+const siteUrl = useRuntimeConfig().public?.siteUrl;
+useSeoMeta({
+  title: "AI Innovation & R&D - SiteSynth | AI-Powered Product Strategy",
+  description:
+    "We help teams discover high-impact AI use cases, prototype quickly, and integrate AI responsibly into products and workflows.",
+  keywords:
+    "ai strategy, ai innovation, rapid prototyping, r&d, llms, vector search, rag, ai product",
+
+  ogTitle: "AI Innovation & R&D - SiteSynth",
+  ogDescription:
+    "Find the right AI opportunities, prototype fast, and embed AI into your product or process with clear value and responsible practices.",
+  ogImage: `${siteUrl}/assets/og-image-home.jpg`,
+  ogImageAlt: "SiteSynth - AI Innovation",
+  ogUrl: `${siteUrl}/ai-innovation`,
+
+  twitterTitle: "AI Innovation & R&D - SiteSynth",
+  twitterDescription:
+    "We identify AI opportunities and build prototypes to deliver measurable product and operational value.",
+  twitterImage: `${siteUrl}/assets/twitter-card-home.jpg`,
+
+  canonical: `${siteUrl}/ai-innovation`,
+});
+
+useHead({
+  script: [
+    {
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "AI Innovation & R&D - SiteSynth",
+        description:
+          "We help teams identify high-impact AI opportunities, prototype rapidly, and integrate AI into products and operations with responsibility and speed.",
+        url: `${siteUrl}/ai-innovation`,
+      }),
+    },
+  ],
+});
+</script>
