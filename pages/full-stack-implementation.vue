@@ -60,7 +60,7 @@
   />
   <TestimonialWhite
     id="testimonial-marco"
-    imageSrc="/assets/marco.png"
+    imageSrc="assets/new-assets/people-for-CTA/Marco.png"
     personName="Marco Maffei"
     personTitle="Full-Stack Engineer"
     quoteTitle="Ideas are cheap. Shipping is rare. We focus on the rare."
