@@ -78,7 +78,7 @@
   </TwoColumnsDesign>
   <Testimonial
     id="testimonial-miguel"
-    imageSrc="/assets/new-assets/solutions-page/solutions/ai-infused-innovation-and-rd/quote/miguel-photo.png"
+    imageSrc="assets/new-assets/people-for-CTA/Miguel.png"
     personName="Miguel Aprossine "
     personTitle="AI & Web3 Visionary Partner"
     quoteTitle="AI isn’t here to replace your team"
