@@ -31,6 +31,10 @@ export default defineNuxtConfig({
           content:
             "0fd5ac2fe7fed2e5e1ed9880e6047013d1627cffdd552e885f66a53b170ad488",
         },
+        {
+          name: "google-site-verification",
+          content: "ZuM9hSt-NO7KjEYf_o5yjeiGyTbsOVekDz-R1z-4ilk",
+        },
       ],
     },
   },
