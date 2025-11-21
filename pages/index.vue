@@ -167,7 +167,7 @@
     }"
     :rightContent="{
       image: {
-        src: '/assets/new-assets/home-page/home/cta/score-synth-feature-image.png',
+        src: 'assets/new-assets/people-for-CTA/Koen.png,
         alt: 'AI Development Process',
         class: 'w-full h-auto rounded-lg',
       },
