@@ -2,7 +2,7 @@
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
-## CTAs
+## Broken links
 
 Make sure to install dependencies:
 
