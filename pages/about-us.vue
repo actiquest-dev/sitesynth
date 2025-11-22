@@ -97,70 +97,7 @@
   <!-- Новый блок Our leaders -->
   <LeadersSection :leaders="leaders" />
 
-  <!-- Блок Our team (старый грид) -->
-  <BannerSection
-    text="Our team"
-    tag="h2"
-    sectionClass="pt-20 pb-[2rem] bg-[#161616] text-white text-center"
-  />
-  <BannerSection
-    text="Creatives, Developers, Designers — meet the team that specializes in <br> turning dreams into digital masterpieces."
-    tag="p"
-    sectionClass="bg-[#161616] text-white text-center"
-    contentClass="mx-auto text-normal text-white"
-  />
-  <TeamsSection
-    id="our-team"
-    backgroundColor="bg-[#161616]"
-    nameTextColor="text-white"
-    positionTextColor="text-[#999999]"
-    :teamMembers="[
-      {
-        imageSrc: '/assets/new-assets/company-page/about-us/our-team/koen.png',
-        name: 'Koen Vergauwen',
-        nameTag: 'h3',
-        nameClass: '',
-        position: 'Head of Growth',
-      },
-      {
-        imageSrc: '/assets/new-assets/company-page/about-us/our-team/mayya.png',
-        name: 'Mayya Aprosina',
-        nameTag: 'h3',
-        nameClass: '',
-        position: 'CEO & Business Designer',
-      },
-      {
-        imageSrc: '/assets/new-assets/company-page/about-us/our-team/marco.png',
-        name: 'Marco Maffei',
-        nameTag: 'h3',
-        nameClass: '',
-        position: 'Full-Stack Engineer',
-      },
-      {
-        imageSrc: '/assets/new-assets/company-page/about-us/our-team/anna.png',
-        name: 'Anna Gorbenko',
-        nameTag: 'h3',
-        nameClass: '',
-        position: 'Content Manager',
-      },
-      {
-        imageSrc:
-          '/assets/new-assets/company-page/about-us/our-team/miguel.png',
-        name: 'Miguel Aprossine',
-        nameTag: 'h3',
-        nameClass: '',
-        position: 'AI & Web3 Visionary Partner',
-      },
-      {
-        imageSrc:
-          '/assets/new-assets/company-page/about-us/our-team/unknown.png',
-        name: 'Wanna Join?',
-        nameTag: 'h3',
-        nameClass: '',
-        position: 'Wanna Join?',
-      },
-    ]"
-  />
+  <!-- Блок Our team (старый грид) убран--> 
 
   <!-- Call to action -->
   <WhiteSection
