@@ -16,7 +16,30 @@
       },
     ]"
   />
+ <template #left>
+      <div class="py-24 md:border-r border-[#636363] bg-[#DDDDDD]">
+        <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
+          <h3 class="text-lg mb-2">WHY WE EXIST?</h3>
+          <h2 class="text-4xl font-bold mb-4">
+            — we’re a strategic bridge between brand, design, and engineering.
+          </h2>
+        </div>
+      </div>
+    </template>
 
+    <template #right>
+      <div class="bg-[#161616] flex items-center justify-center">
+        <div class="max-w-[600px] mr-auto px-6 md:px-0 md:pl-16">
+          <p class="text-white font-bold mb-4">
+            Rooted in effectiveness, openness, and craftsmanship. We're a small
+            but dedicated team—designers, strategists, and full-stack
+            developers—working in sync to deliver integrated solutions that
+            break down silos and drive lasting impact.
+          </p>
+        </div>
+      </div>
+    </template>
+  
   <TwoColumnsDesign
     glowEffect="GlowBlue"
     sectionBgColor="bg-[#161616]"
@@ -65,29 +88,6 @@
     textColorleft="text-[#161616]"
     textColorRight="text-white"
   >
-    <template #left>
-      <div class="py-24 md:border-r border-[#636363] bg-[#DDDDDD]">
-        <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
-          <h3 class="text-lg mb-2">WHY WE EXIST?</h3>
-          <h2 class="text-4xl font-bold mb-4">
-            — we’re a strategic bridge between brand, design, and engineering.
-          </h2>
-        </div>
-      </div>
-    </template>
-
-    <template #right>
-      <div class="bg-[#161616] flex items-center justify-center">
-        <div class="max-w-[600px] mr-auto px-6 md:px-0 md:pl-16">
-          <p class="text-white font-bold mb-4">
-            Rooted in effectiveness, openness, and craftsmanship. We're a small
-            but dedicated team—designers, strategists, and full-stack
-            developers—working in sync to deliver integrated solutions that
-            break down silos and drive lasting impact.
-          </p>
-        </div>
-      </div>
-    </template>
   </TwoColumnsDesign>
   <TwoColumnsDesign
     glowEffect="GlowBlue"
