@@ -39,7 +39,7 @@
         </div>
       </div>
     </template>
-  
+          />
   <TwoColumnsDesign
     glowEffect="GlowBlue"
     sectionBgColor="bg-[#161616]"
