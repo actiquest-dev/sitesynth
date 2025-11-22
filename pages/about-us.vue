@@ -83,7 +83,7 @@
     <template #right>
       <div>
         <img
-          src="/assets/new-assets/company-page/about-us/about-us.png"
+          src="/assets/new-assets/company-page/about-us/about us photo of office.png"
           alt="ScoreSynth Image"
           class="h-full w-full object-cover"
         />
