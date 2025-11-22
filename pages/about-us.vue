@@ -1,6 +1,6 @@
 <template>
   <HeaderSection />
-  
+
   <AboutHero
     glowEffect="GlowBlue"
     :content="[
@@ -18,7 +18,7 @@
     ]"
   />
 
-  <!-- Блок WHY WE EXIST? -->
+  <!-- WHY WE EXIST -->
   <TwoColumnsDesign
     glowEffect="GlowBlue"
     id="info-ai"
@@ -31,9 +31,9 @@
     <template #left>
       <div class="py-24 md:border-r border-[#636363] bg-[#DDDDDD]">
         <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
-          <h3 class="text-lg mb-2 text-[#161616]">WHY WE EXIST?</h3>
-          <h2 class="text-4xl font-bold mb-4 text-[#161616]">
-            — we're a strategic bridge between brand, design, and engineering.
+          <h3 class="text-lg mb-2">WHY WE EXIST?</h3>
+          <h2 class="text-4xl font-bold mb-4">
+            — we’re a strategic bridge between brand, design, and engineering.
           </h2>
         </div>
       </div>
@@ -53,7 +53,7 @@
     </template>
   </TwoColumnsDesign>
 
-  <!-- Блок ABOUT US -->
+  <!-- Блок About Us + фото офиса -->
   <TwoColumnsDesign
     glowEffect="GlowBlue"
     sectionBgColor="bg-[#161616]"
@@ -65,8 +65,8 @@
         <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
           <h2 class="text-white text-3xl sm:text-4xl mb-6">About Us</h2>
           <p class="text-[#999999] text-normal font-light mb-4">
-            We're based in Sint‑Amands, Belgium, in a small office within a
-            beautifully restored historical building by the Schelde river. It's
+            We’re based in Sint-Amands, Belgium, in a small office within a
+            beautifully restored historical building by the Schelde river. It’s
             not flashy—but it's meaningful: rooted, quiet, and real.
           </p>
           <h3 class="text-white text-2xl mt-[3rem] mb-[3rem]">
@@ -74,7 +74,7 @@
           </h3>
           <p class="text-[#999999] text-normal font-light">
             Strategically located between Antwerp, Brussels, and Ghent, we
-            remain deeply connected to Europe's major economic hubs—while
+            remain deeply connected to Europe’s major economic hubs—while
             keeping focus where it matters most. This little town gives us
             clarity and calm—and the flexibility to move quickly when clients
             need us.
@@ -87,47 +87,28 @@
       <div>
         <img
           src="/assets/new-assets/company-page/about-us/about us photo of office.png"
-          alt="SiteSynth Office"
+          alt="SiteSynth office"
           class="h-full w-full object-cover"
         />
       </div>
     </template>
   </TwoColumnsDesign>
 
-  <!-- Блок LEADERS -->
-  <LeadersSection
-    id="our-leaders"
-    title="Our leaders"
-    subtitle="Creatives, Developers, Designers — meet the team that specializes in turning dreams into digital masterpieces."
-    :leaders="[
-      {
-        imageSrc: '/assets/new-assets/company-page/about-us/leaders/mayya.png',
-        name: 'Mayya Aprosina',
-        position: 'CEO & Business Designer',
-        description: 'Mayya leads our strategic vision, bringing a unique blend of business acumen and design excellence to every project.',
-      },
-      {
-        imageSrc: '/assets/new-assets/company-page/about-us/leaders/miguel.png',
-        name: 'Miguel Aprossine',
-        position: 'AI & Web3 Visionary Partner',
-        description: 'Miguel bridges the future of technology with practical innovation, exploring AI and Web3 possibilities.',
-      },
-      {
-        imageSrc: '/assets/new-assets/company-page/about-us/leaders/marco.png',
-        name: 'Marco Maffei',
-        position: 'Full-Stack Engineer',
-        description: 'Marco turns complex technical challenges into elegant solutions, architecting scalable systems.',
-      },
-      {
-        imageSrc: '/assets/new-assets/company-page/about-us/leaders/koen.png',
-        name: 'Koen Vergauwen',
-        position: 'Head of Growth',
-        description: 'Koen drives our growth strategy, connecting us with partners and clients who share our vision.',
-      },
-    ]"
-  />
+  <!-- Новый блок Our leaders -->
+  <LeadersSection :leaders="leaders" />
 
-  <!-- Блок TEAM -->
+  <!-- Блок Our team (старый грид) -->
+  <BannerSection
+    text="Our team"
+    tag="h2"
+    sectionClass="pt-20 pb-[2rem] bg-[#161616] text-white text-center"
+  />
+  <BannerSection
+    text="Creatives, Developers, Designers — meet the team that specializes in <br> turning dreams into digital masterpieces."
+    tag="p"
+    sectionClass="bg-[#161616] text-white text-center"
+    contentClass="mx-auto text-normal text-white"
+  />
   <TeamsSection
     id="our-team"
     backgroundColor="bg-[#161616]"
@@ -163,14 +144,16 @@
         position: 'Content Manager',
       },
       {
-        imageSrc: '/assets/new-assets/company-page/about-us/our-team/miguel.png',
+        imageSrc:
+          '/assets/new-assets/company-page/about-us/our-team/miguel.png',
         name: 'Miguel Aprossine',
         nameTag: 'h3',
         nameClass: '',
         position: 'AI & Web3 Visionary Partner',
       },
       {
-        imageSrc: '/assets/new-assets/company-page/about-us/our-team/unknown.png',
+        imageSrc:
+          '/assets/new-assets/company-page/about-us/our-team/unknown.png',
         name: 'Wanna Join?',
         nameTag: 'h3',
         nameClass: '',
@@ -179,14 +162,14 @@
     ]"
   />
 
-  <!-- CTA секция -->
+  <!-- Call to action -->
   <WhiteSection
     hover="#0033ff"
     glowEffect="GlowBlue"
     id="get-started-today"
     class="pt-[8rem] pb-[8rem]"
     title="Get Started Today"
-    description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you're becoming."
+    description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you’re becoming."
     primaryText="Start a Project"
     primaryLink="/contact-us"
     secondaryText="Book a Call"
@@ -197,44 +180,60 @@
 </template>
 
 <script setup>
-import HeaderSection from '@/components/layout/HeaderSection.vue';
-import AboutHero from '@/components/sections/AboutHero.vue';
-import TwoColumnsDesign from '@/components/sections/TwoColumnsDesign.vue';
-import LeadersSection from '@/components/sections/LeadersSection.vue';
-import TeamsSection from '@/components/sections/TeamsSection.vue';
-import WhiteSection from '@/components/sections/WhiteSection.vue';
-import FooterSection from '@/components/layout/FooterSection.vue';
+const leaders = [
+  {
+    name: "Mayya Aprosina",
+    role: "Founder & CEO",
+    image:
+      "/assets/new-assets/company-page/about-us/our-team/Mayya Aprosina.png",
+    description:
+      "Leads SiteSynth’s strategic direction and product vision. Connects brand, design, and engineering into one coherent story for clients.",
+  },
+  {
+    name: "Miguel Aprossine",
+    role: "AI & Web3 Visionary Partner",
+    image:
+      "/assets/new-assets/company-page/about-us/our-team/Miguel Aprossine.png",
+    description:
+      "Focuses on AI, Web3, and new business models. Helps clients explore emerging technologies without losing focus on real outcomes.",
+  },
+  {
+    name: "Koen Vergauwen",
+    role: "Head of Growth",
+    image:
+      "/assets/new-assets/company-page/about-us/our-team/Koen Vergauwen.png",
+    description:
+      "Works at the intersection of sales, strategy, and partnerships. Turns complex needs into clear, realistic engagement models.",
+  },
+  {
+    name: "Marco Maffei",
+    role: "Technology & Engineering Partner",
+    image:
+      "/assets/new-assets/company-page/about-us/our-team/Marco Maffei.png",
+    description:
+      "Owns the technical backbone of our projects. Bridges design intent with robust, scalable implementation.",
+  },
+];
 
-// SEO Configuration for About Us Page
+// SEO Configuration for About Us Page - Only override what's unique
 const siteUrl = useRuntimeConfig().public?.siteUrl;
 
 useSeoMeta({
-  // Page-specific title
   title: "About Us - SiteSynth | Meet Our Strategic Design & Development Team",
-
-  // Page-specific description
   description:
     "Meet the team behind SiteSynth. Based in Sint-Amands, Belgium, we are designers, strategists, and developers working in sync to deliver integrated digital solutions.",
-
-  // Page-specific keywords
   keywords:
     "about sitesynth, team, belgium design agency, strategic design team, mayya aprosina, miguel aprossine, marco maffei, design and development team",
-
-  // Open Graph
   ogTitle: "About SiteSynth - Meet Our Team",
   ogDescription:
     "Meet the team behind SiteSynth. Based in Sint-Amands, Belgium, we bridge strategy, design, and engineering.",
   ogImage: `${siteUrl}/assets/og-image-about.jpg`,
   ogImageAlt: "SiteSynth Team - Strategic Design & Development",
   ogUrl: `${siteUrl}/about-us`,
-
-  // Twitter
   twitterTitle: "About SiteSynth - Meet Our Team",
   twitterDescription:
     "Meet the team behind SiteSynth. Based in Sint-Amands, Belgium, we bridge strategy, design, and engineering.",
   twitterImage: `${siteUrl}/assets/twitter-card-about.jpg`,
-
-  // Canonical
   canonical: `${siteUrl}/about-us`,
 });
 
@@ -270,11 +269,6 @@ useHead({
               "@type": "Person",
               name: "Marco Maffei",
               jobTitle: "Full-Stack Engineer",
-            },
-            {
-              "@type": "Person",
-              name: "Koen Vergauwen",
-              jobTitle: "Head of Growth",
             },
           ],
         },
