@@ -65,7 +65,7 @@
           <!-- noscript fallback for crawlers / non-JS clients: expose links in raw HTML -->
           <noscript>
             <div class="p-4 space-y-2 bg-[#1E1E1E] rounded-b-lg">
-              <a href="/scoresynth/" class="block text-white hover:underline">
+              <a href="/scoresynth" class="block text-white hover:underline">
                 ScoreSynth
               </a>
               <a
@@ -166,7 +166,7 @@ const navItems = [
       {
         imageSrc: "/assets/new-assets/Menu/Product/gray/ScoreSynth.svg",
         label: "ScoreSynth",
-        link: "/scoresynth/",
+        link: "/scoresynth",
       },
       {
         imageSrc: "/assets/new-assets/Menu/Product/gray/Membria.svg",
