@@ -63,7 +63,7 @@
 
   <Testimonial
     id="testimonial-mayya"
-    imageSrc="/assets/new-assets/people-for-CTA/Mayya v2.png"
+    imageSrc="/assets/new-assets/people-for-CTA/oval-mayya.png"
     personName="Mayya Aprosina"
     personTitle="CEO & Business Designer"
     quoteTitle="A clear why shapes everything that follows."
