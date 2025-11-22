@@ -153,7 +153,7 @@
     hoverbg="hover:bg-[#AA3733]"
     hoverborder="hover:border-[#AA3733]"
     quoteColor="text-[#AA3733]"
-    imageSrc="/assets/new-assets/people-for-CTA/Mayya.png"
+    imageSrc="/assets/new-assets/people-for-CTA/oval-mayya-red.png"
     personName="Mayya Aprosina"
     personTitle="CEO & Business Designer"
     quoteTitle="A clear why shapes everything that follows."
