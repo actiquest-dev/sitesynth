@@ -100,50 +100,7 @@
     textColorRight="text-white"
   >
   </TwoColumnsDesign>
-  <TwoColumnsDesign
-    glowEffect="GlowBlue"
-    sectionBgColor="bg-[#161616]"
-    leftColumnBgColor="bg-[#161616]"
-    rightColumnBgColor="bg-[#161616]"
-  >
-    <template #right>
-      <div class="pt-24 md:border-r border-[#636363] bg-[#161616]">
-        <div class="max-w-[600px] mr-auto px-6 md:px-0md:pl-16">
-          <h2 class="text-white text-3xl sm:text-4xl mb-6">How We Work</h2>
-          <p class="text-[#999999] text-normal font-light mb-4">
-            We're a small, international team based across Europe — working
-            closely together from Belgium, Italy, Germany, and beyond. All
-            product work is done in-house or with trusted long-term
-            collaborators. We don’t outsource to third-party vendors or offload
-            work to anonymous contractors.
-          </p>
-          <h3 class="text-white text-2xl mt-[3rem] mb-[3rem]">
-            We’re hands-on with client projects
-          </h3>
-          <p class="text-[#999999] text-normal font-light">
-            At SiteSynth, we build with intention. We also invest in our own
-            tools and ventures. This dual focus keeps our thinking sharp and our
-            solutions grounded in real use.
-          </p>
-          <p class="text-[#999999] text-normal font-light mt-4">
-            We’re curious by nature, open to different industries — from common
-            digital products to specialized, niche domains. That’s what keeps
-            the work fresh, and the outcomes valuable.
-          </p>
-        </div>
-      </div>
-    </template>
 
-    <template #left>
-      <div>
-        <img
-          src="/assets/new-assets/company-page/about-us/how-we-work.png"
-          alt="ScoreSynth Image"
-          class="w-full object-cover"
-        />
-      </div>
-    </template>
-  </TwoColumnsDesign>
   <BannerSection
     text="Our team"
     tag="h2"
