@@ -62,30 +62,7 @@
               </NuxtLink>
             </li>
           </ul>
-          <!-- noscript fallback for crawlers / non-JS clients: expose links in raw HTML -->
-          <noscript>
-            <div class="p-4 space-y-2 bg-[#1E1E1E] rounded-b-lg">
-              <a href="/scoresynth" class="block text-white hover:underline">
-                ScoreSynth
-              </a>
-              <a
-                href="https://membria.xyz/"
-                target="_blank"
-                rel="noopener"
-                class="block text-white hover:underline"
-              >
-                Membria
-              </a>
-              <a
-                href="https://ailivepod.framer.website/"
-                target="_blank"
-                rel="noopener"
-                class="block text-white hover:underline"
-              >
-                AI Live Pod
-              </a>
-            </div>
-          </noscript>
+          <!-- noscript fallback removed from component to avoid hydration mismatches -->
         </div>
       </template>
 

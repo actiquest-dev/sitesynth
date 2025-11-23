@@ -95,9 +95,9 @@
   </TwoColumnsDesign>
 
   <!-- Новый блок Our leaders -->
-  <LeadersSection :leaders="leaders" />
+  <LeadersSection :leaders="leaders" :id="'our-leaders'" />
 
-  <!-- Блок Our team (старый грид) убран--> 
+  <!-- Блок Our team (старый грид) убран-->
 
   <!-- Call to action -->
   <WhiteSection
@@ -145,8 +145,7 @@ const leaders = [
   {
     name: "Marco Maffei",
     role: "Technology & Engineering Partner",
-    image:
-      "/assets/new-assets/company-page/about-us/our-team/Marco Maffei.png",
+    image: "/assets/new-assets/company-page/about-us/our-team/Marco Maffei.png",
     description:
       "Owns the technical backbone of our projects. Bridges design intent with robust, scalable implementation.",
   },
