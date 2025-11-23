@@ -58,9 +58,15 @@ useHead({
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:site", content: "@sitesynth" },
     { name: "twitter:creator", content: "@sitesynth" },
+    // Default share image (fallback) - pages can override
+    { property: "og:image", content: `${baseUrl}/assets/shareimage.png` },
+    { property: "og:image:alt", content: "SiteSynth - Share Image" },
+    { name: "twitter:image", content: `${baseUrl}/assets/shareimage.png` },
+    { name: "twitter:image:alt", content: "SiteSynth - Share Image" },
   ],
   link: [
     { rel: "icon", type: "image/svg+xml", href: "/assets/favicon.svg" },
+    { rel: "icon", type: "image/png", href: "/assets/favicon.png" },
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
     { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" },
     {
