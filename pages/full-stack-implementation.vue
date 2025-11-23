@@ -214,7 +214,7 @@ useSeoMeta({
   ogTitle: "Full-Stack Implementation - Production-Ready Engineering",
   ogDescription:
     "Production-ready engineering: front-end, back-end, and integrated developer collaboration to ship reliable, scalable digital products.",
-  ogImage: `${siteUrl}/assets/share-image.png`,
+  ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "SiteSynth - Full-Stack Implementation",
   ogUrl: `${siteUrl}/full-stack-implementation`,
 

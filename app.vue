@@ -97,7 +97,7 @@ useHead({
           "Strategic design and development company that bridges product, brand, and tech to create scalable digital solutions.",
         url: baseUrl,
         logo: `${baseUrl}/assets/logo.png`,
-        image: `${baseUrl}/assets/share-image.png`,
+        image: `${baseUrl}/assets/shareimage.png`,
         sameAs: [
           "https://www.linkedin.com/company/sitesynth",
           "https://twitter.com/sitesynth",
