@@ -2,7 +2,7 @@
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
-## og images 2
+## Right og image
 
 Make sure to install dependencies:
 
