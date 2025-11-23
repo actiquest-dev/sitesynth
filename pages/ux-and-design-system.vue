@@ -156,7 +156,7 @@ useSeoMeta({
   ogTitle: "UX & Design Systems - SiteSynth",
   ogDescription:
     "Scalable design systems and UX architecture that let teams move faster and ship with confidence.",
-  ogImage: `${siteUrl}/assets/og-image-home.jpg`,
+  ogImage: `${siteUrl}/assets/share-image.png`,
   ogImageAlt: "SiteSynth - UX & Design Systems",
   ogUrl: `${siteUrl}/ux-and-design-system`,
 

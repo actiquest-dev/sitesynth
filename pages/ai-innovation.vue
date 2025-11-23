@@ -219,7 +219,7 @@ useSeoMeta({
   ogTitle: "AI Innovation & R&D - SiteSynth",
   ogDescription:
     "Find the right AI opportunities, prototype fast, and embed AI into your product or process with clear value and responsible practices.",
-  ogImage: `${siteUrl}/assets/og-image-home.jpg`,
+  ogImage: `${siteUrl}/assets/share-image.png`,
   ogImageAlt: "SiteSynth - AI Innovation",
   ogUrl: `${siteUrl}/ai-innovation`,
 

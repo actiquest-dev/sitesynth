@@ -251,7 +251,7 @@ useSeoMeta({
   ogTitle: "SiteSynth - No silos. Just synthesis.",
   ogDescription:
     "Where product, brand, and tech finally align. We help companies bridge strategy, design, and engineering to create digital products that scale.",
-  ogImage: `${siteUrl}/assets/og-image-home.jpg`,
+  ogImage: `${siteUrl}/assets/share-image.png`,
   ogImageAlt: "SiteSynth - Strategic Design & Development Company",
   ogUrl: siteUrl,
 

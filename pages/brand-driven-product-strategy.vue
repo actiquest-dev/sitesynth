@@ -210,7 +210,7 @@ useSeoMeta({
   ogTitle: "Brand-Driven Product Strategy - SiteSynth",
   ogDescription:
     "We embed your brand’s voice into product experiences — aligning design, product, and marketing for consistent, strategic outcomes.",
-  ogImage: `${siteUrl}/assets/og-image-home.jpg`,
+  ogImage: `${siteUrl}/assets/share-image.png`,
   ogImageAlt: "Brand-Driven Product Strategy - SiteSynth",
   ogUrl: `${siteUrl}/brand-driven-product-strategy`,
 

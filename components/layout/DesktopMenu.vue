@@ -62,7 +62,6 @@
               </NuxtLink>
             </li>
           </ul>
-          <!-- noscript fallback removed from component to avoid hydration mismatches -->
         </div>
       </template>
 

@@ -13,7 +13,7 @@ useSeoMeta({
   ogTitle: "Contact SiteSynth - Let's build something meaningful",
   ogDescription:
     "Get in touch with SiteSynth to start a project, explore partnerships, or join our team.",
-  ogImage: `${siteUrl}/assets/og-image-home.jpg`,
+  ogImage: `${siteUrl}/assets/share-image.png`,
   ogImageAlt: "Contact SiteSynth",
   ogUrl: `${siteUrl}/contact-us`,
 
