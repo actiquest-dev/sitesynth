@@ -2,7 +2,7 @@
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
-## SEO important improvements
+## Hydration problem fixed
 
 Make sure to install dependencies:
 
