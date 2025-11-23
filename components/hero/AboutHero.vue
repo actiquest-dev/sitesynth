@@ -32,13 +32,11 @@
             tag.strokeClass,
           ]"
         >
-        <div
-  class="tag-pill-inner rounded-full bg-[#161616] px-12 py-2 
-         text-lg font-medium text-white/90
-         transition-all duration-300 group-hover:bg-[#181818]"
->
-  {{ tag.label }}
-</div>
+          <div
+            class="tag-pill-inner rounded-full bg-[#161616] px-12 py-2 text-lg font-medium text-white/90 transition-all duration-300 group-hover:bg-[#181818]"
+          >
+            {{ tag.label }}
+          </div>
         </div>
       </div>
     </div>
@@ -125,8 +123,7 @@ const getClasses = (tag) => {
 /* Внешняя оболочка таблетки */
 .tag-pill {
   border-radius: 9999px;
-  transition:
-    transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
+  transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -135,12 +132,10 @@ const getClasses = (tag) => {
   border-radius: 9999px;
   opacity: 0;
   transform: translateY(10px);
-  transition:
-    background-color 380ms cubic-bezier(0.22, 1, 0.36, 1),
+  transition: background-color 380ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1),
     transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
-  animation:
-    fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+  animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards,
     softPulse 4s ease-in-out infinite;
   animation-delay: calc(var(--i) * 90ms);
 }
@@ -182,5 +177,3 @@ const getClasses = (tag) => {
   }
 }
 </style>
-
-

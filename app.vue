@@ -65,13 +65,20 @@ useHead({
     { name: "twitter:image:alt", content: "SiteSynth - Share Image" },
   ],
   link: [
-    { rel: "icon", type: "image/svg+xml", href: "/assets/favicon.svg" },
-    { rel: "icon", type: "image/png", href: "/assets/favicon.png" },
+    { rel: "icon", type: "image/svg+xml", href: "/assets/favicon/favicon.svg" },
+    {
+      rel: "icon",
+      type: "image/png",
+      sizes: "96x96",
+      href: "/assets/favicon/favicon-96x96.png",
+    },
+    { rel: "shortcut icon", href: "/assets/favicon/favicon.ico" },
     {
       rel: "apple-touch-icon",
       sizes: "180x180",
-      href: "/assets/apple-touch-icon.png",
+      href: "/assets/favicon/apple-touch-icon.png",
     },
+    { rel: "manifest", href: "/assets/favicon/site.webmanifest" },
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
     { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" },
     {
