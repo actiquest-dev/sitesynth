@@ -67,6 +67,11 @@ useHead({
   link: [
     { rel: "icon", type: "image/svg+xml", href: "/assets/favicon.svg" },
     { rel: "icon", type: "image/png", href: "/assets/favicon.png" },
+    {
+      rel: "apple-touch-icon",
+      sizes: "180x180",
+      href: "/assets/apple-touch-icon.png",
+    },
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
     { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" },
     {
