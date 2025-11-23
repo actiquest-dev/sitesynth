@@ -163,7 +163,7 @@
             'We integrate cutting-edge AI tools to streamline your design and development process, reducing time-to-market while maintaining quality.',
         },
       ],
-      link: { href: '/scoresynth/', text: 'Discover more about our product' },
+      link: { href: '/scoresynth', text: 'Discover more about our product' },
     }"
     :rightContent="{
       image: {
