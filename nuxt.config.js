@@ -58,16 +58,15 @@ export default defineNuxtConfig({
     autoLastmod: true,
     cacheMaxAgeSeconds: 600,
     // Exclude admin/internal paths if any
-    exclude: [
-      "/api/**",
-    ],
+    exclude: ["/api/**"],
   },
 
   robots: {
     // Explicit robots config to avoid conflicts with sitemap module
     UserAgent: "*",
     Disallow: "",
-    Sitemap: (process.env.SITE_URL || "https://www.sitesynth.com") + "/sitemap.xml",
+    Sitemap:
+      (process.env.SITE_URL || "https://www.sitesynth.com") + "/sitemap.xml",
   },
 
   gtm: {
