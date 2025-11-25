@@ -5,32 +5,22 @@ h1 {
 }
 
 /* Используем :deep() для v-html контента */
-/* Use :deep() for v-html content. Reduce paint cost by animating opacity only
-   and keeping the (reduced) text-shadow static. This moves the animation to
-   the compositor (much cheaper) and avoids repeated expensive repaints. */
 h1 :deep(.glow-text) {
+  animation: pulse-glow 2s ease-in-out infinite;
   display: inline-block;
-  /* Static (reduced) glow - kept simple to avoid heavy paints */
-  text-shadow:
-    0 0 6px #C89BFF,
-    0 0 12px #C89BFF,
-    0 0 18px #8000FF;
-  will-change: opacity, transform;
-  transform: translateZ(0);
-  /* animate opacity only (compositor-friendly) */
-  animation: pulse-opacity 2000ms ease-in-out infinite;
+  text-shadow: 
+    0 0 20px #C89BFF,
+    0 0 30px #8000FF;
+  will-change: opacity;
 }
 
-@keyframes pulse-opacity {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.86; }
-}
-
-/* Respect user's reduced motion preference */
-@media (prefers-reduced-motion: reduce) {
-  h1 :deep(.glow-text) {
-    animation: none !important;
-    opacity: 1 !important;
+/* Оптимизированная анимация пульсации через opacity */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
   }
 }
 </style>
