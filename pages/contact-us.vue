@@ -20,113 +20,167 @@
   />
 
   <!-- ФОРМА + ТЕКСТ (оставляем как было) -->
-  <TwoColumnsDesign
-    sectionBgColor="bg-[#161616]"
-    leftColumnBgColor="bg-[#161616]"
-    rightColumnBgColor="bg-[#161616]"
-  >
-    <template #right>
-      <div class="py-24 md:border-r border-[#636363] bg-[#161616]">
-        <div class="max-w-[600px] mr-auto px-6 md:px-0 md:pl-16">
-          <form class="space-y-8" @submit="handleSubmit">
-            <h2 class="text-white text-3xl sm:text-4xl mb-6">
-              Tell us how we can help
-            </h2>
+ <TwoColumnsDesign
+  sectionBgColor="bg-[#161616]"
+  leftColumnBgColor="bg-[#161616]"
+  rightColumnBgColor="bg-[#161616]"
+>
+  <!-- ЛЕВАЯ КОЛОНКА (текст) -->
+  <template #left>
+    <div class="py-24 md:border-r border-[#363636] bg-[#161616]">
+      <div class="max-w-[560px] mr-auto px-6 md:px-0 md:pr-16">
+        <h2 class="text-white text-3xl sm:text-4xl mb-6">
+          Talk to our team.
+        </h2>
 
-            <!-- Success/Error Messages -->
-            <div
-              v-if="state.submitMessage"
-              class="p-4 bg-green-600/20 border border-green-500 rounded-lg"
-            >
-              <p class="text-green-400 text-sm">{{ state.submitMessage }}</p>
-            </div>
-            <div
-              v-if="state.submitError"
-              class="p-4 bg-red-600/20 border border-red-500 rounded-lg"
-            >
-              <p class="text-red-400 text-sm">{{ state.submitError }}</p>
-            </div>
+        <h3 class="text-white text-2xl mt-10 mb-4 flex items-center gap-3">
+          🧩 <span>Start a custom project</span>
+        </h3>
+        <p class="text-[#b3b3b3] text-base font-light mb-6">
+          Let’s discuss how SiteSynth can help your company design scalable
+          systems, ship faster, and elevate user experience.
+        </p>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label class="block text-[#999999] mb-2" for="fullName">
-                  Full Name
-                </label>
-                <input
-                  id="fullName"
-                  name="fullName"
-                  type="text"
-                  v-model="formData.fullName"
-                  required
-                  class="w-full bg-[#232323] border border-[#333] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#8CB0FF]"
-                />
-              </div>
-              <div>
-                <label class="block text-[#999999] mb-2" for="company">
-                  Company (optional)
-                </label>
-                <input
-                  id="company"
-                  name="company"
-                  type="text"
-                  v-model="formData.company"
-                  class="w-full bg-[#232323] border border-[#333] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#8CB0FF]"
-                />
-              </div>
-            </div>
+        <h3 class="text-white text-2xl mt-10 mb-4 flex items-center gap-3">
+          🤝 <span>Explore a partnership</span>
+        </h3>
+        <p class="text-[#b3b3b3] text-base font-light mb-10">
+          We’re open to long-term collaborations with agencies, product teams,
+          and technology partners.
+        </p>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label class="block text-[#999999] mb-2" for="email">
-                  Email Address
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  v-model="formData.email"
-                  required
-                  class="w-full bg-[#232323] border border-[#333] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#8CB0FF]"
-                />
-              </div>
-              <div>
-                <label class="block text-[#999999] mb-2" for="phone">
-                  Phone number
-                </label>
-                <ClientOnly>
-                  <PhoneInput
-                    v-model="formData.phone"
-                    :input-options="{
-                      placeholder: 'Enter phone',
-                      id: 'phone',
-                      name: 'phone',
-                    }"
-                    :dropdown-options="{
-                      showDialCodeInSelection: true,
-                      showFlags: true,
-                      showSearchBox: true,
-                    }"
-                  />
-                  <template #fallback>
-                    <input
-                      type="tel"
-                      placeholder="Enter phone"
-                      v-model="formData.phone"
-                      class="w-full bg-[#232323] border border-[#333] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#8CB0FF]"
-                    />
-                  </template>
-                </ClientOnly>
-              </div>
-            </div>
+        <p class="text-[#999999] text-sm mb-2">
+          We’re based in Belgium and work globally.
+        </p>
+        <p class="text-[#999999] text-sm">
+          Prefer email? Reach us at
+          <a class="text-white underline underline-offset-2" href="mailto:hello@sitesynth.com">
+            hello@sitesynth.com
+          </a>
+        </p>
+      </div>
+    </div>
+  </template>
 
+  <!-- ПРАВАЯ КОЛОНКА (ФОРМА) -->
+  <template #right>
+    <div class="py-24 bg-[#161616]">
+      <div class="max-w-[560px] ml-auto px-6 md:px-0 md:pl-16">
+        <form class="space-y-8" @submit="handleSubmit">
+          <h2 class="text-white text-3xl sm:text-4xl mb-2">
+            Tell us how we can help
+          </h2>
+          <p class="text-[#aaaaaa] text-sm mb-4">
+            Share a few details about your project or question. We usually reply within 1–2 business days.
+          </p>
+
+          <!-- Success/Error Messages -->
+          <div
+            v-if="state.submitMessage"
+            class="p-4 bg-green-600/15 border border-green-500/60 rounded-lg text-sm text-green-300"
+          >
+            {{ state.submitMessage }}
+          </div>
+          <div
+            v-if="state.submitError"
+            class="p-4 bg-red-600/15 border border-red-500/70 rounded-lg text-sm text-red-300"
+          >
+            {{ state.submitError }}
+          </div>
+
+          <!-- Имя + Компания -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label class="block text-[#999999] mb-2" for="topic">Topic</label>
+              <label class="block text-[#b3b3b3] mb-2 text-sm" for="fullName">
+                Full Name
+              </label>
+              <input
+                id="fullName"
+                name="fullName"
+                type="text"
+                v-model="formData.fullName"
+                required
+                class="w-full bg-[#202020] border border-[#333] rounded-lg px-4 py-3 text-sm text-white
+                       focus:outline-none focus:ring-2 focus:ring-[#8CB0FF] focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label class="block text-[#b3b3b3] mb-2 text-sm" for="company">
+                Company (optional)
+              </label>
+              <input
+                id="company"
+                name="company"
+                type="text"
+                v-model="formData.company"
+                class="w-full bg-[#202020] border border-[#333] rounded-lg px-4 py-3 text-sm text-white
+                       focus:outline-none focus:ring-2 focus:ring-[#8CB0FF] focus:border-transparent"
+              />
+            </div>
+          </div>
+
+          <!-- Email + Phone -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-[#b3b3b3] mb-2 text-sm" for="email">
+                Email Address
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                v-model="formData.email"
+                required
+                class="w-full bg-[#202020] border border-[#333] rounded-lg px-4 py-3 text-sm text-white
+                       focus:outline-none focus:ring-2 focus:ring-[#8CB0FF] focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label class="block text-[#b3b3b3] mb-2 text-sm" for="phone">
+                Phone number
+              </label>
+              <ClientOnly>
+                <PhoneInput
+                  v-model="formData.phone"
+                  :input-options="{
+                    placeholder: 'Enter phone',
+                    id: 'phone',
+                    name: 'phone',
+                  }"
+                  :dropdown-options="{
+                    showDialCodeInSelection: true,
+                    showFlags: true,
+                    showSearchBox: true,
+                  }"
+                  class="w-full"
+                />
+                <template #fallback>
+                  <input
+                    type="tel"
+                    placeholder="Enter phone"
+                    v-model="formData.phone"
+                    class="w-full bg-[#202020] border border-[#333] rounded-lg px-4 py-3 text-sm text-white
+                           focus:outline-none focus:ring-2 focus:ring-[#8CB0FF] focus:border-transparent"
+                  />
+                </template>
+              </ClientOnly>
+            </div>
+          </div>
+
+          <!-- Topic -->
+          <div>
+            <label class="block text-[#b3b3b3] mb-2 text-sm" for="topic">
+              Topic
+            </label>
+            <div class="relative">
               <select
                 id="topic"
                 name="topic"
                 v-model="formData.topic"
                 required
-                class="w-full bg-[#232323] border border-[#333] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#8CB0FF]"
+                class="w-full bg-[#202020] border border-[#333] rounded-lg px-4 py-3 pr-10 text-sm text-white
+                       focus:outline-none focus:ring-2 focus:ring-[#8CB0FF] focus:border-transparent
+                       appearance-none"
               >
                 <option value="">Select a topic</option>
                 <option value="project">Start a custom project</option>
@@ -134,85 +188,66 @@
                 <option value="career">Career opportunity</option>
                 <option value="other">Other</option>
               </select>
-            </div>
-
-            <div>
-              <label class="block text-[#999999] mb-2" for="message">
-                Message
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                rows="4"
-                v-model="formData.message"
-                required
-                class="w-full bg-[#232323] border border-[#333] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#8CB0FF]"
-              ></textarea>
-            </div>
-
-            <div>
-              <div class="mb-6 flex items-center">
-                <input
-                  id="consent"
-                  name="consent"
-                  type="checkbox"
-                  v-model="formData.consent"
-                  required
-                  class="accent-[#8CB0FF] w-5 h-5 mr-3 focus:outline-none focus:ring-2 focus:ring-[#8CB0FF]"
-                />
-                <label for="consent" class="text-[#999999] text-sm">
-                  I agree to SiteSynth storing and processing my data.
-                </label>
-              </div>
-              <button
-                type="submit"
-                :disabled="state.isSubmitting"
-                class="px-6 py-2 border-1 border-white hover:bg-white hover:text-[#161616] hover:border-white bg-[#161616] text-white transition-colors duration-[1000ms] font-semibold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              <!-- Кастомная стрелка -->
+              <span
+                class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#888]"
               >
-                {{ state.isSubmitting ? "Sending..." : "Send Message" }}
-              </button>
+                ▼
+              </span>
             </div>
-          </form>
-        </div>
+          </div>
+
+          <!-- Message -->
+          <div>
+            <label class="block text-[#b3b3b3] mb-2 text-sm" for="message">
+              Message
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              rows="4"
+              v-model="formData.message"
+              required
+              class="w-full bg-[#202020] border border-[#333] rounded-lg px-4 py-3 text-sm text-white
+                     focus:outline-none focus:ring-2 focus:ring-[#8CB0FF] focus:border-transparent resize-y"
+            ></textarea>
+          </div>
+
+          <!-- Consent + Button -->
+          <div>
+            <div class="mb-6 flex items-start gap-3">
+              <input
+                id="consent"
+                name="consent"
+                type="checkbox"
+                v-model="formData.consent"
+                required
+                class="mt-[2px] accent-[#8CB0FF] w-4 h-4
+                       focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-[#8CB0FF]"
+              />
+              <label for="consent" class="text-[#9b9b9b] text-xs leading-relaxed">
+                I agree to SiteSynth storing and processing my data.
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              :disabled="state.isSubmitting"
+              class="inline-flex items-center justify-center px-6 py-2.5
+                     border border-white bg-[#161616] text-white text-sm font-semibold
+                     hover:bg-white hover:text-[#161616] hover:border-white
+                     transition-colors duration-[900ms]
+                     disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {{ state.isSubmitting ? "Sending..." : "Send Message" }}
+            </button>
+          </div>
+        </form>
       </div>
-    </template>
+    </div>
+  </template>
+</TwoColumnsDesign>
 
-    <template #left>
-      <div class="py-24 md:border-r border-[#636363] bg-[#161616]">
-        <div class="max-w-[600px] mr-auto px-6 md:px-0 md:pl-16">
-          <h2 class="text-white text-3xl sm:text-4xl mb-6">
-            Talk to our team.
-          </h2>
-
-          <h3 class="text-white text-2xl mt-[3rem] mb-[3rem]">
-            🧩 Start a custom project
-          </h3>
-          <p class="text-[#999999] text-normal font-light mb-4">
-            Let’s discuss how SiteSynth can help your company design scalable
-            systems, ship faster, and elevate user experience.
-          </p>
-
-          <h3 class="text-white text-2xl mt-[3rem] mb-[3rem]">
-            🤝 Explore a partnership
-          </h3>
-          <p class="text-[#999999] text-normal font-light mb-[8rem]">
-            Let’s discuss how SiteSynth can help your company design scalable
-            systems, ship faster, and elevate user experience.
-          </p>
-
-          <p class="text-[#999999] text-normal font-light mb-4">
-            We’re based in Belgium and work globally.
-          </p>
-          <p class="text-[#999999] text-normal font-light mb-4">
-            Prefer email? Reach us at
-            <a class="text-white" href="mailto:hello@sitesynth.com">
-              hello@sitesynth.com
-            </a>
-          </p>
-        </div>
-      </div>
-    </template>
-  </TwoColumnsDesign>
 
   <FooterSection />
 </template>
