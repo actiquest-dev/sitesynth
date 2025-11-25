@@ -1,53 +1,9 @@
-<script setup>
-const { formData, state, handleSubmit } = useContactForm();
-
-// SEO Configuration for Contact page
-const siteUrl = useRuntimeConfig().public?.siteUrl;
-useSeoMeta({
-  title: "Contact Us - SiteSynth | Let's build something meaningful",
-  description:
-    "Get in touch with SiteSynth to start a project, explore partnerships, or join our team. We’re based in Belgium and work globally.",
-  keywords:
-    "contact, sitesynth, get in touch, hire, partnership, careers, contact us",
-
-  ogTitle: "Contact SiteSynth - Let's build something meaningful",
-  ogDescription:
-    "Get in touch with SiteSynth to start a project, explore partnerships, or join our team.",
-  ogImage: `${siteUrl}/assets/shareimage.png`,
-  ogImageAlt: "Contact SiteSynth",
-  ogUrl: `${siteUrl}/contact-us`,
-
-  twitterTitle: "Contact SiteSynth",
-  twitterDescription:
-    "Get in touch with SiteSynth to start a project, explore partnerships, or join our team.",
-  twitterImage: `${siteUrl}/assets/twitter-card-home.jpg`,
-
-  canonical: `${siteUrl}/contact-us`,
-});
-
-useHead({
-  script: [
-    {
-      type: "application/ld+json",
-      children: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "ContactPage",
-        name: "Contact SiteSynth",
-        description:
-          "Contact SiteSynth to start a project, explore partnerships, or join our team.",
-        url: `${siteUrl}/contact-us`,
-      }),
-    },
-  ],
-});
-</script>
-
 <template>
   <HeaderSection />
-  <HeroGeneric
-    backgroundImage=""
-    backgroundPosition="bg-right-bottom"
-    paddingClasses="pt-[16rem] h-[100vh]"
+
+  <!-- НОВЫЙ HERO -->
+  <ContactHero
+    glowEffect="GlowBlue"
     :content="[
       {
         tag: 'h1',
@@ -62,6 +18,8 @@ useHead({
       },
     ]"
   />
+
+  <!-- ФОРМА + ТЕКСТ (оставляем как было) -->
   <TwoColumnsDesign
     sectionBgColor="bg-[#161616]"
     leftColumnBgColor="bg-[#161616]"
@@ -88,6 +46,7 @@ useHead({
             >
               <p class="text-red-400 text-sm">{{ state.submitError }}</p>
             </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label class="block text-[#999999] mb-2" for="fullName">
@@ -115,6 +74,7 @@ useHead({
                 />
               </div>
             </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label class="block text-[#999999] mb-2" for="email">
@@ -158,6 +118,7 @@ useHead({
                 </ClientOnly>
               </div>
             </div>
+
             <div>
               <label class="block text-[#999999] mb-2" for="topic">Topic</label>
               <select
@@ -174,6 +135,7 @@ useHead({
                 <option value="other">Other</option>
               </select>
             </div>
+
             <div>
               <label class="block text-[#999999] mb-2" for="message">
                 Message
@@ -187,6 +149,7 @@ useHead({
                 class="w-full bg-[#232323] border border-[#333] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#8CB0FF]"
               ></textarea>
             </div>
+
             <div>
               <div class="mb-6 flex items-center">
                 <input
@@ -220,6 +183,7 @@ useHead({
           <h2 class="text-white text-3xl sm:text-4xl mb-6">
             Talk to our team.
           </h2>
+
           <h3 class="text-white text-2xl mt-[3rem] mb-[3rem]">
             🧩 Start a custom project
           </h3>
@@ -227,6 +191,7 @@ useHead({
             Let’s discuss how SiteSynth can help your company design scalable
             systems, ship faster, and elevate user experience.
           </p>
+
           <h3 class="text-white text-2xl mt-[3rem] mb-[3rem]">
             🤝 Explore a partnership
           </h3>
@@ -234,6 +199,7 @@ useHead({
             Let’s discuss how SiteSynth can help your company design scalable
             systems, ship faster, and elevate user experience.
           </p>
+
           <p class="text-[#999999] text-normal font-light mb-4">
             We’re based in Belgium and work globally.
           </p>
@@ -247,5 +213,50 @@ useHead({
       </div>
     </template>
   </TwoColumnsDesign>
+
   <FooterSection />
 </template>
+
+<script setup>
+const { formData, state, handleSubmit } = useContactForm();
+
+// SEO Configuration for Contact page
+const siteUrl = useRuntimeConfig().public?.siteUrl;
+useSeoMeta({
+  title: "Contact Us - SiteSynth | Let's build something meaningful",
+  description:
+    "Get in touch with SiteSynth to start a project, explore partnerships, or join our team. We’re based in Belgium and work globally.",
+  keywords:
+    "contact, sitesynth, get in touch, hire, partnership, careers, contact us",
+
+  ogTitle: "Contact SiteSynth - Let's build something meaningful",
+  ogDescription:
+    "Get in touch with SiteSynth to start a project, explore partnerships, or join our team.",
+  ogImage: `${siteUrl}/assets/shareimage.png`,
+  ogImageAlt: "Contact SiteSynth",
+  ogUrl: `${siteUrl}/contact-us`,
+
+  twitterTitle: "Contact SiteSynth",
+  twitterDescription:
+    "Get in touch with SiteSynth to start a project, explore partnerships, or join our team.",
+  twitterImage: `${siteUrl}/assets/twitter-card-home.jpg`,
+
+  canonical: `${siteUrl}/contact-us`,
+});
+
+useHead({
+  script: [
+    {
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "ContactPage",
+        name: "Contact SiteSynth",
+        description:
+          "Contact SiteSynth to start a project, explore partnerships, or join our team.",
+        url: `${siteUrl}/contact-us`,
+      }),
+    },
+  ],
+});
+</script>
