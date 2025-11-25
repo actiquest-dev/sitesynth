@@ -36,7 +36,7 @@ onMounted(() => {
       spaceBetween: 16,
       breakpoints: {
         640: { slidesPerView: 2, spaceBetween: 20 },
-        1024: { slidesPerView: 6, spaceBetween: 30 },
+        1024: { slidesPerView: 6, spaceBetween: 60 },
       },
       loop: true,
       autoplay: { delay: 3000, disableOnInteraction: false },
