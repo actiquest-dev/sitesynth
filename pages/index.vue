@@ -11,41 +11,41 @@
     id="carousel-logos"
     :images="[
       {
-        src: '/assets/figma.png',
-        alt: 'Figma Logo',
-        link: 'https://www.figma.com/',
+        src: '/assets/new-assets/home-page/home/clients logo/BMIL.png',
+        alt: 'BMI logo',
+        link: 'https://www.bmileisure.com/',
       },
       {
-        src: '/assets/infosys.png',
-        alt: 'Infosys Logo',
-        link: 'https://www.infosys.com/',
+        src: '/assets/new-assets/home-page/home/clients logo/CB.png',
+        alt: 'CB logo',
+        link: 'https://conceptbooth.com/',
       },
       {
-        src: '/assets/mercedes.png',
-        alt: 'Mercedes Logo',
-        link: 'https://www.mercedes-benz.com/',
+        src: '/assets/new-assets/home-page/home/clients logo/baakn.png',
+        alt: 'Baakn Logo',
+        link: 'https://baakn.be/',
       },
       { src: '/assets/sap.png', alt: 'SAP Logo', link: 'https://www.sap.com/' },
       {
-        src: '/assets/societe-generale.png',
-        alt: 'Societe Generale Logo',
-        link: 'https://www.societegenerale.com/',
+        src: '/assets/new-assets/home-page/home/clients logo/helan.png',
+        alt: 'Helan Logo',
+        link: 'https://www.helan.be/',
       },
       {
         src: '/assets/spotify.png',
         alt: 'Spotify Logo',
         link: 'https://www.spotify.com/',
       },
-      { src: '/assets/sap.png', alt: 'SAP Logo', link: 'https://www.sap.com/' },
+      { src: '/assets/new-assets/home-page/home/clients logo/idalko.png', alt: 'idalko Logo', link: 'https://idalko.com/' },
       {
         src: '/assets/societe-generale.png',
         alt: 'Societe Generale Logo',
         link: 'https://www.societegenerale.com/',
       },
       {
-        src: '/assets/spotify.png',
-        alt: 'Spotify Logo',
-        link: 'https://www.spotify.com/',
+        src: '/assets/new-assets/home-page/home/clients logo/actiq.png',
+        alt: 'Actiq Logo',
+        link: 'https://www.actiq.xyz/',
       },
     ]"
   />
