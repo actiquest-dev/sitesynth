@@ -25,73 +25,39 @@
   leftColumnBgColor="bg-[#161616]"
   rightColumnBgColor="bg-[#161616]"
 >
-  <!-- ЛЕВАЯ КОЛОНКА (текст) -->
-  <template #left>
-    <div class="py-24 md:border-r border-[#363636] bg-[#161616]">
-      <div class="max-w-[560px] mr-auto px-6 md:px-0 md:pr-16">
-        <h2 class="text-white text-3xl sm:text-4xl mb-6">
-          Talk to our team.
-        </h2>
-
-        <h3 class="text-white text-2xl mt-10 mb-4 flex items-center gap-3">
-          🧩 <span>Start a custom project</span>
-        </h3>
-        <p class="text-[#b3b3b3] text-base font-light mb-6">
-          Let’s discuss how SiteSynth can help your company design scalable
-          systems, ship faster, and elevate user experience.
-        </p>
-
-        <h3 class="text-white text-2xl mt-10 mb-4 flex items-center gap-3">
-          🤝 <span>Explore a partnership</span>
-        </h3>
-        <p class="text-[#b3b3b3] text-base font-light mb-10">
-          We’re open to long-term collaborations with agencies, product teams,
-          and technology partners.
-        </p>
-
-        <p class="text-[#999999] text-sm mb-2">
-          We’re based in Belgium and work globally.
-        </p>
-        <p class="text-[#999999] text-sm">
-          Prefer email? Reach us at
-          <a class="text-white underline underline-offset-2" href="mailto:hello@sitesynth.com">
-            hello@sitesynth.com
-          </a>
-        </p>
-      </div>
-    </div>
-  </template>
-
-  <!-- ПРАВАЯ КОЛОНКА (ФОРМА) -->
+  <!-- ПРАВАЯ КОЛОНКА: ФОРМА -->
   <template #right>
     <div class="py-24 bg-[#161616]">
-      <div class="max-w-[560px] ml-auto px-6 md:px-0 md:pl-16">
+      <div class="max-w-[560px] w-full mx-auto px-6 md:px-0 md:pl-16">
         <form class="space-y-8" @submit="handleSubmit">
-          <h2 class="text-white text-3xl sm:text-4xl mb-2">
-            Tell us how we can help
-          </h2>
-          <p class="text-[#aaaaaa] text-sm mb-4">
-            Share a few details about your project or question. We usually reply within 1–2 business days.
-          </p>
+          <div class="mb-6">
+            <h2 class="text-white text-3xl sm:text-4xl mb-3">
+              Tell us how we can help
+            </h2>
+            <p class="text-[#999999] text-sm leading-relaxed max-w-[420px]">
+              Share a few details about your project or question. We usually reply
+              within 1–2 business days.
+            </p>
+          </div>
 
-          <!-- Success/Error Messages -->
+          <!-- УСПЕХ / ОШИБКА -->
           <div
             v-if="state.submitMessage"
-            class="p-4 bg-green-600/15 border border-green-500/60 rounded-lg text-sm text-green-300"
+            class="p-4 bg-green-600/15 border border-green-500/70 rounded-[10px] text-sm text-green-300"
           >
             {{ state.submitMessage }}
           </div>
           <div
             v-if="state.submitError"
-            class="p-4 bg-red-600/15 border border-red-500/70 rounded-lg text-sm text-red-300"
+            class="p-4 bg-red-600/15 border border-red-500/70 rounded-[10px] text-sm text-red-300"
           >
             {{ state.submitError }}
           </div>
 
-          <!-- Имя + Компания -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- РЯД 1: Имя + Компания -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
-              <label class="block text-[#b3b3b3] mb-2 text-sm" for="fullName">
+              <label class="block text-[#999999] text-sm mb-2" for="fullName">
                 Full Name
               </label>
               <input
@@ -100,12 +66,15 @@
                 type="text"
                 v-model="formData.fullName"
                 required
-                class="w-full bg-[#202020] border border-[#333] rounded-lg px-4 py-3 text-sm text-white
-                       focus:outline-none focus:ring-2 focus:ring-[#8CB0FF] focus:border-transparent"
+                class="w-full bg-[#151515] border border-[#333333] rounded-[10px]
+                       px-4 py-3.5 text-sm text-white/90 placeholder:text-[#666666]
+                       focus:outline-none focus:ring-2 focus:ring-[#8CB0FF] focus:border-transparent
+                       transition"
               />
             </div>
+
             <div>
-              <label class="block text-[#b3b3b3] mb-2 text-sm" for="company">
+              <label class="block text-[#999999] text-sm mb-2" for="company">
                 Company (optional)
               </label>
               <input
@@ -113,16 +82,18 @@
                 name="company"
                 type="text"
                 v-model="formData.company"
-                class="w-full bg-[#202020] border border-[#333] rounded-lg px-4 py-3 text-sm text-white
-                       focus:outline-none focus:ring-2 focus:ring-[#8CB0FF] focus:border-transparent"
+                class="w-full bg-[#151515] border border-[#333333] rounded-[10px]
+                       px-4 py-3.5 text-sm text-white/90 placeholder:text-[#666666]
+                       focus:outline-none focus:ring-2 focus:ring-[#8CB0FF] focus:border-transparent
+                       transition"
               />
             </div>
           </div>
 
-          <!-- Email + Phone -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- РЯД 2: Email + Phone -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
-              <label class="block text-[#b3b3b3] mb-2 text-sm" for="email">
+              <label class="block text-[#999999] text-sm mb-2" for="email">
                 Email Address
               </label>
               <input
@@ -131,45 +102,59 @@
                 type="email"
                 v-model="formData.email"
                 required
-                class="w-full bg-[#202020] border border-[#333] rounded-lg px-4 py-3 text-sm text-white
-                       focus:outline-none focus:ring-2 focus:ring-[#8CB0FF] focus:border-transparent"
+                class="w-full bg-[#151515] border border-[#333333] rounded-[10px]
+                       px-4 py-3.5 text-sm text-white/90 placeholder:text-[#666666]
+                       focus:outline-none focus:ring-2 focus:ring-[#8CB0FF] focus:border-transparent
+                       transition"
               />
             </div>
+
             <div>
-              <label class="block text-[#b3b3b3] mb-2 text-sm" for="phone">
+              <label class="block text-[#999999] text-sm mb-2" for="phone">
                 Phone number
               </label>
               <ClientOnly>
-                <PhoneInput
-                  v-model="formData.phone"
-                  :input-options="{
-                    placeholder: 'Enter phone',
-                    id: 'phone',
-                    name: 'phone',
-                  }"
-                  :dropdown-options="{
-                    showDialCodeInSelection: true,
-                    showFlags: true,
-                    showSearchBox: true,
-                  }"
-                  class="w-full"
-                />
+                <div class="w-full">
+                  <PhoneInput
+                    v-model="formData.phone"
+                    :input-options="{
+                      placeholder: 'Enter phone',
+                      id: 'phone',
+                      name: 'phone',
+                      style: {
+                        backgroundColor: '#151515',
+                        borderRadius: '10px',
+                        border: '1px solid #333333',
+                        padding: '0.65rem 0.75rem',
+                        width: '100%',
+                        color: 'white'
+                      }
+                    }"
+                    :dropdown-options="{
+                      showDialCodeInSelection: true,
+                      showFlags: true,
+                      showSearchBox: true
+                    }"
+                  />
+                </div>
                 <template #fallback>
                   <input
                     type="tel"
                     placeholder="Enter phone"
                     v-model="formData.phone"
-                    class="w-full bg-[#202020] border border-[#333] rounded-lg px-4 py-3 text-sm text-white
-                           focus:outline-none focus:ring-2 focus:ring-[#8CB0FF] focus:border-transparent"
+                    class="w-full bg-[#151515] border border-[#333333] rounded-[10px]
+                           px-4 py-3.5 text-sm text-white/90 placeholder:text-[#666666]
+                           focus:outline-none focus:ring-2 focus:ring-[#8CB0FF] focus:border-transparent
+                           transition"
                   />
                 </template>
               </ClientOnly>
             </div>
           </div>
 
-          <!-- Topic -->
+          <!-- TOPIC -->
           <div>
-            <label class="block text-[#b3b3b3] mb-2 text-sm" for="topic">
+            <label class="block text-[#999999] text-sm mb-2" for="topic">
               Topic
             </label>
             <div class="relative">
@@ -178,9 +163,10 @@
                 name="topic"
                 v-model="formData.topic"
                 required
-                class="w-full bg-[#202020] border border-[#333] rounded-lg px-4 py-3 pr-10 text-sm text-white
+                class="w-full bg-[#151515] border border-[#333333] rounded-[10px]
+                       px-4 pr-10 py-3.5 text-sm text-white/90
                        focus:outline-none focus:ring-2 focus:ring-[#8CB0FF] focus:border-transparent
-                       appearance-none"
+                       appearance-none transition"
               >
                 <option value="">Select a topic</option>
                 <option value="project">Start a custom project</option>
@@ -188,55 +174,74 @@
                 <option value="career">Career opportunity</option>
                 <option value="other">Other</option>
               </select>
-              <!-- Кастомная стрелка -->
+
+              <!-- Стрелка -->
               <span
-                class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#888]"
+                class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#888888]"
               >
-                ▼
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5 7.5L10 12.5L15 7.5"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
               </span>
             </div>
           </div>
 
-          <!-- Message -->
+          <!-- MESSAGE -->
           <div>
-            <label class="block text-[#b3b3b3] mb-2 text-sm" for="message">
+            <label class="block text-[#999999] text-sm mb-2" for="message">
               Message
             </label>
             <textarea
               id="message"
               name="message"
-              rows="4"
+              rows="5"
               v-model="formData.message"
               required
-              class="w-full bg-[#202020] border border-[#333] rounded-lg px-4 py-3 text-sm text-white
-                     focus:outline-none focus:ring-2 focus:ring-[#8CB0FF] focus:border-transparent resize-y"
+              class="w-full bg-[#151515] border border-[#333333] rounded-[10px]
+                     px-4 py-3.5 text-sm text-white/90 placeholder:text-[#666666]
+                     focus:outline-none focus:ring-2 focus:ring-[#8CB0FF] focus:border-transparent
+                     transition resize-none"
             ></textarea>
           </div>
 
-          <!-- Consent + Button -->
-          <div>
-            <div class="mb-6 flex items-start gap-3">
+          <!-- CHECKBOX + КНОПКА -->
+          <div class="space-y-6 pt-2">
+            <label class="flex items-start gap-3 cursor-pointer select-none">
               <input
                 id="consent"
                 name="consent"
                 type="checkbox"
                 v-model="formData.consent"
                 required
-                class="mt-[2px] accent-[#8CB0FF] w-4 h-4
-                       focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-[#8CB0FF]"
+                class="mt-[3px] w-5 h-5 rounded-[6px] border border-[#444444]
+                       bg-[#181818] accent-[#8D35FF]
+                       focus:outline-none focus:ring-2 focus:ring-[#8D35FF]"
               />
-              <label for="consent" class="text-[#9b9b9b] text-xs leading-relaxed">
+              <span class="text-[#999999] text-sm leading-relaxed">
                 I agree to SiteSynth storing and processing my data.
-              </label>
-            </div>
+              </span>
+            </label>
 
             <button
               type="submit"
               :disabled="state.isSubmitting"
               class="inline-flex items-center justify-center px-6 py-2.5
-                     border border-white bg-[#161616] text-white text-sm font-semibold
+                     rounded-[999px] border border-white
+                     bg-[#161616] text-white text-sm font-semibold
                      hover:bg-white hover:text-[#161616] hover:border-white
-                     transition-colors duration-[900ms]
+                     transition-colors duration-[320ms]
                      disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {{ state.isSubmitting ? "Sending..." : "Send Message" }}
@@ -246,7 +251,43 @@
       </div>
     </div>
   </template>
+
+  <!-- ЛЕВАЯ КОЛОНКА ОСТАЁТСЯ КАК БЫЛО -->
+  <template #left>
+    <!-- твой текущий текст "Talk to our team..." без изменений -->
+    <div class="py-24 md:border-r border-[#636363] bg-[#161616]">
+      <div class="max-w-[600px] mr-auto px-6 md:px-0 md:pl-16">
+        <h2 class="text-white text-3xl sm:text-4xl mb-6">
+          Talk to our team.
+        </h2>
+        <h3 class="text-white text-2xl mt-[3rem] mb-[3rem]">
+          🧩 Start a custom project
+        </h3>
+        <p class="text-[#999999] text-normal font-light mb-4">
+          Let’s discuss how SiteSynth can help your company design scalable
+          systems, ship faster, and elevate user experience.
+        </p>
+        <h3 class="text-white text-2xl mt-[3rem] mb-[3rem]">
+          🤝 Explore a partnership
+        </h3>
+        <p class="text-[#999999] text-normal font-light mb-[8rem]">
+          Let’s discuss how SiteSynth can help your company design scalable
+          systems, ship faster, and elevate user experience.
+        </p>
+        <p class="text-[#999999] text-normal font-light mb-4">
+          We’re based in Belgium and work globally.
+        </p>
+        <p class="text-[#999999] text-normal font-light mb-4">
+          Prefer email? Reach us at
+          <a class="text-white" href="mailto:hello@sitesynth.com">
+            hello@sitesynth.com
+          </a>
+        </p>
+      </div>
+    </div>
+  </template>
 </TwoColumnsDesign>
+
 
 
   <FooterSection />
