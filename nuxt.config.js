@@ -52,21 +52,9 @@ export default defineNuxtConfig({
   site: {
     url: process.env.SITE_URL || "https://www.sitesynth.com",
   },
-  sitemap: {
-    hostname: process.env.SITE_URL || "https://www.sitesynth.com",
-    gzip: false,
-    autoLastmod: true,
-    cacheMaxAgeSeconds: 600,
-    // Exclude admin/internal paths if any
-    exclude: ["/api/**"],
-  },
 
   robots: {
-    // Explicit robots config to avoid conflicts with sitemap module
-    UserAgent: "*",
-    Disallow: "",
-    Sitemap:
-      (process.env.SITE_URL || "https://www.sitesynth.com") + "/sitemap.xml",
+    enabled: false, // Disable robots module since we have a static robots.txt file
   },
 
   gtm: {

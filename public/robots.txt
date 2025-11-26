@@ -2,3 +2,5 @@
 # If you need to block staging/dev, set this file differently in those envs
 User-agent: *
 Disallow:
+
+Sitemap: https://www.sitesynth.com/sitemap.xml
