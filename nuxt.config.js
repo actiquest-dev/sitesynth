@@ -8,7 +8,6 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "@nuxt/image",
     "@nuxtjs/sitemap",
-    "@nuxtjs/robots",
     "@zadigetvoltaire/nuxt-gtm",
   ],
 
@@ -51,10 +50,6 @@ export default defineNuxtConfig({
   // Canonical site url used by sitemap/plugins. Prefer SITE_URL env var.
   site: {
     url: process.env.SITE_URL || "https://www.sitesynth.com",
-  },
-
-  robots: {
-    enabled: false, // Disable robots module since we have a static robots.txt file
   },
 
   gtm: {
