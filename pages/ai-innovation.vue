@@ -207,25 +207,23 @@
 </template>
 
 <script setup>
-// SEO Configuration for AI Innovation page
-const siteUrl = useRuntimeConfig().public?.siteUrl;
-useSeoMeta({
-  title: "AI Innovation & R&D - SiteSynth | AI-Powered Product Strategy",
-  description:
-    "We help teams discover high-impact AI use cases, prototype quickly, and integrate AI responsibly into products and workflows.",
-  keywords:
-    "ai strategy, ai innovation, rapid prototyping, r&d, llms, vector search, rag, ai product",
+import { seoConfig, structuredData } from '~/config/seo'
 
-  ogTitle: "AI Innovation & R&D - SiteSynth",
-  ogDescription:
-    "Find the right AI opportunities, prototype fast, and embed AI into your product or process with clear value and responsible practices.",
+// SEO Configuration - using centralized config
+const siteUrl = useRuntimeConfig().public?.siteUrl;
+const seo = seoConfig.aiInnovation;
+useSeoMeta({
+  title: seo.title,
+  description: seo.description,
+  keywords: seo.keywords,
+  ogTitle: seo.ogTitle,
+  ogDescription: seo.ogDescription,
   ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "SiteSynth - AI Innovation",
   ogUrl: `${siteUrl}/ai-innovation`,
 
-  twitterTitle: "AI Innovation & R&D - SiteSynth",
-  twitterDescription:
-    "We identify AI opportunities and build prototypes to deliver measurable product and operational value.",
+  twitterTitle: seo.twitterTitle,
+  twitterDescription: seo.twitterDescription,
   twitterImage: `${siteUrl}/assets/twitter-card-home.jpg`,
 
   canonical: `${siteUrl}/ai-innovation`,

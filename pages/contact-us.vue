@@ -251,27 +251,25 @@
 </template>
 
 <script setup>
+import { seoConfig, structuredData } from '~/config/seo'
+
 const { formData, state, handleSubmit } = useContactForm();
 
-// SEO Configuration for Contact page
+// SEO Configuration - using centralized config
 const siteUrl = useRuntimeConfig().public?.siteUrl;
+const seo = seoConfig.contact;
 useSeoMeta({
-  title: "Contact Us - SiteSynth | Let's build something meaningful",
-  description:
-    "Get in touch with SiteSynth to start a project, explore partnerships, or join our team. We’re based in Belgium and work globally.",
-  keywords:
-    "contact, sitesynth, get in touch, hire, partnership, careers, contact us",
-
-  ogTitle: "Contact SiteSynth - Let's build something meaningful",
-  ogDescription:
-    "Get in touch with SiteSynth to start a project, explore partnerships, or join our team.",
+  title: seo.title,
+  description: seo.description,
+  keywords: seo.keywords,
+  ogTitle: seo.ogTitle,
+  ogDescription: seo.ogDescription,
   ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "Contact SiteSynth",
   ogUrl: `${siteUrl}/contact-us`,
 
-  twitterTitle: "Contact SiteSynth",
-  twitterDescription:
-    "Get in touch with SiteSynth to start a project, explore partnerships, or join our team.",
+  twitterTitle: seo.twitterTitle,
+  twitterDescription: seo.twitterDescription,
   twitterImage: `${siteUrl}/assets/twitter-card-home.jpg`,
 
   canonical: `${siteUrl}/contact-us`,
@@ -281,14 +279,7 @@ useHead({
   script: [
     {
       type: "application/ld+json",
-      children: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "ContactPage",
-        name: "Contact SiteSynth",
-        description:
-          "Contact SiteSynth to start a project, explore partnerships, or join our team.",
-        url: `${siteUrl}/contact-us`,
-      }),
+      children: JSON.stringify(structuredData.contactPage(siteUrl)),
     },
   ],
 });

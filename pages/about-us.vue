@@ -151,25 +151,24 @@ const leaders = [
   },
 ];
 
-// SEO Configuration for About Us Page - Only override what's unique
+import { seoConfig, structuredData } from '~/config/seo'
+
+// SEO Configuration - using centralized config
 const siteUrl = useRuntimeConfig().public?.siteUrl;
+const seo = seoConfig.about;
 
 useSeoMeta({
-  title: "About Us - SiteSynth | Meet Our Strategic Design & Development Team",
-  description:
-    "Meet the team behind SiteSynth. Based in Sint-Amands, Belgium, we are designers, strategists, and developers working in sync to deliver integrated digital solutions.",
-  keywords:
-    "about sitesynth, team, belgium design agency, strategic design team, mayya aprosina, miguel aprossine, marco maffei, design and development team",
-  ogTitle: "About SiteSynth - Meet Our Team",
-  ogDescription:
-    "Meet the team behind SiteSynth. Based in Sint-Amands, Belgium, we bridge strategy, design, and engineering.",
-  ogImage: `${siteUrl}/assets/og-image-about.jpg`,
+  title: seo.title,
+  description: seo.description,
+  keywords: seo.keywords,
+  ogTitle: seo.ogTitle,
+  ogDescription: seo.ogDescription,
+  ogImage: `${siteUrl}${seo.ogImage}`,
   ogImageAlt: "SiteSynth Team - Strategic Design & Development",
   ogUrl: `${siteUrl}/about-us`,
-  twitterTitle: "About SiteSynth - Meet Our Team",
-  twitterDescription:
-    "Meet the team behind SiteSynth. Based in Sint-Amands, Belgium, we bridge strategy, design, and engineering.",
-  twitterImage: `${siteUrl}/assets/twitter-card-about.jpg`,
+  twitterTitle: seo.ogTitle,
+  twitterDescription: seo.ogDescription,
+  twitterImage: `${siteUrl}${seo.twitterImage}`,
   canonical: `${siteUrl}/about-us`,
 });
 

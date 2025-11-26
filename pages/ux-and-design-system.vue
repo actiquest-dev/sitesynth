@@ -143,26 +143,23 @@
 </template>
 
 <script setup>
-// SEO Configuration for UX & Design System page
-const siteUrl = useRuntimeConfig().public?.siteUrl;
-useSeoMeta({
-  title:
-    "UX & Design Systems - SiteSynth | Scalable Design Systems & UX Architecture",
-  description:
-    "We build scalable design systems and UX architecture that let teams move faster, stay consistent, and hand off clearly to engineering.",
-  keywords:
-    "design systems, ux architecture, figma, design tokens, component libraries, design handoff, zeroheight, storybook",
+import { seoConfig, structuredData } from '~/config/seo'
 
-  ogTitle: "UX & Design Systems - SiteSynth",
-  ogDescription:
-    "Scalable design systems and UX architecture that let teams move faster and ship with confidence.",
+// SEO Configuration - using centralized config
+const siteUrl = useRuntimeConfig().public?.siteUrl;
+const seo = seoConfig.uxDesign;
+useSeoMeta({
+  title: seo.title,
+  description: seo.description,
+  keywords: seo.keywords,
+  ogTitle: seo.ogTitle,
+  ogDescription: seo.ogDescription,
   ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "SiteSynth - UX & Design Systems",
   ogUrl: `${siteUrl}/ux-and-design-system`,
 
-  twitterTitle: "UX & Design Systems - SiteSynth",
-  twitterDescription:
-    "Scalable design systems and UX architecture that let teams move faster and ship with confidence.",
+  twitterTitle: seo.twitterTitle,
+  twitterDescription: seo.twitterDescription,
   twitterImage: `${siteUrl}/assets/twitter-card-home.jpg`,
 
   canonical: `${siteUrl}/ux-and-design-system`,

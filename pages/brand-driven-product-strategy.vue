@@ -198,18 +198,17 @@
 </template>
 
 <script setup>
-// SEO Configuration for Brand-Driven Product Strategy page
-const siteUrl = useRuntimeConfig().public?.siteUrl;
-useSeoMeta({
-  title: "Brand-Driven Product Strategy - SiteSynth | Align Brand & Product",
-  description:
-    "Align your brand with product strategy: we translate brand voice, values, and purpose into product experiences that feel intentional and drive results.",
-  keywords:
-    "brand strategy, product strategy, brand-driven product, messaging framework, design strategy, cross-team alignment",
+import { seoConfig, structuredData } from '~/config/seo'
 
-  ogTitle: "Brand-Driven Product Strategy - SiteSynth",
-  ogDescription:
-    "We embed your brand’s voice into product experiences — aligning design, product, and marketing for consistent, strategic outcomes.",
+// SEO Configuration - using centralized config
+const siteUrl = useRuntimeConfig().public?.siteUrl;
+const seo = seoConfig.brandStrategy;
+useSeoMeta({
+  title: seo.title,
+  description: seo.description,
+  keywords: seo.keywords,
+  ogTitle: seo.ogTitle,
+  ogDescription: seo.ogDescription,
   ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "Brand-Driven Product Strategy - SiteSynth",
   ogUrl: `${siteUrl}/brand-driven-product-strategy`,

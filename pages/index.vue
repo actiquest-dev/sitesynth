@@ -230,34 +230,25 @@
 </template>
 
 <script setup>
-// SEO Configuration for Home Page - Only override what's unique
+import { seoConfig } from '~/config/seo'
+
+// SEO Configuration - using centralized config
 const siteUrl = useRuntimeConfig().public?.siteUrl;
+const seo = seoConfig.home;
 // Use siteUrl from runtime config for images and canonical links
 useSeoMeta({
-  // Override the default title with homepage-specific version
-  title:
-    "SiteSynth - No silos. Just synthesis. | Where Product, Brand & Tech Align",
-
-  // Homepage-specific description
-  description:
-    "Where product, brand, and tech finally align. We help companies bridge strategy, design, and engineering to create digital products that scale.",
-
-  // Homepage-specific keywords (extends the defaults)
-  keywords:
-    "strategic design, product development, brand strategy, full-stack development, design systems, AI innovation, UX design, web development, no silos synthesis",
-
-  // Open Graph - Only the unique values
-  ogTitle: "SiteSynth - No silos. Just synthesis.",
-  ogDescription:
-    "Where product, brand, and tech finally align. We help companies bridge strategy, design, and engineering to create digital products that scale.",
+  title: seo.title,
+  description: seo.description,
+  keywords: seo.keywords,
+  ogTitle: seo.ogTitle,
+  ogDescription: seo.ogDescription,
   ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "SiteSynth - Strategic Design & Development Company",
   ogUrl: siteUrl,
 
   // Twitter Card - Only the unique values
-  twitterTitle: "SiteSynth - No silos. Just synthesis.",
-  twitterDescription:
-    "Where product, brand, and tech finally align. Strategic design & development company.",
+  twitterTitle: seo.twitterTitle,
+  twitterDescription: seo.twitterDescription,
   twitterImage: `${siteUrl}/assets/twitter-card-home.jpg`,
   twitterImageAlt: "SiteSynth - Strategic Design & Development",
 

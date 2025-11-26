@@ -158,3 +158,26 @@
   />
   <FooterSection />
 </template>
+
+<script setup>
+import { seoConfig, structuredData } from '~/config/seo'
+
+// SEO Configuration - using centralized config
+const siteUrl = useRuntimeConfig().public?.siteUrl;
+const seo = seoConfig.careers;
+
+useSeoMeta({
+  title: seo.title,
+  description: seo.description,
+  keywords: seo.keywords,
+  ogTitle: seo.ogTitle,
+  ogDescription: seo.ogDescription,
+  ogImage: `${siteUrl}/assets/shareimage.png`,
+  ogImageAlt: "Careers at SiteSynth",
+  ogUrl: `${siteUrl}/careers`,
+  twitterTitle: seo.ogTitle,
+  twitterDescription: seo.ogDescription,
+  twitterImage: `${siteUrl}/assets/twitter-card-home.jpg`,
+  canonical: `${siteUrl}/careers`,
+});
+</script>

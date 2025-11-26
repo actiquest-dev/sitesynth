@@ -202,25 +202,23 @@
 </template>
 
 <script setup>
-// SEO Configuration for Full-Stack Implementation page
-const siteUrl = useRuntimeConfig().public?.siteUrl;
-useSeoMeta({
-  title: "Full-Stack Implementation - SiteSynth | Production-Ready Engineering",
-  description:
-    "Production-ready engineering: front-end, back-end, and integrated developer collaboration to ship reliable, scalable digital products.",
-  keywords:
-    "full-stack engineering, implementation support, production-ready, backend, frontend, APIs, dev collaboration",
+import { seoConfig, structuredData } from '~/config/seo'
 
-  ogTitle: "Full-Stack Implementation - Production-Ready Engineering",
-  ogDescription:
-    "Production-ready engineering: front-end, back-end, and integrated developer collaboration to ship reliable, scalable digital products.",
+// SEO Configuration - using centralized config
+const siteUrl = useRuntimeConfig().public?.siteUrl;
+const seo = seoConfig.fullStack;
+useSeoMeta({
+  title: seo.title,
+  description: seo.description,
+  keywords: seo.keywords,
+  ogTitle: seo.ogTitle,
+  ogDescription: seo.ogDescription,
   ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "SiteSynth - Full-Stack Implementation",
   ogUrl: `${siteUrl}/full-stack-implementation`,
 
-  twitterTitle: "Full-Stack Implementation - SiteSynth",
-  twitterDescription:
-    "Production-ready engineering: front-end, back-end, and integrated developer collaboration to ship reliable, scalable digital products.",
+  twitterTitle: seo.twitterTitle,
+  twitterDescription: seo.twitterDescription,
   twitterImage: `${siteUrl}/assets/twitter-card-home.jpg`,
 
   canonical: `${siteUrl}/full-stack-implementation`,
