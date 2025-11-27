@@ -69,7 +69,7 @@ const footerData = {
   socialLinks: [
     {
       icon: "fab fa-linkedin",
-      url: "#",
+      url: "https://www.linkedin.com/company/sitesynth/",
       color: "border-[#0A66C2] hover:bg-[#0A66C2]",
     },
     // {

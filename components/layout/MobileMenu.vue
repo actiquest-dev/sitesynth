@@ -163,7 +163,7 @@ const cta = { text: "Get started", link: "/contact-us" };
 const socials = [
   {
     name: "LinkedIn",
-    url: "#",
+    url: "https://www.linkedin.com/company/sitesynth/",
     icon: "fab fa-linkedin",
     hoverBg: "hover:bg-[#0A66C2]",
   },
