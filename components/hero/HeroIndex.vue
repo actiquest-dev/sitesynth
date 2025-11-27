@@ -9,7 +9,7 @@ h1 :deep(.glow-text) {
   animation: pulse-glow 2s ease-in-out infinite;
   display: inline-block;
   text-shadow: 
-    0 0 20px #C89BFF,
+    0 0 10px #C89BFF,
     0 0 30px #8000FF;
   will-change: opacity;
 }
