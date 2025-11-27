@@ -2,7 +2,7 @@
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
-## Menus links socials
+## target blank for socials
 
 Make sure to install dependencies:
 
