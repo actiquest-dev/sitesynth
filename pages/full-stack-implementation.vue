@@ -216,11 +216,9 @@ useSeoMeta({
   ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "SiteSynth - Full-Stack Implementation",
   ogUrl: `${siteUrl}/full-stack-implementation`,
-
   twitterTitle: seo.twitterTitle,
   twitterDescription: seo.twitterDescription,
-  twitterImage: `${siteUrl}/assets/twitter-card-home.jpg`,
-
+  twitterImage: `${siteUrl}/assets/shareimage.png`,
   canonical: `${siteUrl}/full-stack-implementation`,
 });
 

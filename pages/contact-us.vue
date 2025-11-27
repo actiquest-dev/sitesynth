@@ -267,11 +267,9 @@ useSeoMeta({
   ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "Contact SiteSynth",
   ogUrl: `${siteUrl}/contact-us`,
-
   twitterTitle: seo.twitterTitle,
   twitterDescription: seo.twitterDescription,
-  twitterImage: `${siteUrl}/assets/twitter-card-home.jpg`,
-
+  twitterImage: `${siteUrl}/assets/shareimage.png`,
   canonical: `${siteUrl}/contact-us`,
 });
 

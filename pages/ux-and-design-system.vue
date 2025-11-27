@@ -160,7 +160,7 @@ useSeoMeta({
 
   twitterTitle: seo.twitterTitle,
   twitterDescription: seo.twitterDescription,
-  twitterImage: `${siteUrl}/assets/twitter-card-home.jpg`,
+  twitterImage: `${siteUrl}/assets/shareimage.png`,
 
   canonical: `${siteUrl}/ux-and-design-system`,
 });

@@ -227,13 +227,13 @@ useSeoMeta({
   keywords: seo.keywords,
   ogTitle: seo.ogTitle,
   ogDescription: seo.ogDescription,
-  ogImage: `${siteUrl}${seo.ogImage}`,
+  ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "ScoreSynth - AI Music Scoring",
   ogUrl: `${siteUrl}/scoresynth`,
 
   twitterTitle: seo.twitterTitle,
   twitterDescription: seo.twitterDescription,
-  twitterImage: `${siteUrl}/assets/twitter-card-home.jpg`,
+  twitterImage: `${siteUrl}/assets/shareimage.png`,
 
   canonical: `${siteUrl}/scoresynth`,
 });

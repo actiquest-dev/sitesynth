@@ -249,7 +249,7 @@ useSeoMeta({
   // Twitter Card - Only the unique values
   twitterTitle: seo.twitterTitle,
   twitterDescription: seo.twitterDescription,
-  twitterImage: `${siteUrl}/assets/twitter-card-home.jpg`,
+  twitterImage: `${siteUrl}/assets/shareimage.png`,
   twitterImageAlt: "SiteSynth - Strategic Design & Development",
 
   // Page-specific canonical

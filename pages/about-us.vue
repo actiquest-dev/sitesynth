@@ -163,12 +163,12 @@ useSeoMeta({
   keywords: seo.keywords,
   ogTitle: seo.ogTitle,
   ogDescription: seo.ogDescription,
-  ogImage: `${siteUrl}${seo.ogImage}`,
-  ogImageAlt: "SiteSynth Team - Strategic Design & Development",
+  ogImage: `${siteUrl}/assets/shareimage.png`,
+  ogImageAlt: "SiteSynth - Strategic Design & Development",
   ogUrl: `${siteUrl}/about-us`,
   twitterTitle: seo.ogTitle,
   twitterDescription: seo.ogDescription,
-  twitterImage: `${siteUrl}${seo.twitterImage}`,
+  twitterImage: `${siteUrl}/assets/shareimage.png`,
   canonical: `${siteUrl}/about-us`,
 });
 

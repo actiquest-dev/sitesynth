@@ -221,11 +221,9 @@ useSeoMeta({
   ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "SiteSynth - AI Innovation",
   ogUrl: `${siteUrl}/ai-innovation`,
-
   twitterTitle: seo.twitterTitle,
   twitterDescription: seo.twitterDescription,
-  twitterImage: `${siteUrl}/assets/twitter-card-home.jpg`,
-
+  twitterImage: `${siteUrl}/assets/shareimage.png`,
   canonical: `${siteUrl}/ai-innovation`,
 });
 

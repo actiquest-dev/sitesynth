@@ -177,7 +177,7 @@ useSeoMeta({
   ogUrl: `${siteUrl}/careers`,
   twitterTitle: seo.ogTitle,
   twitterDescription: seo.ogDescription,
-  twitterImage: `${siteUrl}/assets/twitter-card-home.jpg`,
+  twitterImage: `${siteUrl}/assets/shareimage.png`,
   canonical: `${siteUrl}/careers`,
 });
 </script>

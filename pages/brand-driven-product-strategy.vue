@@ -212,12 +212,10 @@ useSeoMeta({
   ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "Brand-Driven Product Strategy - SiteSynth",
   ogUrl: `${siteUrl}/brand-driven-product-strategy`,
-
   twitterTitle: "Brand-Driven Product Strategy - SiteSynth",
   twitterDescription:
     "Translate your brand into product experiences that are consistent, scalable, and ready to ship.",
-  twitterImage: `${siteUrl}/assets/twitter-card-home.jpg`,
-
+  twitterImage: `${siteUrl}/assets/shareimage.png`,
   canonical: `${siteUrl}/brand-driven-product-strategy`,
 });
 
