@@ -19,11 +19,6 @@ export default defineNuxtConfig({
     preset: "vercel", // ✅ change from 'static' to 'vercel'
   },
 
-  sourcemap: {
-    server: false,
-    client: false
-  },
-
   app: {
     baseURL: "/", // ✅ change from '/Synth/' to '/'
     // ❌ remove `buildAssetsDir` unless you specifically need a custom one
@@ -52,51 +47,10 @@ export default defineNuxtConfig({
     },
   },
 
-  // Canonical site url used by sitemap/plugins. Prefer SITE_URL env var.
-  site: {
-    url: process.env.SITE_URL || "https://www.sitesynth.com",
-  },
-
   // Sitemap configuration for proper XML generation
-  sitemap: {
-    defaults: {
-      changefreq: 'monthly',
-      priority: 0.8,
-      lastmod: new Date().toISOString()
-    },
-    // Override specific routes with custom metadata
-    routes: [
-      {
-        url: '/',
-        changefreq: 'weekly',
-        priority: 1.0
-      },
-      {
-        url: '/careers',
-        changefreq: 'weekly',
-        priority: 0.7
-      },
-      {
-        url: '/careers/full-stack-developer',
-        changefreq: 'weekly',
-        priority: 0.6
-      },
-      {
-        url: '/careers/marketing-manager',
-        changefreq: 'weekly',
-        priority: 0.6
-      },
-      {
-        url: '/careers/ux-ui-designer',
-        changefreq: 'weekly',
-        priority: 0.6
-      },
-      {
-        url: '/contact-us',
-        changefreq: 'monthly',
-        priority: 0.7
-      }
-    ]
+  site: {
+    url: "https://www.sitesynth.com",
+    name: "SiteSynth",
   },
 
   gtm: {
