@@ -44,7 +44,7 @@
       {
         src: '/assets/new-assets/home-page/home/clients-logo/tech-paw.svg',
         alt: 'Tech Paw Logo',
-        link: 'https://www.techpaw.com/',
+        link: 'https://www.tech-paw.com/',
       },
     ]"
   />

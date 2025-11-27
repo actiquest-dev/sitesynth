@@ -167,18 +167,18 @@ const socials = [
     icon: "fab fa-linkedin",
     hoverBg: "hover:bg-[#0A66C2]",
   },
-  {
-    name: "Instagram",
-    url: "#",
-    icon: "fab fa-instagram",
-    hoverBg: "hover:bg-[#E4405F]",
-  },
-  {
-    name: "YouTube",
-    url: "#",
-    icon: "fab fa-youtube",
-    hoverBg: "hover:bg-[#FF0000]",
-  },
+  // {
+  //   name: "Instagram",
+  //   url: "#",
+  //   icon: "fab fa-instagram",
+  //   hoverBg: "hover:bg-[#E4405F]",
+  // },
+  // {
+  //   name: "YouTube",
+  //   url: "#",
+  //   icon: "fab fa-youtube",
+  //   hoverBg: "hover:bg-[#FF0000]",
+  // },
 ];
 </script>
 

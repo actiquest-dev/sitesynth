@@ -19,6 +19,11 @@ export default defineNuxtConfig({
     preset: "vercel", // ✅ change from 'static' to 'vercel'
   },
 
+  sourcemap: {
+    server: false,
+    client: false
+  },
+
   app: {
     baseURL: "/", // ✅ change from '/Synth/' to '/'
     // ❌ remove `buildAssetsDir` unless you specifically need a custom one
