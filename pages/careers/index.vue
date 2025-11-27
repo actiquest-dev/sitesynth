@@ -57,7 +57,7 @@
     <template #left>
       <div>
         <img
-          src="/assets/contact-us.png"
+          src="/assets/new-assets/company-page/carreers/mayya_prototyping.png"
           alt="ScoreSynth Image"
           class="h-full w-full object-cover"
         />
