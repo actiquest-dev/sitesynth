@@ -68,8 +68,8 @@
         :aria-label="social.name"
         class="w-10 h-10 flex items-center justify-center rounded-full transition duration-1000 hover:text-white"
         :class="social.hoverBg"
-        target="_blank"
-        rel="noopener noreferrer"
+        :target="social.target || null"
+        :rel="social.target === '_blank' ? 'noopener noreferrer' : null"
       >
         <i :class="['text-xl', social.icon]"></i>
       </a>
@@ -166,6 +166,7 @@ const socials = [
     url: "https://www.linkedin.com/company/sitesynth/",
     icon: "fab fa-linkedin",
     hoverBg: "hover:bg-[#0A66C2]",
+    target: "_blank",
   },
   // {
   //   name: "Instagram",

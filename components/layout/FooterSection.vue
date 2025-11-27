@@ -13,16 +13,18 @@
             {{ footerData.tagline }}
           </p>
           <div class="flex space-x-6">
-            <NuxtLink
+            <a
               v-for="(social, index) in footerData.socialLinks"
               :key="index"
-              :to="social.url"
+              :href="social.url"
               aria-label="Social Link"
               class="w-10 h-10 flex items-center justify-center rounded-full border-2 text-white transition duration-1000"
               :class="social.color"
+              :target="social.target || null"
+              :rel="social.target === '_blank' ? 'noopener noreferrer' : null"
             >
               <i :class="social.icon" class="text-xl"></i>
-            </NuxtLink>
+            </a>
           </div>
         </div>
       </div>
@@ -71,6 +73,7 @@ const footerData = {
       icon: "fab fa-linkedin",
       url: "https://www.linkedin.com/company/sitesynth/",
       color: "border-[#0A66C2] hover:bg-[#0A66C2]",
+      target: "_blank",
     },
     // {
     //   icon: "fab fa-instagram",
