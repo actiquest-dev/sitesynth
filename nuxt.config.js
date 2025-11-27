@@ -57,6 +57,49 @@ export default defineNuxtConfig({
     url: process.env.SITE_URL || "https://www.sitesynth.com",
   },
 
+  // Sitemap configuration for proper XML generation
+  sitemap: {
+    defaults: {
+      changefreq: 'monthly',
+      priority: 0.8,
+      lastmod: new Date().toISOString()
+    },
+    urls: async () => {
+      // Auto-discover pages with custom metadata
+      return [
+        {
+          loc: '/',
+          changefreq: 'weekly',
+          priority: 1.0
+        },
+        {
+          loc: '/careers',
+          changefreq: 'weekly',
+          priority: 0.7
+        },
+        {
+          loc: '/careers/full-stack-developer',
+          changefreq: 'weekly',
+          priority: 0.6
+        },
+        {
+          loc: '/careers/marketing-manager',
+          changefreq: 'weekly',
+          priority: 0.6
+        },
+        {
+          loc: '/careers/ux-ui-designer',
+          changefreq: 'weekly',
+          priority: 0.6
+        },
+        {
+          loc: '/contact-us',
+          priority: 0.7
+        }
+      ]
+    }
+  },
+
   gtm: {
     id: "GTM-5N4FRNDR",
     enableRouterSync: true,
