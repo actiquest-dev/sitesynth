@@ -16,7 +16,7 @@ h1 :deep(.glow-text) {
 
 /* Пульсирующее свечение без мигания текста */
 @keyframes pulse-glow {
-  0%,
+  30%,
   100% {
     text-shadow:
       0 0 0 rgba(200, 155, 255, 0),
