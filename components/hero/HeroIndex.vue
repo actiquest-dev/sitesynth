@@ -1,30 +1,49 @@
-<style scoped>
-h1 {
-  font-weight: 100;
-  /* Убрали text-shadow отсюда! */
-}
-
-/* Используем :deep() для v-html контента */
-h1 :deep(.glow-text) {
-  animation: pulse-glow 2s ease-in-out infinite;
-  display: inline-block;
-  text-shadow: 
-    0 0 10px #C89BFF,
-    0 0 30px #8000FF;
-  will-change: opacity;
-}
-
-/* Оптимизированная анимация пульсации через opacity */
-@keyframes pulse-glow {
-  0%, 100% {
-    opacity: 0.2;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-</style>
 <template>
+  <section
+    :id="id || undefined"
+    :class="`group relative overflow-hidden border-t border-b border-[#636363] ${sectionBgColor}`"
+  >
+    <!-- Glow-эффект (над фоном, под контентом) -->
+    <component :is="selectedGlowEffect" />
+
+    <!-- Контейнер по сетке сайта -->
+    <div class="relative z-10 max-w-[1248px] mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-2">
+        <!-- Left Column -->
+        <slot name="left"></slot>
+
+        <!-- Right Column -->
+        <slot name="right"></slot>
+      </div>
+    </div>
+  </section>
+</template>
+
+<script setup>
+import { defineAsyncComponent, computed } from "vue";
+
+const props = defineProps({
+  id: {
+    type: String,
+    default: "",
+  },
+  sectionBgColor: {
+    type: String,
+    default: "bg-[#161616]",
+  },
+  glowEffect: {
+    type: String,
+    default: "GlowEffect",
+  },
+});
+
+const selectedGlowEffect = computed(() =>
+  defineAsyncComponent(() =>
+    import(`@/components/effects/${props.glowEffect}.vue`)
+  )
+);
+</script>
+
   <!-- Hero Section -->
   <section
     :id="id || undefined"
