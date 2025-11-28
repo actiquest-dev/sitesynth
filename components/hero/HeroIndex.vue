@@ -9,15 +9,15 @@ h1 :deep(.glow-text) {
   animation: pulse-glow 2s ease-in-out infinite;
   display: inline-block;
   text-shadow: 
-    0 0 5px #C89BFF,
-    0 0 50px #8000FF;
+    0 0 10px #C89BFF,
+    0 0 30px #8000FF;
   will-change: opacity;
 }
 
 /* Оптимизированная анимация пульсации через opacity */
 @keyframes pulse-glow {
   0%, 100% {
-    opacity: 0.8;
+    opacity: 0.2;
   }
   50% {
     opacity: 1;
