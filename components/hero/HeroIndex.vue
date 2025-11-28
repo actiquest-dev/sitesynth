@@ -3,29 +3,32 @@ h1 {
   font-weight: 100;
 }
 
-/* Анимируем только свечение, а не сам текст */
+/* Glow текст — всегда светится слегка */
 h1 :deep(.glow-text) {
   display: inline-block;
-  color: #ffffff; /* текст остаётся стабильным белым */
+  color: #ffffff;
+
+  /* Базовое свечение — всегда включено */
   text-shadow:
-    0 0 0 rgba(200, 155, 255, 0),
-    0 0 0 rgba(128, 0, 255, 0);
-  animation: pulse-glow 2.4s ease-in-out infinite;
+    0 0 6px rgba(200, 155, 255, 0.45),
+    0 0 18px rgba(128, 0, 255, 0.55);
+
+  animation: pulse-glow 2.8s ease-in-out infinite;
   will-change: text-shadow;
 }
 
-/* Пульсирующее свечение без мигания текста */
+/* Пульсация только усиливает glow, но НЕ убирает его */
 @keyframes pulse-glow {
-  30%,
-  100% {
+  0%, 100% {
     text-shadow:
-      0 0 0 rgba(200, 155, 255, 0),
-      0 0 0 rgba(128, 0, 255, 0);
+      0 0 6px rgba(200, 155, 255, 0.45),
+      0 0 18px rgba(128, 0, 255, 0.55);
   }
+
   50% {
     text-shadow:
-      0 0 12px rgba(200, 155, 255, 0.9),
-      0 0 32px rgba(128, 0, 255, 1);
+      0 0 14px rgba(200, 155, 255, 1),
+      0 0 36px rgba(128, 0, 255, 1);
   }
 }
 </style>
