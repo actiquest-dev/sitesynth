@@ -86,7 +86,7 @@
     <template #right>
       <div>
         <img
-          src="/assets/new-assets/company-page/about-us/about us photo of office.png"
+          src="/assets/new-assets/company-page/about-us/about_us_office.png"
           alt="SiteSynth office"
           class="h-full w-full object-cover"
         />
