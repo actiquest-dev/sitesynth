@@ -19,7 +19,7 @@ h1 :deep(.glow-text) {
 
 /* Пульсация только усиливает glow, но НЕ убирает его */
 @keyframes pulse-glow {
-  0%, 100% {
+  30%, 100% {
     text-shadow:
       0 0 6px rgba(200, 155, 255, 0.45),
       0 0 18px rgba(128, 0, 255, 0.55);
