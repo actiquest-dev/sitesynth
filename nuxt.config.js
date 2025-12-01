@@ -4,12 +4,7 @@ export default defineNuxtConfig({
 
   devtools: { enabled: true },
 
-  modules: [
-    "@nuxtjs/tailwindcss",
-    "@nuxt/image",
-    "@nuxtjs/sitemap",
-    "@zadigetvoltaire/nuxt-gtm",
-  ],
+  modules: ["@nuxtjs/tailwindcss", "@nuxt/image", "@zadigetvoltaire/nuxt-gtm"],
 
   components: [{ path: "~/components", pathPrefix: false }],
 
@@ -20,9 +15,7 @@ export default defineNuxtConfig({
   },
 
   app: {
-    baseURL: "/", // ✅ change from '/Synth/' to '/'
-    // ❌ remove `buildAssetsDir` unless you specifically need a custom one
-    // Add global head meta tags (site-wide). This includes Ahrefs verification.
+    baseURL: "/",
     head: {
       meta: [
         {
@@ -34,6 +27,14 @@ export default defineNuxtConfig({
           name: "google-site-verification",
           content: "ZuM9hSt-NO7KjEYf_o5yjeiGyTbsOVekDz-R1z-4ilk",
         },
+        // Additional meta tags for better SEO
+        { name: "theme-color", content: "#000000" },
+        { name: "msapplication-TileColor", content: "#000000" },
+      ],
+      link: [
+        // Favicon links for better Google recognition
+        { rel: "icon", type: "image/x-icon", href: "/assets/favicon/favicon.ico" },
+        { rel: "apple-touch-icon", sizes: "180x180", href: "/assets/favicon/apple-touch-icon.png" },
       ],
     },
   },

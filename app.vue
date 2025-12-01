@@ -65,20 +65,44 @@ useHead({
     { name: "twitter:image:alt", content: "SiteSynth - Share Image" },
   ],
   link: [
-    { rel: "icon", type: "image/svg+xml", href: "/assets/favicon/favicon.svg" },
+    // Primary favicon (Google prefers ICO at root or with proper path)
+    { rel: "icon", type: "image/x-icon", href: "/assets/favicon/favicon.ico" },
+    { rel: "shortcut icon", type: "image/x-icon", href: "/assets/favicon/favicon.ico" },
+    
+    // PNG favicons for better quality
     {
       rel: "icon",
       type: "image/png",
       sizes: "96x96",
       href: "/assets/favicon/favicon-96x96.png",
     },
-    { rel: "shortcut icon", href: "/assets/favicon/favicon.ico" },
+    {
+      rel: "icon",
+      type: "image/png",
+      sizes: "192x192",
+      href: "/assets/favicon/web-app-manifest-192x192.png",
+    },
+    {
+      rel: "icon",
+      type: "image/png",
+      sizes: "512x512",
+      href: "/assets/favicon/web-app-manifest-512x512.png",
+    },
+    
+    // SVG favicon (modern browsers)
+    { rel: "icon", type: "image/svg+xml", href: "/assets/favicon/favicon.svg" },
+    
+    // Apple touch icon
     {
       rel: "apple-touch-icon",
       sizes: "180x180",
       href: "/assets/favicon/apple-touch-icon.png",
     },
+    
+    // Web app manifest
     { rel: "manifest", href: "/assets/favicon/site.webmanifest" },
+    
+    // Preconnect for performance
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
     { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" },
     {
@@ -89,6 +113,8 @@ useHead({
       rel: "stylesheet",
       href: "https://unpkg.com/swiper/swiper-bundle.min.css",
     },
+    
+    // Canonical URL
     { rel: "canonical", href: canonicalUrl },
   ],
   script: [

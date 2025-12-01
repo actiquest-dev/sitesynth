@@ -1,6 +1,13 @@
-# Allow all crawlers (empty Disallow means allow all paths).
-# If you need to block staging/dev, set this file differently in those envs
+# Allow all crawlers to access all content
 User-agent: *
-Disallow:
+Allow: /
 
+# Disallow crawling of API endpoints and internal files
+Disallow: /api/
+
+# Sitemap location
 Sitemap: https://www.sitesynth.com/sitemap.xml
+
+# Crawl-delay (optional, can help with server load)
+# User-agent: *
+# Crawl-delay: 1
