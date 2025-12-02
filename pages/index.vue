@@ -30,7 +30,11 @@
         alt: 'Helan Logo',
         link: 'https://www.helan.be/',
       },
-      { src: '/assets/new-assets/home-page/home/clients-logo/idalko.png', alt: 'idalko Logo', link: 'https://idalko.com/' },
+      {
+        src: '/assets/new-assets/home-page/home/clients-logo/idalko.png',
+        alt: 'idalko Logo',
+        link: 'https://idalko.com/',
+      },
       {
         src: '/assets/new-assets/home-page/home/clients-logo/actiq.png',
         alt: 'Actiq Logo',
@@ -224,13 +228,13 @@
     quoteText="It takes real effort to cut through the noise and get to what matters. But that’s where momentum begins. At SiteSynth, we believe clarity is a competitive advantage. That’s why we work to make the complex simple — and the simple successful."
     ctaText="Get in touch"
     ctaLink="contact-us"
-    class="pb-[8rem] pt-[8rem]"
+    class="pb-32 pt-32"
   />
   <FooterSection />
 </template>
 
 <script setup>
-import { seoConfig } from '~/config/seo'
+import { seoConfig } from "~/config/seo";
 
 // SEO Configuration - using centralized config
 const siteUrl = useRuntimeConfig().public?.siteUrl;

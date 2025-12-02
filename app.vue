@@ -67,8 +67,12 @@ useHead({
   link: [
     // Primary favicon (Google prefers ICO at root or with proper path)
     { rel: "icon", type: "image/x-icon", href: "/assets/favicon/favicon.ico" },
-    { rel: "shortcut icon", type: "image/x-icon", href: "/assets/favicon/favicon.ico" },
-    
+    {
+      rel: "shortcut icon",
+      type: "image/x-icon",
+      href: "/assets/favicon/favicon.ico",
+    },
+
     // PNG favicons for better quality
     {
       rel: "icon",
@@ -88,20 +92,20 @@ useHead({
       sizes: "512x512",
       href: "/assets/favicon/web-app-manifest-512x512.png",
     },
-    
+
     // SVG favicon (modern browsers)
     { rel: "icon", type: "image/svg+xml", href: "/assets/favicon/favicon.svg" },
-    
+
     // Apple touch icon
     {
       rel: "apple-touch-icon",
       sizes: "180x180",
       href: "/assets/favicon/apple-touch-icon.png",
     },
-    
+
     // Web app manifest
     { rel: "manifest", href: "/assets/favicon/site.webmanifest" },
-    
+
     // Preconnect for performance
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
     { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" },
@@ -113,7 +117,7 @@ useHead({
       rel: "stylesheet",
       href: "https://unpkg.com/swiper/swiper-bundle.min.css",
     },
-    
+
     // Canonical URL
     { rel: "canonical", href: canonicalUrl },
   ],

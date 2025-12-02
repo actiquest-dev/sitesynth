@@ -33,8 +33,16 @@ export default defineNuxtConfig({
       ],
       link: [
         // Favicon links for better Google recognition
-        { rel: "icon", type: "image/x-icon", href: "/assets/favicon/favicon.ico" },
-        { rel: "apple-touch-icon", sizes: "180x180", href: "/assets/favicon/apple-touch-icon.png" },
+        {
+          rel: "icon",
+          type: "image/x-icon",
+          href: "/assets/favicon/favicon.ico",
+        },
+        {
+          rel: "apple-touch-icon",
+          sizes: "180x180",
+          href: "/assets/favicon/apple-touch-icon.png",
+        },
       ],
     },
   },
