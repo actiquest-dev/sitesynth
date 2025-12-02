@@ -61,3 +61,5 @@ Files you may notice (already mentioned above):
 - `SEO-SETUP-GUIDE.md` — A short document explaining the sitemap and SEO steps taken.
 
 This overview is aimed at non-technical readers who want to know what lives in each folder and why it matters for the website's content and appearance.
+
+Change pushed on vercel 🤟
