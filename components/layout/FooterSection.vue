@@ -9,7 +9,7 @@
           <NuxtLink to="/">
             <img :src="footerData.logoSrc" alt="logo" />
           </NuxtLink>
-          <p class="text-white text-base mt-[2rem] mb-[3rem]">
+          <p class="text-white text-base mt-8 mb-12">
             {{ footerData.tagline }}
           </p>
           <div class="flex space-x-6">
@@ -48,7 +48,7 @@
 
     <!-- Bottom Footer Bar -->
     <div
-      class="max-w-[1248px] mx-auto pt-[8rem] grid grid-cols-1 md:grid-cols-2 gap-4 px-6"
+      class="max-w-[1248px] mx-auto pt-32 grid grid-cols-1 md:grid-cols-2 gap-4 px-6"
     >
       <div
         class="text-white font-light text-left transition-colors duration-1000 hover:text-[#8CB0FF]"
@@ -117,7 +117,7 @@ const footerData = {
     },
   ],
   footerLinks: {
-    privacy: "#",
+    privacy: "/privacy-policy",
     copyright: "© 2025 SiteSynth & Tech Paw | All rights reserved.",
   },
 };

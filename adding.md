@@ -6,57 +6,57 @@ This checklist outlines the remaining tasks to complete and optimize the website
 
 ## ✅ Setup & Accounts
 
-| Task | Owner | Status | Notes |
-|------|-------|--------|-------|
-| Vercel account for Mayya | MAYYA or MARCO | ⚠️ In progress | Free plan is sufficient for now, (I also have PRO plan in testing phase) |
-| Brevo account for email API | MAYYA | ⚠️ In progress (testing with MARCO's brevo, prod with MAYYA brevo's) | Connect with official email |
-| Google Analytics account | MAYYA or MARCO| ✅ Done | Needed for traffic insights |
-| Google Search Console account | MAYYA or MARCO| ⚠️ In progress (Created but not connected to the domain) | For indexing and performance - A domain need to be purchased and added to google search console |
-| Ahrefs account | MAYYA or MARCO| ⚠️ In progress | For indexing and performance, it needs to be connected with Google Search Console |
-| Axeptio cookie consent account | MAYYA | ❌ Not started | For GDPR compliance |
-| Google Business | MAYYA | ❌ Not started | For presence on google |
+| Task                          | Owner          | Status                                                        | Notes                                                                                           |
+| ----------------------------- | -------------- | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Vercel account for Mayya      | MAYYA or MARCO | ✅ Done                                                       | Free plan is sufficient for now, (I also have PRO plan in testing phase)                        |
+| Brevo account for email API   | MAYYA          | ✅ Done (testing with MARCO's brevo, prod with MAYYA brevo's) | Connect with official email                                                                     |
+| Google Analytics account      | MAYYA or MARCO | ✅ Done                                                       | Needed for traffic insights                                                                     |
+| Google Search Console account | MAYYA or MARCO | ✅ Done (Created but not connected to the domain)             | For indexing and performance - A domain need to be purchased and added to google search console |
+| Ahrefs account                | MAYYA or MARCO | ✅ Done                                                       | For indexing and performance, it needs to be connected with Google Search Console               |
+| Cookie script consent account | MAYYA          | ✅ Done                                                       | For GDPR compliance                                                                             |
+| Google Business               | MAYYA          | ✅ Done                                                       | For presence on google                                                                          |
 
 ---
 
 ## 🌐 Hosting & Domain
 
-| Task | Owner | Status | Notes |
-|------|-------|--------|-------|
-| HTTPS setup | MARCO| ✅ Done | Default on Vercel |
-| Domain migration to Vercel | MAYYA or MARCO| ⚠️ In progress (if necessary) | Coordinate together |
-| No redirection needed | MARCO| ✅ Done | No action required, for the future a plugin for nuxt3/4 redirection |
+| Task                       | Owner          | Status  | Notes                                                               |
+| -------------------------- | -------------- | ------- | ------------------------------------------------------------------- |
+| HTTPS setup                | MARCO          | ✅ Done | Default on Vercel                                                   |
+| Domain migration to Vercel | MAYYA or MARCO | ✅ Done | Coordinate together                                                 |
+| No redirection needed      | MARCO          | ✅ Done | No action required, for the future a plugin for nuxt3/4 redirection |
 
 ---
 
 ## 📈 SEO & Metadata
 
-| Task | Owner | Status | Notes |
-|------|-------|--------|-------|
-| SEO titles & descriptions | MAYYA | ❌ Not started | For all pages |
-| Shareable social image (Open Graph) | MAYYA | ❌ Not started | For better link previews |
-| Schema.org structured data | MARCO| ⚠️ Partially done | Add relevant schema with extra information |
-| Canonical URLs | MARCO| ✅ Done | Avoid duplicate content issues |
-| Sitemap.xml | MARCO| ✅ Done | Helps search engines crawl site |
-| robots.txt | MARCO| ✅ Done | Default (see a customized one) |
+| Task                                | Owner | Status  | Notes                                      |
+| ----------------------------------- | ----- | ------- | ------------------------------------------ |
+| SEO titles & descriptions           | MARCO | ✅ Done | For all pages                              |
+| Shareable social image (Open Graph) | MAYYA | ✅ Done | For better link previews                   |
+| Schema.org structured data          | MARCO | ✅ Done | Add relevant schema with extra information |
+| Canonical URLs                      | MARCO | ✅ Done | Avoid duplicate content issues             |
+| Sitemap.xml                         | MARCO | ✅ Done | Helps search engines crawl site            |
+| robots.txt                          | MARCO | ✅ Done | Default (see a customized one)             |
 
 ---
 
 ## 🖼️ Media & Performance
 
-| Task | Owner | Status | Notes |
-|------|-------|--------|-------|
-| Compress images / convert to WebP | MARCO | ⚠️ Partially done | Optimize for faster load times |
+| Task                              | Owner          | Status            | Notes                          |
+| --------------------------------- | -------------- | ----------------- | ------------------------------ |
+| Compress images / convert to WebP | MARCO or MAYYA | ⚠️ Partially done | Optimize for faster load times |
 
 ---
 
 ## 📄 Pages & Content
 
-| Task | Owner | Status | Notes |
-|------|-------|--------|-------|
-| 500 error page | MARCO | ✅ Done | Already exists |
-| Privacy Policy / Terms of Service | MAYYA | ❌ Not started | Generic version is fine |
-| Main Contact Form | MAYYA | ❌ Not started | Essential for user inquiries |
-| Social media links | MAYYA | ❌ Not started | Add to footer or header (personal or company?) |
+| Task                              | Owner | Status         | Notes                              |
+| --------------------------------- | ----- | -------------- | ---------------------------------- |
+| 500 error page                    | MARCO | ✅ Done        | Already exists                     |
+| Privacy Policy / Terms of Service | MAYYA | ❌ Not started | Generic version is fine            |
+| Main Contact Form                 | MAYYA | ✅ Done        | Essential for user inquiries       |
+| Social media links                | MAYYA | ✅ Done        | Add to footer or header (linkedin) |
 
 ---
 
@@ -69,4 +69,4 @@ This checklist outlines the remaining tasks to complete and optimize the website
 
 ---
 
-_Last updated: 17 July 2025_
+_Last updated: 3 Dec 2025_

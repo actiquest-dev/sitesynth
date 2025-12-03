@@ -101,6 +101,17 @@ export const seoConfig = {
         twitterTitle: "ScoreSynth | AI Music Scoring - SiteSynth",
         twitterDescription: "Turn audio or MIDI into professionally arranged scores with ScoreSynth — fast, accurate, and ready for performance.",
     },
+
+    // Privacy Policy page
+    privacyPolicy: {
+        title: "Privacy Policy & Terms of Service - SiteSynth",
+        description: "Read our privacy policy and terms of service. Learn how we collect, use, and protect your data, and understand your rights as a user of our website.",
+        keywords: "privacy policy, terms of service, data protection, cookies, GDPR, user rights, terms and conditions, legal",
+        ogTitle: "Privacy Policy & Terms of Service - SiteSynth",
+        ogDescription: "Read our privacy policy and terms of service. Learn how we protect your data and your rights as a user.",
+        twitterTitle: "Privacy Policy & Terms of Service - SiteSynth",
+        twitterDescription: "Read our privacy policy and terms of service. Learn how we protect your data and your rights.",
+    },
 }
 
 // Structured data templates for different page types

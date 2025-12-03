@@ -69,7 +69,7 @@
             beautifully restored historical building by the Schelde river. It’s
             not flashy—but it's meaningful: rooted, quiet, and real.
           </p>
-          <h3 class="text-white text-2xl mt-[3rem] mb-[3rem]">
+          <h3 class="text-white text-2xl mt-12 mb-12">
             Easy reach of partners, clients, and collaborators across Europe.
           </h3>
           <p class="text-[#999999] text-normal font-light">
@@ -104,7 +104,7 @@
     hover="#0033ff"
     glowEffect="GlowBlue"
     id="get-started-today"
-    class="pt-[8rem] pb-[8rem]"
+    class="pt-32 pb-32"
     title="Get Started Today"
     description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you’re becoming."
     primaryText="Start a Project"
@@ -151,7 +151,7 @@ const leaders = [
   },
 ];
 
-import { seoConfig, structuredData } from '~/config/seo'
+import { seoConfig, structuredData } from "~/config/seo";
 
 // SEO Configuration - using centralized config
 const siteUrl = useRuntimeConfig().public?.siteUrl;
