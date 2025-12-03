@@ -10,6 +10,18 @@
           :is="selectedGlowEffect"
           class="absolute inset-0 z-0 pointer-events-none"
         />
+
+         <!-- Gradient Background -->
+        <div 
+          class="absolute inset-0 pointer-events-none opacity-100"
+          :style="{
+            backgroundImage: 'url(/assets/gradients/gradient-for-banner-section.svg)',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+          }"
+        ></div>
+        
         <!-- Left Column (1/3) -->
         <!-- Added vertical centering and z-index to keep the image above the glow overlay -->
         <div
