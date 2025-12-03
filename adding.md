@@ -54,7 +54,7 @@ This checklist outlines the remaining tasks to complete and optimize the website
 | Task                              | Owner | Status         | Notes                              |
 | --------------------------------- | ----- | -------------- | ---------------------------------- |
 | 500 error page                    | MARCO | ✅ Done        | Already exists                     |
-| Privacy Policy / Terms of Service | MAYYA | ❌ Not started | Generic version is fine            |
+| Privacy Policy / Terms of Service | MAYYA | ✅ Done        | Generic version is fine            |
 | Main Contact Form                 | MAYYA | ✅ Done        | Essential for user inquiries       |
 | Social media links                | MAYYA | ✅ Done        | Add to footer or header (linkedin) |
 
