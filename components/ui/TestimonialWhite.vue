@@ -6,9 +6,10 @@
         ref="card"
         class="grid grid-cols-1 md:grid-cols-3 gap-8 relative border border-[#636363] py-14 group overflow-hidden"
       >
-        <!-- Сначала: градиент в углу, самый нижний слой -->
+
+        <!-- 1) Градиент в углу — самый нижний слой -->
         <div
-          class="absolute bottom-0 left-0 w-[420px] h-[320px] pointer-events-none opacity-100 z-0"
+          class="absolute bottom-0 left-0 w-[420px] h-[320px] pointer-events-none z-0"
           :style="{
             backgroundImage: 'url(/assets/gradients/gradient-for-banner-section.svg)',
             backgroundSize: 'cover',
@@ -17,29 +18,22 @@
           }"
         ></div>
 
-        <!-- Затем: GlowEffect поверх градиента, но под контентом -->
+        <!-- 2) GlowEffect — СТАЛ ВИДИМЫЙ -->
         <component
           :is="selectedGlowEffect"
-          class="absolute inset-0 z-[1] pointer-events-none"
+          class="absolute inset-0 z-[2] pointer-events-none 
+                 mix-blend-screen opacity-100"
         />
 
-        <!-- LEFT COLUMN (контент всегда над glow/градиентом) -->
-        <div
-          class="flex flex-col justify-center items-center text-center relative z-10 px-4"
-        >
+        <!-- LEFT COLUMN -->
+        <div class="flex flex-col justify-center items-center text-center relative z-10 px-4">
           <img
             :src="imageSrc"
             :alt="personName"
-            class="mb-4 w-auto max-w-[150px] relative z-20"
+            class="mb-4 w-auto max-w-[150px]"
           />
-
-          <h4 class="text-xl font-semibold text-[#161616]">
-            {{ personName }}
-          </h4>
-
-          <p class="text-[#636363] mt-2">
-            {{ personTitle }}
-          </p>
+          <h4 class="text-xl font-semibold text-[#161616]">{{ personName }}</h4>
+          <p class="text-[#636363] mt-2">{{ personTitle }}</p>
         </div>
 
         <!-- RIGHT COLUMN -->
@@ -50,9 +44,7 @@
             {{ quoteTitle }}
           </h3>
 
-          <p class="text-[#636363] leading-relaxed">
-            "{{ quoteText }}"
-          </p>
+          <p class="text-[#636363] leading-relaxed">"{{ quoteText }}"</p>
 
           <!-- CTA BUTTON -->
           <a
@@ -61,7 +53,7 @@
                    border-[1px] border-[#161616] 
                    bg-[#161616] text-white font-semibold
                    transition-all duration-500
-                   hover:bg-[#8D35FF] hover:border-[#8D35FF] hover:text-white"
+                   hover:bg-[#8D35FF] hover:border-[#8D35FF]"
           >
             {{ ctaText }}
           </a>
@@ -76,7 +68,7 @@
 import { computed, resolveComponent } from "vue";
 
 const props = defineProps({
-  id: { type: String, default: "" },
+  id: String,
   imageSrc: String,
   personName: String,
   personTitle: String,
@@ -86,11 +78,9 @@ const props = defineProps({
   ctaLink: String,
   glowEffect: {
     type: String,
-    default: "GlowEffect",
+    default: "GlowEffect"
   }
 });
 
-const selectedGlowEffect = computed(() =>
-  resolveComponent(props.glowEffect)
-);
+const selectedGlowEffect = computed(() => resolveComponent(props.glowEffect));
 </script>
