@@ -149,7 +149,7 @@
       },
     ]"
   />
-  <Testimonial
+  <TestimonialScoreSynth
     hoverbg="hover:bg-[#AA3733]"
     hoverborder="hover:border-[#AA3733]"
     quoteColor="text-[#AA3733]"
