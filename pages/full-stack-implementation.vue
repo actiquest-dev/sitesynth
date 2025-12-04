@@ -3,6 +3,7 @@
   <HeroFullstack
     id="hero-fullstack"
     backgroundImage="/assets/full-stack-bg.svg"
+    backgroundImage="/assets/new-assets/home-page/home/hero-section/BGGradient.svg"
     title="Design without development is just a suggestion."
     description="We stay in — writing real code, collaborating in Git, and making sure everything works in production."
     buttonText="Let’s Build Together"
