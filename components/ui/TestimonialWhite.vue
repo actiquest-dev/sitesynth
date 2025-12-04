@@ -6,6 +6,18 @@
         class="grid grid-cols-1 md:grid-cols-3 gap-8 relative border border-[#636363] py-14 group overflow-hidden"
       >
         <GlowEffect />
+
+          <!-- Gradient Background -->
+        <div 
+          class="absolute inset-0 pointer-events-none opacity-100"
+          :style="{
+            backgroundImage: 'url(/assets/gradients/gradient-for-banner-section.svg)',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+          }"
+        ></div>
+        
         <!-- Left Column (1/3) -->
         <!-- Center vertically and ensure image sits above the glow overlay -->
         <div
