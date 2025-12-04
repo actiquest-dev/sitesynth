@@ -5,7 +5,10 @@
         ref="card"
         class="grid grid-cols-1 md:grid-cols-3 gap-8 relative border border-[#636363] py-14 group overflow-hidden"
       >
-        <GlowEffect />
+          <component
+          :is="selectedGlowEffect"
+          class="absolute inset-0 z-0 pointer-events-none"
+        />
 
           <!-- Gradient Background -->
         <div 
