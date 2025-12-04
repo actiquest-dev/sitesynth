@@ -17,7 +17,10 @@
         </p>
         <a
           :href="buttonLink"
-          class="inline-block mt-8 px-4 py-2 border-[#161616] hover:bg-white hover:text-[#161616] hover:border-white bg-[#161616] text-white transition-colors duration-[1000ms] font-semibold"
+          class="inline-block mt-8 px-4 py-2
+                 border border-[#161616] bg-[#161616] text-white font-semibold
+                 transition-colors duration-[600ms]
+                 hover:bg-[#8D35FF] hover:border-[#8D35FF] hover:text-white"
         >
           <span>{{ buttonText }}</span>
         </a>
@@ -67,7 +70,6 @@ const props = defineProps({
   },
 });
 
-// Computed style for background image
 const backgroundImageStyle = computed(() => {
   if (props.backgroundImage) {
     return {
