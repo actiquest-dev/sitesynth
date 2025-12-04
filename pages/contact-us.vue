@@ -269,6 +269,9 @@
     </template>
   </TwoColumnsDesign>
 
+  <!-- Map Section -->
+  <MapboxSection />
+
   <FooterSection />
 </template>
 
