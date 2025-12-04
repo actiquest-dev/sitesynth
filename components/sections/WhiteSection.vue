@@ -11,7 +11,18 @@
         :class="`${bgInside} border border-[#636363] py-20 px-20 relative overflow-hidden`"
       >
         <component :is="selectedGlowEffect" />
-
+        
+ <!-- Gradient Background -->
+        <div 
+          class="absolute inset-0 pointer-events-none opacity-100"
+          :style="{
+            backgroundImage: 'url(/assets/gradients/gradient-for-banner-section.svg)',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+          }"
+        ></div>
+        
         <!-- Text Content -->
         <div class="flex flex-col items-center relative z-10">
           <h2 :class="`${textColor} text-4xl font-bold`">{{ title }}</h2>
