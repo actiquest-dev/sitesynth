@@ -132,14 +132,14 @@
   <BannerSection
     id="banner-what-you-get"
     text="What You Get"
-    sectionClass="py-20 text-center bg-[#DDDDDD]"
-    contentClass="text-[#161616] max-w-[1248px] px-6 mx-auto text-4xl"
+    sectionClass="py-20 text-center bg-[#161616]"
+    contentClass="text-[#DDDDDD] max-w-[1248px] px-6 mx-auto text-4xl"
   />
 
   <Column
     id="column-what-you-get"
-    headerTextColor="text-[#161616]"
-    backgroundColor="bg-[#DDDDDD]"
+    headerTextColor="text-[#DDDDDD]"
+    backgroundColor="bg-[#161616]"
     :columns="[
       {
         icon: '🧬',
@@ -158,7 +158,7 @@
       },
       {
         icon: '⚡',
-        title: '🎯 Pattern Usage Guidelines',
+        title: 'Pattern Usage Guidelines',
         headerTag: 'h3',
         description:
           'Know exactly when and how to use each pattern — no guessing, no inconsistency.',
@@ -167,8 +167,8 @@
   />
   <Column
     id="column-design-system-documentation"
-    headerTextColor="text-[#161616]"
-    backgroundColor="bg-[#DDDDDD]"
+    headerTextColor="text-[#DDDDDD]"
+    backgroundColor="bg-[#161616]"
     :columns="[
       {
         icon: '📘 ',
