@@ -7,13 +7,13 @@
     :content="[
       {
         tag: 'h1',
-        text: 'Let's build something<br> meaningful — together.',
+        text: 'Let\'s build something<br> meaningful — together.',
         margin: 'mb-8',
         html: true,
       },
       {
         tag: 'p',
-        text: 'Whether you\'re looking to launch a new product, align your brand, or join our team — we'd love to hear from you. Drop us a message and we'll get back to you soon.',
+        text: 'Whether you\'re looking to launch a new product, align your brand, or join our team — we\'d love to hear from you. Drop us a message and we\'ll get back to you soon.',
         margin: 'mb-0',
       },
     ]"
@@ -54,7 +54,10 @@
           </p>
           <p class="text-[#999999] text-sm leading-relaxed">
             Prefer email? Reach us at
-            <a class="text-[#8CB0FF] hover:text-white transition" href="mailto:hello@sitesynth.com">
+            <a
+              class="text-[#8CB0FF] hover:text-white transition"
+              href="mailto:hello@sitesynth.com"
+            >
               hello@sitesynth.com
             </a>
           </p>
@@ -73,8 +76,8 @@
                 Tell us how we can help
               </h2>
               <p class="text-[#999999] text-sm leading-relaxed">
-                Share a few details about your project or question.
-                We usually reply within 1–2 business days.
+                Share a few details about your project or question. We usually
+                reply within 1–2 business days.
               </p>
             </div>
 
@@ -95,7 +98,10 @@
             <!-- Ряд 1: Имя + Компания -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium" for="fullName">
+                <label
+                  class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium"
+                  for="fullName"
+                >
                   Full Name *
                 </label>
                 <input
@@ -105,14 +111,15 @@
                   v-model="formData.fullName"
                   placeholder="John Doe"
                   required
-                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white
-                         placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF]
-                         transition duration-200 hover:border-[#444]"
+                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]"
                 />
               </div>
 
               <div>
-                <label class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium" for="company">
+                <label
+                  class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium"
+                  for="company"
+                >
                   Company
                 </label>
                 <input
@@ -121,9 +128,7 @@
                   type="text"
                   v-model="formData.company"
                   placeholder="Your company"
-                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white
-                         placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF]
-                         transition duration-200 hover:border-[#444]"
+                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]"
                 />
               </div>
             </div>
@@ -131,7 +136,10 @@
             <!-- Ряд 2: Email + Телефон -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium" for="email">
+                <label
+                  class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium"
+                  for="email"
+                >
                   Email Address *
                 </label>
                 <input
@@ -141,14 +149,15 @@
                   v-model="formData.email"
                   placeholder="hello@example.com"
                   required
-                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white
-                         placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF]
-                         transition duration-200 hover:border-[#444]"
+                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]"
                 />
               </div>
 
               <div>
-                <label class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium" for="phone">
+                <label
+                  class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium"
+                  for="phone"
+                >
                   Phone
                 </label>
                 <ClientOnly>
@@ -158,7 +167,8 @@
                       placeholder: '+1 (555) 000-0000',
                       id: 'phone',
                       name: 'phone',
-                      class: 'w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]'
+                      class:
+                        'w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]',
                     }"
                     :dropdown-options="{
                       showDialCodeInSelection: true,
@@ -173,9 +183,7 @@
                       name="phone"
                       placeholder="+1 (555) 000-0000"
                       v-model="formData.phone"
-                      class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white
-                             placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF]
-                             transition duration-200 hover:border-[#444]"
+                      class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]"
                     />
                   </template>
                 </ClientOnly>
@@ -184,7 +192,10 @@
 
             <!-- Topic -->
             <div>
-              <label class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium" for="topic">
+              <label
+                class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium"
+                for="topic"
+              >
                 Topic *
               </label>
               <div class="relative">
@@ -193,9 +204,7 @@
                   name="topic"
                   v-model="formData.topic"
                   required
-                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 pr-10 text-sm text-white
-                         appearance-none focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF]
-                         transition duration-200 hover:border-[#444] cursor-pointer"
+                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 pr-10 text-sm text-white appearance-none focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444] cursor-pointer"
                 >
                   <option value="">Select a topic</option>
                   <option value="project">Start a custom project</option>
@@ -213,7 +222,10 @@
 
             <!-- Message -->
             <div>
-              <label class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium" for="message">
+              <label
+                class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium"
+                for="message"
+              >
                 Message *
               </label>
               <textarea
@@ -223,9 +235,7 @@
                 v-model="formData.message"
                 placeholder="Tell us more about your project..."
                 required
-                class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white
-                       placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF]
-                       transition duration-200 hover:border-[#444] resize-none"
+                class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444] resize-none"
               ></textarea>
             </div>
 
@@ -237,8 +247,11 @@
                 required
                 class="w-5 h-5 rounded-md accent-[#8CB0FF] mt-0.5 cursor-pointer flex-shrink-0"
               />
-              <span class="text-[#999999] text-xs leading-relaxed group-hover:text-[#bbb] transition">
-                I agree to SiteSynth storing and processing my data according to the privacy policy.
+              <span
+                class="text-[#999999] text-xs leading-relaxed group-hover:text-[#bbb] transition"
+              >
+                I agree to SiteSynth storing and processing my data according to
+                the privacy policy.
               </span>
             </label>
 
@@ -246,9 +259,7 @@
             <button
               type="submit"
               :disabled="state.isSubmitting"
-              class="w-full px-6 py-3 border border-white rounded-lg text-sm font-semibold
-                     text-white bg-transparent hover:bg-white hover:text-black transition duration-300
-                     disabled:opacity-50 disabled:cursor-not-allowed mt-6"
+              class="w-full px-6 py-3 border border-white rounded-lg text-sm font-semibold text-white bg-transparent hover:bg-white hover:text-black transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed mt-6"
             >
               {{ state.isSubmitting ? "Sending..." : "Send Message" }}
             </button>
@@ -262,7 +273,7 @@
 </template>
 
 <script setup>
-import { seoConfig, structuredData } from '~/config/seo'
+import { seoConfig, structuredData } from "~/config/seo";
 
 const { formData, state, handleSubmit } = useContactForm();
 
