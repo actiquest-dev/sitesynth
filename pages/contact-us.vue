@@ -212,9 +212,7 @@
                   <option value="career">Career opportunity</option>
                   <option value="other">Other</option>
                 </select>
-                <span
-                  class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#8CB0FF] text-sm"
-                >
+                <span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#8CB0FF] text-sm">
                   ▼
                 </span>
               </div>
