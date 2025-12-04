@@ -7,7 +7,8 @@
     <GlowEffect />
 
     <div class="relative max-w-[1248px] mx-auto px-6 pt-[16rem] pb-[12rem]">
-      <!-- Hero -->
+
+      <!-- HERO -->
       <div class="text-center px-6">
         <h1 class="text-[#161616] text-4xl sm:text-5xl font-extrabold mb-10">
           {{ title }}
@@ -15,50 +16,77 @@
         <p class="text-[#161616] text-base sm:text-lg font-medium mb-8">
           {{ description }}
         </p>
+
+        <!-- CTA BUTTON WITH ANIMATED ARROW -->
         <a
           :href="buttonLink"
-          class="inline-block mt-8 px-4 py-2
+          class="inline-flex items-center gap-2 mt-8 px-5 py-2
                  border border-[#161616] bg-[#161616] text-white font-semibold
-                 transition-colors duration-[600ms]
-                 hover:bg-[#8D35FF] hover:border-[#8D35FF] hover:text-white"
+                 transition-all duration-500
+                 hover:bg-[#8D35FF] hover:border-[#8D35FF]"
         >
           <span>{{ buttonText }}</span>
+
+          <i
+            class="fa-solid fa-arrow-right text-sm
+                   transition-transform duration-300
+                   group-hover:translate-x-1"
+          ></i>
         </a>
       </div>
 
-      <!-- Cards Grid -->
+      <!-- CARDS GRID -->
       <div class="mt-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
         <div
           v-for="(card, index) in cards"
           :key="index"
-          class="border border-[#636363] bg-[#161616] p-6 py-12 flex flex-col justify-between cursor-pointer"
+          class="border border-[#636363] bg-[#161616] p-6 py-12 flex flex-col justify-between"
         >
           <h3 class="text-xl font-semibold text-center pt-6 pb-8">
             {{ card.icon }} {{ card.title }}
           </h3>
-          <p class="text-center text-[#999999]">{{ card.description }}</p>
-          <div class="text-center mt-6">
+
+          <p class="text-center text-[#999999]">
+            {{ card.description }}
+          </p>
+
+          <!-- READ MORE WITH ANIMATED ARROW + UNDERLINE -->
+          <div class="text-center mt-8">
             <a
               :href="card.link"
-              class="text-[#8CB0FF] font-semibold hover:text-[#A620FF] transition-colors duration-1000"
+              class="relative inline-flex items-center gap-2
+                     text-[#8CB0FF] font-semibold group"
             >
-              Read more →
+              <span>Read more</span>
+
+              <i
+                class="fa-solid fa-arrow-right text-xs
+                       transition-transform duration-300
+                       group-hover:translate-x-1"
+              ></i>
+
+              <!-- Animated underline -->
+              <span
+                class="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#8CB0FF]
+                       transition-all duration-300
+                       group-hover:w-full"
+              ></span>
             </a>
           </div>
         </div>
+
       </div>
     </div>
   </section>
 </template>
 
+
 <script setup>
 import { computed } from "vue";
 
 const props = defineProps({
-  id: {
-    type: String,
-    default: "",
-  },
+  id: String,
   title: String,
   description: String,
   buttonText: String,
@@ -82,3 +110,4 @@ const backgroundImageStyle = computed(() => {
   return {};
 });
 </script>
+
