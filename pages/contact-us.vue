@@ -28,7 +28,7 @@
     <!-- ЛЕВАЯ КОЛОНКА: текст -->
     <template #left>
       <div class="py-24 md:border-r border-[#636363] bg-[#161616]">
-        <div class="max-w-[500px] ml-auto pr-12">
+        <div class="max-w-[600px] ml-auto pr-12">
           <h2 class="text-white text-3xl sm:text-4xl mb-6 font-bold">
             Talk to our team.
           </h2>
@@ -68,7 +68,7 @@
     <!-- ПРАВАЯ КОЛОНКА: ФОРМА -->
     <template #right>
       <div class="py-24 bg-[#161616] flex items-center justify-center">
-        <div class="max-w-[500px] w-full px-6">
+        <div class="max-w-[600px] w-full px-6">
           <form class="space-y-6" @submit.prevent="handleSubmit">
             <!-- Заголовок формы -->
             <div class="mb-8">
@@ -212,7 +212,9 @@
                   <option value="career">Career opportunity</option>
                   <option value="other">Other</option>
                 </select>
-                <span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#8CB0FF] text-sm">
+                <span
+                  class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#8CB0FF] text-sm"
+                >
                   ▼
                 </span>
               </div>
@@ -243,7 +245,7 @@
                 type="checkbox"
                 v-model="formData.consent"
                 required
-                class="w-5 h-5 rounded-md accent-[#8CB0FF] mt-0.5 cursor-pointer flex-shrink-0"
+                class="w-5 h-5 rounded-md accent-[#8CB0FF] mt-0.5 cursor-pointer shrink-0"
               />
               <span
                 class="text-[#999999] text-xs leading-relaxed group-hover:text-[#bbb] transition"
