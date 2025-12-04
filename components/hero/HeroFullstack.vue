@@ -39,47 +39,45 @@
       <div class="mt-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
         <div
-          v-for="(card, index) in cards"
-          :key="index"
-          class="border border-[#636363] bg-[#161616] p-6 py-12 flex flex-col justify-between"
-        >
-          <h3 class="text-xl font-semibold text-center pt-6 pb-8">
-            {{ card.icon }} {{ card.title }}
-          </h3>
+  v-for="(card, index) in cards"
+  :key="index"
+  class="group/card border border-[#636363] bg-[#161616] p-6 py-12 flex flex-col justify-between"
+>
+  <h3 class="text-xl font-semibold text-center pt-6 pb-8">
+    {{ card.icon }} {{ card.title }}
+  </h3>
 
-          <p class="text-center text-[#999999]">
-            {{ card.description }}
-          </p>
+  <p class="text-center text-[#999999]">
+    {{ card.description }}
+  </p>
 
-          <!-- READ MORE WITH ANIMATED ARROW + UNDERLINE -->
-          <div class="text-center mt-8">
-            <a
-              :href="card.link"
-              class="relative inline-flex items-center gap-2
-                     text-[#8CB0FF] font-semibold group"
-            >
-              <span>Read more</span>
+  <!-- READ MORE WITH LOCAL HOVER ANIMATION -->
+  <div class="text-center mt-8">
+    <a
+      :href="card.link"
+      class="relative inline-flex items-center gap-2
+             text-[#8CB0FF] font-semibold group/link"
+    >
+      <span>Read more</span>
 
-              <i
-                class="fa-solid fa-arrow-right text-xs
-                       transition-transform duration-300
-                       group-hover:translate-x-1"
-              ></i>
+      <!-- › instead of → and animated only on card hover -->
+      <span
+        class="text-xs transition-transform duration-300
+               group-hover/card:translate-x-1"
+      >
+        ›
+      </span>
 
-              <!-- Animated underline -->
-              <span
-                class="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#8CB0FF]
-                       transition-all duration-300
-                       group-hover:w-full"
-              ></span>
-            </a>
-          </div>
-        </div>
+      <!-- Underline animation only when hovering THIS card -->
+      <span
+        class="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#8CB0FF]
+               transition-all duration-300
+               group-hover/card:w-full"
+      ></span>
+    </a>
+  </div>
+</div>
 
-      </div>
-    </div>
-  </section>
-</template>
 
 
 <script setup>
