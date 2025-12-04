@@ -1,237 +1,114 @@
 <template>
-  <HeaderSection />
-  <HeroBrand
-    id="hero-brand"
-    title="Build products that feel as good as they function."
-    description="Your brand - is your language. we embed your brand’s voice, values, and character into your digital product from day one. We make sure every interaction feels intentional — not just usable, but unmistakably you."
-    backgroundImage="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/hero-pattern.svg"
-    readMore="Read more"
-    buttonText="Do you know why?"
-    buttonLink="#"
-    :cards="[
-      {
-        icon: '🧭',
-        title: 'Understand the Brand',
-        description:
-          'We begin by distilling your brand’s essence — tone, values, and purpose — into clear, strategic inputs. Through focused sessions and rapid discovery, we align on what your brand really stands for.',
-        link: '#understand-the-brand',
-      },
-      {
-        icon: '🎨',
-        title: 'Translate into Product Experience',
-        description:
-          'We map your brand into UX flows, content, and behaviors — ensuring every screen, message, and interaction feels consistent, intentional, and unmistakably you.',
-        link: '#translate-into-product',
-      },
-      {
-        icon: '🤝',
-        title: 'Align Across Teams',
-        description:
-          'We work across product, design, and marketing — helping your teams speak the same language and move together. No silos. Just shared clarity.',
-        link: '#align-across-teams',
-      },
-    ]"
-  />
+  <section
+    :id="id || undefined"
+    class="relative bg-[#DDDDDD] text-white group overflow-hidden"
+    :style="backgroundImageStyle"
+  >
+    <!-- Glow позади контента -->
+    <GlowEffect />
 
-  <BannerSection
-    id="understand-the-brand"
-    text="Understand the Brand"
-    sectionClass="py-20 text-left bg-[#DDDDDD]"
-    contentClass="text-[#161616] max-w-[1248px] px-6 mx-auto text-4xl"
-  />
+    <div class="relative max-w-[1248px] mx-auto px-6 pt-[16rem] pb-[12rem]">
+      <!-- Hero -->
+      <div class="text-center px-6">
+        <h1 class="text-[#161616] text-4xl sm:text-5xl font-extrabold mb-10">
+          {{ title }}
+        </h1>
+        <p class="text-[#161616] text-base sm:text-lg font-medium mb-8">
+          {{ description }}
+        </p>
 
-  <UnderstandBrandSection
-    id="business"
-    imagePosition="h-full object-cover"
-    bgColor="bg-[#DDDDDD]"
-    leftTitle="🧭 The compass of your business"
-    leftDescription="We begin by distilling your brand’s essence — tone, values, and purpose — into clear, strategic inputs. Through focused workshops and stakeholder alignment, we translate abstract brand traits into usable creative and product direction."
-    :tags="[
-      'Brand Discovery Sessions',
-      'Stakeholder Interviews',
-      'Brand Audit',
-      'Personality Mapping',
-    ]"
-    toolsTitle="🛠️ Tools we use:"
-    :toolsList="[
-      'Miro or FigJam for live collaboration',
-      'Whimsical for brand attributes and tone sliders',
-      'Optional pre-workshop surveys via Typeform or Google Forms',
-    ]"
-    imageSrc="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/understand-brand.png"
-  />
+        <!-- Кнопка hero -->
+        <a
+          :href="buttonLink"
+          class="inline-block mt-8 px-4 py-2
+                 border border-[#161616] bg-[#161616] text-white font-semibold
+                 transition-colors duration-[600ms]
+                 hover:bg-[#8D35FF] hover:border-[#8D35FF] hover:text-white"
+        >
+          <span>{{ buttonText }}</span>
+        </a>
+      </div>
 
-  <Testimonial
-    id="testimonial-mayya"
-    imageSrc="/assets/new-assets/people-for-CTA/oval-mayya.png"
-    personName="Mayya Aprosina"
-    personTitle="CEO & Business Designer"
-    quoteTitle="A clear why shapes everything that follows."
-    quoteText="Understanding why your brand exists — beyond products or features — gives every decision direction. It’s the foundation for building digital experiences that feel aligned, intentional, and real."
-    ctaText="Get in touch"
-    ctaLink="/contact-us"
-    class="pb-[8rem] pt-[8rem]"
-  />
+      <!-- Cards Grid -->
+      <div class="mt-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div
+          v-for="(card, index) in cards"
+          :key="index"
+          class="group/card border border-[#636363] bg-[#161616]
+                 p-6 py-12 flex flex-col justify-between cursor-pointer"
+        >
+          <!-- Заголовок карточки -->
+          <h3 class="text-xl font-semibold text-center pt-6 pb-8">
+            {{ card.icon }} {{ card.title }}
+          </h3>
 
-  <BannerSection
-    id="understand-the-brand"
-    text="Translate into Product Experience"
-    sectionClass="py-20 text-right bg-[#DDDDDD]"
-    contentClass="text-[#161616] max-w-[1248px] px-6 mx-auto text-4xl"
-  />
+          <!-- Описание -->
+          <p class="text-center text-[#999999]">
+            {{ card.description }}
+          </p>
 
-  <TranslateSection
-    imagePosition="h-full object-cover"
-    imageSrc="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/translate-into-product-experience.png"
-    imageAlt="Github code"
-    mainTitle="🎨 Make your product speak, look, and feel like your brand."
-    bgColor="bg-[#DDDDDD]"
-    textColor="text-[#161616]"
-    mainDescription="Here, we bring the brand to life inside the product — not just through visuals, but through behavior, interaction, and language."
-    toolsTitle="🛠️ Tools we use:"
-    :links="[
-      { text: 'UX Tone Principles', url: '#' },
-      { text: 'Messaging Frameworks', url: '#' },
-      { text: 'Brand Audit', url: '#' },
-      { text: 'Personality Mapping', url: '#' },
-    ]"
-    :tools="[
-      'Figma for interface layout, flow mapping, and tone-infused design',
-      'Google Docs for writing voice guides, microcopy, and messaging frameworks',
-      'Whimsical or FigJam for early UX sketches and tone sliders',
-      'Loom for sharing walkthroughs of concept direction and rationale',
-    ]"
-  />
+          <!-- Read more -->
+          <div class="text-center mt-6">
+            <a
+              :href="card.link"
+              class="relative inline-flex items-center gap-2 text-[#8CB0FF] font-semibold group/link"
+            >
+              <span>Read more</span>
 
-  <BannerSection
-    id="align-across-teams"
-    text="Align Across Teams"
-    sectionClass="py-20 text-left bg-[#161616]"
-    contentClass="text-white max-w-[1248px] px-6 mx-auto text-4xl"
-  />
+              <!-- Галочка › с анимацией только при hover на эту карточку -->
+              <span
+                class="text-lg transition-transform duration-300
+                       group-hover/card:translate-x-1"
+              >
+                ›
+              </span>
 
-  <UnderstandBrandSection
-    imagePosition="bottom-0 right-[-150px]"
-    bgColor="bg-[#161616]"
-    contentBgColor="bg-[#161616]"
-    h2Color="text-[#DDDDDD]"
-    textColor="text-[#DDDDDD]"
-    tagBgColor="bg-[#222222]"
-    tagTextColor="text-white"
-    leftTitle="🤝 Turn strategy into shared understanding."
-    leftDescription="Even the best strategy fails without alignment. We bring teams together — literally and strategically — so they move in sync."
-    :tags="[
-      'Cross-Functional Sessions',
-      'Shared Documentation',
-      'Brand Audit',
-      'Project Management',
-    ]"
-    toolsTitle="🛠️ Tools we use:"
-    :toolsList="[
-      'Miro or FigJam for alignment workshops',
-      'Notion for shared strategy docs',
-      'Slack or Loom for async feedback',
-      'Monday.com or Jira for team tracking',
-    ]"
-    imageSrc="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/align-across-teams.png"
-  />
-  <BannerSection text="What You Get" />
-  <Column
-    id="what-you-get"
-    :columns="[
-      {
-        icon: '🧠',
-        imageAlt: 'Brand Icon',
-        title: 'Strategic Foundation',
-        headerTag: 'h3',
-        description:
-          'A clear product direction rooted in your brand’s purpose, promise, and personality — not just market trends or feature requests.',
-      },
-      {
-        icon: '🧱',
-        title: 'Messaging Frameworks',
-        headerTag: 'h3',
-        description:
-          'Positioning, voice, and messaging pillars your whole team can rally around — consistent across product, marketing, and sales.',
-      },
-      {
-        icon: '🗺️',
-        title: 'Cross-Team Alignment',
-        headerTag: 'h3',
-        description:
-          'Collaborative tools and rituals to keep design, product, and business stakeholders aligned — from kickoff to launch.',
-      },
-    ]"
-  />
-  <Column
-    id="design-system"
-    class="pb-20"
-    :columns="[
-      {
-        icon: '🧪',
-        title: 'Decision-Making Criteria',
-        headerTag: 'h3',
-        description:
-          'Shared principles that help your team move faster — and know why they\'re making the choices they are.',
-      },
-      {
-        icon: '🚧',
-        title: 'Actionable Product Architecture',
-        headerTag: 'h3',
-        description:
-          'Feature roadmaps and IA built around real user needs and business priorities — not guesswork.',
-      },
-    ]"
-  />
-  <WhiteSection
-    id="get-started-today"
-    bgImage="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/below-pattern.svg"
-    class="pt-[8rem] pb-[8rem]"
-    title="Get Started Today"
-    description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you’re becoming."
-    primaryText="Start a Project"
-    primaryLink="/contact-us"
-    secondaryText="Book a Call"
-    secondaryLink="/contact-us"
-  />
-  <FooterSection />
+              <!-- Подчёркивание -->
+              <span
+                class="absolute -bottom-1 left-0 h-[2px] bg-[#8CB0FF] w-0
+                       transition-all duration-300
+                       group-hover/card:w-full"
+              ></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script setup>
-import { seoConfig, structuredData } from '~/config/seo'
+import { computed } from "vue";
 
-// SEO Configuration - using centralized config
-const siteUrl = useRuntimeConfig().public?.siteUrl;
-const seo = seoConfig.brandStrategy;
-useSeoMeta({
-  title: seo.title,
-  description: seo.description,
-  keywords: seo.keywords,
-  ogTitle: seo.ogTitle,
-  ogDescription: seo.ogDescription,
-  ogImage: `${siteUrl}/assets/shareimage.png`,
-  ogImageAlt: "Brand-Driven Product Strategy - SiteSynth",
-  ogUrl: `${siteUrl}/brand-driven-product-strategy`,
-  twitterTitle: "Brand-Driven Product Strategy - SiteSynth",
-  twitterDescription:
-    "Translate your brand into product experiences that are consistent, scalable, and ready to ship.",
-  twitterImage: `${siteUrl}/assets/shareimage.png`,
-  canonical: `${siteUrl}/brand-driven-product-strategy`,
+const props = defineProps({
+  id: {
+    type: String,
+    default: "",
+  },
+  title: String,
+  description: String,
+  buttonText: String,
+  buttonLink: String,
+  cards: {
+    type: Array,
+    default: () => [],
+  },
+  backgroundImage: {
+    type: String,
+    default: null,
+  },
 });
 
-useHead({
-  script: [
-    {
-      type: "application/ld+json",
-      children: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "Service",
-        name: "Brand-Driven Product Strategy",
-        description:
-          "Services to align brand and product strategy: discovery, UX translation, messaging frameworks, and cross-team alignment.",
-        url: `${siteUrl}/brand-driven-product-strategy`,
-      }),
-    },
-  ],
+// фон hero (pattern)
+const backgroundImageStyle = computed(() => {
+  if (props.backgroundImage) {
+    return {
+      backgroundImage: `url(${props.backgroundImage})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+    };
+  }
+  return {};
 });
 </script>
