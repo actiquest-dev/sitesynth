@@ -6,16 +6,9 @@
         ref="card"
         class="grid grid-cols-1 md:grid-cols-3 gap-8 relative border border-[#636363] py-14 group overflow-hidden"
       >
-
-        <!-- Glow Effect (под контентом) -->
-        <component
-          :is="selectedGlowEffect"
-          class="absolute inset-0 z-0 pointer-events-none"
-        />
-
-        <!-- Gradient overlay (нижний левый угол) -->
+        <!-- Сначала: градиент в углу, самый нижний слой -->
         <div
-          class="absolute bottom-0 left-0 w-[420px] h-[320px] pointer-events-none opacity-100"
+          class="absolute bottom-0 left-0 w-[420px] h-[320px] pointer-events-none opacity-100 z-0"
           :style="{
             backgroundImage: 'url(/assets/gradients/gradient-for-banner-section.svg)',
             backgroundSize: 'cover',
@@ -24,7 +17,13 @@
           }"
         ></div>
 
-        <!-- LEFT COLUMN -->
+        <!-- Затем: GlowEffect поверх градиента, но под контентом -->
+        <component
+          :is="selectedGlowEffect"
+          class="absolute inset-0 z-[1] pointer-events-none"
+        />
+
+        <!-- LEFT COLUMN (контент всегда над glow/градиентом) -->
         <div
           class="flex flex-col justify-center items-center text-center relative z-10 px-4"
         >
@@ -45,7 +44,6 @@
 
         <!-- RIGHT COLUMN -->
         <div class="md:col-span-2 flex flex-col justify-center px-6 relative z-10">
-
           <i class="text-6xl text-[#A620FF] fa-solid fa-quote-left"></i>
 
           <h3 class="text-3xl font-bold text-[#161616] mt-4 mb-6">
@@ -74,7 +72,6 @@
   </section>
 </template>
 
-
 <script setup>
 import { computed, resolveComponent } from "vue";
 
@@ -97,4 +94,3 @@ const selectedGlowEffect = computed(() =>
   resolveComponent(props.glowEffect)
 );
 </script>
-
