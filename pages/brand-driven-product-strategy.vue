@@ -235,4 +235,3 @@ useHead({
   ],
 });
 </script>
-</script>
