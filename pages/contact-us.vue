@@ -7,13 +7,13 @@
     :content="[
       {
         tag: 'h1',
-        text: 'Let's build something<br> meaningful — together.',
+        text: 'Let\'s build something<br> meaningful — together.',
         margin: 'mb-8',
         html: true,
       },
       {
         tag: 'p',
-        text: 'Whether you\'re looking to launch a new product, align your brand, or join our team — we'd love to hear from you. Drop us a message and we'll get back to you soon.',
+        text: 'Whether you\'re looking to launch a new product, align your brand, or join our team — we\'d love to hear from you. Drop us a message and we\'ll get back to you soon.',
         margin: 'mb-0',
       },
     ]"
@@ -105,9 +105,7 @@
                   v-model="formData.fullName"
                   placeholder="John Doe"
                   required
-                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white
-                         placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF]
-                         transition duration-200 hover:border-[#444]"
+                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]"
                 />
               </div>
 
@@ -121,9 +119,7 @@
                   type="text"
                   v-model="formData.company"
                   placeholder="Your company"
-                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white
-                         placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF]
-                         transition duration-200 hover:border-[#444]"
+                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]"
                 />
               </div>
             </div>
@@ -141,9 +137,7 @@
                   v-model="formData.email"
                   placeholder="hello@example.com"
                   required
-                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white
-                         placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF]
-                         transition duration-200 hover:border-[#444]"
+                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]"
                 />
               </div>
 
@@ -173,9 +167,7 @@
                       name="phone"
                       placeholder="+1 (555) 000-0000"
                       v-model="formData.phone"
-                      class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white
-                             placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF]
-                             transition duration-200 hover:border-[#444]"
+                      class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]"
                     />
                   </template>
                 </ClientOnly>
@@ -193,9 +185,7 @@
                   name="topic"
                   v-model="formData.topic"
                   required
-                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 pr-10 text-sm text-white
-                         appearance-none focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF]
-                         transition duration-200 hover:border-[#444] cursor-pointer"
+                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 pr-10 text-sm text-white appearance-none focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444] cursor-pointer"
                 >
                   <option value="">Select a topic</option>
                   <option value="project">Start a custom project</option>
@@ -203,9 +193,7 @@
                   <option value="career">Career opportunity</option>
                   <option value="other">Other</option>
                 </select>
-                <span
-                  class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#8CB0FF] text-sm"
-                >
+                <span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#8CB0FF] text-sm">
                   ▼
                 </span>
               </div>
@@ -223,9 +211,7 @@
                 v-model="formData.message"
                 placeholder="Tell us more about your project..."
                 required
-                class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white
-                       placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF]
-                       transition duration-200 hover:border-[#444] resize-none"
+                class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444] resize-none"
               ></textarea>
             </div>
 
@@ -246,9 +232,7 @@
             <button
               type="submit"
               :disabled="state.isSubmitting"
-              class="w-full px-6 py-3 border border-white rounded-lg text-sm font-semibold
-                     text-white bg-transparent hover:bg-white hover:text-black transition duration-300
-                     disabled:opacity-50 disabled:cursor-not-allowed mt-6"
+              class="w-full px-6 py-3 border border-white rounded-lg text-sm font-semibold text-white bg-transparent hover:bg-white hover:text-black transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed mt-6"
             >
               {{ state.isSubmitting ? "Sending..." : "Send Message" }}
             </button>
