@@ -17,8 +17,18 @@
     textColorRight="text-white"
   >
     <template #left>
-      <div class="py-24 md:border-r border-[#636363] bg-[#DDDDDD]">
-        <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
+    <div class="py-24 md:border-r border-[#636363] bg-[#DDDDDD] relative">
+
+      <!-- 🔥 Уголовой градиент -->
+      <div 
+        class="absolute bottom-0 left-0 w-[420px] h-[320px] pointer-events-none opacity-100 z-0"
+        style="
+          background-image: url('/assets/gradients/gradient-for-banner-section.svg');
+          background-size: cover;
+          background-position: bottom left;
+          background-repeat: no-repeat;
+        "
+      ></div>
           <h3 class="text-lg mb-2">WHY AI NOW?</h3>
           <h2 class="text-4xl font-bold mb-4">
             You don’t need an AI lab. You need traction.
