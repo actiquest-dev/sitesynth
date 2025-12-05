@@ -26,8 +26,8 @@ export default defineNuxtConfig({
           content: "ZuM9hSt-NO7KjEYf_o5yjeiGyTbsOVekDz-R1z-4ilk",
         },
         // Additional meta tags for better SEO
-        { name: "theme-color", content: "#000000" },
-        { name: "msapplication-TileColor", content: "#000000" },
+        { name: "theme-color", content: "#161616" },
+        { name: "msapplication-TileColor", content: "#161616" },
       ],
       link: [
         // Favicon links for better Google recognition
