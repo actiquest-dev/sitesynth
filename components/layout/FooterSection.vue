@@ -117,7 +117,7 @@ const footerData = {
     },
   ],
   footerLinks: {
-    privacy: "/privacy-policy",
+    privacy: "/privacy-and-policy",
     copyright: "© 2025 SiteSynth & Tech Paw | All rights reserved.",
   },
 };

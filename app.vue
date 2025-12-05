@@ -172,11 +172,27 @@ useHead({
             addressCountry: "BE",
           },
         },
-        services: [
-          "Brand-Driven Product Strategy",
-          "UX & Design Systems",
-          "Full-Stack Development",
-          "AI-Powered Workflows",
+        // Use makesOffer with Offer->itemOffered(Service) to represent offered services correctly
+        makesOffer: [
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Brand-Driven Product Strategy",
+            },
+          },
+          {
+            "@type": "Offer",
+            itemOffered: { "@type": "Service", name: "UX & Design Systems" },
+          },
+          {
+            "@type": "Offer",
+            itemOffered: { "@type": "Service", name: "Full-Stack Development" },
+          },
+          {
+            "@type": "Offer",
+            itemOffered: { "@type": "Service", name: "AI-Powered Workflows" },
+          },
         ],
       }),
     },

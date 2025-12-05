@@ -2,13 +2,13 @@
   <HeaderSection />
 
   <!-- Hero Section -->
-  <section class="bg-[#161616] py-48">
+  <section class="bg-[#161616] py-64">
     <div class="max-w-[1248px] mx-auto px-6">
       <div class="text-center">
-        <h1 class="text-white text-4xl md:text-6xl font-bold mb-6">
+        <h2 class="text-white text-4xl md:text-6xl font-bold mb-6">
           Privacy &
           <span class="glow-text">Cookie Policy</span>
-        </h1>
+        </h2>
         <p class="text-[#999999] text-lg max-w-3xl mx-auto">
           Your privacy is important to us. This policy explains how we collect,
           use, and protect your information.

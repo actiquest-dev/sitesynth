@@ -5,7 +5,7 @@
   />
   <HeroGeneric
     glowEffect="GlowRed"
-    backgroundImage="/assets/hero-scoresynth-bg.png"
+    backgroundImage="/assets/hero-scoresynth-bg.webp"
     backgroundPosition="bg-right-bottom"
     :logo="{
       src: '/assets/ScoreSynth.svg',
@@ -64,7 +64,7 @@
     <template #right>
       <div>
         <img
-          src="/assets/new-assets/products-page/product/score-synth/about.png"
+          src="/assets/new-assets/products-page/product/score-synth/about.webp"
           alt="ScoreSynth Image"
           class="h-full w-full object-cover"
         />
@@ -91,7 +91,7 @@
 
   <OneColumnImage
     glowEffect="GlowRed"
-    centerImg="/assets/new-assets/products-page/product/score-synth/how-works/UiOverPattern.png"
+    centerImg="/assets/new-assets/products-page/product/score-synth/how-works/UiOverPattern.webp"
     centerImgAlt="ScoreSynth UI Interface"
   />
 
@@ -101,23 +101,23 @@
     imageAlt="Synth"
     :images="[
       {
-        src: '/assets/new-assets/products-page/product/score-synth/accordion/upload-your-source.png',
+        src: '/assets/new-assets/products-page/product/score-synth/accordion/upload-your-source.webp',
         alt: 'Discover - Business Goals Analysis',
       },
       {
-        src: '/assets/new-assets/products-page/product/score-synth/accordion/ai-analyzes-separates-the-music.png',
+        src: '/assets/new-assets/products-page/product/score-synth/accordion/ai-analyzes-separates-the-music.webp',
         alt: 'Define - Challenge Clarification',
       },
       {
-        src: '/assets/new-assets/products-page/product/score-synth/accordion/transcription-into-digital-notes.png',
+        src: '/assets/new-assets/products-page/product/score-synth/accordion/transcription-into-digital-notes.webp',
         alt: 'Design - Systems and Flows',
       },
       {
-        src: '/assets/new-assets/products-page/product/score-synth/accordion/orchestration-with-intelligence.png',
+        src: '/assets/new-assets/products-page/product/score-synth/accordion/orchestration-with-intelligence.webp',
         alt: 'Deliver - Design Implementation',
       },
       {
-        src: '/assets/new-assets/products-page/product/score-synth/accordion/ready-out-put.png',
+        src: '/assets/new-assets/products-page/product/score-synth/accordion/ready-out-put.webp',
         alt: 'Deliver - Design Implementation',
       },
     ]"
@@ -165,7 +165,7 @@
   />
   <ColumnsAndBackground
     title="Why Choose ScoreSynth?"
-    background="/assets/orchestra-bg.png"
+    background="/assets/orchestra-bg.webp"
     :leftElements="[
       {
         title: '🎼 Composers & Arrangers',
@@ -216,7 +216,7 @@
 </template>
 
 <script setup>
-import { seoConfig, structuredData } from '~/config/seo'
+import { seoConfig, structuredData } from "~/config/seo";
 
 // SEO Configuration - using centralized config
 const siteUrl = useRuntimeConfig().public?.siteUrl;

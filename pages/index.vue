@@ -100,19 +100,19 @@
     imageAlt="Synth"
     :images="[
       {
-        src: '/assets/new-assets/home-page/home/what-we-offer/Discover.png',
+        src: '/assets/new-assets/home-page/home/what-we-offer/Discover.webp',
         alt: 'Discover - Business Goals Analysis',
       },
       {
-        src: '/assets/new-assets/home-page/home/what-we-offer/Define.png',
+        src: '/assets/new-assets/home-page/home/what-we-offer/Define.webp',
         alt: 'Define - Challenge Clarification',
       },
       {
-        src: '/assets/new-assets/home-page/home/what-we-offer/Design.png',
+        src: '/assets/new-assets/home-page/home/what-we-offer/Design.webp',
         alt: 'Design - Systems and Flows',
       },
       {
-        src: '/assets/new-assets/home-page/home/what-we-offer/Deliver.png',
+        src: '/assets/new-assets/home-page/home/what-we-offer/Deliver.webp',
         alt: 'Deliver - Design Implementation',
       },
     ]"
@@ -170,7 +170,7 @@
     }"
     :rightContent="{
       image: {
-        src: 'assets/new-assets/home-page/home/cta/score-synth-feature-image.png',
+        src: 'assets/new-assets/home-page/home/cta/score-synth-feature-image.webp',
         alt: 'AI Development Process',
         class: 'w-full h-auto rounded-lg',
       },

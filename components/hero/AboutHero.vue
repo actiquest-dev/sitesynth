@@ -6,7 +6,7 @@
     <!-- Частицы / звёзды -->
     <ParticleEffect />
 
-    <div class="relative max-w-[1248px] mx-auto px-6 pt-[12rem] pb-24">
+    <div class="relative max-w-[1248px] mx-auto px-6 pt-48 pb-24">
       <!-- Заголовок + подпись -->
       <div class="text-center max-w-4xl mx-auto">
         <div
