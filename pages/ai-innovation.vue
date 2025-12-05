@@ -19,15 +19,15 @@
   <template #left>
     <div class="py-24 md:border-r border-[#636363] bg-[#DDDDDD] relative">
       <!-- градиент в нижнем левом углу -->
-      <div
-        class="absolute bottom-0 left-0 w-[420px] h-[320px] pointer-events-none opacity-100 z-0"
-        style="
-          background-image: url('/assets/gradients/gradient_right_corner.svg');
-          background-size: cover;
-          background-position: bottom left;
-          background-repeat: no-repeat;
-        "
-      ></div>
+<div class="absolute inset-0 pointer-events-none opacity-100 z-0"
+     style="
+       background-image: url('/assets/gradients/gradient_right_corner.svg');
+       background-size: cover;
+       background-position: bottom left;
+       background-repeat: no-repeat;
+     ">
+</div>
+
 
       <!-- контент поверх градиента -->
       <div class="relative z-10 max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
