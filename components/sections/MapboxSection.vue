@@ -61,7 +61,7 @@ const initializeMap = () => {
     style: "mapbox://styles/bammapbox80/cmirha9kq001i01qvh99fe3uo", // Use standard style to avoid layer errors
     projection: "globe",
     zoom: 12,
-    center: [4.2024058819242995, 51.056684446036954], // Sint-Amands coordinates
+    center: [4.246948039185497, 51.06909246639246], // Sint-Amands coordinates
   });
 
   // Add navigation controls
@@ -104,14 +104,14 @@ const initializeMap = () => {
     focusAfterOpen: false, // Fix ARIA accessibility issue
   }).setHTML(`
     <div style="padding: 15px; text-align: center; font-family: 'Inter', sans-serif;">
-      <strong style="color: #161616; font-size: 16px;"><a target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/dir//Kerkstraat+14,+2890+Puurs-Sint-Amands,+Belgium/@51.0565327,4.1997666,17z/data=!4m18!1m8!3m7!1s0x47c39304acffdbad:0xd5d89f5ed1104ab3!2sKerkstraat+14,+2890+Puurs-Sint-Amands,+Belgium!3b1!8m2!3d51.0565294!4d4.2023415!16s%2Fg%2F11hbr673r_!4m8!1m0!1m5!1m1!1s0x47c39304acffdbad:0xd5d89f5ed1104ab3!2m2!1d4.2023415!2d51.0565294!3e0?entry=ttu&g_ep=EgoyMDI1MTIwMi4wIKXMDSoASAFQAw%3D%3D">SiteSynth</a></strong><br>
-      <span style="color: #666; font-size: 13px; line-height: 1.4;">Oude Kerkstraat 14<br>2890 Puurs-Sint-Amands<br>Belgium 🇧🇪</span>
+      <strong style="color: #161616; font-size: 16px;"><a target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/dir//2890+Puurs-Sint-Amands,+Belgium/@51.0549371,4.1898912,13z/data=!4m18!1m8!3m7!1s0x47c3ecd33d06e815:0xde8ebf776f28e2bb!2s2890+Puurs-Sint-Amands,+Belgium!3b1!8m2!3d51.0558846!4d4.2338458!16s%2Fg%2F1tjrp449!4m8!1m0!1m5!1m1!1s0x47c3ecd33d06e815:0xde8ebf776f28e2bb!2m2!1d4.2338458!2d51.0558846!3e0?entry=ttu&g_ep=EgoyMDI1MTIwMi4wIKXMDSoASAFQAw%3D%3D">SiteSynth</a></strong><br>
+      <span style="color: #666; font-size: 13px; line-height: 1.4;">Meir 67<br>2890 Puurs-Sint-Amands<br>Belgium - 🇧🇪</span>
     </div>
   `);
 
   // Add marker to map with popup attached
   const marker = new window.mapboxgl.Marker(markerElement)
-    .setLngLat([4.2024058819242995, 51.056684446036954])
+    .setLngLat([4.246948039185497, 51.06909246639246])
     .setPopup(popup)
     .addTo(map);
 
