@@ -22,7 +22,7 @@
       <div
         class="absolute bottom-0 left-0 w-[420px] h-[320px] pointer-events-none opacity-100 z-0"
         style="
-          background-image: url('/assets/gradients/gradient-for-banner-section.svg');
+          background-image: url('/assets/gradients/gradient_right_corner.svg');
           background-size: cover;
           background-position: bottom left;
           background-repeat: no-repeat;
