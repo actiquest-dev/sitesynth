@@ -57,7 +57,7 @@
     <template #left>
       <div>
         <img
-          src="/assets/new-assets/company-page/carreers/mayya_prototyping.png"
+          src="/assets/new-assets/company-page/carreers/mayya_prototyping.webp"
           alt="ScoreSynth Image"
           class="h-full w-full object-cover"
         />
@@ -160,7 +160,7 @@
 </template>
 
 <script setup>
-import { seoConfig, structuredData } from '~/config/seo'
+import { seoConfig, structuredData } from "~/config/seo";
 
 // SEO Configuration - using centralized config
 const siteUrl = useRuntimeConfig().public?.siteUrl;

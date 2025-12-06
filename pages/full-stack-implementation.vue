@@ -56,7 +56,7 @@
       'React, Vue, Next.js, Nuxt for frontend development',
       'GitHub / GitLab for version control & code reviews',
     ]"
-    imageSrc="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/front-end-engineering.png"
+    imageSrc="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/front-end-engineering.webp"
   />
   <TestimonialWhite
     id="testimonial-marco"
@@ -78,7 +78,7 @@
   <TranslateSection
     id="translate-back-end"
     imagePosition="object-cover"
-    imageSrc="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/back-end-engineering.png"
+    imageSrc="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/back-end-engineering.webp"
     imageAlt="Github code"
     bgColor="bg-[#DDDDDD]"
     textColor="text-white"
@@ -126,7 +126,7 @@
       'GitHub Projects or Jira for sprints & tasks',
       'Stripe, Auth0, and 3rd-party APIs for integration work',
     ]"
-    imageSrc="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/integrated-dev-collaboration.png"
+    imageSrc="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/integrated-dev-collaboration.webp"
   />
 
   <BannerSection
@@ -202,7 +202,7 @@
 </template>
 
 <script setup>
-import { seoConfig, structuredData } from '~/config/seo'
+import { seoConfig, structuredData } from "~/config/seo";
 
 // SEO Configuration - using centralized config
 const siteUrl = useRuntimeConfig().public?.siteUrl;

@@ -52,14 +52,14 @@
   />
   <OneColumnImage
     id="figma-screen"
-    centerImg="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-main-ui.png"
+    centerImg="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-main-ui.webp"
     centerImgAlt="Figma Screen"
   />
   <TwoColumnsImagesOnly
     id="figma-screenshots"
-    leftImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-jam.png"
+    leftImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-jam.webp"
     leftImgAlt="FigJam Screenshot"
-    rightImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-dev-mode.png"
+    rightImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-dev-mode.webp"
     rightImgAlt="Figma Dev Mode Screenshot"
   />
   <TwoColumnsWithImages
@@ -143,7 +143,7 @@
 </template>
 
 <script setup>
-import { seoConfig, structuredData } from '~/config/seo'
+import { seoConfig, structuredData } from "~/config/seo";
 
 // SEO Configuration - using centralized config
 const siteUrl = useRuntimeConfig().public?.siteUrl;
