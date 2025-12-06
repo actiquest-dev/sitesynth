@@ -66,12 +66,12 @@ useHead({
   ],
   link: [
     // Primary favicon (Google prefers ICO at root or with proper path)
-    { rel: "icon", type: "image/x-icon", href: "/assets/favicon/favicon.ico" },
-    {
-      rel: "shortcut icon",
-      type: "image/x-icon",
-      href: "/assets/favicon/favicon.ico",
-    },
+    // { rel: "icon", type: "image/x-icon", href: "/assets/favicon/favicon.ico" },
+    // {
+    //   rel: "shortcut icon",
+    //   type: "image/x-icon",
+    //   href: "/assets/favicon/favicon.ico",
+    // },
 
     // PNG favicons for better quality
     {
@@ -97,11 +97,11 @@ useHead({
     { rel: "icon", type: "image/svg+xml", href: "/assets/favicon/favicon.svg" },
 
     // Apple touch icon
-    {
-      rel: "apple-touch-icon",
-      sizes: "180x180",
-      href: "/assets/favicon/apple-touch-icon.png",
-    },
+    // {
+    //   rel: "apple-touch-icon",
+    //   sizes: "180x180",
+    //   href: "/assets/favicon/apple-touch-icon.png",
+    // },
 
     // Web app manifest
     { rel: "manifest", href: "/assets/favicon/site.webmanifest" },

@@ -26,6 +26,11 @@ export default defineNuxtConfig({
           content: "ZuM9hSt-NO7KjEYf_o5yjeiGyTbsOVekDz-R1z-4ilk",
         },
         // Additional meta tags for better SEO
+        { name: "application-name", content: "SiteSynth" },
+        { name: "apple-mobile-web-app-title", content: "SiteSynth" },
+        { name: "apple-mobile-web-app-capable", content: "yes" },
+
+        // Additional meta tags for better SEO
         { name: "theme-color", content: "#161616" },
         { name: "msapplication-TileColor", content: "#161616" },
       ],
