@@ -11,18 +11,19 @@
         :class="`${bgInside} border border-[#636363] py-20 px-20 relative overflow-hidden`"
       >
         <component :is="selectedGlowEffect" />
-        
- <!-- Gradient Background -->
-        <div 
+
+        <!-- Gradient Background -->
+        <div
           class="absolute inset-0 pointer-events-none opacity-100"
           :style="{
-            backgroundImage: 'url(/assets/gradients/gradient-for-banner-section.svg)',
+            backgroundImage:
+              'url(/assets/gradients/gradient-for-banner-section.svg)',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
           }"
         ></div>
-        
+
         <!-- Text Content -->
         <div class="flex flex-col items-center relative z-10">
           <h2 :class="`${textColor} text-4xl font-bold`">{{ title }}</h2>
@@ -32,14 +33,13 @@
           <div class="flex flex-col sm:flex-row justify-center gap-4 mt-6">
             <a
               :href="primaryLink"
-              class="px-6 py-2 border-[1px] border-white hover-button bg-white text-[#161616] transition-colors duration-[1000ms] font-semibold"
-              :style="`--hover-bg: ${hover}; --hover-border: ${hover}`"
+              :class="`px-6 py-2 border border-white bg-white text-[#161616] transition-colors duration-1000 font-semibold hover:bg-[${hover}] hover:border-[${hover}] hover:text-white`"
             >
               {{ primaryText }}
             </a>
             <a
               :href="secondaryLink"
-              :class="`px-6 py-2 border-1 border-white hover:bg-white hover:text-[#161616] hover:border-white bg-[#161616] text-white transition-colors duration-[1000ms] font-semibold`"
+              :class="`px-6 py-2 border border-[${hover}] bg-[#161616] text-white transition-colors duration-1000 font-semibold hover:bg-[${hover}] hover:border-[${hover}] hover:text-white`"
             >
               {{ secondaryText }}
             </a>
@@ -107,11 +107,3 @@ const backgroundImageStyle = computed(() => {
   return {};
 });
 </script>
-
-<style scoped>
-.hover-button:hover {
-  background-color: var(--hover-bg) !important;
-  border-color: var(--hover-border) !important;
-  color: white !important;
-}
-</style>
