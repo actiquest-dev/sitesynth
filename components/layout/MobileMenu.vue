@@ -175,6 +175,13 @@ const socials = [
     hoverBg: "hover:bg-[#26a7de]",
     target: "_blank",
   },
+  {
+    name: "Mail",
+    url: "mailto:hello@sitesynth.com",
+    icon: "fa-solid fa-envelope",
+    hoverBg: "hover:bg-[#CB1620]",
+    target: "_blank",
+  },
 ];
 </script>
 

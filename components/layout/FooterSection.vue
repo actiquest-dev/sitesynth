@@ -58,7 +58,19 @@
         </NuxtLink>
       </div>
       <div class="text-white font-light text-left md:text-right">
-        {{ footerData.footerLinks.copyright }}
+        <span>
+          © {{ year }}
+          SiteSynth &amp;
+          <a
+            href="https://tech-paw.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="transition-colors duration-1000 hover:text-[#8CB0FF]"
+          >
+            Tech Paw
+          </a>
+          <span>| All rights reserved.</span>
+        </span>
       </div>
     </div>
   </footer>
@@ -79,6 +91,12 @@ const footerData = {
       icon: "fab fa-twitter",
       url: "https://x.com/sitesynth/",
       color: "border-[#26a7de] hover:bg-[#26a7de]",
+      target: "_blank",
+    },
+    {
+      icon: "fa-solid fa-envelope",
+      url: "mailto:hello@sitesynth.com",
+      color: "border-[#CB1620] hover:bg-[#CB1620]",
       target: "_blank",
     },
   ],
@@ -114,7 +132,8 @@ const footerData = {
   ],
   footerLinks: {
     privacy: "/privacy-and-policy",
-    copyright: "© 2025 SiteSynth & Tech Paw | All rights reserved.",
   },
 };
+
+const year = new Date().getFullYear();
 </script>
