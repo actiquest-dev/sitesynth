@@ -11,7 +11,6 @@
         :class="`${bgInside} border border-[#636363] py-20 px-20 relative overflow-hidden`"
       >
         <component :is="selectedGlowEffect" />
-
         <!-- Gradient Background -->
         <div
           class="absolute inset-0 pointer-events-none opacity-100"
@@ -23,23 +22,23 @@
             backgroundSize: 'cover',
           }"
         ></div>
-
         <!-- Text Content -->
         <div class="flex flex-col items-center relative z-10">
           <h2 :class="`${textColor} text-4xl font-bold`">{{ title }}</h2>
           <p :class="`${textColor} my-6`">{{ description }}</p>
-
           <!-- Call-to-Action Buttons -->
           <div class="flex flex-col sm:flex-row justify-center gap-4 mt-6">
             <a
               :href="primaryLink"
-              :class="`px-6 py-2 border border-white bg-white text-[#161616] transition-colors duration-1000 font-semibold hover:bg-[${hover}] hover:border-[${hover}] hover:text-white`"
+              :style="primaryButtonStyle"
+              class="px-6 py-2 border border-white bg-white text-[#161616] transition-colors duration-1000 font-semibold"
             >
               {{ primaryText }}
             </a>
             <a
               :href="secondaryLink"
-              :class="`px-6 py-2 border border-[${hover}] bg-[#161616] text-white transition-colors duration-1000 font-semibold hover:bg-[${hover}] hover:border-[${hover}] hover:text-white`"
+              :style="secondaryButtonStyle"
+              class="px-6 py-2 border bg-[#161616] text-white transition-colors duration-1000 font-semibold"
             >
               {{ secondaryText }}
             </a>
@@ -106,4 +105,16 @@ const backgroundImageStyle = computed(() => {
   }
   return {};
 });
+
+// Primary button style
+const primaryButtonStyle = computed(() => ({
+  borderColor: props.hover,
+  backgroundColor: props.hover,
+  color: "white",
+}));
+
+// Secondary button style
+const secondaryButtonStyle = computed(() => ({
+  borderColor: props.hover,
+}));
 </script>
