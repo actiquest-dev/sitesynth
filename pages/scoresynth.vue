@@ -199,20 +199,20 @@
     ]"
   />
   <WhiteSection
-    hover="#AA3733"
-    class="pb-[8rem] pt-[8rem]"
-    bgColor="bg-[#161616]"
-    bgInside="bg-[#161616]"
-    textColor="text-white"
-    title="Get Started Today"
-    description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you’re becoming."
-    primaryText="Start a Project"
-    primaryLink="/contact-us"
-    secondaryText="Book a Call"
-    secondaryLink="/contact-us"
-    glowEffect="GlowRed"
-    bgImage="/assets/gradients/gradient-for-banner-section-red.svg"
-  />
+  hover="#AA3733"
+  class="pb-[8rem] pt-[8rem]"
+  bgColor="bg-[#161616]"
+  bgInside="bg-[#161616]"
+  textColor="text-white"
+  title="Get Started Today"
+  description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you're becoming."
+  primaryText="Start a Project"
+  primaryLink="/contact-us"
+  secondaryText="Book a Call"
+  secondaryLink="/contact-us"
+  glowEffect="GlowRed"
+  gradientImage="/assets/gradients/gradient-for-banner-section-red.svg"
+/>
   <FooterSection />
 </template>
 
