@@ -168,18 +168,13 @@ const socials = [
     hoverBg: "hover:bg-[#0A66C2]",
     target: "_blank",
   },
-  // {
-  //   name: "Instagram",
-  //   url: "#",
-  //   icon: "fab fa-instagram",
-  //   hoverBg: "hover:bg-[#E4405F]",
-  // },
-  // {
-  //   name: "YouTube",
-  //   url: "#",
-  //   icon: "fab fa-youtube",
-  //   hoverBg: "hover:bg-[#FF0000]",
-  // },
+  {
+    name: "X",
+    url: "https://x.com/sitesynth/",
+    icon: "fab fa-twitter",
+    hoverBg: "hover:bg-[#26a7de]",
+    target: "_blank",
+  },
 ];
 </script>
 

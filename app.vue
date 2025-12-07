@@ -5,10 +5,10 @@
 
 <script setup>
 import { useRoute } from "vue-router";
-import "~/assets/style.scss";
 import { useHead, useRuntimeConfig } from "#imports";
 import { computed } from "vue";
 import { Analytics } from "@vercel/analytics/nuxt";
+import "~/assets/style.scss";
 
 const route = useRoute();
 
@@ -23,31 +23,13 @@ const canonicalUrl = computed(() => {
 });
 
 useHead({
-  // Default title - pages can override this completely
-  title:
-    "SiteSynth - No silos. Just synthesis. | Strategic Design & Development",
-
   // Default meta tags - pages can override specific ones
   meta: [
     { name: "viewport", content: "width=device-width, initial-scale=1.0" },
     { charset: "utf-8" },
-    { name: "robots", content: "index, follow" }, // Default to allow indexing
+    { name: "robots", content: "index, follow" },
     { name: "author", content: "SiteSynth" },
     { name: "generator", content: "Nuxt 3" },
-
-    // Default description - pages should override this
-    {
-      name: "description",
-      content:
-        "Strategic design and development company that bridges product, brand, and tech to create scalable digital solutions.",
-    },
-
-    // Default keywords - pages can extend or override
-    {
-      name: "keywords",
-      content:
-        "strategic design, product development, brand strategy, full-stack development, design systems",
-    },
 
     // Default Open Graph - pages can override specific values
     { property: "og:site_name", content: "SiteSynth" },
@@ -77,6 +59,24 @@ useHead({
     {
       rel: "icon",
       type: "image/png",
+      sizes: "48x48",
+      href: "/assets/favicon/favicon-48x48.png",
+    },
+    {
+      rel: "icon",
+      type: "image/png",
+      sizes: "32x32",
+      href: "/assets/favicon/favicon-32x32.png",
+    },
+    {
+      rel: "icon",
+      type: "image/png",
+      sizes: "16x16",
+      href: "/assets/favicon/favicon-16x16.png",
+    },
+    {
+      rel: "icon",
+      type: "image/png",
       sizes: "96x96",
       href: "/assets/favicon/favicon-96x96.png",
     },
@@ -95,13 +95,6 @@ useHead({
 
     // SVG favicon (modern browsers)
     { rel: "icon", type: "image/svg+xml", href: "/assets/favicon/favicon.svg" },
-
-    // Apple touch icon
-    // {
-    //   rel: "apple-touch-icon",
-    //   sizes: "180x180",
-    //   href: "/assets/favicon/apple-touch-icon.png",
-    // },
 
     // Web app manifest
     { rel: "manifest", href: "/assets/favicon/site.webmanifest" },

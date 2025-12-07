@@ -75,16 +75,12 @@ const footerData = {
       color: "border-[#0A66C2] hover:bg-[#0A66C2]",
       target: "_blank",
     },
-    // {
-    //   icon: "fab fa-instagram",
-    //   url: "#",
-    //   color: "border-[#E4405F] hover:bg-[#E4405F]",
-    // },
-    // {
-    //   icon: "fab fa-youtube",
-    //   url: "#",
-    //   color: "border-[#FF0000] hover:bg-[#FF0000]",
-    // },
+    {
+      icon: "fab fa-twitter",
+      url: "https://x.com/sitesynth/",
+      color: "border-[#26a7de] hover:bg-[#26a7de]",
+      target: "_blank",
+    },
   ],
   menuSections: [
     {

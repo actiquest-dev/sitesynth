@@ -125,8 +125,8 @@ export const structuredData = {
         mainEntity: {
             "@type": "Organization",
             name: "SiteSynth",
-            foundingDate: "2020",
-            foundingLocation: "Sint-Amands, Belgium",
+            foundingDate: "2025",
+            foundingLocation: "Puurs-Sint-Amands",
             employees: [
                 {
                     "@type": "Person",

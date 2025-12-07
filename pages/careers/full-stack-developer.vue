@@ -8,7 +8,9 @@
   >
     <template #content>
       <p class="text-[#7B38FC] mb-8">Full Time | Remote</p>
-      <h2 class="text-3xl font-bold mb-8 text-white">Full Stack Developer</h2>
+      <h1 class="text-3xl font-bold mb-8 text-white">
+        Full Stack Developer - Join SiteSynth
+      </h1>
       <p class="text-normal font-bold mb-8 text-white">
         SiteSynth is a strategy-led consultancy and product studio at the
         intersection of design, development, and AI. We help ambitious companies
@@ -195,12 +197,12 @@
 <script setup>
 // SEO Meta
 useHead({
-  title: "UX/UI Designer - Join SiteSynth",
+  title: "Full Stack Developer - Join SiteSynth",
   meta: [
     {
       name: "description",
       content:
-        "Join SiteSynth as a UX/UI Designer and lead design on cutting-edge digital products. Create exceptional user experiences from research to polished interfaces.",
+        "Join SiteSynth as a Full Stack Developer and contribute to building innovative digital products. Work with modern technologies and collaborate with a dynamic team to create impactful solutions.",
     },
   ],
 });

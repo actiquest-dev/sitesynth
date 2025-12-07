@@ -8,7 +8,9 @@
   >
     <template #content>
       <p class="text-[#7B38FC] mb-8">Full Time | Remote</p>
-      <h2 class="text-3xl font-bold mb-8 text-white">Ux/Ui Designer</h2>
+      <h1 class="text-3xl font-bold mb-8 text-white">
+        Ux/Ui Designer - Join SiteSynth
+      </h1>
       <p class="text-normal font-bold mb-8 text-white">
         SiteSynth is a consultancy and product studio at the intersection of
         design, development, and AI. We help startups and enterprises craft

@@ -100,7 +100,7 @@ const getErrorMessage = () => {
 
 // Set page meta based on error
 useHead({
-  title: `${props.error.statusCode} - ${getErrorTitle()} | Synt`,
+  title: `${props.error.statusCode} - ${getErrorTitle()} | Sitesynth`,
   meta: [{ name: "description", content: getErrorMessage() }],
 });
 

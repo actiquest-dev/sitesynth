@@ -8,7 +8,9 @@
   >
     <template #content>
       <p class="text-[#7B38FC] mb-8">Full Time | Remote</p>
-      <h2 class="text-3xl font-bold mb-8 text-white">Marketing Manager</h2>
+      <h1 class="text-3xl font-bold mb-8 text-white">
+        Marketing Manager - Join SiteSynth
+      </h1>
       <p class="text-normal font-bold mb-8 text-white">
         SiteSynth is a strategy-first consultancy and product studio. We help
         ambitious teams launch scalable digital products, unify their design and

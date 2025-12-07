@@ -4,19 +4,19 @@
     class="group relative overflow-hidden border-t border-b border-[#636363] bg-[#161616] services"
   >
     <GlowEffect />
-    
+
     <!-- Background SVG - fixed to corner -->
-    <img 
+    <img
       src="/assets/gradients/blur-sphere-free.svg"
-      alt=""
-       class="absolute bottom-0 right-0 pointer-events-none pointer-events-none opacity-100"
-      style="width: auto; height: auto; opacity: 1;"
+      alt="Blur Sphere Background"
+      class="absolute bottom-0 right-0 pointer-events-none pointer-events-none opacity-100"
+      style="width: auto; height: auto; opacity: 1"
     />
-    
+
     <!-- Content -->
-   <div
-  class="max-w-[1248px] mx-auto px-6 grid grid-cols-1 md:grid-cols-2 relative z-10"
->
+    <div
+      class="max-w-[1248px] mx-auto px-6 grid grid-cols-1 md:grid-cols-2 relative z-10"
+    >
       <!-- Left Column -->
       <div class="py-16 md:pr-12 md:border-r border-[#636363]">
         <h2 class="text-3xl font-bold text-white">{{ leftTitle }}</h2>
@@ -24,10 +24,12 @@
           <h3 class="text-xl font-semibold text-white flex items-center gap-2">
             {{ item.icon }} {{ item.title }}
           </h3>
-          <p class="text-[#999999] mt-3 font-light leading-relaxed">{{ item.description }}</p>
+          <p class="text-[#999999] mt-3 font-light leading-relaxed">
+            {{ item.description }}
+          </p>
         </div>
       </div>
-      
+
       <!-- Right Column -->
       <div class="py-16 md:pl-12">
         <h2 class="text-3xl font-bold text-white">{{ rightTitle }}</h2>
@@ -35,7 +37,9 @@
           <h3 class="text-xl text-white font-semibold flex items-center gap-2">
             {{ item.icon }} {{ item.title }}
           </h3>
-          <p class="text-[#999999] mt-3 font-light leading-relaxed">{{ item.description }}</p>
+          <p class="text-[#999999] mt-3 font-light leading-relaxed">
+            {{ item.description }}
+          </p>
         </div>
       </div>
     </div>
