@@ -211,7 +211,7 @@
     secondaryText="Book a Call"
     secondaryLink="/contact-us"
     glowEffect="GlowRed"
-    bgImage="public/assets/gradients/gradient-for-banner-section-red.svg"
+    bgImage="/assets/gradients/gradient-for-banner-section-red.svg"
   />
   <FooterSection />
 </template>
