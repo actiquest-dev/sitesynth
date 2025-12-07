@@ -9,7 +9,7 @@
     <img
       src="/assets/gradients/blur-sphere-free.svg"
       alt="Blur Sphere Background"
-      class="absolute bottom-0 right-0 pointer-events-none pointer-events-none opacity-100"
+      class="absolute bottom-0 right-0 pointer-events-none opacity-100"
       style="width: auto; height: auto; opacity: 1"
     />
 
