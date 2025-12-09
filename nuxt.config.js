@@ -37,7 +37,7 @@ export default defineNuxtConfig({
       link: [
         // Favicon links for better Google recognition
         {
-          rel: "icon",
+          rel: "shortcut icon",
           type: "image/x-icon",
           href: "/assets/favicon/favicon.ico",
         },
