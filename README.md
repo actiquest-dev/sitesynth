@@ -62,4 +62,4 @@ Files you may notice (already mentioned above):
 
 This overview is aimed at non-technical readers who want to know what lives in each folder and why it matters for the website's content and appearance.
 
-Favicon 32 shortcut icon 🤟
+Favicon 32 shortcut icon site manifest 🤟
