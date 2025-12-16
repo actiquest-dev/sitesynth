@@ -4,7 +4,12 @@ export default defineNuxtConfig({
 
   devtools: { enabled: true },
 
-  modules: ["@nuxtjs/tailwindcss", "@nuxt/image", "@zadigetvoltaire/nuxt-gtm"],
+  modules: [
+    "@nuxtjs/tailwindcss",
+    "@nuxt/image",
+    "@zadigetvoltaire/nuxt-gtm",
+    "@nuxtjs/sitemap",
+  ],
 
   components: [{ path: "~/components", pathPrefix: false }],
 
@@ -69,5 +74,85 @@ export default defineNuxtConfig({
     id: "GTM-5N4FRNDR",
     enableRouterSync: true,
     debug: true,
+  },
+
+  // Sitemap configuration
+  sitemap: {
+    hostname: "https://www.sitesynth.com",
+    gzip: true,
+    routes: [
+      {
+        url: "/",
+        changefreq: "weekly",
+        priority: 1.0,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+      {
+        url: "/about-us",
+        changefreq: "monthly",
+        priority: 0.8,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+      {
+        url: "/contact-us",
+        changefreq: "monthly",
+        priority: 0.8,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+      {
+        url: "/ai-innovation",
+        changefreq: "monthly",
+        priority: 0.9,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+      {
+        url: "/brand-driven-product-strategy",
+        changefreq: "monthly",
+        priority: 0.9,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+      {
+        url: "/ux-and-design-system",
+        changefreq: "monthly",
+        priority: 0.9,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+      {
+        url: "/full-stack-implementation",
+        changefreq: "monthly",
+        priority: 0.9,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+      {
+        url: "/scoresynth",
+        changefreq: "monthly",
+        priority: 0.8,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+      {
+        url: "/careers",
+        changefreq: "weekly",
+        priority: 0.7,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+      {
+        url: "/careers/full-stack-developer",
+        changefreq: "weekly",
+        priority: 0.6,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+      {
+        url: "/careers/marketing-manager",
+        changefreq: "weekly",
+        priority: 0.6,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+      {
+        url: "/careers/ux-ui-designer",
+        changefreq: "weekly",
+        priority: 0.6,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+    ],
   },
 });
