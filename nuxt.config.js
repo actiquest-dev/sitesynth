@@ -60,7 +60,7 @@ export default defineNuxtConfig({
     brevoApiKey: process.env.BREVO_API_KEY,
     // Public runtime config (available on client & server)
     public: {
-      siteUrl: process.env.SITE_URL || "https://www.sitesynth.com",
+      siteUrl: process.env.SITE_URL,
     },
   },
 

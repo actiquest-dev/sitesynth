@@ -216,7 +216,6 @@ useSeoMeta({
   twitterDescription:
     "Translate your brand into product experiences that are consistent, scalable, and ready to ship.",
   twitterImage: `${siteUrl}/assets/shareimage.png`,
-  canonical: `${siteUrl}/brand-driven-product-strategy`,
 });
 
 useHead({

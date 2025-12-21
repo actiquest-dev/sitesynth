@@ -178,6 +178,5 @@ useSeoMeta({
   twitterTitle: seo.ogTitle,
   twitterDescription: seo.ogDescription,
   twitterImage: `${siteUrl}/assets/shareimage.png`,
-  canonical: `${siteUrl}/careers`,
 });
 </script>

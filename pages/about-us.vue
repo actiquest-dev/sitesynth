@@ -169,7 +169,6 @@ useSeoMeta({
   twitterTitle: seo.ogTitle,
   twitterDescription: seo.ogDescription,
   twitterImage: `${siteUrl}/assets/shareimage.png`,
-  canonical: `${siteUrl}/about-us`,
 });
 
 // Structured data for About page

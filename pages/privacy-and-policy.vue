@@ -325,7 +325,6 @@ useSeoMeta({
   twitterDescription:
     "Read our privacy policy and terms of service. Learn how we protect your data and your rights.",
   twitterImage: `${siteUrl}/assets/shareimage.png`,
-  canonical: `${siteUrl}/privacy-policy`,
 });
 
 // Structured data for the page

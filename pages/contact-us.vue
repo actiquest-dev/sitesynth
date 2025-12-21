@@ -295,7 +295,6 @@ useSeoMeta({
   twitterTitle: seo.twitterTitle,
   twitterDescription: seo.twitterDescription,
   twitterImage: `${siteUrl}/assets/shareimage.png`,
-  canonical: `${siteUrl}/contact-us`,
 });
 
 useHead({

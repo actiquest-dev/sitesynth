@@ -255,9 +255,6 @@ useSeoMeta({
   twitterDescription: seo.twitterDescription,
   twitterImage: `${siteUrl}/assets/shareimage.png`,
   twitterImageAlt: "SiteSynth - Strategic Design & Development",
-
-  // Page-specific canonical
-  canonical: siteUrl,
 });
 
 // No need for structured data here - it's now global in app.vue

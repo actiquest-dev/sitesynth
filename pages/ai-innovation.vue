@@ -8,36 +8,36 @@
     buttonText="Let’s Build Together"
     buttonLink="#"
   />
-<TwoColumnsDesign
-  id="info-ai"
-  sectionBgColor="bg-[#DDDDDD]"
-  leftColumnBgColor="bg-[#DDDDDD]"
-  rightColumnBgColor="bg-[#161616]"
-  textColorleft="text-[#161616]"
-  textColorRight="text-white"
->
-  <template #left>
-    <div class="py-24 md:border-r border-[#636363] bg-[#DDDDDD] relative">
-      <!-- градиент в нижнем левом углу -->
-<div class="absolute inset-0 pointer-events-none opacity-100 z-0"
-     style="
-       background-image: url('/assets/gradients/gradient_right_corner.svg');
-       background-size: cover;
-       background-position: bottom left;
-       background-repeat: no-repeat;
-     ">
-</div>
+  <TwoColumnsDesign
+    id="info-ai"
+    sectionBgColor="bg-[#DDDDDD]"
+    leftColumnBgColor="bg-[#DDDDDD]"
+    rightColumnBgColor="bg-[#161616]"
+    textColorleft="text-[#161616]"
+    textColorRight="text-white"
+  >
+    <template #left>
+      <div class="py-24 md:border-r border-[#636363] bg-[#DDDDDD] relative">
+        <!-- градиент в нижнем левом углу -->
+        <div
+          class="absolute inset-0 pointer-events-none opacity-100 z-0"
+          style="
+            background-image: url('/assets/gradients/gradient_right_corner.svg');
+            background-size: cover;
+            background-position: bottom left;
+            background-repeat: no-repeat;
+          "
+        ></div>
 
-
-      <!-- контент поверх градиента -->
-      <div class="relative z-10 max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
-        <h3 class="text-lg mb-2">WHY AI NOW?</h3>
-        <h2 class="text-4xl font-bold mb-4">
-          You don’t need an AI lab. You need traction.
-        </h2>
+        <!-- контент поверх градиента -->
+        <div class="relative z-10 max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
+          <h3 class="text-lg mb-2">WHY AI NOW?</h3>
+          <h2 class="text-4xl font-bold mb-4">
+            You don’t need an AI lab. You need traction.
+          </h2>
+        </div>
       </div>
-    </div>
-  </template>
+    </template>
 
     <template #right>
       <div class="py-24 bg-[#161616]">
@@ -219,7 +219,7 @@
 </template>
 
 <script setup>
-import { seoConfig, structuredData } from '~/config/seo'
+import { seoConfig, structuredData } from "~/config/seo";
 
 // SEO Configuration - using centralized config
 const siteUrl = useRuntimeConfig().public?.siteUrl;
@@ -236,7 +236,6 @@ useSeoMeta({
   twitterTitle: seo.twitterTitle,
   twitterDescription: seo.twitterDescription,
   twitterImage: `${siteUrl}/assets/shareimage.png`,
-  canonical: `${siteUrl}/ai-innovation`,
 });
 
 useHead({

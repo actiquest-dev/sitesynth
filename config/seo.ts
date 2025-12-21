@@ -4,7 +4,7 @@
 export const seoConfig = {
     // Home page
     home: {
-        title: "No silos. Just synthesis | Where Product, Brand & Tech Align - SiteSynth",
+        title: "Just synthesis | Where Product, Brand & Tech Align - SiteSynth",
         description: "Where product, brand, and tech finally align. We help companies bridge strategy, design, and engineering to create digital products that scale.",
         keywords: "strategic design, product development, brand strategy, full-stack development, design systems, AI innovation, UX design, web development, no silos synthesis",
         get ogTitle() { return this.title },
@@ -16,7 +16,7 @@ export const seoConfig = {
     // About page
     about: {
         title: "About Us | Meet Our Strategic Design & Development Team - SiteSynth",
-        description: "Meet the team behind SiteSynth. Based in Sint-Amands, Belgium, we are designers, strategists, and developers working in sync to deliver integrated digital solutions.",
+        description: "Meet the team behind SiteSynth. Based in Sint-Amands, we are designers, strategists, and developers working to deliver integrated digital solutions.",
         keywords: "about sitesynth, team, belgium design agency, strategic design team, mayya aprosina, miguel aprossine, marco maffei, design and development team",
         get ogTitle() { return this.title },
         get ogDescription() { return this.description },
