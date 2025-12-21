@@ -35,14 +35,15 @@ useHead({
     { property: "og:site_name", content: "SiteSynth" },
     { property: "og:type", content: "website" },
     { property: "og:locale", content: "en_US" },
+    { property: "og:url", content: canonicalUrl },
+    { property: "og:image", content: `${baseUrl}/assets/shareimage.png` },
+    { property: "og:image:alt", content: "SiteSynth - Share Image" },
 
     // Default Twitter Card - pages can override
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:site", content: "@sitesynth" },
     { name: "twitter:creator", content: "@sitesynth" },
-    // Default share image (fallback) - pages can override
-    { property: "og:image", content: `${baseUrl}/assets/shareimage.png` },
-    { property: "og:image:alt", content: "SiteSynth - Share Image" },
+    { name: "twitter:url", content: canonicalUrl },
     { name: "twitter:image", content: `${baseUrl}/assets/shareimage.png` },
     { name: "twitter:image:alt", content: "SiteSynth - Share Image" },
   ],
