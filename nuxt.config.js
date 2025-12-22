@@ -10,7 +10,22 @@ export default defineNuxtConfig({
     "@zadigetvoltaire/nuxt-gtm",
     "@nuxtjs/sitemap",
     "@nuxt/fonts",
+    "@vesp/nuxt-fontawesome",
   ],
+
+  fontawesome: {
+    icons: {
+      solid: [
+        "envelope",
+        "chevron-down",
+        "chevron-right",
+        "arrow-right",
+        "spinner",
+        "quote-left",
+      ],
+      brands: ["linkedin", "twitter"],
+    },
+  },
 
   fonts: {
     google: {

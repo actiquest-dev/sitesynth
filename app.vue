@@ -113,10 +113,6 @@ useHead({
   ],
   script: [
     {
-      src: "https://kit.fontawesome.com/960a8c2498.js",
-      crossorigin: "anonymous",
-    },
-    {
       type: "application/ld+json",
       children: JSON.stringify({
         "@context": "https://schema.org",

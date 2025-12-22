@@ -23,7 +23,7 @@
               :target="social.target || null"
               :rel="social.target === '_blank' ? 'noopener noreferrer' : null"
             >
-              <i :class="social.icon" class="text-xl"></i>
+              <font-awesome :icon="social.icon" class="text-xl" />
             </a>
           </div>
         </div>
@@ -82,19 +82,19 @@ const footerData = {
   tagline: "No silos. Just synthesis.",
   socialLinks: [
     {
-      icon: "fab fa-linkedin",
+      icon: ["fab", "linkedin"],
       url: "https://www.linkedin.com/company/sitesynth/",
       color: "border-[#0A66C2] hover:bg-[#0A66C2]",
       target: "_blank",
     },
     {
-      icon: "fab fa-twitter",
+      icon: ["fab", "twitter"],
       url: "https://x.com/sitesynth/",
       color: "border-[#26a7de] hover:bg-[#26a7de]",
       target: "_blank",
     },
     {
-      icon: "fa-solid fa-envelope",
+      icon: ["fas", "envelope"],
       url: "mailto:hello@sitesynth.com",
       color: "border-[#CB1620] hover:bg-[#CB1620]",
       target: "_blank",

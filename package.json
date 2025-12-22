@@ -19,6 +19,7 @@
     "@tsparticles/slim": "^3.8.1",
     "@tsparticles/vue3": "^3.0.1",
     "@vercel/analytics": "^1.5.0",
+    "@vesp/nuxt-fontawesome": "^2.0.0",
     "nuxt": "^3.17.5",
     "nuxt-swiper": "^2.0.1",
     "swiper": "^12.0.3",
@@ -27,6 +28,9 @@
     "vue-tel-input": "^9.5.0"
   },
   "devDependencies": {
+    "@fortawesome/free-brands-svg-icons": "^7.1.0",
+    "@fortawesome/free-regular-svg-icons": "^7.1.0",
+    "@fortawesome/free-solid-svg-icons": "^7.1.0",
     "@nuxtjs/tailwindcss": "^7.0.0-beta.0",
     "@zadigetvoltaire/nuxt-gtm": "^0.0.13",
     "sass": "^1.94.2"

@@ -14,9 +14,10 @@
           <span :class="isCurrentParent(item) ? 'underline' : ''">
             {{ item.label }}
           </span>
-          <i
-            class="fas fa-chevron-down transform transition-transform duration-300 group-hover:rotate-180"
-          ></i>
+          <font-awesome
+            :icon="['fas', 'chevron-down']"
+            class="transform transition-transform duration-300 group-hover:rotate-180"
+          />
         </NuxtLink>
 
         <!-- Dropdown Panel with Dynamic Width -->

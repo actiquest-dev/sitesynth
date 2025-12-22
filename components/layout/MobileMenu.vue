@@ -71,7 +71,7 @@
         :target="social.target || null"
         :rel="social.target === '_blank' ? 'noopener noreferrer' : null"
       >
-        <i :class="['text-xl', social.icon]"></i>
+        <font-awesome :icon="social.icon" class="text-xl" />
       </a>
     </div>
   </div>
@@ -164,21 +164,21 @@ const socials = [
   {
     name: "LinkedIn",
     url: "https://www.linkedin.com/company/sitesynth/",
-    icon: "fab fa-linkedin",
+    icon: ["fab", "linkedin"],
     hoverBg: "hover:bg-[#0A66C2]",
     target: "_blank",
   },
   {
     name: "X",
     url: "https://x.com/sitesynth/",
-    icon: "fab fa-twitter",
+    icon: ["fab", "twitter"],
     hoverBg: "hover:bg-[#26a7de]",
     target: "_blank",
   },
   {
     name: "Mail",
     url: "mailto:hello@sitesynth.com",
-    icon: "fa-solid fa-envelope",
+    icon: ["fas", "envelope"],
     hoverBg: "hover:bg-[#CB1620]",
     target: "_blank",
   },
