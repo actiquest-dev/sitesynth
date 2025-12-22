@@ -24,7 +24,7 @@
               v-for="(link, index) in links"
               :key="index"
               :href="link.url"
-              :class="`${tagBgColor} ${tagTextColor} border-1 ${borderColor} px-6 py-3 rounded-[49px] inline-block`"
+              :class="`${tagBgColor} ${tagTextColor} border ${borderColor} px-6 py-3 rounded-[49px] inline-block`"
             >
               {{ link.text }}
             </a>

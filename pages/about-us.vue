@@ -183,29 +183,6 @@ useHead({
         description:
           "Learn about SiteSynth, our team, and our approach to strategic design and development.",
         url: `${siteUrl}/about-us`,
-        mainEntity: {
-          "@type": "Organization",
-          name: "SiteSynth",
-          foundingDate: "2020",
-          foundingLocation: "Sint-Amands, Belgium",
-          employees: [
-            {
-              "@type": "Person",
-              name: "Mayya Aprosina",
-              jobTitle: "CEO & Business Designer",
-            },
-            {
-              "@type": "Person",
-              name: "Miguel Aprossine",
-              jobTitle: "AI & Web3 Visionary Partner",
-            },
-            {
-              "@type": "Person",
-              name: "Marco Maffei",
-              jobTitle: "Full-Stack Engineer",
-            },
-          ],
-        },
       }),
     },
   ],

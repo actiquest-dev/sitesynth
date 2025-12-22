@@ -346,20 +346,6 @@ useHead({
         },
         datePublished: "2025-12-03",
         dateModified: "2025-12-03",
-        mainEntity: {
-          "@type": "Article",
-          headline: "Privacy Policy & Terms of Service",
-          author: {
-            "@type": "Organization",
-            name: "SiteSynth",
-          },
-          publisher: {
-            "@type": "Organization",
-            name: "SiteSynth",
-          },
-          datePublished: "2025-12-03",
-          dateModified: "2025-12-03",
-        },
       }),
     },
   ],
