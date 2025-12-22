@@ -9,9 +9,14 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { VueTelInput } from "vue-tel-input";
-import "vue-tel-input/vue-tel-input.css";
+// import "vue-tel-input/vue-tel-input.css";
+
+onMounted(async () => {
+  // load CSS only when component is mounted on client
+  await import("vue-tel-input/vue-tel-input.css");
+});
 
 const props = defineProps({
   modelValue: {
