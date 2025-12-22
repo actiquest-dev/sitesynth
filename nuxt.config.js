@@ -9,7 +9,19 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@zadigetvoltaire/nuxt-gtm",
     "@nuxtjs/sitemap",
+    "@nuxt/fonts",
   ],
+
+  fonts: {
+    google: {
+      families: {
+        Inter: [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      },
+      display: "swap",
+    },
+  },
+
+  css: ["swiper/css", "swiper/css/navigation"],
 
   components: [{ path: "~/components", pathPrefix: false }],
 

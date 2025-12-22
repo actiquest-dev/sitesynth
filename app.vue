@@ -101,22 +101,17 @@ useHead({
     { rel: "manifest", href: "/assets/favicon/site.webmanifest" },
 
     // Preconnect for performance
-    { rel: "preconnect", href: "https://fonts.googleapis.com" },
-    { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" },
-    {
-      rel: "stylesheet",
-      href: "https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap",
-    },
-    {
-      rel: "stylesheet",
-      href: "https://unpkg.com/swiper/swiper-bundle.min.css",
-    },
+    // { rel: "preconnect", href: "https://fonts.googleapis.com" },
+    // { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" },
+    // {
+    //   rel: "stylesheet",
+    //   href: "https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap",
+    // },
 
     // Canonical URL
     { rel: "canonical", href: canonicalUrl },
   ],
   script: [
-    { src: "https://unpkg.com/swiper/swiper-bundle.min.js", body: true },
     {
       src: "https://kit.fontawesome.com/960a8c2498.js",
       crossorigin: "anonymous",
