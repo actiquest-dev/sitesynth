@@ -81,7 +81,7 @@
         descriptionClass: 'text-[#CCCCCC] text-base',
       },
       {
-        title: 'Ux/Ui Designer',
+        title: 'UX/UI Designer',
         description: 'Work on user interfaces and user experiences',
         link: '/careers/ux-ui-designer',
         image: '/assets/new-assets/company-page/carreers/logo-for-position.svg',
