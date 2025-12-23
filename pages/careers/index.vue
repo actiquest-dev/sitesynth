@@ -11,7 +11,7 @@
       },
       {
         tag: 'p',
-        text: 'Join an elite team of people <br> who love what they do.',
+        text: 'Join an elite team of people who love what they do.',
         margin: 'mb-0',
       },
     ]"
