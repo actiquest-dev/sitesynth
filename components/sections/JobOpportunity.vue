@@ -9,7 +9,7 @@
           :class="isCta(job) ? 'bg-[#DDDDDD]' : 'bg-[#161616]'"
         >
           <!-- CTA ROW -->
-          <a
+          
             v-if="isCta(job)"
             :href="job.link"
             class="relative block h-[140px]"
@@ -47,8 +47,8 @@
             </div>
           </a>
 
-          <!-- NORMAL JOB ROW -->
-          <a
+          <!-- NORMAL JOB ROW - Логотип слева + текст -->
+          
             v-else
             :href="job.link"
             class="group block h-[140px] transition-colors duration-300 hover:bg-white/5"
@@ -62,7 +62,7 @@
 
             <div class="relative z-10 h-full flex">
               <!-- left logo area -->
-              <div class="w-[180px] border-r border-[#636363] flex items-center justify-center">
+              <div class="w-[240px] border-r border-[#636363] flex items-center justify-center">
                 <img
                   :src="job.image"
                   :alt="job.imageAlt || job.title"
@@ -70,7 +70,7 @@
                 />
               </div>
 
-              <!-- text -->
+              <!-- text (БЕЗ правого блока со стрелкой!) -->
               <div class="flex-1 flex flex-col justify-center px-10">
                 <component :is="job.titleTag || 'h3'" :class="job.titleClass">
                   {{ job.title }}
@@ -79,17 +79,9 @@
                 <component
                   :is="job.descriptionTag || 'p'"
                   :class="job.descriptionClass"
-                  class="line-clamp-2"
                 >
                   {{ job.description }}
                 </component>
-              </div>
-
-              <!-- right chevron -->
-              <div class="w-[140px] border-l border-[#636363] flex items-center justify-center">
-                <span class="text-[#636363] transition-colors duration-200 group-hover:text-white">
-                  <i class="fa fa-chevron-right transition-transform duration-200 group-hover:translate-x-1"></i>
-                </span>
               </div>
             </div>
           </a>
@@ -100,27 +92,32 @@
 </template>
 
 <script setup>
-import { computed, resolveComponent } from "vue";
+import { computed } from "vue";
+import GlowBlue from "~/components/effects/GlowBlue.vue";
+import GlowEffect from "~/components/effects/GlowEffect.vue";
+import GlowRed from "~/components/effects/GlowRed.vue";
 
 const props = defineProps({
   id: { type: String, default: "" },
   backgroundColor: { type: String, default: "bg-[#161616]" },
   jobs: { type: Array, required: true },
-  glowEffect: { type: String, default: "GlowBlue" }, // можно менять на странице
+  glowEffect: { type: String, default: "GlowBlue" },
 });
 
-const resolvedGlowEffect = computed(() => resolveComponent(props.glowEffect));
+const resolvedGlowEffect = computed(() => {
+  if (props.glowEffect === "GlowBlue") return GlowBlue;
+  if (props.glowEffect === "GlowRed") return GlowRed;
+  return GlowEffect;
+});
 
 const isCta = (job) => {
-  // CTA у тебя помечен bgColor: 'bg-[#dddddd]' и mailto-ссылкой
-  // делаем устойчиво: либо bgColor светлый, либо mailto
   const bg = (job.bgColor || "").toLowerCase();
   return bg.includes("dddddd") || (job.link || "").startsWith("mailto:");
 };
 </script>
 
 <style scoped>
-/* Optional: если line-clamp не подключен через tailwind plugin, можно убрать line-clamp-2 */
+/* Optional */
 </style>
 
 
