@@ -5,7 +5,7 @@
     :content="[
       {
         tag: 'h1',
-        text: 'Join an elite team of people <br> who love what they do.',
+        text: 'Join an elite team of people who love what they do.',
         margin: 'mb-8',
         html: true,
       },
