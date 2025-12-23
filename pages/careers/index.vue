@@ -1,9 +1,6 @@
 <template>
   <HeaderSection />
-  <HeroGeneric
-    backgroundImage=""
-    backgroundPosition="bg-right-bottom"
-    paddingClasses="flex items-center justify-center h-[100vh]"
+  <AboutHero
     glowEffect="GlowBlue"
     :content="[
       {
@@ -14,7 +11,7 @@
       },
       {
         tag: 'p',
-        text: 'SiteSynth was born from a simple idea: tech, design, and strategy work better when they actually talk to each other.',
+        text: 'Join an elite team of people <br> who love what they do.',
         margin: 'mb-0',
       },
     ]"
