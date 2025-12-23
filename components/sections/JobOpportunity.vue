@@ -20,7 +20,7 @@
               v-if="job.image"
               :src="job.image"
               :alt="job.imageAlt || job.title"
-              class="absolute right-0 top-0 h-full w-auto object-cover opacity-100"
+              class="absolute right-0 top-0 h-full w-auto object-cover"
             />
 
             <div class="relative z-10 h-full flex items-center justify-between px-12">
@@ -37,7 +37,6 @@
                 </component>
               </div>
 
-              <!-- Apply button -->
               <span
                 class="shrink-0 bg-[#161616] text-white px-10 py-3 text-sm font-semibold
                        transition-colors duration-200 hover:bg-[#333333]"
@@ -51,18 +50,18 @@
           <a
             v-else
             :href="job.link"
-            class="group block h-[140px] transition-colors duration-300 hover:bg-white/5"
+            class="group relative block h-[140px] transition-colors duration-300 hover:bg-white/5"
             rel="noopener noreferrer"
           >
             <!-- Glow INSIDE each row (behind content) -->
             <component
-              :is="resolvedGlowEffect"
+              :is="GlowComponent"
               class="absolute inset-0 z-0 pointer-events-none"
             />
 
-            <div class="relative z-10 h-full flex">
-              <!-- left logo area -->
-              <div class="w-[180px] border-r border-[#636363] flex items-center justify-center">
+            <div class="relative z-10 h-full flex items-center">
+              <!-- left logo area (БЕЗ border-r) -->
+              <div class="w-[180px] flex items-center justify-center">
                 <img
                   :src="job.image"
                   :alt="job.imageAlt || job.title"
@@ -85,8 +84,8 @@
                 </component>
               </div>
 
-              <!-- right chevron -->
-              <div class="w-[140px] border-l border-[#636363] flex items-center justify-center">
+              <!-- right chevron (БЕЗ border-l) -->
+              <div class="w-[140px] flex items-center justify-center">
                 <span class="text-[#636363] transition-colors duration-200 group-hover:text-white">
                   <i class="fa fa-chevron-right transition-transform duration-200 group-hover:translate-x-1"></i>
                 </span>
@@ -100,26 +99,30 @@
 </template>
 
 <script setup>
-import { computed, resolveComponent } from "vue";
+import { computed } from "vue";
+
+// ВАЖНО: прямые импорты — glow снова стабильно работает
+import GlowBlue from "@/components/GlowBlue.vue";
+import GlowEffect from "@/components/GlowEffect.vue";
 
 const props = defineProps({
   id: { type: String, default: "" },
   backgroundColor: { type: String, default: "bg-[#161616]" },
   jobs: { type: Array, required: true },
-  glowEffect: { type: String, default: "GlowBlue" }, // можно менять на странице
+  glowEffect: { type: String, default: "GlowBlue" }, // "GlowBlue" | "GlowEffect"
 });
 
-const resolvedGlowEffect = computed(() => resolveComponent(props.glowEffect));
+const GlowComponent = computed(() => {
+  return props.glowEffect === "GlowEffect" ? GlowEffect : GlowBlue;
+});
 
 const isCta = (job) => {
-  // CTA у тебя помечен bgColor: 'bg-[#dddddd]' и mailto-ссылкой
-  // делаем устойчиво: либо bgColor светлый, либо mailto
   const bg = (job.bgColor || "").toLowerCase();
   return bg.includes("dddddd") || (job.link || "").startsWith("mailto:");
 };
 </script>
 
 <style scoped>
-/* Optional: если line-clamp не подключен через tailwind plugin, можно убрать line-clamp-2 */
+/* если у тебя нет tailwind line-clamp — убери line-clamp-2 в шаблоне */
 </style>
 
