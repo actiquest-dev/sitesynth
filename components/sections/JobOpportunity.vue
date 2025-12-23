@@ -2,7 +2,6 @@
   <section :id="id || undefined" :class="backgroundColor">
     <div class="max-w-[1248px] mx-auto px-6">
       <div class="space-y-8">
-
         <div
           v-for="(job, index) in jobs"
           :key="index"
@@ -13,10 +12,10 @@
           <a
             v-if="isCta(job)"
             :href="job.link"
-            class="relative flex items-center h-[140px] px-12"
+            class="relative flex items-center h-[140px]"
             rel="noopener noreferrer"
           >
-            <!-- right pattern block -->
+            <!-- right pattern (no padding) -->
             <div class="absolute right-0 top-0 h-full w-[320px]">
               <img
                 v-if="job.image"
@@ -26,7 +25,7 @@
               />
             </div>
 
-            <div class="relative z-10 flex items-center w-full justify-between gap-10">
+            <div class="relative z-10 w-full flex items-center justify-between px-12 gap-10">
               <div class="max-w-[760px]">
                 <div class="text-[#161616] text-2xl font-semibold leading-tight">
                   {{ job.title }}
@@ -45,34 +44,34 @@
             </div>
           </a>
 
-          <!-- Normal job row -->
+          <!-- NORMAL JOB ROW -->
           <a
             v-else
             :href="job.link"
             class="group relative flex items-center h-[140px] bg-[#161616]
-                   transition-colors duration-300 hover:bg-[#1b1b1b]"
+                   transition-colors duration-300 hover:bg-white/5"
             rel="noopener noreferrer"
+            @mousemove="onMove($event)"
+            @mouseenter="onEnter"
+            @mouseleave="onLeave"
           >
-            <!-- Blue glow (работает всегда, без отдельного компонента) -->
+            <!-- mouse-follow glow -->
             <div
-              class="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              class="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200"
             >
-              <div
-                class="absolute -left-[120px] top-1/2 -translate-y-1/2 w-[520px] h-[520px] blur-[80px]"
-                style="background: radial-gradient(circle, rgba(21,0,255,0.45) 0%, rgba(21,0,255,0.18) 35%, rgba(21,0,255,0.0) 70%);"
-              ></div>
+              <div class="glow" />
             </div>
 
-            <!-- LEFT: logo zone (ТОЛЬКО одна линия справа) -->
-            <div class="h-full w-[220px] border-r border-[#636363] flex items-center justify-center">
+            <!-- LEFT IMAGE ZONE (NO padding, flush left) -->
+            <div class="h-full w-[260px] flex items-stretch">
               <img
                 :src="job.image"
                 :alt="job.imageAlt || job.title"
-                class="h-full w-full object-contain p-10 opacity-25"
+                class="h-full w-full object-cover opacity-25"
               />
             </div>
 
-            <!-- CENTER: text -->
+            <!-- TEXT (no vertical borders inside!) -->
             <div class="flex-1 px-12">
               <div class="text-white text-2xl font-semibold leading-tight">
                 {{ job.title }}
@@ -82,15 +81,14 @@
               </div>
             </div>
 
-            <!-- RIGHT: chevron zone (ТОЛЬКО одна линия слева) -->
-            <div class="h-full w-[180px] border-l border-[#636363] flex items-center justify-center">
+            <!-- RIGHT ICON (no vertical border!) -->
+            <div class="w-[180px] flex items-center justify-center">
               <span class="text-[#636363] group-hover:text-white transition-colors duration-200">
                 <i class="fa fa-chevron-right transition-transform duration-200 group-hover:translate-x-1"></i>
               </span>
             </div>
           </a>
         </div>
-
       </div>
     </div>
   </section>
@@ -108,4 +106,47 @@ const isCta = (job) => {
   const link = String(job.link || "");
   return bg.includes("dddddd") || link.startsWith("mailto:");
 };
+
+// mouse-follow glow (per hovered row)
+const setPos = (el, x, y) => {
+  el.style.setProperty("--mx", `${x}px`);
+  el.style.setProperty("--my", `${y}px`);
+};
+
+const onEnter = (e) => {
+  const el = e.currentTarget;
+  const rect = el.getBoundingClientRect();
+  setPos(el, rect.width / 2, rect.height / 2);
+};
+
+const onMove = (e) => {
+  const el = e.currentTarget;
+  const rect = el.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  setPos(el, x, y);
+};
+
+const onLeave = (e) => {
+  const el = e.currentTarget;
+  const rect = el.getBoundingClientRect();
+  setPos(el, rect.width / 2, rect.height / 2);
+};
 </script>
+
+<style scoped>
+/* glow follows mouse via CSS vars --mx --my */
+.glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle 360px at var(--mx, 50%) var(--my, 50%),
+    rgba(21, 0, 255, 0.45) 0%,
+    rgba(21, 0, 255, 0.22) 25%,
+    rgba(21, 0, 255, 0.10) 45%,
+    rgba(21, 0, 255, 0.0) 70%
+  );
+  filter: blur(60px);
+}
+</style>
+
