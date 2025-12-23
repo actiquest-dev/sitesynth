@@ -1,75 +1,91 @@
 <template>
-  <section :id="id || undefined" :class="backgroundColor">
-    <div class="max-w-[1248px] mx-auto px-6">
-      <div class="space-y-12">
-        <div
+  <section class="bg-[#161616] border-t border-[#363636]">
+    <div class="max-w-[1248px] mx-auto px-6 py-24">
+
+      <!-- Title -->
+      <h2 class="text-white text-4xl font-medium mb-16">
+        Open positions
+      </h2>
+
+      <div class="space-y-8">
+
+        <!-- JOB CARDS -->
+        <a
           v-for="(job, index) in jobs"
           :key="index"
-          :class="job.bgColor || ''"
-          class="job-box group relative border border-[#636363] cursor-pointer"
+          :href="job.link"
+          class="group block border border-[#363636] h-[140px]"
         >
-          <a
-            :href="job.link"
-            class="flex w-full h-full items-stretch"
-            rel="noopener noreferrer"
-          >
-            <!-- Image Section (1/6 width) -->
-            <div class="w-1/6 flex-shrink-0 h-full">
+          <div class="flex h-full">
+
+            <!-- Left graphic -->
+            <div class="w-[180px] border-r border-[#363636] flex items-center justify-center">
               <img
                 :src="job.image"
-                :alt="job.imageAlt || job.title"
-                class="w-full h-full object-cover"
+                alt=""
+                class="opacity-40"
               />
             </div>
 
-            <!-- Content Section (4/6 width) -->
-            <div class="w-4/6 p-6 flex flex-col justify-center h-full">
-              <component :is="job.titleTag || 'h3'" :class="job.titleClass">
+            <!-- Content -->
+            <div class="flex flex-col justify-center px-10">
+              <h3 class="text-white text-lg font-semibold mb-1">
                 {{ job.title }}
-              </component>
-
-              <p :class="job.descriptionClass">
-                {{ job.description }}
+              </h3>
+              <p class="text-[#9a9a9a] text-sm">
+                {{ job.meta }}
               </p>
             </div>
 
-            <!-- Link Section (1/6 width) -->
-            <div class="w-1/6 flex items-center justify-center h-full">
-              <span
-                class="text-[#636363] flex items-center group-hover:text-white transition-colors duration-200"
-              >
-                <span class="mr-2 font-semibold">
-                  {{ job.linkText }}
-                </span>
-                <i
-                  class="fa fa-chevron-right group-hover:translate-x-1 transition-transform duration-200"
-                ></i>
-              </span>
-            </div>
+          </div>
+        </a>
+
+        <!-- CTA BLOCK (same height!) -->
+        <div class="border border-[#363636] h-[140px] bg-[#e6e6e6] flex items-center justify-between px-12">
+
+          <div>
+            <p class="text-[#161616] text-lg font-medium">
+              Don’t see a role that’s right for you?
+            </p>
+            <p class="text-[#161616]">
+              Apply anyways!
+            </p>
+          </div>
+
+          <a
+            href="/careers/apply"
+            class="bg-black text-white px-8 py-3 text-sm font-medium hover:bg-[#333] transition"
+          >
+            Apply
           </a>
+
         </div>
+
       </div>
     </div>
   </section>
 </template>
 
 <script setup>
-defineProps({
-  id: { type: String, default: "" },
-  backgroundColor: { type: String, default: "bg-[#161616]" },
-  jobs: { type: Array, required: true },
-});
+const jobs = [
+  {
+    title: 'Full Stack Developer',
+    meta: 'Full Time | Belgium',
+    link: '/careers/full-stack',
+    image: '/assets/jobs/job-mark.svg',
+  },
+  {
+    title: 'UI/UX Designer',
+    meta: 'Full Time | Remote',
+    link: '/careers/ui-ux',
+    image: '/assets/jobs/job-mark.svg',
+  },
+  {
+    title: 'Marketing Manager',
+    meta: 'Full Time | Spain',
+    link: '/careers/marketing',
+    image: '/assets/jobs/job-mark.svg',
+  },
+];
 </script>
-
-<style scoped>
-/* Одинаковая высота карточек на десктопе */
-.job-box {
-  min-height: 180px;
-}
-@media (min-width: 768px) {
-  .job-box {
-    min-height: 200px; /* подгони цифру если нужно */
-  }
-}
-</style>
 
