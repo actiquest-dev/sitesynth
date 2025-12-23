@@ -1,97 +1,94 @@
 <template>
-  <section :id="id || undefined" :class="backgroundColor" class="job-opportunity">
+  <section :id="id || undefined" :class="backgroundColor">
     <div class="max-w-[1248px] mx-auto px-6">
       <div class="space-y-8">
 
         <div
           v-for="(job, index) in jobs"
           :key="index"
-          class="relative border border-[#636363] overflow-hidden"
+          class="border border-[#636363] overflow-hidden"
           :class="isCta(job) ? 'bg-[#DDDDDD]' : 'bg-[#161616]'"
         >
-          <!-- CTA ROW (grey) -->
+          <!-- CTA (grey) -->
           <a
             v-if="isCta(job)"
             :href="job.link"
-            class="relative block h-[140px]"
+            class="relative flex items-center h-[140px] px-12"
             rel="noopener noreferrer"
           >
-            <!-- right pattern -->
-            <img
-              v-if="job.image"
-              :src="job.image"
-              :alt="job.imageAlt || job.title"
-              class="absolute right-0 top-0 h-full w-[320px] object-cover opacity-100"
-            />
+            <!-- right pattern block -->
+            <div class="absolute right-0 top-0 h-full w-[320px]">
+              <img
+                v-if="job.image"
+                :src="job.image"
+                :alt="job.imageAlt || job.title"
+                class="h-full w-full object-cover"
+              />
+            </div>
 
-            <div class="relative z-10 h-full flex items-center justify-between px-12">
-              <div class="max-w-[720px]">
-                <component :is="job.titleTag || 'h3'" :class="job.titleClass">
+            <div class="relative z-10 flex items-center w-full justify-between gap-10">
+              <div class="max-w-[760px]">
+                <div class="text-[#161616] text-2xl font-semibold leading-tight">
                   {{ job.title }}
-                </component>
-
-                <component :is="job.descriptionTag || 'p'" :class="job.descriptionClass">
+                </div>
+                <div class="text-[#161616] text-base mt-1">
                   {{ job.description }}
-                </component>
+                </div>
               </div>
 
-              <!-- Apply button -->
               <span
                 class="shrink-0 bg-[#161616] text-white px-10 py-3 text-sm font-semibold
-                       border border-[#161616]
-                       transition-colors duration-200 hover:bg-[#333333]"
+                       border border-[#161616] transition-colors duration-200 hover:bg-[#333333]"
               >
                 {{ job.linkText || "Apply" }}
               </span>
             </div>
           </a>
 
-          <!-- NORMAL JOB ROW -->
+          <!-- Normal job row -->
           <a
             v-else
             :href="job.link"
-            class="group block h-[140px] transition-colors duration-300 hover:bg-white/5"
+            class="group relative flex items-center h-[140px] bg-[#161616]
+                   transition-colors duration-300 hover:bg-[#1b1b1b]"
             rel="noopener noreferrer"
           >
-            <!-- Glow INSIDE each row (behind content) -->
-            <div class="absolute inset-0 z-0 pointer-events-none">
-              <component :is="resolvedGlowEffect" class="absolute inset-0" />
+            <!-- Blue glow (работает всегда, без отдельного компонента) -->
+            <div
+              class="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            >
+              <div
+                class="absolute -left-[120px] top-1/2 -translate-y-1/2 w-[520px] h-[520px] blur-[80px]"
+                style="background: radial-gradient(circle, rgba(21,0,255,0.45) 0%, rgba(21,0,255,0.18) 35%, rgba(21,0,255,0.0) 70%);"
+              ></div>
             </div>
 
-            <div class="relative z-10 h-full flex">
-              <!-- left logo area -->
-              <div class="w-[180px] border-r border-[#636363] flex items-center justify-center">
-                <img
-                  :src="job.image"
-                  :alt="job.imageAlt || job.title"
-                  class="w-full h-full object-contain p-8 opacity-40"
-                />
-              </div>
+            <!-- LEFT: logo zone (ТОЛЬКО одна линия справа) -->
+            <div class="h-full w-[220px] border-r border-[#636363] flex items-center justify-center">
+              <img
+                :src="job.image"
+                :alt="job.imageAlt || job.title"
+                class="h-full w-full object-contain p-10 opacity-25"
+              />
+            </div>
 
-              <!-- text -->
-              <div class="flex-1 flex flex-col justify-center px-10">
-                <component :is="job.titleTag || 'h3'" :class="job.titleClass">
-                  {{ job.title }}
-                </component>
-
-                <!-- в макете это “Full Time | Location”, но если у тебя description — оставляем -->
-                <component
-                  :is="job.descriptionTag || 'p'"
-                  :class="job.descriptionClass"
-                >
-                  {{ job.description }}
-                </component>
+            <!-- CENTER: text -->
+            <div class="flex-1 px-12">
+              <div class="text-white text-2xl font-semibold leading-tight">
+                {{ job.title }}
               </div>
-
-              <!-- right chevron -->
-              <div class="w-[140px] border-l border-[#636363] flex items-center justify-center">
-                <span class="text-[#636363] transition-colors duration-200 group-hover:text-white">
-                  <i class="fa fa-chevron-right transition-transform duration-200 group-hover:translate-x-1"></i>
-                </span>
+              <div class="text-[#999999] text-base mt-2">
+                {{ job.description }}
               </div>
+            </div>
+
+            <!-- RIGHT: chevron zone (ТОЛЬКО одна линия слева) -->
+            <div class="h-full w-[180px] border-l border-[#636363] flex items-center justify-center">
+              <span class="text-[#636363] group-hover:text-white transition-colors duration-200">
+                <i class="fa fa-chevron-right transition-transform duration-200 group-hover:translate-x-1"></i>
+              </span>
             </div>
           </a>
-
         </div>
 
       </div>
@@ -100,26 +97,10 @@
 </template>
 
 <script setup>
-import { computed, resolveComponent } from "vue";
-
 const props = defineProps({
   id: { type: String, default: "" },
   backgroundColor: { type: String, default: "bg-[#161616]" },
   jobs: { type: Array, required: true },
-  glowEffect: { type: String, default: "GlowBlue" },
-});
-
-/**
- * Важно: resolveComponent работает только если GlowBlue реально зарегистрирован
- * (лежит в /components и auto-import включен, либо импортирован глобально).
- */
-const resolvedGlowEffect = computed(() => {
-  try {
-    return resolveComponent(props.glowEffect);
-  } catch (e) {
-    // fallback чтобы билд не падал
-    return resolveComponent("GlowEffect");
-  }
 });
 
 const isCta = (job) => {
@@ -128,22 +109,3 @@ const isCta = (job) => {
   return bg.includes("dddddd") || link.startsWith("mailto:");
 };
 </script>
-
-<style>
-/* Делает glow реально видимым в этих строках.
-   Если твой GlowBlue использует .glow внутри, это его усиливает. */
-.job-opportunity .glow {
-  opacity: 1 !important;
-  filter: blur(70px) !important;
-}
-
-/* Если у GlowBlue есть переменная --pos как в testimonial,
-   можно дать дефолт, чтобы glow не "случайно" был в углу. */
-.job-opportunity {
-  --pos: 55% 45%;
-}
-</style>
-
-
-
-
