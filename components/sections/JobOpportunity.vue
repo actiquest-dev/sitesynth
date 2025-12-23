@@ -2,22 +2,19 @@
   <section :id="id || undefined" :class="backgroundColor">
     <div class="max-w-[1248px] mx-auto px-6">
       <div class="space-y-12">
-
         <div
           v-for="(job, index) in jobs"
           :key="index"
-          :class="[job.bgColor || '']"
-          class="job-box group relative border border-[#636363]
-                 flex cursor-pointer
-                 min-h-[180px] md:min-h-[200px]"
+          :class="job.bgColor || ''"
+          class="job-box group relative border border-[#636363] cursor-pointer"
         >
           <a
             :href="job.link"
-            class="flex w-full h-full no-underline"
+            class="flex w-full h-full items-stretch"
             rel="noopener noreferrer"
           >
-            <!-- Image Section (1/6) -->
-            <div class="w-1/6 flex-shrink-0">
+            <!-- Image Section (1/6 width) -->
+            <div class="w-1/6 flex-shrink-0 h-full">
               <img
                 :src="job.image"
                 :alt="job.imageAlt || job.title"
@@ -25,12 +22,9 @@
               />
             </div>
 
-            <!-- Content Section (4/6) -->
-            <div class="w-4/6 p-6 flex flex-col justify-center">
-              <component
-                :is="job.titleTag || 'h3'"
-                :class="job.titleClass"
-              >
+            <!-- Content Section (4/6 width) -->
+            <div class="w-4/6 p-6 flex flex-col justify-center h-full">
+              <component :is="job.titleTag || 'h3'" :class="job.titleClass">
                 {{ job.title }}
               </component>
 
@@ -39,25 +33,21 @@
               </p>
             </div>
 
-            <!-- Link Section (1/6) -->
-            <div class="w-1/6 flex items-center justify-center">
+            <!-- Link Section (1/6 width) -->
+            <div class="w-1/6 flex items-center justify-center h-full">
               <span
-                class="text-[#636363] flex items-center
-                       group-hover:text-white transition-colors duration-200"
+                class="text-[#636363] flex items-center group-hover:text-white transition-colors duration-200"
               >
                 <span class="mr-2 font-semibold">
                   {{ job.linkText }}
                 </span>
                 <i
-                  class="fa fa-chevron-right
-                         transition-transform duration-200
-                         group-hover:translate-x-1"
+                  class="fa fa-chevron-right group-hover:translate-x-1 transition-transform duration-200"
                 ></i>
               </span>
             </div>
           </a>
         </div>
-
       </div>
     </div>
   </section>
@@ -65,17 +55,21 @@
 
 <script setup>
 defineProps({
-  id: {
-    type: String,
-    default: "",
-  },
-  backgroundColor: {
-    type: String,
-    default: "bg-[#161616]",
-  },
-  jobs: {
-    type: Array,
-    required: true,
-  },
+  id: { type: String, default: "" },
+  backgroundColor: { type: String, default: "bg-[#161616]" },
+  jobs: { type: Array, required: true },
 });
 </script>
+
+<style scoped>
+/* Одинаковая высота карточек на десктопе */
+.job-box {
+  min-height: 180px;
+}
+@media (min-width: 768px) {
+  .job-box {
+    min-height: 200px; /* подгони цифру если нужно */
+  }
+}
+</style>
+
