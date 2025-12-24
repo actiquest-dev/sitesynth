@@ -67,7 +67,7 @@
               <img
                 :src="job.image"
                 :alt="job.imageAlt || job.title"
-                class="h-full w-full object-cover opacity-25"
+                class="h-full w-full object-cover opacity-80"
               />
             </div>
 
