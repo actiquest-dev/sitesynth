@@ -63,11 +63,11 @@
             </div>
 
             <!-- LEFT IMAGE ZONE (NO padding, flush left) -->
-            <div class="h-full w-[260px] flex items-center justify-center">
+            <div class="h-full w-[260px] flex items-stretch">
               <img
                 :src="job.image"
                 :alt="job.imageAlt || job.title"
-                class="h-[70%] w-auto object-contain opacity-25"
+                class="h-full w-full object-cover opacity-25"
               />
             </div>
 
@@ -149,4 +149,5 @@ const onLeave = (e) => {
   filter: blur(60px);
 }
 </style>
+
 
