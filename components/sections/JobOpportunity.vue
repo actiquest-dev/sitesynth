@@ -5,42 +5,54 @@
         <div
           v-for="(job, index) in jobs"
           :key="index"
-          class="border border-[#636363] overflow-hidden"
+          class="relative border border-[#636363] overflow-hidden"
           :class="isCta(job) ? 'bg-[#DDDDDD]' : 'bg-[#161616]'"
         >
-          <!-- CTA (grey) -->
+          <!-- CTA ROW -->
           <a
             v-if="isCta(job)"
             :href="job.link"
-            class="relative flex items-center h-[140px]"
+            class="relative block"
             rel="noopener noreferrer"
           >
-            <!-- right pattern (no padding) -->
-            <div class="absolute right-0 top-0 h-full w-[320px]">
+            <!-- desktop height -->
+            <div class="h-auto md:h-[140px]">
+              <!-- right pattern -->
               <img
                 v-if="job.image"
                 :src="job.image"
                 :alt="job.imageAlt || job.title"
-                class="h-full w-full object-cover"
+                class="absolute right-0 top-0 h-full w-auto object-cover"
               />
-            </div>
 
-            <div class="relative z-10 w-full flex items-center justify-between px-12 gap-10">
-              <div class="max-w-[760px]">
-                <div class="text-[#161616] text-2xl font-semibold leading-tight">
-                  {{ job.title }}
-                </div>
-                <div class="text-[#161616] text-base mt-1">
-                  {{ job.description }}
-                </div>
-              </div>
-
-              <span
-                class="shrink-0 bg-[#161616] text-white px-10 py-3 text-sm font-semibold
-                       border border-[#161616] transition-colors duration-200 hover:bg-[#333333]"
+              <div
+                class="relative z-10 flex h-full flex-col gap-4
+                       px-6 py-6
+                       md:flex-row md:items-center md:justify-between md:px-12 md:py-0"
               >
-                {{ job.linkText || "Apply" }}
-              </span>
+                <div class="max-w-[720px]">
+                  <component :is="job.titleTag || 'h3'" :class="job.titleClass">
+                    {{ job.title }}
+                  </component>
+
+                  <component
+                    :is="job.descriptionTag || 'p'"
+                    :class="job.descriptionClass"
+                  >
+                    {{ job.description }}
+                  </component>
+                </div>
+
+                <!-- Apply button -->
+                <span
+                  class="shrink-0 inline-flex items-center justify-center
+                         bg-[#161616] text-white px-8 py-3 text-sm font-semibold
+                         transition-colors duration-200 hover:bg-[#333333]
+                         w-full md:w-auto"
+                >
+                  Apply
+                </span>
+              </div>
             </div>
           </a>
 
@@ -48,44 +60,68 @@
           <a
             v-else
             :href="job.link"
-            class="group relative flex items-center h-[140px] bg-[#161616]
-                   transition-colors duration-300 hover:bg-white/5"
+            class="group block transition-colors duration-300 hover:bg-white/5"
             rel="noopener noreferrer"
-            @mousemove="onMove($event)"
-            @mouseenter="onEnter"
-            @mouseleave="onLeave"
           >
-            <!-- mouse-follow glow -->
-            <div
-              class="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-            >
-              <div class="glow" />
-            </div>
+            <!-- glow behind content -->
+            <component
+              :is="resolvedGlowEffect"
+              class="absolute inset-0 z-0 pointer-events-none"
+            />
 
-            <!-- LEFT IMAGE ZONE (NO padding, flush left) -->
-            <div class="h-full w-[260px] flex items-stretch">
-              <img
-                :src="job.image"
-                :alt="job.imageAlt || job.title"
-                class="h-full w-full object-cover opacity-80"
-              />
-            </div>
-
-            <!-- TEXT (no vertical borders inside!) -->
-            <div class="flex-1 px-12">
-              <div class="text-white text-2xl font-semibold leading-tight">
-                {{ job.title }}
+            <!-- ROW CONTENT -->
+            <div class="relative z-10 flex flex-col md:flex-row">
+              <!-- LEFT IMAGE / LOGO AREA -->
+              <div
+                class="w-full md:w-[220px] flex items-center justify-start
+                       border-b md:border-b-0 md:border-r border-[#636363]"
+              >
+                <!-- mobile: full-bleed banner (no padding), desktop: smaller logo inside -->
+                <img
+                  :src="job.image"
+                  :alt="job.imageAlt || job.title"
+                  class="w-full h-[110px] md:h-[140px]
+                         object-cover md:object-contain
+                         md:w-auto md:max-w-[180px]
+                         md:ml-6"
+                />
               </div>
-              <div class="text-[#999999] text-base mt-2">
-                {{ job.description }}
-              </div>
-            </div>
 
-            <!-- RIGHT ICON (no vertical border!) -->
-            <div class="w-[180px] flex items-center justify-center">
-              <span class="text-[#636363] group-hover:text-white transition-colors duration-200">
-                <i class="fa fa-chevron-right transition-transform duration-200 group-hover:translate-x-1"></i>
-              </span>
+              <!-- TEXT -->
+              <div
+                class="flex-1 flex flex-col justify-center
+                       px-6 py-6
+                       md:px-10 md:py-0 md:h-[140px]"
+              >
+                <component :is="job.titleTag || 'h3'" :class="job.titleClass">
+                  {{ job.title }}
+                </component>
+
+                <component
+                  :is="job.descriptionTag || 'p'"
+                  :class="job.descriptionClass"
+                  class="mt-2"
+                >
+                  {{ job.description }}
+                </component>
+              </div>
+
+              <!-- RIGHT CHEVRON -->
+              <div
+                class="flex items-center justify-between
+                       border-t md:border-t-0 md:border-l border-[#636363]
+                       px-6 py-4
+                       md:w-[120px] md:justify-center md:px-0 md:py-0 md:h-[140px]"
+              >
+                <span class="text-[#636363] group-hover:text-white transition-colors duration-200">
+                  <span class="md:hidden font-semibold">Open</span>
+                  <i
+                    class="fa fa-chevron-right ml-2 md:ml-0
+                           transition-transform duration-200
+                           group-hover:translate-x-1"
+                  ></i>
+                </span>
+              </div>
             </div>
           </a>
         </div>
@@ -95,59 +131,22 @@
 </template>
 
 <script setup>
+import { computed, resolveComponent } from "vue";
+
 const props = defineProps({
   id: { type: String, default: "" },
   backgroundColor: { type: String, default: "bg-[#161616]" },
   jobs: { type: Array, required: true },
+  glowEffect: { type: String, default: "GlowBlue" },
 });
 
+const resolvedGlowEffect = computed(() => resolveComponent(props.glowEffect));
+
 const isCta = (job) => {
-  const bg = String(job.bgColor || "").toLowerCase();
-  const link = String(job.link || "");
-  return bg.includes("dddddd") || link.startsWith("mailto:");
-};
-
-// mouse-follow glow (per hovered row)
-const setPos = (el, x, y) => {
-  el.style.setProperty("--mx", `${x}px`);
-  el.style.setProperty("--my", `${y}px`);
-};
-
-const onEnter = (e) => {
-  const el = e.currentTarget;
-  const rect = el.getBoundingClientRect();
-  setPos(el, rect.width / 2, rect.height / 2);
-};
-
-const onMove = (e) => {
-  const el = e.currentTarget;
-  const rect = el.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  setPos(el, x, y);
-};
-
-const onLeave = (e) => {
-  const el = e.currentTarget;
-  const rect = el.getBoundingClientRect();
-  setPos(el, rect.width / 2, rect.height / 2);
+  const bg = (job.bgColor || "").toLowerCase();
+  return bg.includes("dddddd") || (job.link || "").startsWith("mailto:");
 };
 </script>
 
-<style scoped>
-/* glow follows mouse via CSS vars --mx --my */
-.glow {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    circle 360px at var(--mx, 50%) var(--my, 50%),
-    rgba(21, 0, 255, 0.45) 0%,
-    rgba(21, 0, 255, 0.22) 25%,
-    rgba(21, 0, 255, 0.10) 45%,
-    rgba(21, 0, 255, 0.0) 70%
-  );
-  filter: blur(60px);
-}
-</style>
 
 
