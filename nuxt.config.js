@@ -65,18 +65,45 @@ export default defineNuxtConfig({
         // Additional meta tags for better SEO
         { name: "theme-color", content: "#161616" },
         { name: "msapplication-TileColor", content: "#161616" },
+        {
+          name: "msapplication-TileImage",
+          content: "/assets/favicon/web-app-manifest-192x192.png",
+        },
       ],
       link: [
-        // Favicon links for better Google recognition
+        // Modern browsers - SVG favicon (scalable, preferred)
+        {
+          rel: "icon",
+          type: "image/svg+xml",
+          href: "/assets/favicon/favicon.svg",
+        },
+        // Fallback for browsers that don't support SVG favicons
+        {
+          rel: "icon",
+          sizes: "32x32",
+          href: "/assets/favicon/favicon-32x32.png",
+        },
+        {
+          rel: "icon",
+          sizes: "192x192",
+          href: "/assets/favicon/apple-touch-icon-192x192.png",
+        },
+        // Legacy browsers fallback
         {
           rel: "shortcut icon",
           type: "image/x-icon",
           href: "/assets/favicon/favicon.ico",
         },
+        // Apple devices
         {
           rel: "apple-touch-icon",
           sizes: "180x180",
           href: "/assets/favicon/apple-touch-icon.png",
+        },
+        // Web app manifest (contains PWA icons)
+        {
+          rel: "manifest",
+          href: "/assets/favicon/site.webmanifest",
         },
       ],
     },
@@ -113,19 +140,84 @@ export default defineNuxtConfig({
       lastmod: new Date().toISOString().split("T")[0],
     },
     urls: [
-      { loc: "/", changefreq: "weekly", priority: 1.0, lastmod: new Date().toISOString().split("T")[0] },
-      { loc: "/about-us", changefreq: "monthly", priority: 0.8, lastmod: new Date().toISOString().split("T")[0] },
-      { loc: "/ux-and-design-system", changefreq: "monthly", priority: 0.9, lastmod: new Date().toISOString().split("T")[0] },
-      { loc: "/brand-driven-product-strategy", changefreq: "monthly", priority: 0.9, lastmod: new Date().toISOString().split("T")[0] },
-      { loc: "/careers", changefreq: "weekly", priority: 0.7, lastmod: new Date().toISOString().split("T")[0] },
-      { loc: "/careers/full-stack-developer", changefreq: "weekly", priority: 0.6, lastmod: new Date().toISOString().split("T")[0] },
-      { loc: "/careers/marketing-manager", changefreq: "weekly", priority: 0.6, lastmod: new Date().toISOString().split("T")[0] },
-      { loc: "/careers/ux-ui-designer", changefreq: "weekly", priority: 0.6, lastmod: new Date().toISOString().split("T")[0] },
-      { loc: "/scoresynth", changefreq: "monthly", priority: 0.8, lastmod: new Date().toISOString().split("T")[0] },
-      { loc: "/ai-innovation", changefreq: "monthly", priority: 0.9, lastmod: new Date().toISOString().split("T")[0] },
-      { loc: "/full-stack-implementation", changefreq: "monthly", priority: 0.9, lastmod: new Date().toISOString().split("T")[0] },
-      { loc: "/contact-us", changefreq: "monthly", priority: 0.8, lastmod: new Date().toISOString().split("T")[0] },
-      { loc: "/privacy-and-policy", changefreq: "yearly", priority: 0.3, lastmod: new Date().toISOString().split("T")[0] },
+      {
+        loc: "/",
+        changefreq: "weekly",
+        priority: 1.0,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+      {
+        loc: "/about-us",
+        changefreq: "monthly",
+        priority: 0.8,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+      {
+        loc: "/ux-and-design-system",
+        changefreq: "monthly",
+        priority: 0.9,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+      {
+        loc: "/brand-driven-product-strategy",
+        changefreq: "monthly",
+        priority: 0.9,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+      {
+        loc: "/careers",
+        changefreq: "weekly",
+        priority: 0.7,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+      {
+        loc: "/careers/full-stack-developer",
+        changefreq: "weekly",
+        priority: 0.6,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+      {
+        loc: "/careers/marketing-manager",
+        changefreq: "weekly",
+        priority: 0.6,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+      {
+        loc: "/careers/ux-ui-designer",
+        changefreq: "weekly",
+        priority: 0.6,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+      {
+        loc: "/scoresynth",
+        changefreq: "monthly",
+        priority: 0.8,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+      {
+        loc: "/ai-innovation",
+        changefreq: "monthly",
+        priority: 0.9,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+      {
+        loc: "/full-stack-implementation",
+        changefreq: "monthly",
+        priority: 0.9,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+      {
+        loc: "/contact-us",
+        changefreq: "monthly",
+        priority: 0.8,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
+      {
+        loc: "/privacy-and-policy",
+        changefreq: "yearly",
+        priority: 0.3,
+        lastmod: new Date().toISOString().split("T")[0],
+      },
     ],
   },
 });

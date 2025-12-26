@@ -48,61 +48,8 @@ useHead({
     { name: "twitter:image:alt", content: "SiteSynth - Share Image" },
   ],
   link: [
-    // Primary favicon (Google prefers ICO at root or with proper path)
-    // { rel: "icon", type: "image/x-icon", href: "/assets/favicon/favicon.ico" },
-    // {
-    //   rel: "shortcut icon",
-    //   type: "image/x-icon",
-    //   href: "/assets/favicon/favicon.ico",
-    // },
-
-    // PNG favicons for better quality
-    {
-      rel: "icon",
-      type: "image/png",
-      sizes: "48x48",
-      href: "/assets/favicon/favicon-48x48.png",
-    },
-    {
-      rel: "icon",
-      type: "image/png",
-      sizes: "32x32",
-      href: "/assets/favicon/favicon-32x32.png",
-    },
-    {
-      rel: "icon",
-      type: "image/png",
-      sizes: "16x16",
-      href: "/assets/favicon/favicon-16x16.png",
-    },
-    {
-      rel: "icon",
-      type: "image/png",
-      sizes: "96x96",
-      href: "/assets/favicon/favicon-96x96.png",
-    },
-    {
-      rel: "icon",
-      type: "image/png",
-      sizes: "192x192",
-      href: "/assets/favicon/web-app-manifest-192x192.png",
-    },
-    {
-      rel: "icon",
-      type: "image/png",
-      sizes: "512x512",
-      href: "/assets/favicon/web-app-manifest-512x512.png",
-    },
-
-    // SVG favicon (modern browsers)
-    { rel: "icon", type: "image/svg+xml", href: "/assets/favicon/favicon.svg" },
-
-    // Web app manifest
-    { rel: "manifest", href: "/assets/favicon/site.webmanifest" },
-
-    // Preconnect for performance
-    // { rel: "preconnect", href: "https://fonts.googleapis.com" },
-    // { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" },
+    // Canonical URL (dynamically updated per route)
+    { rel: "canonical", href: canonicalUrl },
     // {
     //   rel: "stylesheet",
     //   href: "https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap",
