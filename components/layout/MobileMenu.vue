@@ -18,10 +18,11 @@
             @click="toggleSubmenu(index)"
           >
             <span class="font-medium text-lg">{{ item.label }}</span>
-            <i
-              class="fas fa-chevron-down transform transition-transform duration-300"
+            <font-awesome
+              :icon="['fas', 'chevron-down']"
+              class="transform transition-transform duration-300"
               :class="{ 'rotate-180': openSubmenus[index] }"
-            ></i>
+            />
           </div>
 
           <!-- Submenu -->
