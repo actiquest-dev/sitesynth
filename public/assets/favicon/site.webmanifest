@@ -2,7 +2,11 @@
   "name": "SiteSynth",
   "short_name": "SiteSynth",
   "start_url": "/",
+  "id": "/",
   "scope": "/",
+  "lang": "en",
+  "dir": "ltr",
+  "description": "SiteSynth – Strategic design and development company that bridges product, brand, and tech to create scalable digital solutions.",
   "display": "standalone",
   "background_color": "#161616",
   "theme_color": "#A620FF",
@@ -34,20 +38,16 @@
       "purpose": "any maskable"
     },
     {
-      "src": "/assets/favicon/favicon-196x196.png",
-      "sizes": "196x196",
+      "src": "/assets/favicon/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/favicon/icon-512x512.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
-    },
-    {
-      "src": "/assets/favicon/favicon.ico",
-      "sizes": "48x48",
-      "type": "image/x-icon"
-    },
-    {
-      "src": "/assets/favicon/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
     },
     {
       "src": "/assets/favicon.svg",

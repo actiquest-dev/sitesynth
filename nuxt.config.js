@@ -88,6 +88,11 @@ export default defineNuxtConfig({
           sizes: "192x192",
           href: "/assets/favicon/apple-touch-icon-192x192.png",
         },
+        {
+          rel: "icon",
+          sizes: "512x512",
+          href: "/assets/favicon/favicon-512x512.png",
+        },
         // Legacy browsers fallback
         {
           rel: "shortcut icon",
