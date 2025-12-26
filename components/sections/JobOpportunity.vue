@@ -8,17 +8,17 @@
           class="border border-[#636363] overflow-hidden"
           :class="isCta(job) ? 'bg-[#DDDDDD]' : 'bg-[#161616]'"
         >
-          <!-- =========================
-               CTA (grey) — DESKTOP/TABLET
-               ========================= -->
+          <!-- ========================= -->
+          <!-- CTA (grey) -->
+          <!-- ========================= -->
           <a
             v-if="isCta(job)"
             :href="job.link"
-            class="relative hidden sm:flex items-center h-[140px]"
+            class="relative block"
             rel="noopener noreferrer"
           >
-            <!-- right pattern -->
-            <div class="absolute right-0 top-0 h-full w-[320px]">
+            <!-- Pattern: desktop (справа фикс ширина) -->
+            <div class="absolute right-0 top-0 h-full w-[320px] hidden md:block">
               <img
                 v-if="job.image"
                 :src="job.image"
@@ -27,7 +27,18 @@
               />
             </div>
 
-            <div class="relative z-10 w-full flex items-center justify-between px-12 gap-10">
+            <!-- Pattern: mobile (справа половина) -->
+            <div class="absolute right-0 top-0 h-full w-1/2 md:hidden">
+              <img
+                v-if="job.image"
+                :src="job.image"
+                :alt="job.imageAlt || job.title"
+                class="h-full w-full object-cover"
+              />
+            </div>
+
+            <!-- DESKTOP CTA layout -->
+            <div class="relative z-10 hidden md:flex items-center justify-between h-[140px] px-12 gap-10">
               <div class="max-w-[760px]">
                 <div class="text-[#161616] text-2xl font-semibold leading-tight">
                   {{ job.title }}
@@ -44,51 +55,32 @@
                 {{ job.linkText || "Apply" }}
               </span>
             </div>
-          </a>
 
-          <!-- =========================
-               CTA (grey) — MOBILE (как на рефе)
-               ========================= -->
-          <a
-            v-if="isCta(job)"
-            :href="job.link"
-            class="relative sm:hidden block bg-[#DDDDDD]"
-            rel="noopener noreferrer"
-          >
-            <!-- pattern справа на половину -->
-            <div class="absolute right-0 top-0 h-full w-1/2 pointer-events-none">
-              <img
-                v-if="job.image"
-                :src="job.image"
-                :alt="job.imageAlt || job.title"
-                class="h-full w-full object-cover"
-              />
-            </div>
-
-            <div class="relative z-10 p-8">
+            <!-- MOBILE CTA layout (как в референсе) -->
+            <div class="relative z-10 md:hidden p-6">
               <div class="text-[#161616] text-3xl font-semibold leading-tight">
                 {{ job.title }}
               </div>
-              <div class="text-[#161616] text-xl mt-2">
+              <div class="text-[#161616] text-base mt-2">
                 {{ job.description }}
               </div>
 
               <span
-                class="mt-8 block w-full text-center bg-[#161616] text-white py-4 text-base font-semibold
-                       border border-[#161616] transition-colors duration-200 hover:bg-[#333333]"
+                class="mt-6 block w-full text-center bg-[#161616] text-white py-4 text-base font-semibold
+                       border border-[#161616] transition-colors duration-200 active:bg-[#333333]"
               >
                 {{ job.linkText || "Apply" }}
               </span>
             </div>
           </a>
 
-          <!-- =========================
-               NORMAL JOB — DESKTOP/TABLET
-               ========================= -->
+          <!-- ========================= -->
+          <!-- NORMAL JOB ROW -->
+          <!-- ========================= -->
           <a
             v-else
             :href="job.link"
-            class="group relative hidden sm:flex items-center h-[140px] bg-[#161616]
+            class="group relative block bg-[#161616]
                    transition-colors duration-300 hover:bg-white/5"
             rel="noopener noreferrer"
             @mousemove="onMove($event)"
@@ -102,46 +94,37 @@
               <div class="glow" />
             </div>
 
-            <!-- LEFT IMAGE ZONE (flush left, no padding) -->
-            <div class="h-full w-[240px] flex items-stretch">
-              <img
-                :src="job.image"
-                :alt="job.imageAlt || job.title"
-                class="h-full w-full object-cover"
-              />
-            </div>
-
-            <!-- TEXT (no internal vertical borders) -->
-            <div class="flex-1 px-12">
-              <div class="text-white text-2xl font-semibold leading-tight">
-                {{ job.title }}
+            <!-- DESKTOP ROW -->
+            <div class="relative z-10 hidden md:flex items-center h-[140px]">
+              <!-- LEFT IMAGE (flush left, чуть меньше) -->
+              <div class="h-full w-[220px] flex items-stretch">
+                <img
+                  :src="job.image"
+                  :alt="job.imageAlt || job.title"
+                  class="h-full w-full object-cover"
+                />
               </div>
-              <div class="text-[#999999] text-base mt-2">
-                {{ job.description }}
+
+              <!-- TEXT -->
+              <div class="flex-1 px-12">
+                <div class="text-white text-2xl font-semibold leading-tight">
+                  {{ job.title }}
+                </div>
+                <div class="text-[#999999] text-base mt-2">
+                  {{ job.description }}
+                </div>
+              </div>
+
+              <!-- RIGHT ICON -->
+              <div class="w-[180px] flex items-center justify-center">
+                <span class="text-[#636363] group-hover:text-white transition-colors duration-200">
+                  <i class="fa fa-chevron-right transition-transform duration-200 group-hover:translate-x-1"></i>
+                </span>
               </div>
             </div>
 
-            <!-- RIGHT ICON (no vertical border) -->
-            <div class="w-[180px] flex items-center justify-center">
-              <span class="text-[#636363] group-hover:text-white transition-colors duration-200">
-                <i
-                  class="fa fa-chevron-right transition-transform duration-200 group-hover:translate-x-1"
-                ></i>
-              </span>
-            </div>
-          </a>
-
-          <!-- =========================
-               NORMAL JOB — MOBILE (как твой реф)
-               картинка уходит вообще
-               ========================= -->
-          <a
-            v-else
-            :href="job.link"
-            class="sm:hidden block bg-[#161616] border border-[#636363]"
-            rel="noopener noreferrer"
-          >
-            <div class="p-10">
+            <!-- MOBILE ROW (картинки нет, как ты просила) -->
+            <div class="relative z-10 md:hidden p-8">
               <div class="text-white text-4xl font-semibold leading-tight">
                 {{ job.title }}
               </div>
@@ -151,7 +134,7 @@
               </div>
 
               <div class="text-[#999999] text-xl mt-14">
-                open
+                {{ job.linkText || "open" }}
               </div>
             </div>
           </a>
