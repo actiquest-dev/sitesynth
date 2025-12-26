@@ -2,20 +2,19 @@
   <section :id="id || undefined" :class="backgroundColor">
     <div class="max-w-[1248px] mx-auto px-6">
       <div class="space-y-8">
-
         <div
           v-for="(job, index) in jobs"
           :key="index"
           class="border border-[#636363] overflow-hidden"
           :class="isCta(job) ? 'bg-[#DDDDDD]' : 'bg-[#161616]'"
         >
-          <!-- ========================= -->
-          <!-- CTA DESKTOP -->
-          <!-- ========================= -->
+          <!-- =========================
+               CTA (grey) — DESKTOP/TABLET
+               ========================= -->
           <a
             v-if="isCta(job)"
             :href="job.link"
-            class="relative hidden md:flex items-center h-[140px]"
+            class="relative hidden sm:flex items-center h-[140px]"
             rel="noopener noreferrer"
           >
             <!-- right pattern -->
@@ -40,25 +39,24 @@
 
               <span
                 class="shrink-0 bg-[#161616] text-white px-10 py-3 text-sm font-semibold
-                       border border-[#161616]
-                       transition-colors duration-200 hover:bg-[#333333]"
+                       border border-[#161616] transition-colors duration-200 hover:bg-[#333333]"
               >
-                {{ job.linkText || 'Apply' }}
+                {{ job.linkText || "Apply" }}
               </span>
             </div>
           </a>
 
-          <!-- ========================= -->
-          <!-- CTA MOBILE (FIGMA STYLE) -->
-          <!-- ========================= -->
+          <!-- =========================
+               CTA (grey) — MOBILE (как на рефе)
+               ========================= -->
           <a
             v-if="isCta(job)"
             :href="job.link"
-            class="relative block md:hidden bg-[#DDDDDD]"
+            class="relative sm:hidden block bg-[#DDDDDD]"
             rel="noopener noreferrer"
           >
-            <!-- pattern right half -->
-            <div class="absolute right-0 top-0 h-full w-1/2">
+            <!-- pattern справа на половину -->
+            <div class="absolute right-0 top-0 h-full w-1/2 pointer-events-none">
               <img
                 v-if="job.image"
                 :src="job.image"
@@ -67,50 +65,45 @@
               />
             </div>
 
-            <div class="relative z-10 px-6 py-8">
+            <div class="relative z-10 p-8">
               <div class="text-[#161616] text-3xl font-semibold leading-tight">
                 {{ job.title }}
               </div>
-              <div class="text-[#161616] text-3xl font-semibold leading-tight">
+              <div class="text-[#161616] text-xl mt-2">
                 {{ job.description }}
               </div>
 
-              <div class="mt-8">
-                <span
-                  class="inline-flex w-full h-[56px] items-center justify-center
-                         bg-[#161616] text-white text-base font-semibold
-                         border border-[#161616]
-                         transition-colors duration-200 hover:bg-[#333333]"
-                >
-                  {{ job.linkText || 'Apply' }}
-                </span>
-              </div>
+              <span
+                class="mt-8 block w-full text-center bg-[#161616] text-white py-4 text-base font-semibold
+                       border border-[#161616] transition-colors duration-200 hover:bg-[#333333]"
+              >
+                {{ job.linkText || "Apply" }}
+              </span>
             </div>
           </a>
 
-          <!-- ========================= -->
-          <!-- NORMAL JOB DESKTOP -->
-          <!-- ========================= -->
+          <!-- =========================
+               NORMAL JOB — DESKTOP/TABLET
+               ========================= -->
           <a
             v-else
             :href="job.link"
-            class="group relative hidden md:flex items-center h-[140px] bg-[#161616]
+            class="group relative hidden sm:flex items-center h-[140px] bg-[#161616]
                    transition-colors duration-300 hover:bg-white/5"
             rel="noopener noreferrer"
-            @mousemove="onMove"
+            @mousemove="onMove($event)"
             @mouseenter="onEnter"
             @mouseleave="onLeave"
           >
             <!-- mouse-follow glow -->
             <div
-              class="absolute inset-0 pointer-events-none opacity-0
-                     group-hover:opacity-100 transition-opacity duration-200"
+              class="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200"
             >
-              <div class="glow"></div>
+              <div class="glow" />
             </div>
 
-            <!-- left image (flush) -->
-            <div class="h-full w-[220px] flex items-stretch">
+            <!-- LEFT IMAGE ZONE (flush left, no padding) -->
+            <div class="h-full w-[240px] flex items-stretch">
               <img
                 :src="job.image"
                 :alt="job.imageAlt || job.title"
@@ -118,7 +111,7 @@
               />
             </div>
 
-            <!-- text -->
+            <!-- TEXT (no internal vertical borders) -->
             <div class="flex-1 px-12">
               <div class="text-white text-2xl font-semibold leading-tight">
                 {{ job.title }}
@@ -128,41 +121,41 @@
               </div>
             </div>
 
-            <!-- chevron -->
-            <div class="w-[140px] flex items-center justify-center">
-              <span
-                class="text-[#636363] group-hover:text-white
-                       transition-colors duration-200"
-              >
+            <!-- RIGHT ICON (no vertical border) -->
+            <div class="w-[180px] flex items-center justify-center">
+              <span class="text-[#636363] group-hover:text-white transition-colors duration-200">
                 <i
-                  class="fa fa-chevron-right transition-transform duration-200
-                         group-hover:translate-x-1"
+                  class="fa fa-chevron-right transition-transform duration-200 group-hover:translate-x-1"
                 ></i>
               </span>
             </div>
           </a>
 
-          <!-- ========================= -->
-          <!-- NORMAL JOB MOBILE -->
-          <!-- ========================= -->
+          <!-- =========================
+               NORMAL JOB — MOBILE (как твой реф)
+               картинка уходит вообще
+               ========================= -->
           <a
             v-else
             :href="job.link"
-            class="block md:hidden bg-[#161616] px-6 py-8"
+            class="sm:hidden block bg-[#161616] border border-[#636363]"
             rel="noopener noreferrer"
           >
-            <div class="text-white text-2xl font-semibold">
-              {{ job.title }}
-            </div>
-            <div class="text-[#999999] text-base mt-2">
-              {{ job.description }}
-            </div>
-            <div class="text-[#636363] text-sm mt-6">
-              open →
+            <div class="p-10">
+              <div class="text-white text-4xl font-semibold leading-tight">
+                {{ job.title }}
+              </div>
+
+              <div class="text-[#999999] text-2xl mt-6">
+                {{ job.description }}
+              </div>
+
+              <div class="text-[#999999] text-xl mt-14">
+                open
+              </div>
             </div>
           </a>
         </div>
-
       </div>
     </div>
   </section>
@@ -181,7 +174,7 @@ const isCta = (job) => {
   return bg.includes("dddddd") || link.startsWith("mailto:");
 };
 
-// mouse-follow glow
+// mouse-follow glow (per hovered row)
 const setPos = (el, x, y) => {
   el.style.setProperty("--mx", `${x}px`);
   el.style.setProperty("--my", `${y}px`);
@@ -196,7 +189,9 @@ const onEnter = (e) => {
 const onMove = (e) => {
   const el = e.currentTarget;
   const rect = el.getBoundingClientRect();
-  setPos(el, e.clientX - rect.left, e.clientY - rect.top);
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  setPos(el, x, y);
 };
 
 const onLeave = (e) => {
@@ -220,9 +215,4 @@ const onLeave = (e) => {
   filter: blur(60px);
 }
 </style>
-
-
-
-
-
 
