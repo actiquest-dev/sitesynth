@@ -108,7 +108,7 @@ export default defineNuxtConfig({
         // Web app manifest (contains PWA icons)
         {
           rel: "manifest",
-          href: "/assets/favicon/site.webmanifest",
+          href: "/site.webmanifest",
         },
       ],
     },
@@ -140,7 +140,7 @@ export default defineNuxtConfig({
     hostname: "https://www.sitesynth.com",
     gzip: true,
     defaults: {
-      changefreq: "monthly",
+      changefreq: "weekly",
       priority: 0.8,
       lastmod: new Date().toISOString().split("T")[0],
     },
@@ -153,19 +153,19 @@ export default defineNuxtConfig({
       },
       {
         loc: "/about-us",
-        changefreq: "monthly",
+        changefreq: "weekly",
         priority: 0.8,
         lastmod: new Date().toISOString().split("T")[0],
       },
       {
         loc: "/ux-and-design-system",
-        changefreq: "monthly",
+        changefreq: "weekly",
         priority: 0.9,
         lastmod: new Date().toISOString().split("T")[0],
       },
       {
         loc: "/brand-driven-product-strategy",
-        changefreq: "monthly",
+        changefreq: "weekly",
         priority: 0.9,
         lastmod: new Date().toISOString().split("T")[0],
       },
@@ -195,25 +195,25 @@ export default defineNuxtConfig({
       },
       {
         loc: "/scoresynth",
-        changefreq: "monthly",
+        changefreq: "weekly",
         priority: 0.8,
         lastmod: new Date().toISOString().split("T")[0],
       },
       {
         loc: "/ai-innovation",
-        changefreq: "monthly",
+        changefreq: "weekly",
         priority: 0.9,
         lastmod: new Date().toISOString().split("T")[0],
       },
       {
         loc: "/full-stack-implementation",
-        changefreq: "monthly",
+        changefreq: "weekly",
         priority: 0.9,
         lastmod: new Date().toISOString().split("T")[0],
       },
       {
         loc: "/contact-us",
-        changefreq: "monthly",
+        changefreq: "weekly",
         priority: 0.8,
         lastmod: new Date().toISOString().split("T")[0],
       },
