@@ -7,7 +7,6 @@
     <GlowEffect />
 
     <div class="relative max-w-[1248px] mx-auto px-6 pt-[16rem] pb-[12rem]">
-      
       <!-- HERO TEXT -->
       <div class="text-center px-6">
         <h1 class="text-[#161616] text-4xl sm:text-5xl font-extrabold mb-10">
@@ -31,12 +30,11 @@
 
       <!-- CARDS GRID -->
       <div class="mt-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
         <!-- CARD -->
         <div
           v-for="(card, index) in cards"
           :key="index"
-          class="group/card border border-[#636363] bg-[#161616] 
+          class="group/card border border-[#636363] bg-[#161616]
                  p-6 py-12 flex flex-col justify-between"
         >
           <h3 class="text-xl font-semibold text-center pt-6 pb-8">
@@ -56,14 +54,12 @@
             >
               <span>Read more</span>
 
-              <!-- ANIMATED › ONLY ON CARD HOVER -->
-              <span
-                class="inline-block !text-[28px] leading-none relative top-[1px]
-         transition-transform duration-300 group-hover/card:translate-x-1"
-                   aria-hidden="true"
-              >
-                ›
-              </span>
+              <!-- CHEVRON (FontAwesome SVG) -->
+              <font-awesome
+                :icon="['fas', 'chevron-right']"
+                class="text-xl transform transition-transform duration-300 group-hover/card:translate-x-1"
+                aria-hidden="true"
+              />
 
               <!-- UNDERLINE ANIMATION -->
               <span
@@ -74,7 +70,6 @@
             </a>
           </div>
         </div>
-
       </div>
     </div>
   </section>
@@ -106,3 +101,4 @@ const backgroundImageStyle = computed(() => {
   return {};
 });
 </script>
+
