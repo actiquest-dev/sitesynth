@@ -58,9 +58,9 @@
 
               <!-- ANIMATED › ONLY ON CARD HOVER -->
               <span
-                class="text-xl leading-none inline-block transition-transform duration-300
-         group-hover/card:translate-x-1"
-                      aria-hidden="true"
+                class="inline-block !text-[28px] leading-none relative top-[1px]
+         transition-transform duration-300 group-hover/card:translate-x-1"
+                   aria-hidden="true"
               >
                 ›
               </span>
