@@ -8,7 +8,6 @@
     <GlowEffect class="absolute inset-0 z-0 pointer-events-none" />
 
     <div class="relative z-10 max-w-[1248px] mx-auto px-6 pt-[16rem] pb-[12rem]">
-      
       <!-- HERO TEXT -->
       <div class="text-center px-6">
         <h1 class="text-4xl sm:text-5xl font-extrabold mb-10">{{ title }}</h1>
@@ -28,7 +27,6 @@
 
       <!-- CARDS GRID -->
       <div class="mt-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
         <div
           v-for="(card, index) in cards"
           :key="index"
@@ -47,17 +45,16 @@
           <div class="text-center mt-6">
             <a
               :href="card.link"
-              class="relative inline-flex items-center justify-center gap-2 text-[#8CB0FF] font-semibold group/link"
+              class="relative inline-flex items-baseline gap-1 text-[#8CB0FF] font-semibold group/link"
             >
               <span>{{ readMore }}</span>
 
-              <!-- Animated chevron › -->
-              <span
-                class="text-lg transition-transform duration-300
-                       group-hover/card:translate-x-1"
-              >
-                ›
-              </span>
+              <font-awesome
+                :icon="['fas', 'chevron-right']"
+                class="text-sm relative top-[1px]
+                       transition-transform duration-300 group-hover/card:translate-x-1"
+                aria-hidden="true"
+              />
 
               <!-- underline -->
               <span
@@ -67,9 +64,7 @@
               ></span>
             </a>
           </div>
-
         </div>
-
       </div>
     </div>
   </section>
