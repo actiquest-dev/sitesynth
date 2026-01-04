@@ -49,15 +49,15 @@
           <div class="text-center mt-6">
             <a
               :href="card.link"
-              class="relative inline-flex items-center gap-2
+              class="relative inline-flex items-baseline gap-1
                      text-[#8CB0FF] font-semibold group/link"
             >
               <span>Read more</span>
 
-              <!-- CHEVRON (FontAwesome SVG) -->
               <font-awesome
                 :icon="['fas', 'chevron-right']"
-                class="text-xl transform transition-transform duration-300 group-hover/card:translate-x-1"
+                class="text-sm relative top-[1px]
+                       transition-transform duration-300 group-hover/card:translate-x-1"
                 aria-hidden="true"
               />
 
@@ -101,4 +101,5 @@ const backgroundImageStyle = computed(() => {
   return {};
 });
 </script>
+
 
