@@ -36,10 +36,7 @@ export default defineNuxtConfig({
     },
   },
 
-   css: [
-    "swiper/css",
-    "swiper/css/navigation",
-    "@fortawesome/fontawesome-free/css/all.css",
+  css: ["swiper/css", "swiper/css/navigation"],
 
   components: [{ path: "~/components", pathPrefix: false }],
 
