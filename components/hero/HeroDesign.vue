@@ -1,87 +1,95 @@
 <template>
-  <section
-    :id="id || undefined"
-    class="relative bg-[#161616] text-white group overflow-hidden"
-    :style="backgroundImageStyle"
-  >
-    <GlowEffect />
+  <section :id="id || undefined" class="bg-[#161616]">
+    <div class="max-w-[1248px] mx-auto px-6 py-24 text-center">
+      <h2 class="text-white text-4xl sm:text-5xl font-extrabold">
+        {{ title }}
+      </h2>
 
-    <div class="relative max-w-[1248px] mx-auto px-6 pt-[16rem] pb-[12rem]">
-      <!-- Hero -->
-      <div class="text-center px-6 max-w-4xl mx-auto">
-        <h1 class="text-4xl sm:text-5xl font-extrabold mb-10">{{ title }}</h1>
-        <p class="text-base sm:text-lg font-medium">{{ description }}</p>
-      </div>
+      <p class="text-white/80 text-base sm:text-lg font-medium mt-6">
+        {{ description }}
+      </p>
 
-      <!-- Form -->
-      <form
-        @submit="handleSubmit"
-        class="flex items-center max-w-4xl mx-auto mt-15 px-6"
-      >
-        <!-- Left Image -->
-        <img src="/assets/figma.svg" alt="Left Image" class="h-12 w-12 mr-2" />
+      <!-- Input row -->
+      <div class="mt-12 flex items-center justify-center">
+        <div class="w-full max-w-[900px] flex items-stretch gap-6">
+          <!-- Left icon (можешь заменить на свой SVG/картинку) -->
+          <div class="flex items-center justify-center w-14">
+            <img
+              v-if="leftIconSrc"
+              :src="leftIconSrc"
+              alt=""
+              class="w-10 h-10"
+            />
+          </div>
 
-        <!-- Input -->
-        <div class="relative flex-1">
-          <input
-            type="url"
-            v-model="formData.link"
-            placeholder="Enter a link"
-            :disabled="state.isSubmitting"
-            class="w-full h-12 px-4 bg-[#6363634D] text-[#A3A3A3] focus:outline-none disabled:opacity-50"
-          />
+          <!-- Input + Button -->
+          <div class="flex-1 flex items-stretch">
+            <input
+              v-model="value"
+              :placeholder="placeholder"
+              class="flex-1 h-16 px-6 bg-white/10 text-white placeholder:text-white/40
+                     border border-white/20 focus:outline-none focus:border-white/40"
+              type="text"
+            />
 
-          <!-- Right Arrow Button -->
-          <button
-            type="submit"
-            :disabled="state.isSubmitting || !formData.link.trim()"
-            class="absolute cursor-pointer inset-y-0 right-0 flex items-center justify-center w-12 bg-[#A259FF] disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <i
-              v-if="!state.isSubmitting"
-              class="fas fa-arrow-right text-white"
-            ></i>
-            <i v-else class="fas fa-spinner fa-spin text-white"></i>
-          </button>
+            <!-- Purple button with arrow -->
+            <button
+              type="button"
+              class="h-16 w-20 bg-[#6B3FA6] flex items-center justify-center
+                     text-white transition-colors duration-300 hover:bg-[#7a49bf]"
+              @click="onClick"
+              aria-label="Submit link"
+            >
+              <font-awesome
+                :icon="['fas', 'arrow-right']"
+                class="text-lg"
+                aria-hidden="true"
+              />
+            </button>
+          </div>
         </div>
-      </form>
-
-      <!-- Message -->
-      <div v-if="state.message" class="text-center mt-4 px-6">
-        <p :class="isSuccessMessage() ? 'text-green-400' : 'text-red-400'">
-          {{ state.message }}
-        </p>
       </div>
+
+      <!-- optional helper -->
+      <p v-if="helperText" class="mt-4 text-white/50 text-sm">
+        {{ helperText }}
+      </p>
     </div>
   </section>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { ref, watch } from "vue";
 
 const props = defineProps({
-  id: {
+  id: { type: String, default: "" },
+  title: { type: String, default: "Design that’s consistent, scalable, and ready to ship." },
+  description: {
     type: String,
-    default: "",
+    default:
+      "We build design systems and UX architecture that grow with your product — enabling your teams to move faster, stay on-brand, and deliver with confidence.",
   },
-  title: String,
-  description: String,
-  backgroundImage: String,
+  placeholder: { type: String, default: "Enter a link" },
+  modelValue: { type: String, default: "" },
+  leftIconSrc: { type: String, default: "" }, // сюда можешь поставить Figma иконку
+  helperText: { type: String, default: "" },
 });
 
-// Use link form composable
-const { formData, state, handleSubmit, isSuccessMessage } = useLinkForm();
+const emit = defineEmits(["update:modelValue", "submit"]);
 
-// Simple computed style for background image
-const backgroundImageStyle = computed(() => {
-  if (props.backgroundImage) {
-    return {
-      backgroundImage: `url(${props.backgroundImage})`,
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      backgroundRepeat: "no-repeat",
-    };
+const value = ref(props.modelValue);
+
+watch(
+  () => props.modelValue,
+  (v) => {
+    value.value = v;
   }
-  return {};
-});
+);
+
+watch(value, (v) => emit("update:modelValue", v));
+
+function onClick() {
+  emit("submit", value.value);
+}
 </script>
+
