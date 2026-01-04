@@ -12,6 +12,7 @@
     "sass:build": "sass assets/style.scss assets/style.css"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.0.0"
     "@nuxt/fonts": "^0.12.1",
     "@nuxt/image": "^1.10.0",
     "@nuxtjs/sitemap": "^7.4.11",
