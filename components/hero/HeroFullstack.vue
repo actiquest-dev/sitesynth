@@ -58,8 +58,9 @@
 
               <!-- ANIMATED › ONLY ON CARD HOVER -->
               <span
-                class="text-lg transition-transform duration-300
-                       group-hover/card:translate-x-1"
+                class="text-xl leading-none inline-block transition-transform duration-300
+         group-hover/card:translate-x-1"
+                      aria-hidden="true"
               >
                 ›
               </span>
