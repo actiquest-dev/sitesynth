@@ -30,7 +30,18 @@
   >
     <template #left>
       <div class="py-24 md:border-r border-[#636363] bg-[#DDDDDD]">
-        <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
+           <!-- градиент в нижнем левом углу -->
+        <div
+          class="absolute inset-0 pointer-events-none opacity-100 z-0"
+          style="
+            background-image: url('/assets/gradients/gradient_right_corner.svg');
+            background-size: cover;
+            background-position: bottom left;
+            background-repeat: no-repeat;
+          "
+        ></div>
+              <!-- контент поверх градиента -->
+        <div class="relative z-10 max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
           <h3 class="text-lg mb-2">WHY WE EXIST?</h3>
           <h2 class="text-4xl font-bold mb-4">
             — we’re a strategic bridge between brand, design, and engineering.
