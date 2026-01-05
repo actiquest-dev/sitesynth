@@ -12,28 +12,29 @@
     leftColumnBgColor="bg-[#161616]"
     rightColumnBgColor="bg-[#161616]"
   >
-    <template #left>
-      <div class="py-24 md:border-r border-[#636363]">
-          <!-- градиент в нижнем левом углу -->
-        <div
-          class="absolute inset-0 pointer-events-none opacity-100 z-0"
-          style="
-            background-image: url('/assets/gradients/gradient_right_corner.svg');
-            background-size: cover;
-            background-position: bottom left;
-            background-repeat: no-repeat;
-          "
-        ></div>
-          <!-- контент поверх градиента -->
-        <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
-          <h3 class="text-white text-lg mb-6">WHY YOU NEED FIGMA?</h3>
-          <h2 class="text-white text-4xl font-bold">
-            Design debt is real. So is handoff hell..
-          </h2>
-        </div>
-      </div>
-    </template>
+   <template #left>
+  <div class="py-24 md:border-r border-[#636363] relative overflow-hidden">
+    <!-- градиент только в углу (НЕ на весь блок) -->
+    <div
+      class="absolute bottom-0 left-0 w-[520px] h-[520px] pointer-events-none z-0"
+      style="
+        background-image: url('/assets/gradients/gradient_right_corner.svg');
+        background-repeat: no-repeat;
+        background-position: bottom left;
+        background-size: contain;
+      "
+    ></div>
 
+    <!-- контент поверх градиента -->
+    <div class="relative z-10 max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
+      <h3 class="text-white text-lg mb-6">WHY YOU NEED FIGMA?</h3>
+      <h2 class="text-white text-4xl font-bold">
+        Design debt is real. So is handoff hell..
+      </h2>
+    </div>
+  </div>
+</template>
+    
     <template #right>
       <div class="py-24">
         <div class="max-w-[600px] mr-auto px-6 md:px-0 md:pl-16">
