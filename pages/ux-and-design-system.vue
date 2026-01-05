@@ -32,8 +32,8 @@
 
         <!-- контент поверх градиента -->
         <div class="relative z-10 max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
-          <h3 class="text-lg mb-2">WHY YOU NEED FIGMA?</h3>
-          <h2 class="text-4xl font-bold mb-4">
+          <h3 class="text-white text-lg mb-2">WHY YOU NEED FIGMA?</h3>
+          <h2 class="text-white text-4xl font-bold mb-4">
             — design debt is real. So is handoff hell.
           </h2>
         </div>
