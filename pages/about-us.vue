@@ -21,7 +21,7 @@
   <!-- WHY WE EXIST -->
    <TwoColumnsDesign
     glowEffect="GlowBlue"
-    id="info-ai"
+    id="about-us"
     sectionBgColor="bg-[#DDDDDD]"
     leftColumnBgColor="bg-[#DDDDDD]"
     rightColumnBgColor="bg-[#161616]"
