@@ -8,36 +8,33 @@
     description="We’ll review structure, components, and UX flows, then suggest what to fix first to make it consistent and scalable."
   />
 
-  <TwoColumnsDesign
+   <TwoColumnsDesign
+    glowEffect="GlowEffect"
     id="why-figma"
     sectionBgColor="bg-[#161616]"
     leftColumnBgColor="bg-[#161616]"
     rightColumnBgColor="bg-[#161616]"
+    textColorleft="text-white"
+    textColorRight="text-white"
   >
     <template #left>
-      <div
-        class="py-24 md:border-r border-[#636363] bg-[#161616] relative overflow-hidden isolate"
-      >
-        <!-- glow в нижнем левом углу без “квадрата” -->
+      <div class="py-24 md:border-r border-[#636363] bg-[#161616] relative">
+        <!-- градиент в нижнем левом углу -->
         <div
-          class="absolute inset-0 pointer-events-none z-0"
+          class="absolute inset-0 pointer-events-none opacity-100 z-0"
           style="
             background-image: url('/assets/gradients/gradient_right_corner.svg');
+            background-size: cover;
+            background-position: bottom left;
             background-repeat: no-repeat;
-            background-position: bottom right;
-            background-size: 900px 900px;
-            opacity: 80;
-
-            -webkit-mask-image: radial-gradient(900px 650px at 0% 100%, #000 0%, transparent 70%);
-            mask-image: radial-gradient(900px 650px at 0% 100%, #000 0%, transparent 70%);
           "
         ></div>
 
-        <!-- контент поверх -->
+        <!-- контент поверх градиента -->
         <div class="relative z-10 max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
-          <h3 class="text-white text-lg mb-6">WHY YOU NEED FIGMA?</h3>
-          <h2 class="text-white text-4xl font-bold">
-            Design debt is real. So is handoff hell.
+          <h3 class="text-lg mb-2">WHY YOU NEED FIGMA?</h3>
+          <h2 class="text-4xl font-bold mb-4">
+            — design debt is real. So is handoff hell.
           </h2>
         </div>
       </div>
@@ -58,7 +55,7 @@
       </div>
     </template>
   </TwoColumnsDesign>
-
+  
   <FigmaSection
     id="figma"
     title="Figma"
