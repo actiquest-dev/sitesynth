@@ -34,7 +34,7 @@
             <a
               :href="primaryLink"
               :class="[
-                'px-6 py-2 border border-[#161616] bg-[#161616] text-white transition-colors duration-1000 font-semibold',
+                'px-6 py-2 border border-[#DDDDDD] bg-[#161616] text-white transition-colors duration-1000 font-semibold',
                 `hover:bg-[${hover}] hover:border-[${hover}] hover:text-white`
               ]"
             >
