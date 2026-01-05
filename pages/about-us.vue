@@ -19,7 +19,7 @@
   />
 
   <!-- WHY WE EXIST -->
-  <TwoColumnsDesign
+   <TwoColumnsDesign
     glowEffect="GlowBlue"
     id="info-ai"
     sectionBgColor="bg-[#DDDDDD]"
@@ -29,8 +29,8 @@
     textColorRight="text-white"
   >
     <template #left>
-      <div class="py-24 md:border-r border-[#636363] bg-[#DDDDDD]">
-           <!-- градиент в нижнем левом углу -->
+      <div class="py-24 md:border-r border-[#636363] bg-[#DDDDDD] relative">
+        <!-- градиент в нижнем левом углу -->
         <div
           class="absolute inset-0 pointer-events-none opacity-100 z-0"
           style="
@@ -40,7 +40,8 @@
             background-repeat: no-repeat;
           "
         ></div>
-              <!-- контент поверх градиента -->
+
+        <!-- контент поверх градиента -->
         <div class="relative z-10 max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
           <h3 class="text-lg mb-2">WHY WE EXIST?</h3>
           <h2 class="text-4xl font-bold mb-4">
@@ -51,7 +52,7 @@
     </template>
 
     <template #right>
-      <div class="bg-[#161616] flex items-center justify-center">
+      <div class="py-24 bg-[#161616]">
         <div class="max-w-[600px] mr-auto px-6 md:px-0 md:pl-16">
           <p class="text-white font-bold mb-4">
             Rooted in effectiveness, openness, and craftsmanship. We're a small
