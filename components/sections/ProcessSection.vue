@@ -54,10 +54,12 @@
               ]"
             >
               <span>{{ section.linkText }}</span>
-              <i
-                class="fa-solid fa-chevron-right relative top-[2px] transition-transform duration-300 group-hover/link:translate-x-1"
+
+              <font-awesome
+                :icon="['fas', 'chevron-right']"
+                class="text-sm relative top-[1px] transition-transform duration-300 group-hover/link:translate-x-1"
                 aria-hidden="true"
-              ></i>
+              />
 
               <div
                 class="absolute bottom-0 left-0 h-[2px] bg-[#8CB0FF] w-0 group-hover/link:w-full transition-all duration-300"
@@ -170,4 +172,6 @@ const getCurrentImageAlt = computed(() => {
   opacity: 1;
 }
 </style>
+
+
 
