@@ -180,7 +180,7 @@ useSeoMeta({
   ogDescription: seo.ogDescription,
   ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "SiteSynth - UX & Design Systems",
-  ogUrl: `${siteUrl}/ux-and-design-system/`,
+  ogUrl: `${siteUrl}/ux-and-design-system`,
   twitterTitle: seo.twitterTitle,
   twitterDescription: seo.twitterDescription,
   twitterImage: `${siteUrl}/assets/shareimage.png`,

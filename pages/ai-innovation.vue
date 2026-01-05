@@ -232,7 +232,7 @@ useSeoMeta({
   ogDescription: seo.ogDescription,
   ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "SiteSynth - AI Innovation",
-  ogUrl: `${siteUrl}/ai-innovation/`,
+  ogUrl: `${siteUrl}/ai-innovation`,
   twitterTitle: seo.twitterTitle,
   twitterDescription: seo.twitterDescription,
   twitterImage: `${siteUrl}/assets/shareimage.png`,
