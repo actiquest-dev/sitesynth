@@ -3,8 +3,8 @@
   <HeroDesign
     id="hero-design"
     backgroundImage="/assets/design-bg.svg"
-    title="Design that’s consistent, scalable, and ready to ship."
-    description="We build design systems and UX architecture that grow with your product — enabling your teams to move faster, stay on-brand, and deliver with confidence."
+    title="Let’s start the design conversation in Figma."
+    description="We’ll review structure, components, and UX flows, then suggest what to fix first to make it consistent and scalable."
   />
   <TwoColumnsDesign
     id="why-figma"
