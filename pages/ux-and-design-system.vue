@@ -14,6 +14,17 @@
   >
     <template #left>
       <div class="py-24 md:border-r border-[#636363]">
+          <!-- градиент в нижнем левом углу -->
+        <div
+          class="absolute inset-0 pointer-events-none opacity-100 z-0"
+          style="
+            background-image: url('/assets/gradients/gradient_right_corner.svg');
+            background-size: cover;
+            background-position: bottom left;
+            background-repeat: no-repeat;
+          "
+        ></div>
+          <!-- контент поверх градиента -->
         <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
           <h3 class="text-white text-lg mb-6">WHY YOU NEED FIGMA?</h3>
           <h2 class="text-white text-4xl font-bold">
@@ -26,14 +37,14 @@
     <template #right>
       <div class="py-24">
         <div class="max-w-[600px] mr-auto px-6 md:px-0 md:pl-16">
-          <h3 class="text-white text-[24px] font-light">
+          <p class="text-white font-bold mb-4">
             When teams move fast without systems, the result is chaos:
             duplicated components, messy UX, endless revisions, and frustrated
             developers.
             <br />
             We fix that by putting structure where it matters — in the product’s
             foundation.
-          </h3>
+          </p>
         </div>
       </div>
     </template>
