@@ -169,14 +169,31 @@
 </template>
 
 <script setup>
-// SEO Meta
+import { seoConfig, structuredData } from "~/config/seo";
+
+// SEO Configuration - using centralized config
+const siteUrl = useRuntimeConfig().public?.siteUrl;
+const seo = seoConfig.uxUiDesigner;
+
+useSeoMeta({
+  title: seo.title,
+  description: seo.description,
+  keywords: seo.keywords,
+  ogTitle: seo.ogTitle,
+  ogDescription: seo.ogDescription,
+  ogImage: `${siteUrl}/assets/shareimage.png`,
+  ogImageAlt: "UX/UI Designer - Join SiteSynth",
+  ogUrl: `${siteUrl}/careers/ux-ui-designer`,
+  twitterTitle: seo.twitterTitle,
+  twitterDescription: seo.twitterDescription,
+  twitterImage: `${siteUrl}/assets/shareimage.png`,
+});
+
 useHead({
-  title: "UX/UI Designer - Join SiteSynth",
-  meta: [
+  script: [
     {
-      name: "description",
-      content:
-        "Join SiteSynth as a UX/UI Designer and lead design on cutting-edge digital products. Create exceptional user experiences from research to polished interfaces.",
+      type: "application/ld+json",
+      children: JSON.stringify(structuredData.uxUiDesignerJob(siteUrl)),
     },
   ],
 });

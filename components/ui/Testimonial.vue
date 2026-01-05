@@ -14,7 +14,8 @@
         <div
           class="absolute inset-0 pointer-events-none opacity-100"
           :style="{
-            backgroundImage: 'url(/assets/gradients/gradient-for-banner-section.svg)',
+            backgroundImage:
+              'url(/assets/gradients/gradient-for-banner-section.svg)',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
@@ -22,7 +23,9 @@
         ></div>
 
         <!-- Left Column (1/3) -->
-        <div class="flex flex-col justify-center items-center text-center relative z-10">
+        <div
+          class="flex flex-col justify-center items-center text-center relative z-10"
+        >
           <img
             :src="imageSrc"
             :alt="personName"
@@ -33,8 +36,14 @@
         </div>
 
         <!-- Right Column (2/3) -->
-        <div class="md:col-span-2 flex flex-col justify-center px-6 relative z-10">
-          <font-awesome icon="quote-left" class="text-6xl" :class="quoteColor" />
+        <div
+          class="md:col-span-2 flex flex-col justify-center px-6 relative z-10"
+        >
+          <font-awesome
+            icon="quote-left"
+            class="text-6xl"
+            :class="quoteColor"
+          />
 
           <h3 class="text-4xl font-black text-white mt-4 mb-6">
             {{ quoteTitle }}
@@ -93,4 +102,3 @@ const selectedGlowEffect = computed(() => {
   return resolveComponent("GlowEffect");
 });
 </script>
-

@@ -7,7 +7,9 @@
     <!-- Glow позади контента -->
     <GlowEffect class="absolute inset-0 z-0 pointer-events-none" />
 
-    <div class="relative z-10 max-w-[1248px] mx-auto px-6 pt-[16rem] pb-[12rem]">
+    <div
+      class="relative z-10 max-w-[1248px] mx-auto px-6 pt-[16rem] pb-[12rem]"
+    >
       <!-- HERO TEXT -->
       <div class="text-center px-6">
         <h1 class="text-4xl sm:text-5xl font-extrabold mb-10">{{ title }}</h1>
@@ -16,10 +18,7 @@
         <!-- Hero button -->
         <a
           :href="buttonLink"
-          class="inline-block mt-8 px-4 py-2 font-semibold
-                 border border-white bg-white text-[#161616]
-                 transition-all duration-500
-                 hover:bg-[#8D35FF] hover:border-[#8D35FF] hover:text-white"
+          class="inline-block mt-8 px-4 py-2 font-semibold border border-white bg-white text-[#161616] transition-all duration-500 hover:bg-[#8D35FF] hover:border-[#8D35FF] hover:text-white"
         >
           {{ buttonText }}
         </a>
@@ -30,8 +29,7 @@
         <div
           v-for="(card, index) in cards"
           :key="index"
-          class="group/card border border-[#636363] bg-[#ffffff14] backdrop-blur
-                 p-6 py-12 flex flex-col justify-between cursor-pointer transition-all duration-300"
+          class="group/card border border-[#636363] bg-[#ffffff14] backdrop-blur p-6 py-12 flex flex-col justify-between cursor-pointer transition-all duration-300"
         >
           <h3 class="text-xl font-semibold text-center pt-6 pb-8">
             {{ card.icon }} {{ card.title }}
@@ -51,16 +49,13 @@
 
               <font-awesome
                 :icon="['fas', 'chevron-right']"
-                class="text-sm relative top-[1px]
-                       transition-transform duration-300 group-hover/card:translate-x-1"
+                class="text-sm relative top-[1px] transition-transform duration-300 group-hover/card:translate-x-1"
                 aria-hidden="true"
               />
 
               <!-- underline -->
               <span
-                class="absolute -bottom-1 left-0 h-[2px] w-0 bg-[#8CB0FF]
-                       transition-all duration-300
-                       group-hover/card:w-full"
+                class="absolute -bottom-1 left-0 h-[2px] w-0 bg-[#8CB0FF] transition-all duration-300 group-hover/card:w-full"
               ></span>
             </a>
           </div>

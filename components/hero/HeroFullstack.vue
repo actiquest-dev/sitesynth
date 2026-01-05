@@ -19,10 +19,7 @@
 
         <a
           :href="buttonLink"
-          class="inline-block mt-8 px-4 py-2
-                 border border-[#161616] bg-[#161616] text-white font-semibold
-                 transition-colors duration-500
-                 hover:bg-[#8D35FF] hover:border-[#8D35FF] hover:text-white"
+          class="inline-block mt-8 px-4 py-2 border border-[#161616] bg-[#161616] text-white font-semibold transition-colors duration-500 hover:bg-[#8D35FF] hover:border-[#8D35FF] hover:text-white"
         >
           {{ buttonText }}
         </a>
@@ -34,8 +31,7 @@
         <div
           v-for="(card, index) in cards"
           :key="index"
-          class="group/card border border-[#636363] bg-[#161616]
-                 p-6 py-12 flex flex-col justify-between"
+          class="group/card border border-[#636363] bg-[#161616] p-6 py-12 flex flex-col justify-between"
         >
           <h3 class="text-xl font-semibold text-center pt-6 pb-8">
             {{ card.icon }} {{ card.title }}
@@ -49,23 +45,19 @@
           <div class="text-center mt-6">
             <a
               :href="card.link"
-              class="relative inline-flex items-baseline gap-1
-                     text-[#8CB0FF] font-semibold group/link"
+              class="relative inline-flex items-baseline gap-1 text-[#8CB0FF] font-semibold group/link"
             >
               <span>Read more</span>
 
               <font-awesome
                 :icon="['fas', 'chevron-right']"
-                class="text-sm relative top-[1px]
-                       transition-transform duration-300 group-hover/card:translate-x-1"
+                class="text-sm relative top-[1px] transition-transform duration-300 group-hover/card:translate-x-1"
                 aria-hidden="true"
               />
 
               <!-- UNDERLINE ANIMATION -->
               <span
-                class="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#8CB0FF]
-                       transition-all duration-300
-                       group-hover/card:w-full"
+                class="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#8CB0FF] transition-all duration-300 group-hover/card:w-full"
               ></span>
             </a>
           </div>
@@ -101,5 +93,3 @@ const backgroundImageStyle = computed(() => {
   return {};
 });
 </script>
-
-

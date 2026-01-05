@@ -188,14 +188,31 @@
 </template>
 
 <script setup>
-// SEO Meta
+import { seoConfig, structuredData } from "~/config/seo";
+
+// SEO Configuration - using centralized config
+const siteUrl = useRuntimeConfig().public?.siteUrl;
+const seo = seoConfig.marketingManager;
+
+useSeoMeta({
+  title: seo.title,
+  description: seo.description,
+  keywords: seo.keywords,
+  ogTitle: seo.ogTitle,
+  ogDescription: seo.ogDescription,
+  ogImage: `${siteUrl}/assets/shareimage.png`,
+  ogImageAlt: "Marketing Manager - Join SiteSynth",
+  ogUrl: `${siteUrl}/careers/marketing-manager`,
+  twitterTitle: seo.twitterTitle,
+  twitterDescription: seo.twitterDescription,
+  twitterImage: `${siteUrl}/assets/shareimage.png`,
+});
+
 useHead({
-  title: "Marketing Manager - Join SiteSynth",
-  meta: [
+  script: [
     {
-      name: "description",
-      content:
-        "Join SiteSynth as a Marketing Manager and help shape and amplify our story. Develop and execute marketing strategies to grow brand visibility and generate qualified leads.",
+      type: "application/ld+json",
+      children: JSON.stringify(structuredData.marketingManagerJob(siteUrl)),
     },
   ],
 });

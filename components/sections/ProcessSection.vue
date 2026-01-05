@@ -32,12 +32,16 @@
 
           <!-- Плавная анимация как у GitHub -->
           <div
-            :ref="el => setContentRef(el, index)"
+            :ref="(el) => setContentRef(el, index)"
             class="overflow-hidden transition-[max-height,opacity,transform] duration-300 ease-out"
             :style="{
-              maxHeight: openIndex === index ? (contentHeights[index] || 0) + 'px' : '0px',
+              maxHeight:
+                openIndex === index
+                  ? (contentHeights[index] || 0) + 'px'
+                  : '0px',
               opacity: openIndex === index ? 1 : 0,
-              transform: openIndex === index ? 'translateY(0)' : 'translateY(-4px)'
+              transform:
+                openIndex === index ? 'translateY(0)' : 'translateY(-4px)',
             }"
           >
             <p class="text-[#999999] mt-2">
@@ -50,7 +54,7 @@
               :class="[
                 accentColor,
                 'font-semibold mt-4 inline-flex items-center gap-2',
-                'relative group/link py-2 transition-colors duration-300'
+                'relative group/link py-2 transition-colors duration-300',
               ]"
             >
               <span>{{ section.linkText }}</span>
@@ -172,6 +176,3 @@ const getCurrentImageAlt = computed(() => {
   opacity: 1;
 }
 </style>
-
-
-

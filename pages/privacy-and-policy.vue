@@ -304,49 +304,31 @@
 </template>
 
 <script setup>
-import { seoConfig } from "~/config/seo";
+import { seoConfig, structuredData } from "~/config/seo";
 
-// SEO Configuration
+// SEO Configuration - using centralized config
 const siteUrl = useRuntimeConfig().public?.siteUrl;
+const seo = seoConfig.privacyPolicy;
 
 useSeoMeta({
-  title: "Privacy Policy & Terms of Service - SiteSynth",
-  description:
-    "Read our privacy policy and terms of service. Learn how we collect, use, and protect your data, and understand your rights as a user of our website.",
-  keywords:
-    "privacy policy, terms of service, data protection, cookies, GDPR, user rights, terms and conditions, legal",
-  ogTitle: "Privacy Policy & Terms of Service - SiteSynth",
-  ogDescription:
-    "Read our privacy policy and terms of service. Learn how we protect your data and your rights as a user.",
+  title: seo.title,
+  description: seo.description,
+  keywords: seo.keywords,
+  ogTitle: seo.ogTitle,
+  ogDescription: seo.ogDescription,
   ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "SiteSynth - Privacy Policy & Terms of Service",
-  ogUrl: `${siteUrl}/privacy-policy`,
-  twitterTitle: "Privacy Policy & Terms of Service - SiteSynth",
-  twitterDescription:
-    "Read our privacy policy and terms of service. Learn how we protect your data and your rights.",
+  ogUrl: `${siteUrl}/privacy-and-policy`,
+  twitterTitle: seo.twitterTitle,
+  twitterDescription: seo.twitterDescription,
   twitterImage: `${siteUrl}/assets/shareimage.png`,
 });
 
-// Structured data for the page
 useHead({
   script: [
     {
       type: "application/ld+json",
-      children: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        name: "Privacy Policy & Terms of Service",
-        description:
-          "SiteSynth's privacy policy and terms of service explaining how we collect, use, and protect user data.",
-        url: `${siteUrl}/privacy-policy`,
-        publisher: {
-          "@type": "Organization",
-          name: "SiteSynth",
-          url: siteUrl,
-        },
-        datePublished: "2025-12-03",
-        dateModified: "2025-12-03",
-      }),
+      children: JSON.stringify(structuredData.privacyPolicyPage(siteUrl)),
     },
   ],
 });

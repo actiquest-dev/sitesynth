@@ -195,14 +195,31 @@
 </template>
 
 <script setup>
-// SEO Meta
+import { seoConfig, structuredData } from "~/config/seo";
+
+// SEO Configuration - using centralized config
+const siteUrl = useRuntimeConfig().public?.siteUrl;
+const seo = seoConfig.fullStackDeveloper;
+
+useSeoMeta({
+  title: seo.title,
+  description: seo.description,
+  keywords: seo.keywords,
+  ogTitle: seo.ogTitle,
+  ogDescription: seo.ogDescription,
+  ogImage: `${siteUrl}/assets/shareimage.png`,
+  ogImageAlt: "Full-Stack Developer - Join SiteSynth",
+  ogUrl: `${siteUrl}/careers/full-stack-developer`,
+  twitterTitle: seo.twitterTitle,
+  twitterDescription: seo.twitterDescription,
+  twitterImage: `${siteUrl}/assets/shareimage.png`,
+});
+
 useHead({
-  title: "Full Stack Developer - Join SiteSynth",
-  meta: [
+  script: [
     {
-      name: "description",
-      content:
-        "Join SiteSynth as a Full Stack Developer and contribute to building innovative digital products. Work with modern technologies and collaborate with a dynamic team to create impactful solutions.",
+      type: "application/ld+json",
+      children: JSON.stringify(structuredData.fullStackDeveloperJob(siteUrl)),
     },
   ],
 });

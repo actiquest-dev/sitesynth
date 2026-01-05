@@ -242,14 +242,7 @@ useHead({
   script: [
     {
       type: "application/ld+json",
-      children: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        name: "AI Innovation & R&D - SiteSynth",
-        description:
-          "We help teams identify high-impact AI opportunities, prototype rapidly, and integrate AI into products and operations with responsibility and speed.",
-        url: `${siteUrl}/ai-innovation`,
-      }),
+      children: JSON.stringify(structuredData.aiInnovationPage(siteUrl)),
     },
   ],
 });

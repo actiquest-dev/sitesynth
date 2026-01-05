@@ -176,4 +176,13 @@ useSeoMeta({
   twitterDescription: seo.ogDescription,
   twitterImage: `${siteUrl}/assets/shareimage.png`,
 });
+
+useHead({
+  script: [
+    {
+      type: "application/ld+json",
+      children: JSON.stringify(structuredData.careersPage(siteUrl)),
+    },
+  ],
+});
 </script>

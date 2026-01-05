@@ -234,12 +234,12 @@
 </template>
 
 <script setup>
-import { seoConfig } from "~/config/seo";
+import { seoConfig, structuredData } from "~/config/seo";
 
 // SEO Configuration - using centralized config
 const siteUrl = useRuntimeConfig().public?.siteUrl;
 const seo = seoConfig.home;
-// Use siteUrl from runtime config for images and canonical links
+
 useSeoMeta({
   title: seo.title,
   description: seo.description,
@@ -249,13 +249,17 @@ useSeoMeta({
   ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "SiteSynth - Strategic Design & Development Company",
   ogUrl: siteUrl,
-
-  // Twitter Card - Only the unique values
   twitterTitle: seo.twitterTitle,
   twitterDescription: seo.twitterDescription,
   twitterImage: `${siteUrl}/assets/shareimage.png`,
-  twitterImageAlt: "SiteSynth - Strategic Design & Development",
 });
 
-// No need for structured data here - it's now global in app.vue
+useHead({
+  script: [
+    {
+      type: "application/ld+json",
+      children: JSON.stringify(structuredData.homePage(siteUrl)),
+    },
+  ],
+});
 </script>

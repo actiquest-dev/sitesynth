@@ -112,6 +112,37 @@ export const seoConfig = {
         get twitterTitle() { return this.title },
         get twitterDescription() { return this.description },
     },
+
+    // Career Detail Pages
+    fullStackDeveloper: {
+        title: "Full-Stack Developer | Join Our Team - SiteSynth",
+        description: "Join SiteSynth as a Full Stack Developer and contribute to building innovative digital products. Work with modern technologies and collaborate with a dynamic team to create impactful solutions.",
+        keywords: "full stack developer, developer jobs, react, vue, node.js, careers, remote work, belgium jobs",
+        get ogTitle() { return this.title },
+        get ogDescription() { return this.description },
+        get twitterTitle() { return this.title },
+        get twitterDescription() { return this.description },
+    },
+
+    marketingManager: {
+        title: "Marketing Manager | Join Our Team - SiteSynth",
+        description: "Join SiteSynth as a Marketing Manager and help shape and amplify our story. Develop and execute marketing strategies to grow brand visibility and generate qualified leads.",
+        keywords: "marketing manager, marketing jobs, digital marketing, content strategy, brand marketing, careers, belgium jobs",
+        get ogTitle() { return this.title },
+        get ogDescription() { return this.description },
+        get twitterTitle() { return this.title },
+        get twitterDescription() { return this.description },
+    },
+
+    uxUiDesigner: {
+        title: "UX/UI Designer | Join Our Team - SiteSynth",
+        description: "Join SiteSynth as a UX/UI Designer and lead design on cutting-edge digital products. Create exceptional user experiences from research to polished interfaces.",
+        keywords: "ux designer, ui designer, design jobs, figma, design systems, user research, careers, belgium jobs",
+        get ogTitle() { return this.title },
+        get ogDescription() { return this.description },
+        get twitterTitle() { return this.title },
+        get twitterDescription() { return this.description },
+    },
 }
 
 // Structured data templates for different page types
@@ -190,5 +221,187 @@ export const structuredData = {
             },
         },
         employmentType: job.employmentType || "FULL_TIME",
+    }),
+
+    // Service pages (AI Innovation, Brand Strategy, UX Design, Full-Stack)
+    aiInnovationPage: (siteUrl: string) => ({
+        "@context": "https://schema.org",
+        "@type": "Service",
+        name: "AI Innovation & R&D",
+        description: "We help teams identify high-impact AI opportunities, prototype rapidly, and integrate AI into products and operations with responsibility and speed.",
+        url: `${siteUrl}/ai-innovation`,
+        provider: {
+            "@type": "Organization",
+            name: "SiteSynth",
+            url: siteUrl,
+        },
+        serviceType: "AI Innovation and R&D Services",
+        areaServed: "Worldwide",
+    }),
+
+    brandStrategyPage: (siteUrl: string) => ({
+        "@context": "https://schema.org",
+        "@type": "Service",
+        name: "Brand-Driven Product Strategy",
+        description: "Services to align brand and product strategy: discovery, UX translation, messaging frameworks, and cross-team alignment.",
+        url: `${siteUrl}/brand-driven-product-strategy`,
+        provider: {
+            "@type": "Organization",
+            name: "SiteSynth",
+            url: siteUrl,
+        },
+        serviceType: "Brand Strategy Services",
+        areaServed: "Worldwide",
+    }),
+
+    uxDesignPage: (siteUrl: string) => ({
+        "@context": "https://schema.org",
+        "@type": "Service",
+        name: "UX & Design Systems",
+        description: "We build scalable design systems and UX architecture that let teams move faster, stay consistent, and hand off clearly to engineering.",
+        url: `${siteUrl}/ux-and-design-system`,
+        provider: {
+            "@type": "Organization",
+            name: "SiteSynth",
+            url: siteUrl,
+        },
+        serviceType: "UX and Design System Services",
+        areaServed: "Worldwide",
+    }),
+
+    fullStackPage: (siteUrl: string) => ({
+        "@context": "https://schema.org",
+        "@type": "Service",
+        name: "Full-Stack Implementation",
+        description: "Production-ready engineering: front-end, back-end, and integrated developer collaboration to ship reliable, scalable digital products.",
+        url: `${siteUrl}/full-stack-implementation`,
+        provider: {
+            "@type": "Organization",
+            name: "SiteSynth",
+            url: siteUrl,
+        },
+        serviceType: "Full-Stack Development Services",
+        areaServed: "Worldwide",
+    }),
+
+    // Product pages
+    scoreSynthPage: (siteUrl: string) => ({
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        name: "ScoreSynth",
+        description: "ScoreSynth transforms audio or MIDI into professional orchestral sheet music using AI-powered transcription, orchestration, and export to MusicXML/PDF.",
+        url: `${siteUrl}/scoresynth`,
+        applicationCategory: "MusicApplication",
+        operatingSystem: "Web",
+        offers: {
+            "@type": "Offer",
+            price: "0",
+            priceCurrency: "USD",
+        },
+    }),
+
+    // Career pages
+    careersPage: (siteUrl: string) => ({
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "Careers at SiteSynth",
+        description: "Join our team of designers, strategists, and developers. Work on meaningful projects in a collaborative environment.",
+        url: `${siteUrl}/careers`,
+    }),
+
+    fullStackDeveloperJob: (siteUrl: string) => ({
+        "@context": "https://schema.org",
+        "@type": "JobPosting",
+        title: "Full-Stack Developer",
+        description: "Join SiteSynth as a Full Stack Developer and contribute to building innovative digital products. Work with modern technologies and collaborate with a dynamic team to create impactful solutions.",
+        datePosted: "2025-01-01",
+        hiringOrganization: {
+            "@type": "Organization",
+            name: "SiteSynth",
+            sameAs: siteUrl,
+            logo: `${siteUrl}/assets/logo.png`,
+        },
+        jobLocation: {
+            "@type": "Place",
+            address: {
+                "@type": "PostalAddress",
+                addressLocality: "Sint-Amands",
+                addressCountry: "Belgium",
+            },
+        },
+        employmentType: "FULL_TIME",
+        url: `${siteUrl}/careers/full-stack-developer`,
+    }),
+
+    marketingManagerJob: (siteUrl: string) => ({
+        "@context": "https://schema.org",
+        "@type": "JobPosting",
+        title: "Marketing Manager",
+        description: "Join SiteSynth as a Marketing Manager and help shape and amplify our story. Develop and execute marketing strategies to grow brand visibility and generate qualified leads.",
+        datePosted: "2025-01-01",
+        hiringOrganization: {
+            "@type": "Organization",
+            name: "SiteSynth",
+            sameAs: siteUrl,
+            logo: `${siteUrl}/assets/logo.png`,
+        },
+        jobLocation: {
+            "@type": "Place",
+            address: {
+                "@type": "PostalAddress",
+                addressLocality: "Sint-Amands",
+                addressCountry: "Belgium",
+            },
+        },
+        employmentType: "FULL_TIME",
+        url: `${siteUrl}/careers/marketing-manager`,
+    }),
+
+    uxUiDesignerJob: (siteUrl: string) => ({
+        "@context": "https://schema.org",
+        "@type": "JobPosting",
+        title: "UX/UI Designer",
+        description: "Join SiteSynth as a UX/UI Designer and lead design on cutting-edge digital products. Create exceptional user experiences from research to polished interfaces.",
+        datePosted: "2025-01-01",
+        hiringOrganization: {
+            "@type": "Organization",
+            name: "SiteSynth",
+            sameAs: siteUrl,
+            logo: `${siteUrl}/assets/logo.png`,
+        },
+        jobLocation: {
+            "@type": "Place",
+            address: {
+                "@type": "PostalAddress",
+                addressLocality: "Sint-Amands",
+                addressCountry: "Belgium",
+            },
+        },
+        employmentType: "FULL_TIME",
+        url: `${siteUrl}/careers/ux-ui-designer`,
+    }),
+
+    // Privacy policy page
+    privacyPolicyPage: (siteUrl: string) => ({
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "Privacy Policy & Terms of Service",
+        description: "Read our privacy policy and terms of service. Learn how we collect, use, and protect your data.",
+        url: `${siteUrl}/privacy-and-policy`,
+    }),
+
+    // Home page
+    homePage: (siteUrl: string) => ({
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "SiteSynth - Where Product, Brand & Tech Align",
+        description: "Where product, brand, and tech finally align. We help companies bridge strategy, design, and engineering to create digital products that scale.",
+        url: siteUrl,
+        mainEntity: {
+            "@type": "Organization",
+            name: "SiteSynth",
+            description: "Strategic design and development company that bridges product, brand, and tech to create scalable digital solutions.",
+            url: siteUrl,
+        },
     }),
 }

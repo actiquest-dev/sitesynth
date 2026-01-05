@@ -225,14 +225,7 @@ useHead({
   script: [
     {
       type: "application/ld+json",
-      children: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        name: "Full-Stack Implementation - SiteSynth",
-        description:
-          "Production-ready engineering services: front-end and back-end development, APIs, and integrated dev collaboration to help teams ship.",
-        url: `${siteUrl}/full-stack-implementation`,
-      }),
+      children: JSON.stringify(structuredData.fullStackPage(siteUrl)),
     },
   ],
 });

@@ -1,28 +1,28 @@
 <template>
- <section
-  :id="id || undefined"
-  class="bg-[#161616] flex justify-center pb-40"
->
+  <section :id="id || undefined" class="bg-[#161616] flex justify-center pb-40">
     <div class="max-w-[1248px] mx-auto px-6 w-full">
       <div
         ref="card"
         class="grid grid-cols-1 md:grid-cols-2 gap-8 relative border border-[#636363] group overflow-hidden"
       >
         <GlowEffect />
-        
+
         <!-- Gradient Background -->
-        <div 
+        <div
           class="absolute inset-0 pointer-events-none opacity-100"
           :style="{
-            backgroundImage: 'url(/assets/gradients/gradient-for-banner-section.svg)',
+            backgroundImage:
+              'url(/assets/gradients/gradient-for-banner-section.svg)',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
           }"
         ></div>
-        
+
         <!-- Left Column (1/2) -->
-        <div :class="`flex flex-col justify-center ${leftPadding} relative z-10`">
+        <div
+          :class="`flex flex-col justify-center ${leftPadding} relative z-10`"
+        >
           <!-- Image and Text Row -->
           <div class="flex items-center gap-4 mb-6">
             <img
@@ -39,7 +39,7 @@
               </component>
             </div>
           </div>
-          
+
           <!-- Dynamic Text Elements -->
           <div
             v-for="(textItem, index) in leftContent.textElements"
@@ -50,7 +50,7 @@
               {{ textItem.content }}
             </component>
           </div>
-          
+
           <!-- Link -->
           <a
             :href="leftContent.link.href"
@@ -66,10 +66,12 @@
             />
 
             <!-- Animated underline -->
-            <div class="absolute bottom-0 left-0 h-[2px] bg-[#8CB0FF] w-0 group-hover/link:w-full transition-all duration-300"></div>
+            <div
+              class="absolute bottom-0 left-0 h-[2px] bg-[#8CB0FF] w-0 group-hover/link:w-full transition-all duration-300"
+            ></div>
           </a>
         </div>
-        
+
         <!-- Right Column (1/2) -->
         <div
           :class="`flex flex-col justify-center items-center ${rightPadding} relative z-10`"

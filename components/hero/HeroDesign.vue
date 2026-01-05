@@ -28,16 +28,14 @@
             v-model="formData.link"
             placeholder="Enter a link"
             :disabled="state.isSubmitting"
-            class="w-full h-12 px-4 pr-14 bg-white/10 backdrop-blur-[10px] text-[#A3A3A3]
-                   focus:outline-none disabled:opacity-50"
+            class="w-full h-12 px-4 pr-14 bg-white/10 backdrop-blur-[10px] text-[#A3A3A3] focus:outline-none disabled:opacity-50"
           />
 
           <!-- Right Arrow Button -->
           <button
             type="submit"
             :disabled="state.isSubmitting || !formData.link.trim()"
-            class="absolute cursor-pointer inset-y-0 right-0 flex items-center justify-center w-12
-                   bg-[#A259FF] disabled:opacity-50 disabled:cursor-not-allowed"
+            class="absolute cursor-pointer inset-y-0 right-0 flex items-center justify-center w-12 bg-[#A259FF] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <font-awesome
               v-if="!state.isSubmitting"
@@ -94,7 +92,3 @@ const backgroundImageStyle = computed(() => {
   return {};
 });
 </script>
-
-
-
-

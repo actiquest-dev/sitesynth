@@ -241,14 +241,7 @@ useHead({
   script: [
     {
       type: "application/ld+json",
-      children: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        name: "ScoreSynth - AI Music Scoring",
-        description:
-          "ScoreSynth transforms audio or MIDI into professional orchestral sheet music using AI-powered transcription and orchestration.",
-        url: `${siteUrl}/scoresynth`,
-      }),
+      children: JSON.stringify(structuredData.scoreSynthPage(siteUrl)),
     },
   ],
 });

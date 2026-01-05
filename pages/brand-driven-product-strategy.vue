@@ -222,14 +222,7 @@ useHead({
   script: [
     {
       type: "application/ld+json",
-      children: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "Service",
-        name: "Brand-Driven Product Strategy",
-        description:
-          "Services to align brand and product strategy: discovery, UX translation, messaging frameworks, and cross-team alignment.",
-        url: `${siteUrl}/brand-driven-product-strategy`,
-      }),
+      children: JSON.stringify(structuredData.brandStrategyPage(siteUrl)),
     },
   ],
 });

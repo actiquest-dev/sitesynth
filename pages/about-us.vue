@@ -19,7 +19,7 @@
   />
 
   <!-- WHY WE EXIST -->
-   <TwoColumnsDesign
+  <TwoColumnsDesign
     glowEffect="GlowBlue"
     id="about-us"
     sectionBgColor="bg-[#DDDDDD]"
@@ -188,14 +188,7 @@ useHead({
   script: [
     {
       type: "application/ld+json",
-      children: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "AboutPage",
-        name: "About SiteSynth",
-        description:
-          "Learn about SiteSynth, our team, and our approach to strategic design and development.",
-        url: `${siteUrl}/about-us`,
-      }),
+      children: JSON.stringify(structuredData.aboutPage(siteUrl)),
     },
   ],
 });

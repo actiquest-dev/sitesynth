@@ -8,7 +8,10 @@
       class="relative overflow-hidden z-0 testimonial-card max-w-[1248px] mx-auto text-center px-6 group"
     >
       <div
-        :class="[bgInside, 'border border-[#636363] py-20 px-20 relative overflow-hidden']"
+        :class="[
+          bgInside,
+          'border border-[#636363] py-20 px-20 relative overflow-hidden',
+        ]"
       >
         <component :is="selectedGlowEffect" />
 
@@ -35,7 +38,7 @@
               :href="primaryLink"
               :class="[
                 'px-6 py-2 border border-[#DDDDDD] bg-[#161616] text-white transition-colors duration-1000 font-semibold',
-                `hover:bg-[${hover}] hover:border-[${hover}] hover:text-white`
+                `hover:bg-[${hover}] hover:border-[${hover}] hover:text-white`,
               ]"
             >
               {{ primaryText }}
@@ -46,13 +49,12 @@
               :href="secondaryLink"
               :class="[
                 'px-6 py-2 border border-[#161616] bg-[#DDDDDD] text-[#161616] transition-colors duration-1000 font-semibold',
-                `hover:bg-[${hover}] hover:border-[${hover}] hover:text-white`
+                `hover:bg-[${hover}] hover:border-[${hover}] hover:text-white`,
               ]"
             >
               {{ secondaryText }}
             </a>
           </div>
-
         </div>
       </div>
     </div>

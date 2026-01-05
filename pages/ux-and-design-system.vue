@@ -8,7 +8,7 @@
     description="We’ll review structure, components, and UX flows, then suggest what to fix first to make it consistent and scalable."
   />
 
-   <TwoColumnsDesign
+  <TwoColumnsDesign
     glowEffect="GlowEffect"
     id="why-figma"
     sectionBgColor="bg-[#161616]"
@@ -55,7 +55,7 @@
       </div>
     </template>
   </TwoColumnsDesign>
-  
+
   <FigmaSection
     id="figma"
     title="Figma"
@@ -111,19 +111,22 @@
         imageAlt: 'Brand Icon',
         title: 'Centralized Figma System',
         headerTag: 'h3',
-        description: 'Atomic, flexible, and organized - built for scaling without clutter.',
+        description:
+          'Atomic, flexible, and organized - built for scaling without clutter.',
       },
       {
         icon: '🧭',
         title: 'UX Flow Diagrams & Interaction Logic',
         headerTag: 'h3',
-        description: 'Clear maps of how users move through your product - across all key journeys.',
+        description:
+          'Clear maps of how users move through your product - across all key journeys.',
       },
       {
         icon: '📐',
         title: 'Pattern Usage Guidelines',
         headerTag: 'h3',
-        description: 'Know exactly when and how to use each pattern - no guessing, no inconsistency.',
+        description:
+          'Know exactly when and how to use each pattern - no guessing, no inconsistency.',
       },
     ]"
   />
@@ -135,13 +138,15 @@
         icon: '📚',
         title: 'Design System Documentation',
         headerTag: 'h3',
-        description: 'Everything documented and ready in Figma’s Dev Mode, Zeroheight, or your preferred platform.',
+        description:
+          'Everything documented and ready in Figma’s Dev Mode, Zeroheight, or your preferred platform.',
       },
       {
         icon: '🔄',
         title: 'Practical, Living Docs',
         headerTag: 'h3',
-        description: 'Practical, living docs that support day-to-day work - not just sit in a folder.',
+        description:
+          'Practical, living docs that support day-to-day work - not just sit in a folder.',
       },
     ]"
   />
@@ -162,7 +167,7 @@
 </template>
 
 <script setup>
-import { seoConfig } from "~/config/seo";
+import { seoConfig, structuredData } from "~/config/seo";
 
 const siteUrl = useRuntimeConfig().public?.siteUrl;
 const seo = seoConfig.uxDesign;
@@ -185,16 +190,8 @@ useHead({
   script: [
     {
       type: "application/ld+json",
-      children: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "WebPage",
-        name: "UX & Design Systems - SiteSynth",
-        description:
-          "We build scalable design systems and UX architecture that let teams move faster, stay consistent, and hand off clearly to engineering.",
-        url: `${siteUrl}/ux-and-design-system`,
-      }),
+      children: JSON.stringify(structuredData.uxDesignPage(siteUrl)),
     },
   ],
 });
 </script>
-
