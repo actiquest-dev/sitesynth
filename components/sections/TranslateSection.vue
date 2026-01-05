@@ -1,9 +1,7 @@
 <template>
-  <section
-    :id="id || undefined"
-    :class="`${bgColor} group relative overflow-hidden`"
-  >
+  <section :id="id || undefined" :class="`${bgColor} group relative overflow-hidden`">
     <GlowEffect />
+
     <div :class="`border-t border-b border-[#636363] ${contentBgColor}`">
       <div class="max-w-[1248px] mx-auto grid grid-cols-1 md:grid-cols-2 px-6">
         <!-- Image Section -->
@@ -16,24 +14,37 @@
           <h2 :class="`text-2xl font-semibold pb-4 ${textColor}`">
             {{ mainTitle }}
           </h2>
-          <p :class="`leading-relaxed ${textColor}`">{{ mainDescription }}</p>
 
-          <!-- Dynamic Links -->
+          <p :class="`leading-relaxed ${textColor}`">
+            {{ mainDescription }}
+          </p>
+
+          <!-- Dynamic Links (Pills with animation) -->
           <div class="flex flex-wrap gap-4 py-6">
-            <a
+            <div
               v-for="(link, index) in links"
               :key="index"
-              :href="link.url"
-              :class="`${tagBgColor} ${tagTextColor} border ${borderColor} px-6 py-3 rounded-[49px] inline-block`"
+              :style="{ '--i': index }"
+              :class="[
+                'tag-pill inline-flex rounded-full p-[3px] border-[2px]',
+                borderColor,
+              ]"
             >
-              {{ link.text }}
-            </a>
+              <a
+                :href="link.url"
+                class="tag-pill-inner inline-flex items-center justify-center rounded-full px-6 py-3 font-medium"
+                :class="[tagBgColor, tagTextColor]"
+              >
+                {{ link.text }}
+              </a>
+            </div>
           </div>
 
           <!-- Tools Section -->
           <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
             {{ toolsTitle }}
           </h2>
+
           <ul :class="`list-disc pl-6 ${textColor}`">
             <li v-for="(tool, index) in tools" :key="index">{{ tool }}</li>
           </ul>
@@ -45,49 +56,100 @@
 
 <script setup>
 defineProps({
-  id: {
-    type: String,
-    default: "",
-  },
+  id: { type: String, default: "" },
   sectionTitle: String,
   imageSrc: String,
   imageAlt: String,
   mainTitle: String,
   mainDescription: String,
-  links: Array,
+
+  links: {
+    type: Array,
+    default: () => [],
+  },
+
   toolsTitle: String,
-  tools: Array,
-  bgColor: {
-    type: String,
-    default: "bg-[#DDDDDD]",
+  tools: {
+    type: Array,
+    default: () => [],
   },
-  contentBgColor: {
-    type: String,
-    default: "bg-[#DDDDDD]",
-  },
-  textColor: {
-    type: String,
-    default: "text-[#161616]",
-  },
-  h2Color: {
-    type: String,
-    default: "text-[#161616]",
-  },
-  tagBgColor: {
-    type: String,
-    default: "bg-[#161616]",
-  },
-  tagTextColor: {
-    type: String,
-    default: "text-white",
-  },
-  borderColor: {
-    type: String,
-    default: "border-white",
-  },
-  imagePosition: {
-    type: String,
-    default: "",
-  },
+
+  bgColor: { type: String, default: "bg-[#DDDDDD]" },
+  contentBgColor: { type: String, default: "bg-[#DDDDDD]" },
+  textColor: { type: String, default: "text-[#161616]" },
+  h2Color: { type: String, default: "text-[#161616]" },
+
+  tagBgColor: { type: String, default: "bg-[#161616]" },
+  tagTextColor: { type: String, default: "text-white" },
+  borderColor: { type: String, default: "border-white" },
+
+  imagePosition: { type: String, default: "" },
 });
 </script>
+
+<style scoped>
+/* Внешняя оболочка таблетки */
+.tag-pill {
+  cursor: pointer;
+  transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Внутренняя часть: fade-in + мягкий пульс */
+.tag-pill-inner {
+  opacity: 0;
+  transform: translateY(10px);
+  will-change: transform, box-shadow, opacity;
+  transition: filter 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+    softPulse 4s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 90ms);
+}
+
+/* Hover эффекты только для устройств с мышкой */
+@media (hover: hover) and (pointer: fine) {
+  .tag-pill:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.22);
+  }
+
+  .tag-pill:hover .tag-pill-inner {
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.22);
+    transform: translateY(0);
+    filter: brightness(1.08);
+  }
+}
+
+/* Фокус с клавиатуры */
+.tag-pill:focus-within {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.22);
+}
+
+/* Плавное появление */
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Мягкий пульс (белый glow) */
+@keyframes softPulse {
+  0% {
+    box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  }
+  50% {
+    box-shadow: 0 0 14px rgba(255, 255, 255, 0.14);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+</style>
