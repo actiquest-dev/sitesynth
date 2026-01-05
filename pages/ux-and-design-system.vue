@@ -24,9 +24,9 @@
           style="
             background-image: url('/assets/gradients/gradient_right_corner.svg');
             background-repeat: no-repeat;
-            background-position: bottom left;
+            background-position: bottom right;
             background-size: 900px 900px;
-            opacity: 0.95;
+            opacity: 80;
 
             -webkit-mask-image: radial-gradient(900px 650px at 0% 100%, #000 0%, transparent 70%);
             mask-image: radial-gradient(900px 650px at 0% 100%, #000 0%, transparent 70%);
