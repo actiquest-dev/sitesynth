@@ -60,7 +60,7 @@ export const seoConfig = {
 
     // UX Design page
     uxDesign: {
-        title: "UX & Design Systems | Scalable Design Systems & UX Architecture - SiteSynth",
+        title: "UX & Design Systems - SiteSynth",
         description: "We build scalable design systems and UX architecture that let teams move faster, stay consistent, and hand off clearly to engineering.",
         keywords: "design systems, ux architecture, figma, design tokens, component libraries, design handoff, zeroheight, storybook",
         get ogTitle() { return this.title },
@@ -116,7 +116,7 @@ export const seoConfig = {
     // Career Detail Pages
     fullStackDeveloper: {
         title: "Full-Stack Developer | Join Our Team - SiteSynth",
-        description: "Join SiteSynth as a Full Stack Developer and contribute to building innovative digital products. Work with modern technologies and collaborate with a dynamic team to create impactful solutions.",
+        description: "Join SiteSynth as a Full Stack Developer and contribute to building innovative digital products.",
         keywords: "full stack developer, developer jobs, react, vue, node.js, careers, remote work, belgium jobs",
         get ogTitle() { return this.title },
         get ogDescription() { return this.description },
@@ -126,7 +126,7 @@ export const seoConfig = {
 
     marketingManager: {
         title: "Marketing Manager | Join Our Team - SiteSynth",
-        description: "Join SiteSynth as a Marketing Manager and help shape and amplify our story. Develop and execute marketing strategies to grow brand visibility and generate qualified leads.",
+        description: "Join SiteSynth as a Marketing Manager and help shape and amplify our story.",
         keywords: "marketing manager, marketing jobs, digital marketing, content strategy, brand marketing, careers, belgium jobs",
         get ogTitle() { return this.title },
         get ogDescription() { return this.description },
@@ -293,11 +293,6 @@ export const structuredData = {
         url: `${siteUrl}/scoresynth`,
         applicationCategory: "MusicApplication",
         operatingSystem: "Web",
-        offers: {
-            "@type": "Offer",
-            price: "0",
-            priceCurrency: "USD",
-        },
     }),
 
     // Career pages

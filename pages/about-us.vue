@@ -177,7 +177,7 @@ useSeoMeta({
   ogDescription: seo.ogDescription,
   ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "SiteSynth - Strategic Design & Development",
-  ogUrl: `${siteUrl}/about-us`,
+  ogUrl: `${siteUrl}/about-us/`,
   twitterTitle: seo.ogTitle,
   twitterDescription: seo.ogDescription,
   twitterImage: `${siteUrl}/assets/shareimage.png`,

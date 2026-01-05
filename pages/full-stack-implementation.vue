@@ -215,7 +215,7 @@ useSeoMeta({
   ogDescription: seo.ogDescription,
   ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "SiteSynth - Full-Stack Implementation",
-  ogUrl: `${siteUrl}/full-stack-implementation`,
+  ogUrl: `${siteUrl}/full-stack-implementation/`,
   twitterTitle: seo.twitterTitle,
   twitterDescription: seo.twitterDescription,
   twitterImage: `${siteUrl}/assets/shareimage.png`,

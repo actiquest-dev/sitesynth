@@ -318,7 +318,7 @@ useSeoMeta({
   ogDescription: seo.ogDescription,
   ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "SiteSynth - Privacy Policy & Terms of Service",
-  ogUrl: `${siteUrl}/privacy-and-policy`,
+  ogUrl: `${siteUrl}/privacy-and-policy/`,
   twitterTitle: seo.twitterTitle,
   twitterDescription: seo.twitterDescription,
   twitterImage: `${siteUrl}/assets/shareimage.png`,
