@@ -75,7 +75,7 @@ export default defineNuxtConfig({
         {
           rel: "icon",
           type: "image/svg+xml",
-          href: "/assets/favicon/favicon.svg",
+          href: "/assets/favicon/favicon-new.svg",
         },
         // Fallback for browsers that don't support SVG favicons
         {
@@ -91,7 +91,7 @@ export default defineNuxtConfig({
         {
           rel: "icon",
           sizes: "512x512",
-          href: "/assets/favicon/favicon-512x512.png",
+          href: "/assets/favicon/favicon-new-512x512.png",
         },
         // Legacy browsers fallback
         {
