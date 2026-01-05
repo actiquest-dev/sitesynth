@@ -28,7 +28,7 @@
             v-model="formData.link"
             placeholder="Enter a link"
             :disabled="state.isSubmitting"
-            class="w-full h-12 px-4 pr-14 bg-white/10 backdrop-blur-[2px] text-[#A3A3A3]
+            class="w-full h-12 px-4 pr-14 bg-white/10 backdrop-blur-[10px] text-[#A3A3A3]
                    focus:outline-none disabled:opacity-50"
           />
 
