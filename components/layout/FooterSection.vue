@@ -106,11 +106,11 @@ const footerData = {
       links: [
         {
           text: "Brand-Driven Product Strategy",
-          url: "/brand-driven-product-strategy/",
+          url: "/brand-driven-product-strategy",
         },
-        { text: "UX & Design Systems", url: "/ux-and-design-system/" },
-        { text: "Development Support", url: "/full-stack-implementation/" },
-        { text: "AI-Powered Workflows", url: "/ai-innovation/" },
+        { text: "UX & Design Systems", url: "/ux-and-design-system" },
+        { text: "Development Support", url: "/full-stack-implementation" },
+        { text: "AI-Powered Workflows", url: "/ai-innovation" },
       ],
     },
     {

@@ -63,7 +63,7 @@
         title: 'Brand-Led Product Thinking',
         description:
           'We help you build digital products aligned with your brand voice and vision.',
-        link: '/brand-driven-product-strategy/',
+        link: '/brand-driven-product-strategy',
       },
       {
         imageSrc:
@@ -72,7 +72,7 @@
         title: 'Design Systems & UX Architecture',
         description:
           'We craft scalable design systems and UX flows that bridge user needs and developer logic.',
-        link: '/ux-and-design-system/',
+        link: '/ux-and-design-system',
       },
       {
         imageSrc:
@@ -81,7 +81,7 @@
         title: 'Full-Stack Implementation Support',
         description:
           'From prototypes to production, we collaborate closely with your dev team — or bring our own.',
-        link: '/full-stack-implementation/',
+        link: '/full-stack-implementation',
       },
       {
         imageSrc:
@@ -90,7 +90,7 @@
         title: 'AI-Infused Innovation & R&D',
         description:
           'We bring forward-thinking, AI-powered tooling into the design and development process.',
-        link: '/ai-innovation/',
+        link: '/ai-innovation',
       },
     ]"
   />
@@ -126,19 +126,19 @@
       {
         title: '2. Define',
         description: 'We clarify the challenge and craft a shared direction.',
-        link: '/brand-driven-product-strategy/',
+        link: '/brand-driven-product-strategy',
         linkText: 'How connect brand and product',
       },
       {
         title: '3. Design',
         description: 'Systems, visuals, and flows — always aligned.',
-        link: '/ux-and-design-system/',
+        link: '/ux-and-design-system',
         linkText: 'How we build design systems',
       },
       {
         title: '4. Deliver',
         description: 'Bringing designs to life with clarity and collaboration.',
-        link: '/full-stack-implementation/',
+        link: '/full-stack-implementation',
         linkText: 'How we bring designs to life',
       },
     ]"

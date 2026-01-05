@@ -16,9 +16,10 @@ const route = useRoute();
 const config = useRuntimeConfig();
 // Default base URL (can be overridden with SITE_URL env var)
 const baseUrl = config.public?.siteUrl;
+
 const canonicalUrl = computed(() => {
   // Remove trailing slash and ensure proper formatting
-  const path = route.path === "/" ? "" : route.path;
+  const path = route.path === "/" ? "" : route.path.replace(/\/+$/, "");
   return `${baseUrl}${path}`;
 });
 
