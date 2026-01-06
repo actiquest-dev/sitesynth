@@ -6,80 +6,77 @@
   >
     <GlowEffect />
 
-    <div class="max-w-[1248px] px-6 mx-auto grid grid-cols-1 md:grid-cols-2">
-      <!-- Left Column -->
-      <div class="md:border-r border-[#636363] py-12 md:pr-6">
-        <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
-          {{ leftTitle }}
-        </h2>
+    <!-- как было: max-w + px-6 -->
+    <div class="relative z-10 max-w-[1248px] px-6 mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2">
+        <!-- Left Column -->
+        <div class="pt-12 pb-0 md:py-12 md:pr-6 md:border-r border-[#636363]">
+          <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
+            {{ leftTitle }}
+          </h2>
 
-        <p :class="`leading-relaxed ${textColor}`">
-          {{ leftDescription }}
-        </p>
+          <p :class="`leading-relaxed ${textColor}`">
+            {{ leftDescription }}
+          </p>
 
-        <!-- Tags (animated on scroll into view) -->
-        <div
-          v-if="tags?.length"
-          class="flex flex-wrap gap-4 py-10"
-          :class="{ 'pills-visible': inView }"
-        >
+          <!-- Tags (animated on scroll into view) -->
           <div
-            v-for="(tag, index) in tags"
-            :key="index"
-            :style="{ '--i': index }"
-            :class="[
-              'tag-pill inline-flex rounded-full p-[3px] border-[2px]',
-              borderColor,
-            ]"
+            v-if="tags?.length"
+            class="flex flex-wrap gap-4 py-10"
+            :class="{ 'pills-visible': inView }"
           >
-            <a
-              href="#"
-              class="tag-pill-inner inline-flex items-center justify-center rounded-full px-6 py-3 font-medium"
-              :class="[tagBgColor, tagTextColor]"
-              @click.prevent
+            <div
+              v-for="(tag, index) in tags"
+              :key="index"
+              :style="{ '--i': index }"
+              :class="[
+                'tag-pill inline-flex rounded-full p-[3px] border-[2px]',
+                borderColor,
+              ]"
             >
-              {{ tag }}
-            </a>
+              <a
+                href="#"
+                class="tag-pill-inner inline-flex items-center justify-center rounded-full px-6 py-3 font-medium"
+                :class="[tagBgColor, tagTextColor]"
+                @click.prevent
+              >
+                {{ tag }}
+              </a>
+            </div>
           </div>
-        </div>
 
-        <!-- Tools -->
-        <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
-          {{ toolsTitle }}
-        </h2>
+          <!-- Tools -->
+          <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
+            {{ toolsTitle }}
+          </h2>
 
-        <ul class="list-disc pl-6" :class="textColor">
-          <li class="pb-2" v-for="(tool, index) in toolsList" :key="index">
-            {{ tool }}
-          </li>
-        </ul>
-      </div>
+          <ul class="list-disc pl-6" :class="textColor">
+            <li class="pb-2" v-for="(tool, index) in toolsList" :key="index">
+              {{ tool }}
+            </li>
+          </ul>
 
-      <!-- Right Column Image -->
-      <div :class="`${paddingImage} relative py-12 md:py-0`">
-        <!-- Desktop / Tablet -->
-        <div class="hidden md:block h-full">
-          <img
-            :src="imageSrc"
-            alt="Section image"
-            class="w-full h-full"
-            :class="imagePosition"
-          />
-        </div>
-
-        <!-- Mobile (full-bleed to screen edges) -->
-        <div class="md:hidden mt-8">
-          <div
-            class="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]
-                   overflow-hidden"
-          >
+          <!-- Mobile image: ближе к тексту + в край + без пустоты снизу -->
+          <div class="mt-6 md:hidden -mx-6">
             <img
               :src="imageSrc"
               alt="Section image"
-              class="w-full h-auto"
-              :class="imagePosition"
+              class="w-full h-auto block object-cover"
             />
           </div>
+        </div>
+
+        <!-- Right Column Image (desktop как было) -->
+        <div
+          class="hidden md:block relative"
+          :class="paddingImage"
+        >
+          <img
+            :src="imageSrc"
+            alt="Section image"
+            class="w-full h-full object-cover"
+            :class="imagePosition"
+          />
         </div>
       </div>
     </div>
@@ -100,7 +97,7 @@ defineProps({
   borderColor: { type: String, default: "border-white" },
 
   paddingImage: { type: String, default: "" },
-  imagePosition: { type: String, default: "object-cover" },
+  imagePosition: { type: String, default: "object-center" },
 
   leftTitle: String,
   leftDescription: String,
@@ -127,18 +124,13 @@ onMounted(() => {
         observer?.disconnect();
       }
     },
-    {
-      threshold: 0.25,
-      rootMargin: "0px 0px -10% 0px",
-    }
+    { threshold: 0.25, rootMargin: "0px 0px -10% 0px" }
   );
 
   if (sectionRef.value) observer.observe(sectionRef.value);
 });
 
-onBeforeUnmount(() => {
-  observer?.disconnect();
-});
+onBeforeUnmount(() => observer?.disconnect());
 </script>
 
 <style scoped>
@@ -224,7 +216,5 @@ onBeforeUnmount(() => {
   }
 }
 </style>
-
-
 
 
