@@ -4,7 +4,7 @@
     id="hero-brand"
     title="Build products that feel as good as they function."
     description="Your brand - is your language. we embed your brand’s voice, values, and character into your digital product from day one. We make sure every interaction feels intentional — not just usable, but unmistakably you."
-    backgroundImage="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/hero-pattern.svg"
+    backgroundImage="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/HeroPatternAnimated (1).svg"
     readMore="Read more"
     buttonText="Do you know why?"
     buttonLink="#"
