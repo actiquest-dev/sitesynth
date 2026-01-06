@@ -1,5 +1,6 @@
 <template>
   <section
+    ref="sectionRef"
     :id="id || undefined"
     :class="`group relative overflow-hidden border-t border-b border-[#636363] ${contentBgColor}`"
   >
@@ -16,8 +17,12 @@
           {{ leftDescription }}
         </p>
 
-        <!-- Tags (animated pills) -->
-        <div v-if="tags?.length" class="flex flex-wrap gap-4 py-10">
+        <!-- Tags (animated on scroll into view) -->
+        <div
+          v-if="tags?.length"
+          class="flex flex-wrap gap-4 py-10"
+          :class="{ 'pills-visible': inView }"
+        >
           <div
             v-for="(tag, index) in tags"
             :key="index"
@@ -28,10 +33,10 @@
             ]"
           >
             <a
-              :href="tagHref(tag)"
+              href="#"
               class="tag-pill-inner inline-flex items-center justify-center rounded-full px-6 py-3 font-medium"
               :class="[tagBgColor, tagTextColor]"
-              @click="onTagClick"
+              @click.prevent
             >
               {{ tag }}
             </a>
@@ -59,6 +64,8 @@
 </template>
 
 <script setup>
+import { ref, onMounted, onBeforeUnmount } from "vue";
+
 const props = defineProps({
   id: { type: String, default: "" },
 
@@ -75,26 +82,40 @@ const props = defineProps({
   leftTitle: String,
   leftDescription: String,
 
-  tags: {
-    type: Array,
-    default: () => [],
-  },
+  tags: { type: Array, default: () => [] },
 
   toolsTitle: String,
-  toolsList: {
-    type: Array,
-    default: () => [],
-  },
+  toolsList: { type: Array, default: () => [] },
 
   imageSrc: String,
 });
 
-const tagHref = () => "#";
+const sectionRef = ref(null);
+const inView = ref(false);
 
-// чтобы не было прыжка страницы наверх при клике
-const onTagClick = (e) => {
-  e.preventDefault();
-};
+let observer;
+
+onMounted(() => {
+  observer = new IntersectionObserver(
+    (entries) => {
+      const entry = entries[0];
+      if (entry?.isIntersecting) {
+        inView.value = true;
+        observer?.disconnect(); // запускаем один раз
+      }
+    },
+    {
+      threshold: 0.25,
+      rootMargin: "0px 0px -10% 0px",
+    }
+  );
+
+  if (sectionRef.value) observer.observe(sectionRef.value);
+});
+
+onBeforeUnmount(() => {
+  observer?.disconnect();
+});
 </script>
 
 <style scoped>
@@ -105,7 +126,7 @@ const onTagClick = (e) => {
     box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Внутренняя часть: появление + мягкий пульс */
+/* По умолчанию скрыто (пока не доскроллили) */
 .tag-pill-inner {
   opacity: 0;
   transform: translateY(10px);
@@ -113,7 +134,10 @@ const onTagClick = (e) => {
   transition: filter 380ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1),
     transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
+}
 
+/* Когда блок попал в viewport — запускаем анимации */
+.pills-visible .tag-pill-inner {
   animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards,
     softPulse 4s ease-in-out infinite;
   animation-delay: calc(var(--i) * 90ms);
@@ -160,6 +184,19 @@ const onTagClick = (e) => {
   }
   100% {
     box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .tag-pill,
+  .tag-pill-inner {
+    transition: none !important;
+    animation: none !important;
+  }
+  .tag-pill-inner {
+    opacity: 1;
+    transform: none;
   }
 }
 </style>
