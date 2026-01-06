@@ -9,54 +9,55 @@
     <!-- как в твоём примере: grid на всю ширину -->
     <div class="mx-auto grid grid-cols-1 md:grid-cols-2 relative z-10">
       <!-- Left Column -->
+<div class="py-12 md:border-r border-[#636363]">
+  <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-12">
+    <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
+      {{ leftTitle }}
+    </h2>
+
+    <p :class="`leading-relaxed ${textColor}`">
+      {{ leftDescription }}
+    </p>
+
+    <!-- Tags -->
+    <div
+      v-if="tags?.length"
+      class="flex flex-wrap gap-4 py-10"
+      :class="{ 'pills-visible': inView }"
+    >
       <div
-  class="px-6 pt-12 pb-6 md:py-12 md:pr-12 md:pl-[clamp(24px,calc((100vw-1248px)/2+24px),260px)] md:border-r border-[#636363]"
->
-        <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
-          {{ leftTitle }}
-        </h2>
-
-        <p :class="`leading-relaxed ${textColor}`">
-          {{ leftDescription }}
-        </p>
-
-        <!-- Tags -->
-        <div
-          v-if="tags?.length"
-          class="flex flex-wrap gap-4 py-10"
-          :class="{ 'pills-visible': inView }"
+        v-for="(tag, index) in tags"
+        :key="index"
+        :style="{ '--i': index }"
+        :class="[
+          'tag-pill inline-flex rounded-full p-[3px] border-[2px]',
+          borderColor,
+        ]"
+      >
+        <a
+          href="#"
+          class="tag-pill-inner inline-flex items-center justify-center rounded-full px-6 py-3 font-medium"
+          :class="[tagBgColor, tagTextColor]"
+          @click.prevent
         >
-          <div
-            v-for="(tag, index) in tags"
-            :key="index"
-            :style="{ '--i': index }"
-            :class="[
-              'tag-pill inline-flex rounded-full p-[3px] border-[2px]',
-              borderColor,
-            ]"
-          >
-            <a
-              href="#"
-              class="tag-pill-inner inline-flex items-center justify-center rounded-full px-6 py-3 font-medium"
-              :class="[tagBgColor, tagTextColor]"
-              @click.prevent
-            >
-              {{ tag }}
-            </a>
-          </div>
-        </div>
-
-        <!-- Tools -->
-        <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
-          {{ toolsTitle }}
-        </h2>
-
-        <ul class="list-disc pl-6" :class="textColor">
-          <li class="pb-2" v-for="(tool, index) in toolsList" :key="index">
-            {{ tool }}
-          </li>
-        </ul>
+          {{ tag }}
+        </a>
       </div>
+    </div>
+
+    <!-- Tools -->
+    <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
+      {{ toolsTitle }}
+    </h2>
+
+    <ul class="list-disc pl-6" :class="textColor">
+      <li class="pb-2" v-for="(tool, index) in toolsList" :key="index">
+        {{ tool }}
+      </li>
+    </ul>
+  </div>
+</div>
+
 
       <!-- Right Column (Image) -->
       <!-- без padding: картинка в край и на мобилке и на десктопе -->
