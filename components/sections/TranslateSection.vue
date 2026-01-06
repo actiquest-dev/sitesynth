@@ -1,5 +1,9 @@
 <template>
-  <section :id="id || undefined" :class="`${bgColor} group relative overflow-hidden`">
+  <section
+    ref="sectionRef"
+    :id="id || undefined"
+    :class="`${bgColor} group relative overflow-hidden`"
+  >
     <GlowEffect />
 
     <div :class="`border-t border-b border-[#636363] ${contentBgColor}`">
@@ -19,8 +23,8 @@
             {{ mainDescription }}
           </p>
 
-          <!-- Dynamic Links (Pills with animation) -->
-          <div class="flex flex-wrap gap-4 py-6">
+          <!-- Dynamic Links (Pills with animation on scroll) -->
+          <div class="flex flex-wrap gap-4 py-6" :class="{ 'pills-visible': inView }">
             <div
               v-for="(link, index) in links"
               :key="index"
@@ -55,6 +59,8 @@
 </template>
 
 <script setup>
+import { ref, onMounted, onBeforeUnmount } from "vue";
+
 defineProps({
   id: { type: String, default: "" },
   sectionTitle: String,
@@ -63,16 +69,10 @@ defineProps({
   mainTitle: String,
   mainDescription: String,
 
-  links: {
-    type: Array,
-    default: () => [],
-  },
+  links: { type: Array, default: () => [] },
 
   toolsTitle: String,
-  tools: {
-    type: Array,
-    default: () => [],
-  },
+  tools: { type: Array, default: () => [] },
 
   bgColor: { type: String, default: "bg-[#DDDDDD]" },
   contentBgColor: { type: String, default: "bg-[#DDDDDD]" },
@@ -85,6 +85,33 @@ defineProps({
 
   imagePosition: { type: String, default: "" },
 });
+
+const sectionRef = ref(null);
+const inView = ref(false);
+
+let observer;
+
+onMounted(() => {
+  observer = new IntersectionObserver(
+    (entries) => {
+      const entry = entries[0];
+      if (entry?.isIntersecting) {
+        inView.value = true;
+        observer?.disconnect(); // один раз
+      }
+    },
+    {
+      threshold: 0.25,
+      rootMargin: "0px 0px -10% 0px",
+    }
+  );
+
+  if (sectionRef.value) observer.observe(sectionRef.value);
+});
+
+onBeforeUnmount(() => {
+  observer?.disconnect();
+});
 </script>
 
 <style scoped>
@@ -95,7 +122,7 @@ defineProps({
     box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Внутренняя часть: fade-in + мягкий пульс */
+/* База: скрыто (до скролла) */
 .tag-pill-inner {
   opacity: 0;
   transform: translateY(10px);
@@ -103,7 +130,10 @@ defineProps({
   transition: filter 380ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1),
     transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
+}
 
+/* Запуск анимаций только когда секция в зоне видимости */
+.pills-visible .tag-pill-inner {
   animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards,
     softPulse 4s ease-in-out infinite;
   animation-delay: calc(var(--i) * 90ms);
@@ -150,6 +180,19 @@ defineProps({
   }
   100% {
     box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .tag-pill,
+  .tag-pill-inner {
+    transition: none !important;
+    animation: none !important;
+  }
+  .tag-pill-inner {
+    opacity: 1;
+    transform: none;
   }
 }
 </style>
