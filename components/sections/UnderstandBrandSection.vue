@@ -66,15 +66,15 @@
           </div>
         </div>
 
-       <!-- Right Column (Image) -->
-      <!-- без padding: картинка в край и на мобилке и на десктопе -->
-      <div class="relative border-t border-[#636363] md:border-t-0">
-        <img
-          :src="imageSrc"
-          alt="Section image"
-          class="w-full h-full block object-cover"
-          :class="imagePosition"
-        />
+        <!-- Right Column (Image) - только md+ -->
+        <div class="hidden md:block relative border-t border-[#636363] md:border-t-0">
+          <img
+            :src="imageSrc"
+            alt="Section image"
+            class="w-full h-full block object-cover"
+            :class="imagePosition"
+          />
+        </div>
       </div>
     </div>
   </section>
