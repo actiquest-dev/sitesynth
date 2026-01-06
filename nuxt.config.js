@@ -77,8 +77,15 @@ export default defineNuxtConfig({
       link: [
         {
           rel: "icon",
-          sizes: "192x192",
-          href: "/assets/favicon/favicon-192x192.png",
+          type: "image/png",
+          sizes: "96x96",
+          href: "/favicon.png",
+        },
+        // Fallback (Google still checks this)
+        {
+          rel: "shortcut icon",
+          type: "image/x-icon",
+          href: "/favicon.ico",
         },
         // Modern browsers - SVG favicon (scalable, preferred)
         {
@@ -86,22 +93,11 @@ export default defineNuxtConfig({
           type: "image/svg+xml",
           href: "/assets/favicon/favicon-new.svg",
         },
-        // Fallback for browsers that don't support SVG favicons
-        {
-          rel: "icon",
-          sizes: "512x512",
-          href: "/assets/favicon/favicon-new-512x512.png",
-        },
         // Apple devices
         {
           rel: "apple-touch-icon",
           sizes: "180x180",
           href: "/assets/favicon/apple-touch-icon.png",
-        },
-        {
-          rel: "icon",
-          sizes: "32x32",
-          href: "/assets/favicon/favicon-32x32.png",
         },
         // Web app manifest (contains PWA icons)
         {
