@@ -75,6 +75,11 @@ export default defineNuxtConfig({
         { name: "theme-color", content: "#161616" },
       ],
       link: [
+        {
+          rel: "icon",
+          sizes: "192x192",
+          href: "/assets/favicon/apple-touch-icon-192x192.png",
+        },
         // Modern browsers - SVG favicon (scalable, preferred)
         {
           rel: "icon",
@@ -84,30 +89,19 @@ export default defineNuxtConfig({
         // Fallback for browsers that don't support SVG favicons
         {
           rel: "icon",
-          sizes: "32x32",
-          href: "/assets/favicon/favicon-32x32.png",
-        },
-        {
-          rel: "icon",
-          sizes: "192x192",
-          href: "/assets/favicon/apple-touch-icon-192x192.png",
-        },
-        {
-          rel: "icon",
           sizes: "512x512",
           href: "/assets/favicon/favicon-new-512x512.png",
-        },
-        // Legacy browsers fallback
-        {
-          rel: "shortcut icon",
-          type: "image/x-icon",
-          href: "/assets/favicon/favicon.ico",
         },
         // Apple devices
         {
           rel: "apple-touch-icon",
           sizes: "180x180",
           href: "/assets/favicon/apple-touch-icon.png",
+        },
+        {
+          rel: "icon",
+          sizes: "32x32",
+          href: "/assets/favicon/favicon-32x32.png",
         },
         // Web app manifest (contains PWA icons)
         {

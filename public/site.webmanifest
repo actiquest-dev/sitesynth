@@ -2,6 +2,8 @@
   "name": "SiteSynth",
   "short_name": "SiteSynth",
   "start_url": "/",
+  "id": "/",
+  "scope": "/",
   "lang": "en",
   "dir": "ltr",
   "description": "SiteSynth – Strategic design and development company that bridges product, brand, and tech to create scalable digital solutions.",

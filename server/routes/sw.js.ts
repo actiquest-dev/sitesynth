@@ -1,3 +1,4 @@
+import { defineEventHandler } from 'h3'
 // Handle service worker requests to prevent 404 errors
 export default defineEventHandler((event) => {
   return new Response('// Service worker disabled', {
