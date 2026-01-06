@@ -58,7 +58,7 @@
       'Whimsical for brand attributes and tone sliders',
       'Optional pre-workshop surveys via Typeform or Google Forms',
     ]"
-    imageSrc="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/understand-brand.webp"
+    imageSrc="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/understand-brand.svg"
   />
 
   <Testimonial
@@ -82,7 +82,7 @@
 
   <TranslateSection
     imagePosition="h-full object-cover"
-    imageSrc="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/translate-into-product-experience.webp"
+    imageSrc="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/translate-into-product-experience.svg"
     imageAlt="Github code"
     mainTitle="🎨 Make your product speak, look, and feel like your brand."
     bgColor="bg-[#DDDDDD]"
@@ -133,7 +133,7 @@
       'Slack or Loom for async feedback',
       'Monday.com or Jira for team tracking',
     ]"
-    imageSrc="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/align-across-teams.webp"
+    imageSrc="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/align-across-teams.svg"
   />
   <BannerSection text="What You Get" />
   <Column
