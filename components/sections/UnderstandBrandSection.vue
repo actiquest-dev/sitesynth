@@ -10,8 +10,8 @@
     <div class="mx-auto grid grid-cols-1 md:grid-cols-2 relative z-10">
       <!-- Left Column -->
       <div
-        class="px-6 pt-12 pb-6 md:py-12 md:pr-12 md:border-r border-[#636363]"
-      >
+  class="px-6 pt-12 pb-6 md:py-12 md:pr-12 md:pl-[clamp(24px,calc((100vw-1248px)/2+24px),260px)] md:border-r border-[#636363]"
+>
         <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
           {{ leftTitle }}
         </h2>
