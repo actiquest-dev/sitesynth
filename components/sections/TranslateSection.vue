@@ -7,51 +7,62 @@
     <GlowEffect />
 
     <div :class="`border-t border-b border-[#636363] ${contentBgColor}`">
-      <div class="max-w-[1248px] mx-auto grid grid-cols-1 md:grid-cols-2 px-6">
-        <!-- Image Section -->
+      <!-- FULL WIDTH GRID -->
+      <div class="mx-auto grid grid-cols-1 md:grid-cols-2 relative z-10">
+        <!-- Left Column (Image) -->
         <div class="md:border-r border-[#636363]">
-          <img :src="imageSrc" :alt="imageAlt" :class="`${imagePosition}`" />
+          <img
+            :src="imageSrc"
+            :alt="imageAlt"
+            class="w-full h-full block object-cover"
+            :class="imagePosition"
+          />
         </div>
 
-        <!-- Content Section -->
-        <div class="py-12 md:pl-8">
-          <h2 :class="`text-2xl font-semibold pb-4 ${textColor}`">
-            {{ mainTitle }}
-          </h2>
+        <!-- Right Column (Content) -->
+        <div class="py-12">
+          <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pl-12">
+            <h2 :class="`text-2xl font-semibold pb-4 ${textColor}`">
+              {{ mainTitle }}
+            </h2>
 
-          <p :class="`leading-relaxed ${textColor}`">
-            {{ mainDescription }}
-          </p>
+            <p :class="`leading-relaxed ${textColor}`">
+              {{ mainDescription }}
+            </p>
 
-          <!-- Dynamic Links (Pills with animation on scroll) -->
-          <div class="flex flex-wrap gap-4 py-6" :class="{ 'pills-visible': inView }">
+            <!-- Dynamic Links (Pills with animation on scroll) -->
             <div
-              v-for="(link, index) in links"
-              :key="index"
-              :style="{ '--i': index }"
-              :class="[
-                'tag-pill inline-flex rounded-full p-[3px] border-[2px]',
-                borderColor,
-              ]"
+              class="flex flex-wrap gap-4 py-6"
+              :class="{ 'pills-visible': inView }"
             >
-              <a
-                :href="link.url"
-                class="tag-pill-inner inline-flex items-center justify-center rounded-full px-6 py-3 font-medium"
-                :class="[tagBgColor, tagTextColor]"
+              <div
+                v-for="(link, index) in links"
+                :key="index"
+                :style="{ '--i': index }"
+                :class="[
+                  'tag-pill inline-flex rounded-full p-[3px] border-[2px]',
+                  borderColor,
+                ]"
               >
-                {{ link.text }}
-              </a>
+                <a
+                  :href="link.url"
+                  class="tag-pill-inner inline-flex items-center justify-center rounded-full px-6 py-3 font-medium"
+                  :class="[tagBgColor, tagTextColor]"
+                >
+                  {{ link.text }}
+                </a>
+              </div>
             </div>
+
+            <!-- Tools Section -->
+            <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
+              {{ toolsTitle }}
+            </h2>
+
+            <ul :class="`list-disc pl-6 ${textColor}`">
+              <li v-for="(tool, index) in tools" :key="index">{{ tool }}</li>
+            </ul>
           </div>
-
-          <!-- Tools Section -->
-          <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
-            {{ toolsTitle }}
-          </h2>
-
-          <ul :class="`list-disc pl-6 ${textColor}`">
-            <li v-for="(tool, index) in tools" :key="index">{{ tool }}</li>
-          </ul>
         </div>
       </div>
     </div>
@@ -83,7 +94,8 @@ defineProps({
   tagTextColor: { type: String, default: "text-white" },
   borderColor: { type: String, default: "border-white" },
 
-  imagePosition: { type: String, default: "" },
+  // сюда передавай object-position классы типа "object-center", "object-right", etc.
+  imagePosition: { type: String, default: "object-center" },
 });
 
 const sectionRef = ref(null);
@@ -97,7 +109,7 @@ onMounted(() => {
       const entry = entries[0];
       if (entry?.isIntersecting) {
         inView.value = true;
-        observer?.disconnect(); // один раз
+        observer?.disconnect();
       }
     },
     {
@@ -115,14 +127,12 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-/* Внешняя оболочка таблетки */
 .tag-pill {
   cursor: pointer;
   transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* База: скрыто (до скролла) */
 .tag-pill-inner {
   opacity: 0;
   transform: translateY(10px);
@@ -132,14 +142,12 @@ onBeforeUnmount(() => {
     transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Запуск анимаций только когда секция в зоне видимости */
 .pills-visible .tag-pill-inner {
   animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards,
     softPulse 4s ease-in-out infinite;
   animation-delay: calc(var(--i) * 90ms);
 }
 
-/* Hover эффекты только для устройств с мышкой */
 @media (hover: hover) and (pointer: fine) {
   .tag-pill:hover {
     transform: translateY(-3px);
@@ -153,12 +161,10 @@ onBeforeUnmount(() => {
   }
 }
 
-/* Фокус с клавиатуры */
 .tag-pill:focus-within {
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.22);
 }
 
-/* Плавное появление */
 @keyframes fadeUp {
   0% {
     opacity: 0;
@@ -170,7 +176,6 @@ onBeforeUnmount(() => {
   }
 }
 
-/* Мягкий пульс (белый glow) */
 @keyframes softPulse {
   0% {
     box-shadow: 0 0 0 rgba(255, 255, 255, 0);
@@ -183,7 +188,6 @@ onBeforeUnmount(() => {
   }
 }
 
-/* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .tag-pill,
   .tag-pill-inner {
@@ -196,3 +200,4 @@ onBeforeUnmount(() => {
   }
 }
 </style>
+
