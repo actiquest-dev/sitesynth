@@ -66,12 +66,15 @@
           </div>
         </div>
 
-        <!-- Right Column (Image) - только md+ -->
-        <div class="hidden md:block relative border-t border-[#636363] md:border-t-0">
+        <!-- Right Column Image (desktop как было) -->
+        <div
+          class="hidden md:block relative"
+          :class="paddingImage"
+        >
           <img
             :src="imageSrc"
             alt="Section image"
-            class="w-full h-full block object-cover"
+            class="w-full h-full object-cover"
             :class="imagePosition"
           />
         </div>
@@ -93,7 +96,7 @@ defineProps({
   tagTextColor: { type: String, default: "text-white" },
   borderColor: { type: String, default: "border-white" },
 
-  // object-position классы: object-center / object-right / object-right-bottom etc.
+  paddingImage: { type: String, default: "" },
   imagePosition: { type: String, default: "object-center" },
 
   leftTitle: String,
@@ -213,6 +216,8 @@ onBeforeUnmount(() => observer?.disconnect());
   }
 }
 </style>
+
+
 
 
 
