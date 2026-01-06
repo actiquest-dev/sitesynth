@@ -4,6 +4,19 @@ export default defineNuxtConfig({
 
   devtools: { enabled: true },
 
+  // Remove trailing slashes from URLs
+  hooks: {
+    "pages:extend"(pages) {
+      // This ensures Nuxt's router handles trailing slashes consistently
+    },
+  },
+
+  router: {
+    options: {
+      strict: true, // Ensures trailing slashes are significant
+    },
+  },
+
   modules: [
     "@nuxtjs/tailwindcss",
     "@nuxt/image",
@@ -59,16 +72,7 @@ export default defineNuxtConfig({
         },
         // Additional meta tags for better SEO
         { name: "application-name", content: "SiteSynth" },
-        { name: "apple-mobile-web-app-title", content: "SiteSynth" },
-        { name: "apple-mobile-web-app-capable", content: "yes" },
-
-        // Additional meta tags for better SEO
         { name: "theme-color", content: "#161616" },
-        { name: "msapplication-TileColor", content: "#161616" },
-        {
-          name: "msapplication-TileImage",
-          content: "/assets/favicon/web-app-manifest-192x192.png",
-        },
       ],
       link: [
         // Modern browsers - SVG favicon (scalable, preferred)

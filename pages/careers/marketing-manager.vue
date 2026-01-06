@@ -202,7 +202,6 @@ useSeoMeta({
   ogDescription: seo.ogDescription,
   ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "Marketing Manager - Join SiteSynth",
-  ogUrl: `${siteUrl}/careers/marketing-manager`,
   twitterTitle: seo.twitterTitle,
   twitterDescription: seo.twitterDescription,
   twitterImage: `${siteUrl}/assets/shareimage.png`,

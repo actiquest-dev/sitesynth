@@ -230,7 +230,6 @@ useSeoMeta({
   ogDescription: seo.ogDescription,
   ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "ScoreSynth - AI Music Scoring",
-  ogUrl: `${siteUrl}/scoresynth`,
 
   twitterTitle: seo.twitterTitle,
   twitterDescription: seo.twitterDescription,

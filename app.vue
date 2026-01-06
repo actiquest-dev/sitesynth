@@ -11,17 +11,11 @@ import { Analytics } from "@vercel/analytics/nuxt";
 import "~/assets/style.scss";
 
 const route = useRoute();
-
-// Computed canonical URL that updates with route changes
 const config = useRuntimeConfig();
-// Default base URL (can be overridden with SITE_URL env var)
 const baseUrl = config.public?.siteUrl;
 
-const canonicalUrl = computed(() => {
-  // Remove trailing slash and ensure proper formatting
-  const path = route.path === "/" ? "" : route.path.replace(/\/+$/, "");
-  return `${baseUrl}${path}`;
-});
+// Use the canonical URL composable for consistency
+const canonicalUrl = useCanonicalUrl();
 
 useHead({
   // Default meta tags - pages can override specific ones

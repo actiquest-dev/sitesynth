@@ -183,7 +183,6 @@ useSeoMeta({
   ogDescription: seo.ogDescription,
   ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "UX/UI Designer - Join SiteSynth",
-  ogUrl: `${siteUrl}/careers/ux-ui-designer`,
   twitterTitle: seo.twitterTitle,
   twitterDescription: seo.twitterDescription,
   twitterImage: `${siteUrl}/assets/shareimage.png`,

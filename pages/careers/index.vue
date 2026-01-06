@@ -171,7 +171,6 @@ useSeoMeta({
   ogDescription: seo.ogDescription,
   ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "Careers at SiteSynth",
-  ogUrl: `${siteUrl}/careers`,
   twitterTitle: seo.ogTitle,
   twitterDescription: seo.ogDescription,
   twitterImage: `${siteUrl}/assets/shareimage.png`,

@@ -209,7 +209,6 @@ useSeoMeta({
   ogDescription: seo.ogDescription,
   ogImage: `${siteUrl}/assets/shareimage.png`,
   ogImageAlt: "Full-Stack Developer - Join SiteSynth",
-  ogUrl: `${siteUrl}/careers/full-stack-developer`,
   twitterTitle: seo.twitterTitle,
   twitterDescription: seo.twitterDescription,
   twitterImage: `${siteUrl}/assets/shareimage.png`,
