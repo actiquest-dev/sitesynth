@@ -55,17 +55,13 @@
         </ul>
       </div>
 
-      <!-- Right Column Image (FIXED) -->
+      <!-- Right Column Image (FIX) -->
       <div :class="`${paddingImage} relative overflow-hidden`">
         <img
           :src="imageSrc"
           alt="Section image"
-          :class="[
-            'absolute',
-            hasManualPosition ? '' : 'inset-0',
-            'w-full h-full object-contain',
-            imagePosition
-          ]"
+          class="w-full h-auto block"
+          :class="imagePosition"
         />
       </div>
     </div>
@@ -73,9 +69,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, computed } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 
-const props = defineProps({
+defineProps({
   id: { type: String, default: "" },
 
   contentBgColor: { type: String, default: "bg-[#DDDDDD]" },
@@ -97,11 +93,6 @@ const props = defineProps({
   toolsList: { type: Array, default: () => [] },
 
   imageSrc: String,
-});
-
-const hasManualPosition = computed(() => {
-  // если ты передал top- / right- / bottom- / left- / inset- — значит хочешь ручное позиционирование
-  return /(inset-|top-|right-|bottom-|left-)/.test(props.imagePosition || "");
 });
 
 const sectionRef = ref(null);
@@ -133,14 +124,13 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-/* Внешняя оболочка таблетки */
+/* твой CSS без изменений */
 .tag-pill {
   cursor: pointer;
   transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* ФИКС: stroke всегда белый и не меняется на hover */
 .tag-pill {
   border-color: #ffffff !important;
 }
@@ -150,7 +140,6 @@ onBeforeUnmount(() => {
   }
 }
 
-/* По умолчанию скрыто (пока не доскроллили) */
 .tag-pill-inner {
   opacity: 0;
   transform: translateY(10px);
@@ -160,14 +149,12 @@ onBeforeUnmount(() => {
     transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Когда блок попал в viewport — запускаем анимации */
 .pills-visible .tag-pill-inner {
   animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards,
     softPulse 4s ease-in-out infinite;
   animation-delay: calc(var(--i) * 90ms);
 }
 
-/* Hover только для устройств с мышкой */
 @media (hover: hover) and (pointer: fine) {
   .tag-pill:hover {
     transform: translateY(-3px);
@@ -181,37 +168,21 @@ onBeforeUnmount(() => {
   }
 }
 
-/* Фокус с клавиатуры */
 .tag-pill:focus-within {
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.22);
 }
 
-/* Появление */
 @keyframes fadeUp {
-  0% {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
-/* Мягкий пульс */
 @keyframes softPulse {
-  0% {
-    box-shadow: 0 0 0 rgba(255, 255, 255, 0);
-  }
-  50% {
-    box-shadow: 0 0 14px rgba(255, 255, 255, 0.14);
-  }
-  100% {
-    box-shadow: 0 0 0 rgba(255, 255, 255, 0);
-  }
+  0% { box-shadow: 0 0 0 rgba(255, 255, 255, 0); }
+  50% { box-shadow: 0 0 14px rgba(255, 255, 255, 0.14); }
+  100% { box-shadow: 0 0 0 rgba(255, 255, 255, 0); }
 }
 
-/* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .tag-pill,
   .tag-pill-inner {
@@ -224,6 +195,7 @@ onBeforeUnmount(() => {
   }
 }
 </style>
+
 
 
 
