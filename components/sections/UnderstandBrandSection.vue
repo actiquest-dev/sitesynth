@@ -66,7 +66,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
 
-const props = defineProps({
+defineProps({
   id: { type: String, default: "" },
 
   contentBgColor: { type: String, default: "bg-[#DDDDDD]" },
@@ -124,6 +124,16 @@ onBeforeUnmount(() => {
   cursor: pointer;
   transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ФИКС: stroke всегда белый и не меняется на hover */
+.tag-pill {
+  border-color: #ffffff !important;
+}
+@media (hover: hover) and (pointer: fine) {
+  .tag-pill:hover {
+    border-color: #ffffff !important;
+  }
 }
 
 /* По умолчанию скрыто (пока не доскроллили) */
@@ -200,4 +210,5 @@ onBeforeUnmount(() => {
   }
 }
 </style>
+
 
