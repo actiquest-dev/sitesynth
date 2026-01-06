@@ -55,9 +55,14 @@
         </ul>
       </div>
 
-      <!-- Right Column Image -->
-      <div :class="`${paddingImage} relative`">
-        <img :src="imageSrc" alt="Section image" :class="`${imagePosition}`" />
+      <!-- Right Column Image (UPDATED) -->
+      <div :class="`${paddingImage} relative flex items-center justify-center overflow-hidden`">
+        <img
+          :src="imageSrc"
+          alt="Section image"
+          class="w-full h-full object-contain"
+          :class="imagePosition"
+        />
       </div>
     </div>
   </section>
@@ -101,7 +106,7 @@ onMounted(() => {
       const entry = entries[0];
       if (entry?.isIntersecting) {
         inView.value = true;
-        observer?.disconnect(); // запускаем один раз
+        observer?.disconnect();
       }
     },
     {
@@ -119,14 +124,13 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-/* Внешняя оболочка таблетки */
+/* ... твой CSS без изменений ... */
 .tag-pill {
   cursor: pointer;
   transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* ФИКС: stroke всегда белый и не меняется на hover */
 .tag-pill {
   border-color: #ffffff !important;
 }
@@ -136,7 +140,6 @@ onBeforeUnmount(() => {
   }
 }
 
-/* По умолчанию скрыто (пока не доскроллили) */
 .tag-pill-inner {
   opacity: 0;
   transform: translateY(10px);
@@ -146,14 +149,12 @@ onBeforeUnmount(() => {
     transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Когда блок попал в viewport — запускаем анимации */
 .pills-visible .tag-pill-inner {
   animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards,
     softPulse 4s ease-in-out infinite;
   animation-delay: calc(var(--i) * 90ms);
 }
 
-/* Hover только для устройств с мышкой */
 @media (hover: hover) and (pointer: fine) {
   .tag-pill:hover {
     transform: translateY(-3px);
@@ -167,12 +168,10 @@ onBeforeUnmount(() => {
   }
 }
 
-/* Фокус с клавиатуры */
 .tag-pill:focus-within {
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.22);
 }
 
-/* Появление */
 @keyframes fadeUp {
   0% {
     opacity: 0;
@@ -184,7 +183,6 @@ onBeforeUnmount(() => {
   }
 }
 
-/* Мягкий пульс */
 @keyframes softPulse {
   0% {
     box-shadow: 0 0 0 rgba(255, 255, 255, 0);
@@ -197,7 +195,6 @@ onBeforeUnmount(() => {
   }
 }
 
-/* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .tag-pill,
   .tag-pill-inner {
