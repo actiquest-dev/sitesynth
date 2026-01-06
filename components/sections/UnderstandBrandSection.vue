@@ -6,65 +6,66 @@
   >
     <GlowEffect />
 
-    <!-- как в твоём примере: grid на всю ширину -->
+    <!-- Делаем как в твоём slot-компоненте: grid на всю ширину -->
     <div class="mx-auto grid grid-cols-1 md:grid-cols-2 relative z-10">
-      <!-- Left Column -->
-      <div
-        class="px-6 pt-12 pb-6 md:py-12 md:pr-12 md:border-r border-[#636363]"
-      >
-        <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
-          {{ leftTitle }}
-        </h2>
+      <!-- Left Column (оставил как было, 1:1) -->
+      <div class="px-6 -mb-8 md:mb-0">
+        <div class="md:border-r border-[#636363] py-12 md:pr-6">
+          <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
+            {{ leftTitle }}
+          </h2>
 
-        <p :class="`leading-relaxed ${textColor}`">
-          {{ leftDescription }}
-        </p>
+          <p :class="`leading-relaxed ${textColor}`">
+            {{ leftDescription }}
+          </p>
 
-        <!-- Tags -->
-        <div
-          v-if="tags?.length"
-          class="flex flex-wrap gap-4 py-10"
-          :class="{ 'pills-visible': inView }"
-        >
+          <!-- Tags (animated on scroll into view) -->
           <div
-            v-for="(tag, index) in tags"
-            :key="index"
-            :style="{ '--i': index }"
-            :class="[
-              'tag-pill inline-flex rounded-full p-[3px] border-[2px]',
-              borderColor,
-            ]"
+            v-if="tags?.length"
+            class="flex flex-wrap gap-4 py-10"
+            :class="{ 'pills-visible': inView }"
           >
-            <a
-              href="#"
-              class="tag-pill-inner inline-flex items-center justify-center rounded-full px-6 py-3 font-medium"
-              :class="[tagBgColor, tagTextColor]"
-              @click.prevent
+            <div
+              v-for="(tag, index) in tags"
+              :key="index"
+              :style="{ '--i': index }"
+              :class="[
+                'tag-pill inline-flex rounded-full p-[3px] border-[2px]',
+                borderColor,
+              ]"
             >
-              {{ tag }}
-            </a>
+              <a
+                href="#"
+                class="tag-pill-inner inline-flex items-center justify-center rounded-full px-6 py-3 font-medium"
+                :class="[tagBgColor, tagTextColor]"
+                @click.prevent
+              >
+                {{ tag }}
+              </a>
+            </div>
           </div>
+
+          <!-- Tools -->
+          <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
+            {{ toolsTitle }}
+          </h2>
+
+          <ul class="list-disc pl-6" :class="textColor">
+            <li class="pb-2" v-for="(tool, index) in toolsList" :key="index">
+              {{ tool }}
+            </li>
+          </ul>
         </div>
-
-        <!-- Tools -->
-        <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
-          {{ toolsTitle }}
-        </h2>
-
-        <ul class="list-disc pl-6" :class="textColor">
-          <li class="pb-2" v-for="(tool, index) in toolsList" :key="index">
-            {{ tool }}
-          </li>
-        </ul>
       </div>
 
-      <!-- Right Column (Image) -->
-      <!-- без padding: картинка в край и на мобилке и на десктопе -->
-      <div class="relative border-t border-[#636363] md:border-t-0">
+      <!-- Right Column Image -->
+      <div
+        class="relative border-t border-[#636363] md:border-t-0 md:border-l md:border-[#636363]"
+      >
         <img
           :src="imageSrc"
           alt="Section image"
-          class="w-full h-full block object-cover"
+          class="block w-full h-auto md:h-full object-cover"
           :class="imagePosition"
         />
       </div>
@@ -85,7 +86,6 @@ defineProps({
   tagTextColor: { type: String, default: "text-white" },
   borderColor: { type: String, default: "border-white" },
 
-  // object-position классы: object-center / object-right / object-right-bottom etc.
   imagePosition: { type: String, default: "object-center" },
 
   leftTitle: String,
@@ -113,22 +113,29 @@ onMounted(() => {
         observer?.disconnect();
       }
     },
-    { threshold: 0.25, rootMargin: "0px 0px -10% 0px" }
+    {
+      threshold: 0.25,
+      rootMargin: "0px 0px -10% 0px",
+    }
   );
 
   if (sectionRef.value) observer.observe(sectionRef.value);
 });
 
-onBeforeUnmount(() => observer?.disconnect());
+onBeforeUnmount(() => {
+  observer?.disconnect();
+});
 </script>
 
 <style scoped>
+/* Внешняя оболочка таблетки */
 .tag-pill {
   cursor: pointer;
   transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* ФИКС: stroke всегда белый и не меняется на hover */
 .tag-pill {
   border-color: #ffffff !important;
 }
@@ -138,6 +145,7 @@ onBeforeUnmount(() => observer?.disconnect());
   }
 }
 
+/* По умолчанию скрыто (пока не доскроллили) */
 .tag-pill-inner {
   opacity: 0;
   transform: translateY(10px);
@@ -147,6 +155,7 @@ onBeforeUnmount(() => observer?.disconnect());
     transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* Когда блок попал в viewport — запускаем анимации */
 .pills-visible .tag-pill-inner {
   animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards,
     softPulse 4s ease-in-out infinite;
