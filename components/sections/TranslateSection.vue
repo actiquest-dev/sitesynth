@@ -20,8 +20,8 @@
         </div>
 
         <!-- Right Column (Content) -->
-        <div class="py-12">
-          <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pl-12">
+        <div class="py-12 md:py-24">
+          <div class="max-w-[600px] mr-auto px-6 md:px-0 md:pl-16">
             <h2 :class="`text-2xl font-semibold pb-4 ${textColor}`">
               {{ mainTitle }}
             </h2>
@@ -81,7 +81,6 @@ defineProps({
   mainDescription: String,
 
   links: { type: Array, default: () => [] },
-
   toolsTitle: String,
   tools: { type: Array, default: () => [] },
 
@@ -94,7 +93,6 @@ defineProps({
   tagTextColor: { type: String, default: "text-white" },
   borderColor: { type: String, default: "border-white" },
 
-  // сюда передавай object-position классы типа "object-center", "object-right", etc.
   imagePosition: { type: String, default: "object-center" },
 });
 
@@ -112,21 +110,17 @@ onMounted(() => {
         observer?.disconnect();
       }
     },
-    {
-      threshold: 0.25,
-      rootMargin: "0px 0px -10% 0px",
-    }
+    { threshold: 0.25, rootMargin: "0px 0px -10% 0px" }
   );
 
   if (sectionRef.value) observer.observe(sectionRef.value);
 });
 
-onBeforeUnmount(() => {
-  observer?.disconnect();
-});
+onBeforeUnmount(() => observer?.disconnect());
 </script>
 
 <style scoped>
+/* твой существующий CSS — без изменений */
 .tag-pill {
   cursor: pointer;
   transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -200,4 +194,5 @@ onBeforeUnmount(() => {
   }
 }
 </style>
+
 
