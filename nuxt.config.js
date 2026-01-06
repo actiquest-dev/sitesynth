@@ -78,7 +78,7 @@ export default defineNuxtConfig({
         {
           rel: "icon",
           sizes: "192x192",
-          href: "/assets/favicon/apple-touch-icon-192x192.png",
+          href: "/assets/favicon/favicon-192x192.png",
         },
         // Modern browsers - SVG favicon (scalable, preferred)
         {
