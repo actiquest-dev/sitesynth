@@ -6,72 +6,91 @@
   >
     <GlowEffect />
 
-    <div class="max-w-[1248px] px-6 mx-auto grid grid-cols-1 md:grid-cols-2">
-      <!-- Left Column -->
-      <div class="md:border-r border-[#636363] py-12 md:pr-6">
-        <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
-          {{ leftTitle }}
-        </h2>
+    <!-- Контент держим в max-w как раньше -->
+    <div class="relative z-10 max-w-[1248px] px-6 mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2">
+        <!-- Left Column -->
+        <div class="py-12 md:pr-6">
+          <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
+            {{ leftTitle }}
+          </h2>
 
-        <p :class="`leading-relaxed ${textColor}`">
-          {{ leftDescription }}
-        </p>
+          <p :class="`leading-relaxed ${textColor}`">
+            {{ leftDescription }}
+          </p>
 
-        <!-- Tags (animated on scroll into view) -->
-        <div
-          v-if="tags?.length"
-          class="flex flex-wrap gap-4 py-10"
-          :class="{ 'pills-visible': inView }"
-        >
+          <!-- Tags (animated on scroll into view) -->
           <div
-            v-for="(tag, index) in tags"
-            :key="index"
-            :style="{ '--i': index }"
-            :class="[
-              'tag-pill inline-flex rounded-full p-[3px] border-[2px]',
-              borderColor,
-            ]"
+            v-if="tags?.length"
+            class="flex flex-wrap gap-4 py-10"
+            :class="{ 'pills-visible': inView }"
           >
-            <a
-              href="#"
-              class="tag-pill-inner inline-flex items-center justify-center rounded-full px-6 py-3 font-medium"
-              :class="[tagBgColor, tagTextColor]"
-              @click.prevent
+            <div
+              v-for="(tag, index) in tags"
+              :key="index"
+              :style="{ '--i': index }"
+              :class="[
+                'tag-pill inline-flex rounded-full p-[3px] border-[2px]',
+                borderColor,
+              ]"
             >
-              {{ tag }}
-            </a>
+              <a
+                href="#"
+                class="tag-pill-inner inline-flex items-center justify-center rounded-full px-6 py-3 font-medium"
+                :class="[tagBgColor, tagTextColor]"
+                @click.prevent
+              >
+                {{ tag }}
+              </a>
+            </div>
+          </div>
+
+          <!-- Tools -->
+          <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
+            {{ toolsTitle }}
+          </h2>
+
+          <ul class="list-disc pl-6" :class="textColor">
+            <li class="pb-2" v-for="(tool, index) in toolsList" :key="index">
+              {{ tool }}
+            </li>
+          </ul>
+
+          <!-- mobile image (чтобы на телефоне было нормально) -->
+          <div class="mt-10 md:hidden">
+            <div class="relative w-full overflow-hidden border border-[#636363]">
+              <img
+                :src="imageSrc"
+                alt="Section image"
+                class="w-full h-auto object-cover"
+              />
+            </div>
           </div>
         </div>
 
-        <!-- Tools -->
-        <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
-          {{ toolsTitle }}
-        </h2>
-
-        <ul class="list-disc pl-6" :class="textColor">
-          <li class="pb-2" v-for="(tool, index) in toolsList" :key="index">
-            {{ tool }}
-          </li>
-        </ul>
+        <!-- Пустая правая колонка только для сетки внутри max-w -->
+        <div class="hidden md:block"></div>
       </div>
+    </div>
 
-      <!-- Right Column Image (FIX) -->
-      <div :class="`${paddingImage} relative overflow-hidden`">
-        <img
-          :src="imageSrc"
-          alt="Section image"
-          class="w-full h-auto block"
-          :class="imagePosition"
-        />
-      </div>
+    <!-- Full-bleed image справа (md+) -->
+    <div
+      class="hidden md:block absolute inset-y-0 left-1/2 right-0 z-0 border-l border-[#636363]"
+      :class="paddingImage"
+    >
+      <img
+        :src="imageSrc"
+        alt="Section image"
+        :class="imgClass"
+      />
     </div>
   </section>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, computed } from "vue";
 
-defineProps({
+const props = defineProps({
   id: { type: String, default: "" },
 
   contentBgColor: { type: String, default: "bg-[#DDDDDD]" },
@@ -81,8 +100,11 @@ defineProps({
   tagTextColor: { type: String, default: "text-white" },
   borderColor: { type: String, default: "border-white" },
 
+  // если хочешь добавить отступы/позиционирование контейнера картинки справа
   paddingImage: { type: String, default: "" },
-  imagePosition: { type: String, default: "" },
+
+  // лучше сюда передавать object-position типа: "object-right", "object-center", "object-right-bottom"
+  imagePosition: { type: String, default: "object-center" },
 
   leftTitle: String,
   leftDescription: String,
@@ -93,6 +115,11 @@ defineProps({
   toolsList: { type: Array, default: () => [] },
 
   imageSrc: String,
+});
+
+const imgClass = computed(() => {
+  // базово: растёт с браузером, не тянется, обрезается аккуратно
+  return `w-full h-full object-cover ${props.imagePosition || ""}`;
 });
 
 const sectionRef = ref(null);
@@ -124,13 +151,14 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-/* твой CSS без изменений */
+/* Внешняя оболочка таблетки */
 .tag-pill {
   cursor: pointer;
   transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* ФИКС: stroke всегда белый и не меняется на hover */
 .tag-pill {
   border-color: #ffffff !important;
 }
@@ -140,6 +168,7 @@ onBeforeUnmount(() => {
   }
 }
 
+/* По умолчанию скрыто (пока не доскроллили) */
 .tag-pill-inner {
   opacity: 0;
   transform: translateY(10px);
@@ -149,6 +178,7 @@ onBeforeUnmount(() => {
     transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* Когда блок попал в viewport — запускаем анимации */
 .pills-visible .tag-pill-inner {
   animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards,
     softPulse 4s ease-in-out infinite;
@@ -173,14 +203,26 @@ onBeforeUnmount(() => {
 }
 
 @keyframes fadeUp {
-  0% { opacity: 0; transform: translateY(12px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes softPulse {
-  0% { box-shadow: 0 0 0 rgba(255, 255, 255, 0); }
-  50% { box-shadow: 0 0 14px rgba(255, 255, 255, 0.14); }
-  100% { box-shadow: 0 0 0 rgba(255, 255, 255, 0); }
+  0% {
+    box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  }
+  50% {
+    box-shadow: 0 0 14px rgba(255, 255, 255, 0.14);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
