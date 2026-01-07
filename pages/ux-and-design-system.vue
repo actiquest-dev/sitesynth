@@ -3,7 +3,7 @@
 
   <HeroDesign
     id="hero-design"
-    backgroundImage="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/HeroPattern-Anima.svg"
+    backgroundImage="assets/new-assets/test/hero-pattern-animated-once.svg"
     title="Let’s start the design conversation in Figma."
     description="We’ll review structure, components, and UX flows, then suggest what to fix first to make it consistent and scalable."
   />
