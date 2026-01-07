@@ -78,7 +78,7 @@
   <TranslateSection
     id="translate-back-end"
     imagePosition="object-cover"
-    imageSrc="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/back-end-engineering.webp"
+    imageSrc="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/back-end-engineering-two.svg"
     imageAlt="Github code"
     bgColor="bg-[#DDDDDD]"
     textColor="text-white"
