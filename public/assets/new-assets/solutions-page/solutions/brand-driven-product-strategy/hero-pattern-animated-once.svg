@@ -154,3 +154,29 @@ svg{shape-rendering:geometricPrecision;}
   <path d="M1336.5 1180.79L1193.71 1038L1336.5 895.207V1180.79Z" style="--i:45" pathLength="100"/>
 </g>
 </svg>
+
+<svg width="1457" height="1213" viewBox="0 0 1457 1213" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_1337_2612)">
+<g filter="url(#filter0_f_1337_2612)">
+<g clip-path="url(#paint0_angular_1337_2612_clip_path)" data-figma-skip-parse="true"><g transform="matrix(0 0.095 -0.5525 0 1277.5 402)"><foreignObject x="-1010.53" y="-1010.53" width="2021.05" height="2021.05"><div xmlns="http://www.w3.org/1999/xhtml" style="background:conic-gradient(from 90deg,rgba(0, 51, 255, 0.31) 0deg,rgba(165, 31, 255, 1) 360deg);height:100%;width:100%;opacity:1"></div></foreignObject></g></g><ellipse cx="1277.5" cy="402" rx="552.5" ry="95" data-figma-gradient-fill="{&#34;type&#34;:&#34;GRADIENT_ANGULAR&#34;,&#34;stops&#34;:[{&#34;color&#34;:{&#34;r&#34;:0.0,&#34;g&#34;:0.20000000298023224,&#34;b&#34;:1.0,&#34;a&#34;:0.31000000238418579},&#34;position&#34;:0.0},{&#34;color&#34;:{&#34;r&#34;:0.65000003576278687,&#34;g&#34;:0.1250,&#34;b&#34;:1.0,&#34;a&#34;:1.0},&#34;position&#34;:1.0}],&#34;stopsVar&#34;:[{&#34;color&#34;:{&#34;r&#34;:0.0,&#34;g&#34;:0.20000000298023224,&#34;b&#34;:1.0,&#34;a&#34;:0.31000000238418579},&#34;position&#34;:0.0},{&#34;color&#34;:{&#34;r&#34;:0.65000003576278687,&#34;g&#34;:0.1250,&#34;b&#34;:1.0,&#34;a&#34;:1.0},&#34;position&#34;:1.0}],&#34;transform&#34;:{&#34;m00&#34;:6.7661737215667095e-14,&#34;m01&#34;:-1105.0,&#34;m02&#34;:1830.0,&#34;m10&#34;:190.0,&#34;m11&#34;:1.1634144914270637e-14,&#34;m12&#34;:307.0},&#34;opacity&#34;:1.0,&#34;blendMode&#34;:&#34;NORMAL&#34;,&#34;visible&#34;:true}"/>
+</g>
+<g filter="url(#filter1_f_1337_2612)">
+<g clip-path="url(#paint1_angular_1337_2612_clip_path)" data-figma-skip-parse="true"><g transform="matrix(0 0.095 -0.5525 0 -171.5 885)"><foreignObject x="-1010.53" y="-1010.53" width="2021.05" height="2021.05"><div xmlns="http://www.w3.org/1999/xhtml" style="background:conic-gradient(from 90deg,rgba(0, 51, 255, 0.31) 0deg,rgba(165, 31, 255, 1) 360deg);height:100%;width:100%;opacity:1"></div></foreignObject></g></g><ellipse cx="-171.5" cy="885" rx="552.5" ry="95" data-figma-gradient-fill="{&#34;type&#34;:&#34;GRADIENT_ANGULAR&#34;,&#34;stops&#34;:[{&#34;color&#34;:{&#34;r&#34;:0.0,&#34;g&#34;:0.20000000298023224,&#34;b&#34;:1.0,&#34;a&#34;:0.31000000238418579},&#34;position&#34;:0.0},{&#34;color&#34;:{&#34;r&#34;:0.65000003576278687,&#34;g&#34;:0.1250,&#34;b&#34;:1.0,&#34;a&#34;:1.0},&#34;position&#34;:1.0}],&#34;stopsVar&#34;:[{&#34;color&#34;:{&#34;r&#34;:0.0,&#34;g&#34;:0.20000000298023224,&#34;b&#34;:1.0,&#34;a&#34;:0.31000000238418579},&#34;position&#34;:0.0},{&#34;color&#34;:{&#34;r&#34;:0.65000003576278687,&#34;g&#34;:0.1250,&#34;b&#34;:1.0,&#34;a&#34;:1.0},&#34;position&#34;:1.0}],&#34;transform&#34;:{&#34;m00&#34;:6.7661737215667095e-14,&#34;m01&#34;:-1105.0,&#34;m02&#34;:381.0,&#34;m10&#34;:190.0,&#34;m11&#34;:1.1634144914270637e-14,&#34;m12&#34;:790.0},&#34;opacity&#34;:1.0,&#34;blendMode&#34;:&#34;NORMAL&#34;,&#34;visible&#34;:true}"/>
+</g>
+</g>
+<defs>
+<filter id="filter0_f_1337_2612" x="405.9" y="-12.1" width="1743.2" height="828.2" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="159.55" result="effect1_foregroundBlur_1337_2612"/>
+</filter>
+<clipPath id="paint0_angular_1337_2612_clip_path"><ellipse cx="1277.5" cy="402" rx="552.5" ry="95"/></clipPath><filter id="filter1_f_1337_2612" x="-1043.1" y="470.9" width="1743.2" height="828.2" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="159.55" result="effect1_foregroundBlur_1337_2612"/>
+</filter>
+<clipPath id="paint1_angular_1337_2612_clip_path"><ellipse cx="-171.5" cy="885" rx="552.5" ry="95"/></clipPath><clipPath id="clip0_1337_2612">
+<rect width="1457" height="1213" fill="white"/>
+</clipPath>
+</defs>
+</svg>
