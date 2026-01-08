@@ -2,7 +2,7 @@
   <HeaderSection />
   <HeroAi
     id="hero-ai"
-    backgroundImage="/assets/HeroAi.svg"
+    backgroundImage="/assets/new-assets/solutions-page/solutions/ai-infused-innovation-and-rd/AIHeroPattern-flow-soft.svg"
     title="Everyone talks about AI. We build with it."
     description="AI is transforming how teams design, build, and operate — but most companies don’t know where to start. We help you find the right use cases, test fast, and integrate AI meaningfully into your product or process."
     buttonText="Let’s Build Together"
