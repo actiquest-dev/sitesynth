@@ -1,0 +1,89 @@
+<svg width="1457" height="941" viewBox="0 0 1457 941" fill="none" xmlns="http://www.w3.org/2000/svg">
+<style>
+  /* Trim animation: draw -> erase, twice, pause, repeat */
+  .trim-line{
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: trim2x 12s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+    animation-delay: calc(var(--i) * 120ms);
+  }
+
+  @keyframes trim2x{
+    0%   { stroke-dashoffset: 1000; opacity: 0.0; }
+    6%   { opacity: 0.85; }
+    15%  { stroke-dashoffset: 0;    opacity: 0.95; }
+    30%  { stroke-dashoffset: 1000; opacity: 0.0; }
+
+    45%  { stroke-dashoffset: 0;    opacity: 0.95; }
+    60%  { stroke-dashoffset: 1000; opacity: 0.0; }
+
+    100% { stroke-dashoffset: 1000; opacity: 0.0; }
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    .trim-line{ animation: none !important; stroke-dasharray: none; stroke-dashoffset: 0; opacity: 0.9; }
+  }
+</style>
+
+<g clip-path="url(#clip0_631_3041)">
+<g filter="url(#filter0_f_631_3041)">
+<g clip-path="url(#paint0_angular_631_3041_clip_path)" data-figma-skip-parse="true"><g transform="matrix(0 0.095 -0.5525 0 1277.5 550)"><foreignObject x="-1010.53" y="-1010.53" width="2021.05" height="2021.05"><div xmlns="http://www.w3.org/1999/xhtml" style="background:conic-gradient(from 90deg,rgba(0, 51, 255, 0.31) 0deg,rgba(165, 31, 255, 1) 360deg);height:100%;width:100%;opacity:1"></div></foreignObject></g></g><ellipse cx="1277.5" cy="550" rx="552.5" ry="95" data-figma-gradient-fill="{&#34;type&#34;:&#34;GRADIENT_ANGULAR&#34;,&#34;stops&#34;:[{&#34;color&#34;:{&#34;r&#34;:0.0,&#34;g&#34;:0.20000000298023224,&#34;b&#34;:1.0,&#34;a&#34;:0.31000000238418579},&#34;position&#34;:0.0},{&#34;color&#34;:{&#34;r&#34;:0.65000003576278687,&#34;g&#34;:0.1250,&#34;b&#34;:1.0,&#34;a&#34;:1.0},&#34;position&#34;:1.0}],&#34;stopsVar&#34;:[{&#34;color&#34;:{&#34;r&#34;:0.0,&#34;g&#34;:0.20000000298023224,&#34;b&#34;:1.0,&#34;a&#34;:0.31000000238418579},&#34;position&#34;:0.0},{&#34;color&#34;:{&#34;r&#34;:0.65000003576278687,&#34;g&#34;:0.1250,&#34;b&#34;:1.0,&#34;a&#34;:1.0},&#34;position&#34;:1.0}],&#34;transform&#34;:{&#34;m00&#34;:6.7661737215667095e-14,&#34;m01&#34;:-1105.0,&#34;m02&#34;:1830.0,&#34;m10&#34;:190.0,&#34;m11&#34;:1.1634144914270637e-14,&#34;m12&#34;:455.0},&#34;opacity&#34;:1.0,&#34;blendMode&#34;:&#34;NORMAL&#34;,&#34;visible&#34;:true}"/>
+</g>
+<g clip-path="url(#clip1_631_3041)">
+<path style="--i:0" pathLength="1000" class="trim-line" d="M-1 493.104V-1.89563L114.645 130.024L251.204 -1.89563L373 119.131L-1 493.104Z" stroke="#FFFFFF"/>
+<path style="--i:1" pathLength="1000" class="trim-line" d="M557 -1.89563V493.104L441.355 361.185L304.796 493.104L183 372.077L557 -1.89563Z" stroke="#FFFFFF"/>
+</g>
+<g clip-path="url(#clip2_631_3041)">
+<path style="--i:2" pathLength="1000" class="trim-line" d="M555 493.104V-1.89563L670.645 130.024L807.204 -1.89563L929 119.131L555 493.104Z" stroke="#FFFFFF"/>
+<path style="--i:3" pathLength="1000" class="trim-line" d="M1113 -1.89563V493.104L997.355 361.185L860.796 493.104L739 372.077L1113 -1.89563Z" stroke="#FFFFFF"/>
+</g>
+<g clip-path="url(#clip3_631_3041)">
+<path style="--i:4" pathLength="1000" class="trim-line" d="M1111 493.104V-1.89563L1226.64 130.024L1363.2 -1.89563L1485 119.131L1111 493.104Z" stroke="#FFFFFF"/>
+<path style="--i:5" pathLength="1000" class="trim-line" d="M1669 -1.89563V493.104L1553.36 361.185L1416.8 493.104L1295 372.077L1669 -1.89563Z" stroke="#FFFFFF"/>
+</g>
+<g clip-path="url(#clip4_631_3041)">
+<path style="--i:6" pathLength="1000" class="trim-line" d="M-115 941.104V446.104L0.644722 578.024L137.204 446.104L259 567.131L-115 941.104Z" stroke="#FFFFFF"/>
+<path style="--i:7" pathLength="1000" class="trim-line" d="M443 446.104V941.104L327.355 809.185L190.796 941.104L69 820.077L443 446.104Z" stroke="#FFFFFF"/>
+</g>
+<g clip-path="url(#clip5_631_3041)">
+<path style="--i:8" pathLength="1000" class="trim-line" d="M441 941.104V446.104L556.645 578.024L693.204 446.104L815 567.131L441 941.104Z" stroke="#FFFFFF"/>
+<path style="--i:9" pathLength="1000" class="trim-line" d="M999 446.104V941.104L883.355 809.185L746.796 941.104L625 820.077L999 446.104Z" stroke="#FFFFFF"/>
+</g>
+<g clip-path="url(#clip6_631_3041)">
+<path style="--i:10" pathLength="1000" class="trim-line" d="M997 941.104V446.104L1112.64 578.024L1249.2 446.104L1371 567.131L997 941.104Z" stroke="#FFFFFF"/>
+<path style="--i:11" pathLength="1000" class="trim-line" d="M1555 446.104V941.104L1439.36 809.185L1302.8 941.104L1181 820.077L1555 446.104Z" stroke="#FFFFFF"/>
+</g>
+</g>
+<defs>
+<filter id="filter0_f_631_3041" x="405.9" y="135.9" width="1743.2" height="828.2" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="159.55" result="effect1_foregroundBlur_631_3041"/>
+</filter>
+<clipPath id="paint0_angular_631_3041_clip_path"><ellipse cx="1277.5" cy="550" rx="552.5" ry="95"/></clipPath><clipPath id="clip0_631_3041">
+<rect width="1457" height="941" fill="white"/>
+</clipPath>
+<clipPath id="clip1_631_3041">
+<rect width="556" height="556" fill="white" transform="translate(0 -33)"/>
+</clipPath>
+<clipPath id="clip2_631_3041">
+<rect width="556" height="556" fill="white" transform="translate(556 -33)"/>
+</clipPath>
+<clipPath id="clip3_631_3041">
+<rect width="556" height="556" fill="white" transform="translate(1112 -33)"/>
+</clipPath>
+<clipPath id="clip4_631_3041">
+<rect width="556" height="556" fill="white" transform="translate(-114 415)"/>
+</clipPath>
+<clipPath id="clip5_631_3041">
+<rect width="556" height="556" fill="white" transform="translate(442 415)"/>
+</clipPath>
+<clipPath id="clip6_631_3041">
+<rect width="556" height="556" fill="white" transform="translate(998 415)"/>
+</clipPath>
+</defs>
+</svg>
