@@ -56,7 +56,7 @@
       'React, Vue, Next.js, Nuxt for frontend development',
       'GitHub / GitLab for version control & code reviews',
     ]"
-    imageSrc="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/front-end-engineering.webp"
+    imageSrc="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/back-end-engineering-two.svg"
   />
   <TestimonialWhite
     id="testimonial-marco"
@@ -126,7 +126,7 @@
       'GitHub Projects or Jira for sprints & tasks',
       'Stripe, Auth0, and 3rd-party APIs for integration work',
     ]"
-    imageSrc="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/back-end-engineering.svg"
+    imageSrc="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/dev-collaboration.svg"
   />
 
   <BannerSection
