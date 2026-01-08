@@ -5,27 +5,23 @@
   >
     <GlowEffect />
 
-    <!-- Content -->
-    <div
-      class="max-w-[1248px] mx-auto px-6 grid grid-cols-1 md:grid-cols-2 relative z-10"
-    >
-      <!-- Left Column -->
-      <div
-        class="md:pr-6 md:border-r border-[#636363] flex items-center justify-center"
-      >
+    <!-- FULL WIDTH GRID (как TwoColumns) -->
+    <div class="mx-auto grid grid-cols-1 md:grid-cols-2 relative z-10">
+      <!-- Left Image (full-bleed) -->
+      <div class="md:border-r border-[#636363]">
         <img
           :src="leftImgSrc"
           :alt="leftImgAlt"
-          class="max-w-full object-cover"
+          class="w-full h-full block object-cover"
         />
       </div>
 
-      <!-- Right Column -->
-      <div class="md:pl-6 flex items-center justify-center">
+      <!-- Right Image (full-bleed) -->
+      <div class="border-t border-[#636363] md:border-t-0">
         <img
           :src="rightImgSrc"
           :alt="rightImgAlt"
-          class="max-w-full object-cover"
+          class="w-full h-full block object-cover"
         />
       </div>
     </div>
