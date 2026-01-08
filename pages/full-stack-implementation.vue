@@ -2,7 +2,7 @@
   <HeaderSection :darkBackground="true" />
   <HeroFullstack
     id="hero-fullstack"
-    backgroundImage="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/hero-pattern-full-stuck.svg"
+    backgroundImage="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/HeroPatternFullStuck-trim2x-white-slow.svg"
     title="Design without development is just a suggestion."
     description="We stay in — writing real code, collaborating in Git, and making sure everything works in production."
     buttonText="Let’s Build Together"
