@@ -141,7 +141,7 @@
         },
       ],
       link: {
-        href: 'https://membria.xyz/',
+        href: 'https://membria.ai/',
         target: '_blank',
         text: 'Discover more about our product',
       },
