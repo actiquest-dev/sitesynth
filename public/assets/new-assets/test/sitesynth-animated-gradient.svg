@@ -1,0 +1,76 @@
+<svg width="1448" height="878" viewBox="0 0 1448 878" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .orb-a { animation: driftA 18s ease-in-out infinite; }
+    .orb-b { animation: driftB 22s ease-in-out infinite; }
+    @keyframes driftA {
+      0%   { transform: translate(0px, 0px); opacity: .95; }
+      50%  { transform: translate(28px, -10px); opacity: 1; }
+      100% { transform: translate(0px, 0px); opacity: .95; }
+    }
+    @keyframes driftB {
+      0%   { transform: translate(0px, 0px); opacity: .90; }
+      50%  { transform: translate(-32px, -14px); opacity: .98; }
+      100% { transform: translate(0px, 0px); opacity: .90; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .orb-a, .orb-b { animation: none !important; }
+    }
+  </style>
+
+  <g clip-path="url(#clip0)">
+    <!-- Right glow -->
+    <g class="orb-a" filter="url(#blurStrong)">
+      <ellipse cx="1158.5" cy="839" rx="552.5" ry="95" fill="url(#gradA)"/>
+    </g>
+
+    <!-- Left glow -->
+    <g class="orb-b" filter="url(#blurStrong)">
+      <ellipse cx="204.5" cy="921" rx="552.5" ry="95" fill="url(#gradB)"/>
+    </g>
+  </g>
+
+  <defs>
+    <clipPath id="clip0">
+      <rect width="1448" height="878" fill="white"/>
+    </clipPath>
+
+    <!-- Soft blur like your original export -->
+    <filter id="blurStrong" x="-900" y="-300" width="3300" height="1700" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="159.55" />
+    </filter>
+
+    <!-- Gradient A -->
+    <radialGradient id="gradA" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+      gradientTransform="translate(1158.5 839) rotate(180) scale(700 240)">
+      <stop offset="0" stop-color="#A51FFF" stop-opacity="1">
+        <animate attributeName="stop-color" dur="10s" repeatCount="indefinite"
+          values="#A51FFF; #0033FF; #A51FFF"/>
+        <animate attributeName="stop-opacity" dur="10s" repeatCount="indefinite"
+          values="1; .85; 1"/>
+      </stop>
+      <stop offset="1" stop-color="#0033FF" stop-opacity="0.31">
+        <animate attributeName="stop-color" dur="10s" repeatCount="indefinite"
+          values="#0033FF; #A51FFF; #0033FF"/>
+        <animate attributeName="stop-opacity" dur="10s" repeatCount="indefinite"
+          values=".31; .18; .31"/>
+      </stop>
+    </radialGradient>
+
+    <!-- Gradient B (phase-shifted) -->
+    <radialGradient id="gradB" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+      gradientTransform="translate(204.5 921) rotate(180) scale(720 250)">
+      <stop offset="0" stop-color="#0033FF" stop-opacity="1">
+        <animate attributeName="stop-color" dur="12s" repeatCount="indefinite"
+          values="#0033FF; #A51FFF; #0033FF"/>
+        <animate attributeName="stop-opacity" dur="12s" repeatCount="indefinite"
+          values="1; .88; 1"/>
+      </stop>
+      <stop offset="1" stop-color="#A51FFF" stop-opacity="0.31">
+        <animate attributeName="stop-color" dur="12s" repeatCount="indefinite"
+          values="#A51FFF; #0033FF; #A51FFF"/>
+        <animate attributeName="stop-opacity" dur="12s" repeatCount="indefinite"
+          values=".31; .20; .31"/>
+      </stop>
+    </radialGradient>
+  </defs>
+</svg>
