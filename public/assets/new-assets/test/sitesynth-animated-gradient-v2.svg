@@ -1,0 +1,80 @@
+<svg width="1448" height="878" viewBox="0 0 1448 878" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    /* Keep shape stable; animate the gradient itself (inside) */
+    @media (prefers-reduced-motion: reduce) {
+      animate, animateTransform { display: none !important; }
+    }
+  </style>
+
+  <g clip-path="url(#clip0)">
+    <!-- Right glow -->
+    <g filter="url(#blurStrong)">
+      <ellipse cx="1158.5" cy="839" rx="552.5" ry="95" fill="url(#gradA)"/>
+    </g>
+
+    <!-- Left glow -->
+    <g filter="url(#blurStrong)">
+      <ellipse cx="204.5" cy="921" rx="552.5" ry="95" fill="url(#gradB)"/>
+    </g>
+  </g>
+
+  <defs>
+    <clipPath id="clip0">
+      <rect width="1448" height="878" fill="white"/>
+    </clipPath>
+
+    <!-- Soft blur like your original export -->
+    <filter id="blurStrong" x="-900" y="-300" width="3300" height="1700" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="159.55">
+        <!-- tiny blur breathing to make motion more visible -->
+        <animate attributeName="stdDeviation" dur="10s" repeatCount="indefinite" values="159.55; 170; 159.55"/>
+      </feGaussianBlur>
+    </filter>
+
+    <!-- Gradient A (moves its center + scale slowly) -->
+    <radialGradient id="gradA" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+      gradientTransform="translate(1158.5 839) rotate(180) scale(700 240)">
+      <animate attributeName="gradientTransform" dur="18s" repeatCount="indefinite"
+        values="
+          translate(1158.5 839) rotate(180) scale(700 240);
+          translate(1110 820) rotate(205) scale(780 280);
+          translate(1188 860) rotate(170) scale(740 260);
+          translate(1158.5 839) rotate(180) scale(700 240)
+        " />
+
+      <stop offset="0" stop-color="#A51FFF" stop-opacity="1">
+        <animate attributeName="stop-color" dur="12s" repeatCount="indefinite"
+          values="#A51FFF; #0033FF; #A51FFF"/>
+      </stop>
+      <stop offset="1" stop-color="#0033FF" stop-opacity="0.31">
+        <animate attributeName="stop-opacity" dur="12s" repeatCount="indefinite"
+          values="0.31; 0.18; 0.31"/>
+        <animate attributeName="stop-color" dur="12s" repeatCount="indefinite"
+          values="#0033FF; #A51FFF; #0033FF"/>
+      </stop>
+    </radialGradient>
+
+    <!-- Gradient B (phase-shifted motion) -->
+    <radialGradient id="gradB" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+      gradientTransform="translate(204.5 921) rotate(180) scale(720 250)">
+      <animate attributeName="gradientTransform" dur="20s" repeatCount="indefinite"
+        values="
+          translate(204.5 921) rotate(180) scale(720 250);
+          translate(260 905) rotate(160) scale(790 290);
+          translate(180 940) rotate(195) scale(750 265);
+          translate(204.5 921) rotate(180) scale(720 250)
+        " />
+
+      <stop offset="0" stop-color="#0033FF" stop-opacity="1">
+        <animate attributeName="stop-color" dur="14s" repeatCount="indefinite"
+          values="#0033FF; #A51FFF; #0033FF"/>
+      </stop>
+      <stop offset="1" stop-color="#A51FFF" stop-opacity="0.31">
+        <animate attributeName="stop-opacity" dur="14s" repeatCount="indefinite"
+          values="0.31; 0.20; 0.31"/>
+        <animate attributeName="stop-color" dur="14s" repeatCount="indefinite"
+          values="#A51FFF; #0033FF; #A51FFF"/>
+      </stop>
+    </radialGradient>
+  </defs>
+</svg>
