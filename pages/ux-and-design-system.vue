@@ -77,7 +77,7 @@
 
   <TwoColumnsImagesOnly
     id="figma-screenshots"
-    leftImgSrc="public/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-jam.svg"
+    leftImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-jam.svg"
     leftImgAlt="FigJam Screenshot"
     rightImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-dev-mode.svg"
     rightImgAlt="Figma Dev Mode Screenshot"
