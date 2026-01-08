@@ -71,15 +71,15 @@
 
   <OneColumnImage
     id="figma-screen"
-    centerImg="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-main-ui.webp"
+    centerImg="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-main-ui.svg"
     centerImgAlt="Figma Screen"
   />
 
   <TwoColumnsImagesOnly
     id="figma-screenshots"
-    leftImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-jam.webp"
+    leftImgSrc="public/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-jam.svg"
     leftImgAlt="FigJam Screenshot"
-    rightImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-dev-mode.webp"
+    rightImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-dev-mode.svg"
     rightImgAlt="Figma Dev Mode Screenshot"
   />
 
