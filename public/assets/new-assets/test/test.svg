@@ -1,0 +1,65 @@
+<svg width="800" height="500" viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bgGlow" cx="90%" cy="10%" r="60%" fx="90%" fy="10%">
+      <stop offset="0%" style="stop-color:#5a2d9c;stop-opacity:0.4" />
+      <stop offset="100%" style="stop-color:#121212;stop-opacity:0" />
+    </radialGradient>
+    <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#7c4dff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#448aff;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+      <feMerge>
+        <feMergeNode in="coloredBlur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="800" height="500" fill="#121212" />
+  <rect width="800" height="500" fill="url(#bgGlow)" />
+  
+  <rect x="50" y="50" width="700" height="400" rx="10" ry="10" fill="#1a1a1a" stroke="#333" stroke-width="1"/>
+  <rect x="50" y="50" width="700" height="30" rx="10" ry="10" fill="#252526" />
+  <circle cx="70" cy="65" r="5" fill="#ff5f56" />
+  <circle cx="90" cy="65" r="5" fill="#ffbd2e" />
+  <circle cx="110" cy="65" r="5" fill="#27c93f" />
+  <text x="350" y="70" font-family="sans-serif" font-size="14" fill="#888" text-anchor="middle">Server Architecture Diagram</text>
+
+  <g transform="translate(100, 120)">
+    <g transform="translate(0, 125)">
+      <rect x="0" y="0" width="120" height="80" rx="8" fill="#1e1e2e" stroke="url(#lineGradient)" stroke-width="2" filter="url(#glow)"/>
+      <text x="60" y="35" font-family="sans-serif" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">API Gateway</text>
+      <text x="60" y="55" font-family="sans-serif" font-size="12" fill="#aaa" text-anchor="middle">Auth & Routing</text>
+      <path d="M -40,40 L -5,40" stroke="#7c4dff" stroke-width="3" />
+    </g>
+
+    <path d="M 120,165 L 180,165" stroke="url(#lineGradient)" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+    <g transform="translate(180, 100)">
+      <rect x="0" y="0" width="160" height="130" rx="8" fill="#262639" stroke="url(#lineGradient)" stroke-width="2" filter="url(#glow)"/>
+      <svg x="65" y="15" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#448aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+      </svg>
+      <text x="80" y="70" font-family="sans-serif" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">App Backend</text>
+      <text x="80" y="90" font-family="sans-serif" font-size="12" fill="#aaa" text-anchor="middle">Business Logic</text>
+    </g>
+
+    <path d="M 340,135 C 370,135 370,65 400,65" stroke="url(#lineGradient)" stroke-width="3" fill="none" filter="url(#glow)"/>
+    <path d="M 340,195 C 370,195 370,265 400,265" stroke="url(#lineGradient)" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+    <g transform="translate(400, 20)">
+      <path d="M0,25 C0,10 110,10 110,25 L110,70 C110,85 0,85 0,70 Z M0,25 C0,40 110,40 110,25 M0,47 C0,62 110,62 110,47" 
+            fill="#1e1e2e" stroke="#448aff" stroke-width="2" filter="url(#glow)"/>
+      <text x="55" y="100" font-family="sans-serif" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">SQL DB</text>
+    </g>
+
+     <g transform="translate(400, 220)">
+       <path d="M30,0 L80,0 L110,45 L80,90 L30,90 L0,45 Z" 
+            fill="#1e1e2e" stroke="#7c4dff" stroke-width="2" filter="url(#glow)"/>
+      <text x="55" y="100" font-family="sans-serif" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">NoSQL / Cache</text>
+    </g>
+  </g>
+</svg>
