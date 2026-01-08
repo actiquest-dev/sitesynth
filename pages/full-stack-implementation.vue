@@ -56,7 +56,7 @@
       'React, Vue, Next.js, Nuxt for frontend development',
       'GitHub / GitLab for version control & code reviews',
     ]"
-    imageSrc="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/back-end-engineering-two.svg"
+    imageSrc="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/front-end.svg"
   />
   <TestimonialWhite
     id="testimonial-marco"
