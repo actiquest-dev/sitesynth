@@ -148,7 +148,7 @@ const navItems = [
       {
         imageSrc: "/assets/new-assets/Menu/Product/gray/Membria.svg",
         label: "Membria",
-        link: "https://membria.xyz/",
+        link: "https://membria.ai/",
         target: "_blank",
       },
       {
