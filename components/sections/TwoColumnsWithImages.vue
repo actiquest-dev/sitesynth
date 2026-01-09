@@ -24,21 +24,22 @@
           {{ leftH3 }}
         </h3>
 
-        <p class="text-gray-300 mb-2 whitespace-pre-line">{{ leftP }}</p>
+        <p class="text-gray-300 mb-2 whitespace-pre-line">
+          {{ leftP }}
+        </p>
 
-        <!-- FIXED LINK -->
+        <!-- Learn more (with arrow + underline hover) -->
         <a
           :href="leftLearnMoreLink"
           class="relative inline-flex items-baseline gap-1 text-[#8CB0FF] font-semibold pt-4 group/link"
         >
           <span>{{ leftLearnMoreText }}</span>
 
-          <span
+          <font-awesome
+            :icon="['fas', 'chevron-right']"
             class="text-sm relative top-[1px] transition-transform duration-300 group-hover/link:translate-x-1"
             aria-hidden="true"
-          >
-            ›
-          </span>
+          />
 
           <span
             class="absolute -bottom-1 left-0 h-[2px] w-0 bg-[#8CB0FF]
@@ -62,21 +63,22 @@
           {{ rightH3 }}
         </h3>
 
-        <p class="text-gray-300 mb-2 whitespace-pre-line">{{ rightP }}</p>
+        <p class="text-gray-300 mb-2 whitespace-pre-line">
+          {{ rightP }}
+        </p>
 
-        <!-- FIXED LINK -->
+        <!-- Learn more (with arrow + underline hover) -->
         <a
           :href="rightLearnMoreLink"
           class="relative inline-flex items-baseline gap-1 text-[#8CB0FF] font-semibold pt-4 group/link"
         >
           <span>{{ rightLearnMoreText }}</span>
 
-          <span
+          <font-awesome
+            :icon="['fas', 'chevron-right']"
             class="text-sm relative top-[1px] transition-transform duration-300 group-hover/link:translate-x-1"
             aria-hidden="true"
-          >
-            ›
-          </span>
+          />
 
           <span
             class="absolute -bottom-1 left-0 h-[2px] w-0 bg-[#8CB0FF]
@@ -90,10 +92,8 @@
 
 <script setup>
 defineProps({
-  id: {
-    type: String,
-    default: "",
-  },
+  id: { type: String, default: "" },
+
   leftImgSrc: String,
   leftImgAlt: String,
   leftH2: String,
@@ -101,6 +101,7 @@ defineProps({
   leftP: String,
   leftLearnMoreText: String,
   leftLearnMoreLink: String,
+
   rightImgSrc: String,
   rightImgAlt: String,
   rightH2: String,
