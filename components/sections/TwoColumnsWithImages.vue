@@ -19,15 +19,31 @@
           />
           <h2 class="text-3xl font-bold text-white">{{ leftH2 }}</h2>
         </div>
-        <h3
-          class="text-xl font-semibold text-white flex items-center gap-2 mb-2"
-        >
+
+        <h3 class="text-xl font-semibold text-white flex items-center gap-2 mb-2">
           {{ leftH3 }}
         </h3>
+
         <p class="text-gray-300 mb-2 whitespace-pre-line">{{ leftP }}</p>
-        <a :href="leftLearnMoreLink" class="text-[#8CB0FF] pt-4">
-          {{ leftLearnMoreText }}
-          <i class="ml-1 fa-solid fa-chevron-right text-sm"></i>
+
+        <!-- FIXED LINK -->
+        <a
+          :href="leftLearnMoreLink"
+          class="relative inline-flex items-baseline gap-1 text-[#8CB0FF] font-semibold pt-4 group/link"
+        >
+          <span>{{ leftLearnMoreText }}</span>
+
+          <span
+            class="text-sm relative top-[1px] transition-transform duration-300 group-hover/link:translate-x-1"
+            aria-hidden="true"
+          >
+            ›
+          </span>
+
+          <span
+            class="absolute -bottom-1 left-0 h-[2px] w-0 bg-[#8CB0FF]
+                   transition-all duration-300 group-hover/link:w-full"
+          ></span>
         </a>
       </div>
 
@@ -41,18 +57,31 @@
           />
           <h2 class="text-3xl font-bold text-white">{{ rightH2 }}</h2>
         </div>
-        <h3
-          class="text-xl font-semibold text-white flex items-center gap-2 mb-2"
-        >
+
+        <h3 class="text-xl font-semibold text-white flex items-center gap-2 mb-2">
           {{ rightH3 }}
         </h3>
+
         <p class="text-gray-300 mb-2 whitespace-pre-line">{{ rightP }}</p>
+
+        <!-- FIXED LINK -->
         <a
           :href="rightLearnMoreLink"
-          class="text-[#8CB0FF] pt-4 flex items-center"
+          class="relative inline-flex items-baseline gap-1 text-[#8CB0FF] font-semibold pt-4 group/link"
         >
-          {{ rightLearnMoreText }}
-          <i class="ml-1 fa-solid fa-chevron-right text-sm"></i>
+          <span>{{ rightLearnMoreText }}</span>
+
+          <span
+            class="text-sm relative top-[1px] transition-transform duration-300 group-hover/link:translate-x-1"
+            aria-hidden="true"
+          >
+            ›
+          </span>
+
+          <span
+            class="absolute -bottom-1 left-0 h-[2px] w-0 bg-[#8CB0FF]
+                   transition-all duration-300 group-hover/link:w-full"
+          ></span>
         </a>
       </div>
     </div>
