@@ -22,10 +22,10 @@
         icon: '🎨',
         title: 'Translate into Product Experience',
         description:
-          'We map your brand into UX flows — ensuring every screen feels consistent and unmistakably you.',
+          'We map your brand into UX flows — ensuring every screen feels consistent.',
         link: '#translate-into-product',
         image:
-          '/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/cards/card-translate-product-experience.svg',
+          '/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/cards/card-product-brand.svg',
       },
       {
         icon: '🤝',
