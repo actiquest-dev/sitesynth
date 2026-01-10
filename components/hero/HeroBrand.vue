@@ -32,24 +32,32 @@
                  transition-all duration-300 hover:bg-[#ffffff1a]
                  focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
         >
-          <!-- padded content (padding moved here so pinned image sticks to true corner) -->
-          <div class="relative z-10 h-full p-10 pr-20 flex flex-col">
-            <h3 class="text-lg sm:text-xl font-semibold text-left leading-tight">
+          <!-- pinned image (true corner) -->
+          <img
+            v-if="card.image"
+            :src="card.image"
+            alt=""
+            class="pointer-events-none select-none absolute bottom-0 right-0 z-0
+                   w-[280px] md:w-[300px] lg:w-[320px] max-w-none opacity-90"
+          />
+
+          <!-- content box (NOT full height; fixed width like Figma) -->
+          <div class="relative z-10 p-10 max-w-[293px]">
+            <h3 class="text-xl font-semibold text-left leading-tight">
               {{ card.title }}
             </h3>
 
-            <p class="text-left text-[#999999] mt-6 max-w-[34ch] leading-relaxed">
+            <p class="text-left text-[#999999] mt-6 leading-relaxed">
               {{ card.description }}
             </p>
 
             <!-- Round arrow button (smaller) -->
             <div class="mt-10">
               <span
-                class="inline-flex items-center justify-center w-12 h-12 rounded-full
+                class="inline-flex items-center justify-center w-11 h-11 rounded-full
                        border border-white/35 bg-white/5 text-white/90
                        transition-all duration-300
-                       group-hover/card:bg-white/10 group-hover/card:border-white/60
-                       group-hover/card:shadow-[0_0_0_6px_rgba(255,255,255,0.06)]"
+                       group-hover/card:bg-white/10 group-hover/card:border-white/60"
                 aria-label="Open"
               >
                 <font-awesome
@@ -60,15 +68,6 @@
               </span>
             </div>
           </div>
-
-          <!-- pinned image (now truly pinned to the card corner) -->
-          <img
-            v-if="card.image"
-            :src="card.image"
-            alt=""
-            class="pointer-events-none select-none absolute bottom-0 right-0 z-0
-                   w-[260px] sm:w-[300px] lg:w-[340px] max-w-none opacity-90"
-          />
         </a>
       </div>
     </div>
@@ -100,5 +99,6 @@ const backgroundImageStyle = computed(() => {
   return {};
 });
 </script>
+
 
 
