@@ -28,44 +28,55 @@
           :key="index"
           :href="card.link"
           class="group/card relative border border-[#636363] bg-[#ffffff14] backdrop-blur
-                 min-h-[420px] overflow-hidden
-                 transition-all duration-300 hover:bg-[#ffffff1a]
+                 overflow-hidden transition-colors duration-300 hover:bg-[#ffffff1a]
                  focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
         >
-          <!-- pinned image (true corner) -->
-          <img
-            v-if="card.image"
-            :src="card.image"
-            alt=""
-            class="pointer-events-none select-none absolute bottom-0 right-0 z-0
-                   w-[280px] md:w-[300px] lg:w-[320px] max-w-none opacity-90"
-          />
+          <!-- MAIN LAYOUT (same principle) -->
+          <div class="relative z-10 flex flex-col min-h-[420px]">
+            <!-- header: padding + fixed text box width -->
+            <header class="p-10 pb-0">
+              <!-- вот этот бокс (как на твоей красной рамке) -->
+              <div class="max-w-[293px]">
+                <h3 class="text-xl font-semibold leading-tight text-left">
+                  {{ card.title }}
+                </h3>
 
-          <!-- content box (NOT full height; fixed width like Figma) -->
-          <div class="relative z-10 p-10 max-w-[293px]">
-            <h3 class="text-xl font-semibold text-left leading-tight">
-              {{ card.title }}
-            </h3>
+                <p class="text-left text-[#999999] mt-5 leading-relaxed">
+                  {{ card.description }}
+                </p>
+              </div>
 
-            <p class="text-left text-[#999999] mt-6 leading-relaxed">
-              {{ card.description }}
-            </p>
-
-            <!-- Round arrow button (smaller) -->
-            <div class="mt-10">
-              <span
-                class="inline-flex items-center justify-center w-11 h-11 rounded-full
-                       border border-white/35 bg-white/5 text-white/90
-                       transition-all duration-300
-                       group-hover/card:bg-white/10 group-hover/card:border-white/60"
-                aria-label="Open"
-              >
-                <font-awesome
-                  :icon="['fas', 'arrow-right']"
-                  class="text-[12px] transition-transform duration-300 group-hover/card:translate-x-[2px]"
+              <!-- smaller round arrow -->
+              <div class="mt-7">
+                <span
+                  class="inline-flex items-center justify-center w-10 h-10 rounded-full
+                         border border-white/30 bg-white/5 text-white/90
+                         transition-all duration-300
+                         group-hover/card:bg-white/10 group-hover/card:border-white/55
+                         group-hover/card:shadow-[0_0_0_6px_rgba(255,255,255,0.06)]"
                   aria-hidden="true"
-                />
-              </span>
+                >
+                  <font-awesome
+                    :icon="['fas', 'arrow-right']"
+                    class="text-[12px] transition-transform duration-300 group-hover/card:translate-x-[2px]"
+                    aria-hidden="true"
+                  />
+                </span>
+              </div>
+            </header>
+
+            <!-- spacer exactly like reference -->
+            <div class="w-full grow h-28"></div>
+
+            <!-- bottom image area -->
+            <div class="relative w-full h-[210px]">
+              <img
+                v-if="card.image"
+                :src="card.image"
+                alt=""
+                class="pointer-events-none select-none absolute bottom-0 right-0
+                       w-[320px] max-w-none opacity-95"
+              />
             </div>
           </div>
         </a>
@@ -83,8 +94,8 @@ const props = defineProps({
   description: String,
   buttonText: String,
   buttonLink: String,
-  cards: { type: Array, default: () => [] }, // { title, description, link, image? }
   backgroundImage: String,
+  cards: { type: Array, default: () => [] }, // { title, description, link, image? }
 });
 
 const backgroundImageStyle = computed(() => {
@@ -99,6 +110,10 @@ const backgroundImageStyle = computed(() => {
   return {};
 });
 </script>
+
+
+
+
 
 
 
