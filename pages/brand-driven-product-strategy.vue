@@ -3,7 +3,7 @@
   <HeroBrand
     id="hero-brand"
     title="Build products that feel as good as they function."
-    description="Your brand - is your language. we embed your brand’s voice, values, and character into your digital product from day one. We make sure every interaction feels intentional — not just usable, but unmistakably you."
+    description="We begin by distilling your brand’s essence — tone, values, and purpose — into clear, strategic inputs."
     backgroundImage="/assets/new-assets/test/hero-pattern-animated-once.svg"
     readMore="Read more"
     buttonText="Do you know why?"
@@ -13,7 +13,7 @@
         icon: '🧭',
         title: 'Understand the Brand',
         description:
-          'We begin by distilling your brand’s essence — tone, values, and purpose — into clear, strategic inputs. Through focused sessions and rapid discovery, we align on what your brand really stands for.',
+          'We begin by distilling your brand’s essence — tone, values, and purpose — into clear, strategic inputs.',
         link: '#understand-the-brand',
         image:
           '/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/cards/card-understand-brand.svg',
@@ -22,7 +22,7 @@
         icon: '🎨',
         title: 'Translate into Product Experience',
         description:
-          'We map your brand into UX flows, content, and behaviors — ensuring every screen, message, and interaction feels consistent, intentional, and unmistakably you.',
+          'We map your brand into UX flows — ensuring every screen feels consistent and unmistakably you.',
         link: '#translate-into-product',
         image:
           '/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/cards/card-translate-product-experience.svg',
@@ -31,7 +31,7 @@
         icon: '🤝',
         title: 'Align Across Teams',
         description:
-          'We work across product, design, and marketing — helping your teams speak the same language and move together. No silos. Just shared clarity.',
+          'We work across product, design, and marketing — helping your teams speak the same language.',
         link: '#align-across-teams',
         image:
           '/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/cards/card-align-across-teams.svg',
