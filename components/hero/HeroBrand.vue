@@ -33,7 +33,7 @@
                  transition-all duration-300 hover:bg-[#ffffff1a]"
         >
           <!-- Title + description (outlined to the left) -->
-          <h3 class="text-3xl font-semibold text-left pr-20">
+       <h3 class="text-xl font-semibold text-left pr-20 pt-2">
             {{ card.title }}
           </h3>
 
