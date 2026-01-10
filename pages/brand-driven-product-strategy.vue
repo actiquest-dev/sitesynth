@@ -15,6 +15,8 @@
         description:
           'We begin by distilling your brand’s essence — tone, values, and purpose — into clear, strategic inputs. Through focused sessions and rapid discovery, we align on what your brand really stands for.',
         link: '#understand-the-brand',
+        image:
+          '/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/cards/card-understand-brand.svg',
       },
       {
         icon: '🎨',
@@ -22,6 +24,8 @@
         description:
           'We map your brand into UX flows, content, and behaviors — ensuring every screen, message, and interaction feels consistent, intentional, and unmistakably you.',
         link: '#translate-into-product',
+        image:
+          '/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/cards/card-translate-product-experience.svg',
       },
       {
         icon: '🤝',
@@ -29,9 +33,13 @@
         description:
           'We work across product, design, and marketing — helping your teams speak the same language and move together. No silos. Just shared clarity.',
         link: '#align-across-teams',
+        image:
+          '/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/cards/card-align-across-teams.svg',
       },
     ]"
   />
+</template>
+
 
   <BannerSection
     id="understand-the-brand"
