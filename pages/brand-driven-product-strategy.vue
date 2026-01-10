@@ -38,8 +38,6 @@
       },
     ]"
   />
-</template>
-
 
   <BannerSection
     id="understand-the-brand"
