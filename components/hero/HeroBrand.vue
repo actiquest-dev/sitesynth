@@ -7,9 +7,7 @@
     <!-- Glow позади контента -->
     <GlowEffect class="absolute inset-0 z-0 pointer-events-none" />
 
-    <div
-      class="relative z-10 max-w-[1248px] mx-auto px-6 pt-[16rem] pb-[12rem]"
-    >
+    <div class="relative z-10 max-w-[1248px] mx-auto px-6 pt-[16rem] pb-[12rem]">
       <!-- HERO TEXT -->
       <div class="text-center px-6">
         <h1 class="text-4xl sm:text-5xl font-extrabold mb-10">{{ title }}</h1>
@@ -26,40 +24,49 @@
 
       <!-- CARDS GRID -->
       <div class="mt-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div
+        <a
           v-for="(card, index) in cards"
           :key="index"
-          class="group/card border border-[#636363] bg-[#ffffff14] backdrop-blur p-6 py-12 flex flex-col justify-between cursor-pointer transition-all duration-300"
+          :href="card.link"
+          class="group/card relative border border-[#636363] bg-[#ffffff14] backdrop-blur
+                 p-10 min-h-[420px] overflow-hidden
+                 transition-all duration-300 hover:bg-[#ffffff1a]"
         >
-          <h3 class="text-xl font-semibold text-center pt-6 pb-8">
-            {{ card.icon }} {{ card.title }}
+          <!-- Title + description (outlined to the left) -->
+          <h3 class="text-3xl font-semibold text-left pr-20">
+            {{ card.title }}
           </h3>
 
-          <p class="text-center text-[#999999] mt-2">
+          <p class="text-left text-[#999999] mt-6 max-w-[34ch] leading-relaxed pr-20">
             {{ card.description }}
           </p>
 
-          <!-- READ MORE -->
-          <div class="text-center mt-6">
-            <a
-              :href="card.link"
-              class="relative inline-flex items-baseline gap-1 text-[#8CB0FF] font-semibold group/link"
+          <!-- Round arrow button -->
+          <div class="mt-10">
+            <span
+              class="inline-flex items-center justify-center w-14 h-14 rounded-full
+                     border border-white/35 bg-white/5 text-white/90
+                     transition-all duration-300
+                     group-hover/card:bg-white/10 group-hover/card:border-white/60"
+              aria-label="Open"
             >
-              <span>{{ readMore }}</span>
-
               <font-awesome
-                :icon="['fas', 'chevron-right']"
-                class="text-sm relative top-[1px] transition-transform duration-300 group-hover/card:translate-x-1"
+                :icon="['fas', 'arrow-right']"
+                class="text-sm transition-transform duration-300 group-hover/card:translate-x-[2px]"
                 aria-hidden="true"
               />
-
-              <!-- underline -->
-              <span
-                class="absolute -bottom-1 left-0 h-[2px] w-0 bg-[#8CB0FF] transition-all duration-300 group-hover/card:w-full"
-              ></span>
-            </a>
+            </span>
           </div>
-        </div>
+
+          <!-- Pinned image (sticks to corner) -->
+          <img
+            v-if="card.image"
+            :src="card.image"
+            alt=""
+            class="pointer-events-none select-none absolute bottom-0 right-0
+                   w-[320px] max-w-none opacity-90"
+          />
+        </a>
       </div>
     </div>
   </section>
@@ -74,9 +81,8 @@ const props = defineProps({
   description: String,
   buttonText: String,
   buttonLink: String,
-  cards: Array,
+  cards: { type: Array, default: () => [] }, // ожидаем { title, description, link, image? }
   backgroundImage: String,
-  readMore: String,
 });
 
 const backgroundImageStyle = computed(() => {
@@ -91,3 +97,4 @@ const backgroundImageStyle = computed(() => {
   return {};
 });
 </script>
+
