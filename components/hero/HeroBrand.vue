@@ -6,7 +6,9 @@
   >
     <GlowEffect class="absolute inset-0 z-0 pointer-events-none" />
 
-    <div class="relative z-10 max-w-[1248px] mx-auto px-6 pt-[16rem] pb-[12rem]">
+    <div
+      class="relative z-10 max-w-[1248px] mx-auto px-6 pt-[16rem] pb-[12rem]"
+    >
       <!-- HERO TEXT -->
       <div class="text-center px-6">
         <h1 class="text-4xl sm:text-5xl font-extrabold mb-10">{{ title }}</h1>
@@ -14,8 +16,7 @@
 
         <a
           :href="buttonLink"
-          class="inline-block mt-8 px-4 py-2 font-semibold border border-white bg-white text-[#161616]
-                 transition-all duration-500 hover:bg-[#8D35FF] hover:border-[#8D35FF] hover:text-white"
+          class="inline-block mt-8 px-4 py-2 font-semibold border border-white bg-white text-[#161616] transition-all duration-500 hover:bg-[#8D35FF] hover:border-[#8D35FF] hover:text-white"
         >
           {{ buttonText }}
         </a>
@@ -27,14 +28,12 @@
           v-for="(card, index) in cards"
           :key="index"
           :href="card.link"
-          class="group/card relative border border-[#636363] bg-[#ffffff14] backdrop-blur
-                 overflow-hidden transition-colors duration-300 hover:bg-[#ffffff1a]
-                 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+          class="group/card relative border border-[#636363] bg-[#ffffff14] backdrop-blur overflow-hidden transition-colors duration-300 hover:bg-[#ffffff1a] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
         >
           <!-- MAIN LAYOUT (same principle) -->
           <div class="relative z-10 flex flex-col min-h-[420px]">
             <!-- header: padding + fixed text box width -->
-            <header class="p-10 pb-0">
+            <div class="p-10 pb-0">
               <!-- вот этот бокс (как на твоей красной рамке) -->
               <div class="max-w-[293px]">
                 <h3 class="text-xl font-semibold leading-tight text-left">
@@ -49,11 +48,7 @@
               <!-- smaller round arrow -->
               <div class="mt-7">
                 <span
-                  class="inline-flex items-center justify-center w-10 h-10 rounded-full
-                         border border-white/30 bg-white/5 text-white/90
-                         transition-all duration-300
-                         group-hover/card:bg-white/10 group-hover/card:border-white/55
-                         group-hover/card:shadow-[0_0_0_6px_rgba(255,255,255,0.06)]"
+                  class="inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/30 bg-white/5 text-white/90 transition-all duration-300 group-hover/card:bg-white/10 group-hover/card:border-white/55 group-hover/card:shadow-[0_0_0_6px_rgba(255,255,255,0.06)]"
                   aria-hidden="true"
                 >
                   <font-awesome
@@ -63,21 +58,14 @@
                   />
                 </span>
               </div>
-            </header>
-
-            <!-- spacer exactly like reference -->
-            <div class="w-full grow h-28"></div>
-
-            <!-- bottom image area -->
-            <div class="relative w-full h-[210px]">
-              <img
-                v-if="card.image"
-                :src="card.image"
-                alt=""
-                class="pointer-events-none select-none absolute bottom-0 right-0
-                       w-[320px] max-w-none opacity-95"
-              />
             </div>
+            <img
+              v-if="card.image"
+              :src="card.image"
+              alt=""
+              class="pointer-events-none select-none absolute bottom-0 right-0 max-w-none opacity-95"
+            />
+            <!-- bottom image area -->
           </div>
         </a>
       </div>
@@ -110,10 +98,3 @@ const backgroundImageStyle = computed(() => {
   return {};
 });
 </script>
-
-
-
-
-
-
-
