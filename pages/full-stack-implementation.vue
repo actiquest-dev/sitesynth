@@ -129,7 +129,7 @@
       'GitHub Projects or Jira for sprints & tasks',
       'Stripe, Auth0, and 3rd-party APIs for integration work',
     ]"
-    imageSrc="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/dev-collaboration.svg"
+    imageSrc="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/align-across-teams.svg"
   />
 
   <BannerSection
