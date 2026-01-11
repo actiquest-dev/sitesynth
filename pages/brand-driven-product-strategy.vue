@@ -80,7 +80,7 @@
   />
 
   <BannerSection
-    id="understand-the-brand"
+    id="translate-into-product"
     text="Translate into Product Experience"
     sectionClass="py-20 text-right bg-[#DDDDDD]"
     contentClass="text-[#161616] max-w-[1248px] px-6 mx-auto text-4xl"
