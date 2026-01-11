@@ -75,15 +75,7 @@
     centerImgAlt="Figma Screen"
   />
 
-  <TwoColumnsImagesOnly
-    id="figma-screenshots"
-    leftImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-jam.svg"
-    leftImgAlt="FigJam Screenshot"
-    rightImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-dev-mode.svg"
-    rightImgAlt="Figma Dev Mode Screenshot"
-  />
-
-  <TwoColumnsWithImages
+   <TwoColumnsWithImages
     id="figma-ux-architecture"
     leftImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-logo-1.png"
     leftImgAlt="FigJam Logo"
@@ -100,6 +92,15 @@
     rightLearnMoreText="Learn more about Dev Mode"
     rightLearnMoreLink="https://www.figma.com/dev-mode/"
   />
+
+   <TwoColumnsImagesOnly
+    id="figma-screenshots"
+    leftImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-jam.svg"
+    leftImgAlt="FigJam Screenshot"
+    rightImgSrc="/assets/new-assets/solutions-page/solutions/design-systems-and-ux-architecture/figma-dev-mode.svg"
+    rightImgAlt="Figma Dev Mode Screenshot"
+  />
+
 
   <BannerSection id="what-you-get" text="What You Get" />
 
