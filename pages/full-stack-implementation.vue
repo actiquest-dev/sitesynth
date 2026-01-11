@@ -10,7 +10,6 @@
   buttonLink="#"
   :cards="[
     {
-      icon: '⚛️',
       title: 'Front-End Engineering',
       description: 'Beautiful, accessible, and fast interfaces built for real users.',
       link: '#banner-front-end',
@@ -18,7 +17,6 @@
         '/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/cards/card-front-end.svg',
     },
     {
-      icon: '🌐',
       title: 'Back-End Engineering',
       description: 'Scalable, secure, and API-ready architecture.',
       link: '#banner-back-end',
@@ -26,7 +24,6 @@
         '/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/cards/card-back-end.svg',
     },
     {
-      icon: '🤝',
       title: 'Integrated Dev Collaboration',
       description: 'We plug into your workflow, toolset, and priorities.',
       link: '#banner-integrated-dev-collaboration',
