@@ -79,30 +79,30 @@ export default defineNuxtConfig({
           rel: "icon",
           type: "image/png",
           sizes: "96x96",
-          href: "/favicon.png",
+          href: "https://www.sitesynth.com/favicon.png",
         },
         // Fallback (Google still checks this)
         {
           rel: "shortcut icon",
           type: "image/x-icon",
-          href: "/favicon.ico",
+          href: "https://www.sitesynth.com/favicon.ico",
         },
         // Modern browsers - SVG favicon (scalable, preferred)
         {
           rel: "icon",
           type: "image/svg+xml",
-          href: "/assets/favicon/favicon-new.svg",
+          href: "https://www.sitesynth.com/assets/favicon/favicon-new.svg",
         },
         // Apple devices
         {
           rel: "apple-touch-icon",
           sizes: "180x180",
-          href: "/assets/favicon/apple-touch-icon.png",
+          href: "https://www.sitesynth.com/assets/favicon/apple-touch-icon.png",
         },
         // Web app manifest (contains PWA icons)
         {
           rel: "manifest",
-          href: "/site.webmanifest",
+          href: "https://www.sitesynth.com/site.webmanifest",
         },
       ],
     },
