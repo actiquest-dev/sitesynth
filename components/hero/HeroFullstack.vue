@@ -1,12 +1,12 @@
 <template>
   <section
     :id="id || undefined"
-    class="relative bg-[#DDDDDD] text-white group overflow-hidden"
+    class="relative bg-[#DDDDDD] group overflow-hidden"
     :style="backgroundImageStyle"
   >
     <GlowEffect />
 
-    <div class="relative max-w-[1248px] mx-auto px-6 pt-[16rem] pb-[12rem]">
+    <div class="relative z-10 max-w-[1248px] mx-auto px-6 pt-[16rem] pb-[12rem]">
       <!-- HERO TEXT -->
       <div class="text-center px-6">
         <h1 class="text-[#161616] text-4xl sm:text-5xl font-extrabold mb-10">
@@ -19,7 +19,8 @@
 
         <a
           :href="buttonLink"
-          class="inline-block mt-8 px-4 py-2 border border-[#161616] bg-[#161616] text-white font-semibold transition-colors duration-500 hover:bg-[#8D35FF] hover:border-[#8D35FF] hover:text-white"
+          class="inline-block mt-8 px-4 py-2 border border-[#161616] bg-[#161616] text-white font-semibold
+                 transition-colors duration-500 hover:bg-[#8D35FF] hover:border-[#8D35FF]"
         >
           {{ buttonText }}
         </a>
@@ -27,41 +28,58 @@
 
       <!-- CARDS GRID -->
       <div class="mt-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- CARD -->
-        <div
+        <a
           v-for="(card, index) in cards"
           :key="index"
-          class="group/card border border-[#636363] bg-[#161616] p-6 py-12 flex flex-col justify-between"
+          :href="card.link"
+          class="group/card relative border border-[#636363] bg-[#161616] overflow-hidden
+                 transition-colors duration-300 hover:bg-[#1a1a1a]
+                 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#161616]/30"
         >
-          <h3 class="text-xl font-semibold text-center pt-6 pb-8">
-            {{ card.icon }} {{ card.title }}
-          </h3>
+          <!-- MAIN LAYOUT (same principle) -->
+          <div class="relative z-10 flex flex-col min-h-[420px]">
+            <!-- header: padding + fixed text box width -->
+            <div class="p-10 pb-0">
+              <!-- fixed text box -->
+              <div class="max-w-[293px]">
+                <h3 class="text-white text-xl font-semibold leading-tight text-left">
+                  <span v-if="card.icon" class="mr-2">{{ card.icon }}</span>{{ card.title }}
+                </h3>
 
-          <p class="text-center text-[#999999]">
-            {{ card.description }}
-          </p>
+                <p class="text-left text-[#999999] mt-5 leading-relaxed">
+                  {{ card.description }}
+                </p>
+              </div>
 
-          <!-- READ MORE -->
-          <div class="text-center mt-6">
-            <a
-              :href="card.link"
-              class="relative inline-flex items-baseline gap-1 text-[#8CB0FF] font-semibold group/link"
-            >
-              <span>Read more</span>
+              <!-- smaller round arrow -->
+              <div class="mt-7">
+                <span
+                  class="inline-flex items-center justify-center w-10 h-10 rounded-full
+                         border border-white/30 bg-white/5 text-white/90
+                         transition-all duration-300
+                         group-hover/card:bg-white/10 group-hover/card:border-white/55
+                         group-hover/card:shadow-[0_0_0_6px_rgba(255,255,255,0.06)]"
+                  aria-hidden="true"
+                >
+                  <font-awesome
+                    :icon="['fas', 'arrow-right']"
+                    class="text-[12px] transition-transform duration-300 group-hover/card:translate-x-[2px]"
+                    aria-hidden="true"
+                  />
+                </span>
+              </div>
+            </div>
 
-              <font-awesome
-                :icon="['fas', 'chevron-right']"
-                class="text-sm relative top-[1px] transition-transform duration-300 group-hover/card:translate-x-1"
-                aria-hidden="true"
-              />
-
-              <!-- UNDERLINE ANIMATION -->
-              <span
-                class="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#8CB0FF] transition-all duration-300 group-hover/card:w-full"
-              ></span>
-            </a>
+            <!-- pinned image (sticks to corner) -->
+            <img
+              v-if="card.image"
+              :src="card.image"
+              alt=""
+              class="pointer-events-none select-none absolute bottom-0 right-0 z-0
+                     max-w-none opacity-95"
+            />
           </div>
-        </div>
+        </a>
       </div>
     </div>
   </section>
@@ -76,11 +94,11 @@ const props = defineProps({
   description: String,
   buttonText: String,
   buttonLink: String,
-  cards: Array,
+  // cards: [{ icon?, title, description, link, image? }]
+  cards: { type: Array, default: () => [] },
   backgroundImage: { type: String, default: null },
 });
 
-// Background image support
 const backgroundImageStyle = computed(() => {
   if (props.backgroundImage) {
     return {
@@ -93,3 +111,4 @@ const backgroundImageStyle = computed(() => {
   return {};
 });
 </script>
+
