@@ -1,35 +1,41 @@
 <template>
   <HeaderSection :darkBackground="true" />
-  <HeroFullstack
-    id="hero-fullstack"
-    backgroundImage="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/HeroPatternFullStuck-trim2x-white-slow.svg"
-    title="Design without development is just a suggestion."
-    description="We stay in — writing real code, collaborating in Git, and making sure everything works in production."
-    buttonText="Let’s Build Together"
-    backgroundColor="bg-[#DDDDDD]"
-    buttonLink="#"
-    :cards="[
-      {
-        icon: '⚛️',
-        title: 'Front-End Engineering',
-        description:
-          'Beautiful, accessible, and fast interfaces built for real users.',
-        link: '#banner-front-end',
-      },
-      {
-        icon: '🌐',
-        title: 'Back-End Engineering',
-        description: 'Scalable, secure, and API-ready architecture.',
-        link: '#banner-back-end',
-      },
-      {
-        icon: '🤝',
-        title: 'Integrated Dev Collaboration',
-        description: 'We plug into your workflow, toolset, and priorities.',
-        link: '#banner-integrated-dev-collaboration',
-      },
-    ]"
-  />
+<HeroFullstack
+  id="hero-fullstack"
+  backgroundImage="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/HeroPatternFullStuck-trim2x-white-slow.svg"
+  title="Design without development is just a suggestion."
+  description="We stay in — writing real code, collaborating in Git, and making sure everything works in production."
+  buttonText="Let’s Build Together"
+  backgroundColor="bg-[#DDDDDD]"
+  buttonLink="#"
+  :cards="[
+    {
+      icon: '⚛️',
+      title: 'Front-End Engineering',
+      description: 'Beautiful, accessible, and fast interfaces built for real users.',
+      link: '#banner-front-end',
+      image:
+        '/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/cards/card-front-end.svg',
+    },
+    {
+      icon: '🌐',
+      title: 'Back-End Engineering',
+      description: 'Scalable, secure, and API-ready architecture.',
+      link: '#banner-back-end',
+      image:
+        '/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/cards/card-back-end.svg',
+    },
+    {
+      icon: '🤝',
+      title: 'Integrated Dev Collaboration',
+      description: 'We plug into your workflow, toolset, and priorities.',
+      link: '#banner-integrated-dev-collaboration',
+      image:
+        '/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/cards/card-dev-collab.svg',
+    },
+  ]"
+/>
+
   <BannerSection
     id="banner-front-end"
     text="Front-End Engineering"
