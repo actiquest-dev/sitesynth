@@ -139,7 +139,7 @@
       'Slack or Loom for async feedback',
       'Monday.com or Jira for team tracking',
     ]"
-    imageSrc="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/align-across-teams.svg"
+    imageSrc="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/dev-collaboration.svg"
   />
   <BannerSection text="What You Get" />
   <Column
