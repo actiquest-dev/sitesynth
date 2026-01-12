@@ -51,42 +51,65 @@
         </div>
       </div>
     </template>
-  </TwoColumnsDesign>
-  <TwoColumnsDesign
-    id="stats-ai"
-    sectionBgColor=""
-    leftColumnBgColor="bg-[#191919]"
-    rightColumnBgColor="bg-[#161616]"
-    textColorleft="text-[#161616]"
-    textColorRight="text-white"
-  >
-    <template #left>
-      <div class="py-24 md:border-r border-[#636363] bg-[#191919]">
-        <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
-          <h2 class="text-4xl mb-2 text-white">84% 🪄</h2>
-          <h2 class="text-4xl mb-2 text-white">of executives</h2>
-          <p class="text-lg font-bold mb-4 text-white">
-            say AI will give them a competitive advantage — but only 19% have
-            adopted it at scale.
-          </p>
-          <p class="text-[#999999]">— McKinsey Global AI Survey</p>
-        </div>
-      </div>
-    </template>
+    
+</TwoColumnsDesign>
 
-    <template #right>
-      <div class="py-24 bg-[#161616]">
-        <div class="max-w-[600px] mr-auto px-6 md:px-0 md:pl-16">
-          <h2 class="text-4xl mb-2 text-white">5x 🚀</h2>
-          <h2 class="text-4xl mb-2 text-white">faster</h2>
-          <p class="text-lg font-bold mb-4 text-white">
-            Companies that adopt AI early grow 50% faster in productivity and
-            customer retention.
-          </p>
-          <p class="text-[#999999]">— BCG AI at Scale Report</p>
-        </div>
+<TwoColumnsDesign
+  id="stats-ai"
+  sectionBgColor=""
+  leftColumnBgColor="bg-[#191919]"
+  rightColumnBgColor="bg-[#161616]"
+  textColorleft="text-[#161616]"
+  textColorRight="text-white"
+>
+  <template #left>
+    <div class="py-24 md:border-r border-[#636363] bg-[#191919]">
+      <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
+        <!-- 84% -->
+        <h2 class="mb-2 text-white leading-none">
+          <span class="text-5xl sm:text-6xl font-extrabold">
+            <CountUp :end="84" suffix="%" />
+          </span>
+          <span class="text-3xl sm:text-4xl ml-3 align-middle">🪄</span>
+        </h2>
+
+        <h2 class="text-4xl mb-2 text-white">of executives</h2>
+
+        <p class="text-lg font-bold mb-4 text-white">
+          say AI will give them a competitive advantage — but only 19% have
+          adopted it at scale.
+        </p>
+
+        <p class="text-[#999999]">— McKinsey Global AI Survey</p>
       </div>
-    </template>
+    </div>
+  </template>
+
+  <template #right>
+    <div class="py-24 bg-[#161616]">
+      <div class="max-w-[600px] mr-auto px-6 md:px-0 md:pl-16">
+        <!-- 5x -->
+        <h2 class="mb-2 text-white leading-none">
+          <span class="text-5xl sm:text-6xl font-extrabold">
+            <CountUp :end="5" suffix="x" />
+          </span>
+          <span class="text-3xl sm:text-4xl ml-3 align-middle">🚀</span>
+        </h2>
+
+        <h2 class="text-4xl mb-2 text-white">faster</h2>
+
+        <p class="text-lg font-bold mb-4 text-white">
+          Companies that adopt AI early grow 50% faster in productivity and
+          customer retention.
+        </p>
+
+        <p class="text-[#999999]">— BCG AI at Scale Report</p>
+      </div>
+    </div>
+  </template>
+</TwoColumnsDesign>
+
+    
   </TwoColumnsDesign>
   <Testimonial
     id="testimonial-miguel"
