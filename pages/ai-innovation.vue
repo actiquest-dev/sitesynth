@@ -1,5 +1,6 @@
 <template>
   <HeaderSection />
+
   <HeroAi
     id="hero-ai"
     backgroundImage="/assets/new-assets/solutions-page/solutions/ai-infused-innovation-and-rd/AIHeroPattern-flow-soft.svg"
@@ -107,10 +108,10 @@
     </template>
   </TwoColumnsDesign>
 
-<Testimonial
-  id="testimonial-miguel"
+  <Testimonial
+    id="testimonial-miguel"
     imageSrc="/assets/new-assets/people-for-CTA/oval-miguel.png"
-    personName="Miguel Aprossine "
+    personName="Miguel Aprossine "
     personTitle="AI & Web3 Visionary Partner"
     quoteTitle="AI isn’t here to replace your team"
     quoteText="We use AI to cut the noise, speed up workflows, and reveal smarter ways to build. It’s not about hype — it’s about helping real teams move faster with less friction."
@@ -118,7 +119,9 @@
     ctaLink="#"
     class="pt-[8rem]"
   />
+
   <BannerSection text="What We Offer" />
+
   <WhatWeOfferAi
     id="what-we-offer-ai"
     :cards="[
@@ -142,7 +145,9 @@
       },
     ]"
   />
+
   <BannerSection text="New AI product we are working on" />
+
   <TwoColumnSection
     id="membria"
     class="pb-20"
@@ -173,35 +178,49 @@
       },
     }"
   />
+
   <BannerSection text="What You Get" />
-  <Column
+
+  <!-- ✅ ЗАМЕНА Column -> FeatureCards (черные, без кнопки, с картинками) -->
+  <FeatureCards
     id="what-you-get"
-    class="pb-20"
-    :columns="[
+    sectionClass="bg-[#161616] pb-20"
+    :showArrow="false"
+    :cards="[
       {
         icon: '🧬',
-        imageAlt: 'Brand Icon',
         title: 'Clear Brand Architecture',
-        headerTag: 'h3',
         description:
           'Atomic, flexible, and organized — built for scaling without clutter.',
+        image:
+          '/assets/new-assets/solutions-page/solutions/ai-infused-innovation-and-rd/cards/card-ai-roadmap.svg',
+        imageClass:
+          'w-[420px] md:w-[460px] lg:w-[520px] translate-x-[18px] translate-y-[18px]',
       },
       {
         icon: '🗺️',
         title: 'User Journey Maps',
-        headerTag: 'h3',
         description:
           'Clear maps of how users move through your product — across all key journeys.',
+        image:
+          '/assets/new-assets/solutions-page/solutions/ai-infused-innovation-and-rd/cards/card-team.svg',
+        imageClass:
+          'w-[420px] md:w-[460px] lg:w-[520px] translate-x-[18px] translate-y-[18px]',
       },
       {
         icon: '⚡',
         title: 'Pattern Usage Guidelines',
-        headerTag: 'h3',
         description:
           'Know exactly when and how to use each pattern — no guessing, no inconsistency.',
+        image:
+          '/assets/new-assets/solutions-page/solutions/ai-infused-innovation-and-rd/cards/card-prototyping.svg',
+        imageClass:
+          'w-[420px] md:w-[460px] lg:w-[520px] translate-x-[18px] translate-y-[18px]',
       },
     ]"
   />
+
+  <!-- оставила второй Column как был -->
   <Column
     id="design-system"
     class="pb-20"
@@ -234,15 +253,19 @@
     secondaryText="Book a Call"
     secondaryLink="/contact-us"
   />
+
   <FooterSection />
 </template>
 
 <script setup>
 import { seoConfig, structuredData } from "~/config/seo";
 
-// SEO Configuration - using centralized config
+// если Nuxt auto-import у тебя выключен, раскомментируй:
+// import FeatureCards from "~/components/ui/FeatureCards.vue";
+
 const siteUrl = useRuntimeConfig().public?.siteUrl;
 const seo = seoConfig.aiInnovation;
+
 useSeoMeta({
   title: seo.title,
   description: seo.description,
@@ -265,3 +288,4 @@ useHead({
   ],
 });
 </script>
+
