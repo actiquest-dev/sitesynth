@@ -154,7 +154,7 @@ const navItems = [
       {
         imageSrc: "/assets/new-assets/Menu/Product/gray/AILivePod.svg",
         label: "AI Live Pod",
-        link: "https://ailivepod.framer.website/",
+        link: "https://ailivepod.framer.website/product",
         target: "_blank",
       },
     ],
