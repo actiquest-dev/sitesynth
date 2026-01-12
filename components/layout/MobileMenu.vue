@@ -102,13 +102,13 @@ const navItems = [
       {
         imageSrc: "/assets/membria.svg",
         label: "Membria",
-        link: "https://membria.xyz/",
+        link: "https://membria.ai/",
         target: "_blank",
       },
       {
         imageSrc: "/assets/ai-live-pod.svg",
         label: "AI Live Pod",
-        link: "https://ailivepod.framer.website/",
+        link: "https://ailivepod.framer.website/product",
         target: "_blank",
       },
     ],
