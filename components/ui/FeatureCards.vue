@@ -1,3 +1,4 @@
+<!-- components/ui/FeatureCards.vue (BLACK variant) -->
 <template>
   <section :id="id || undefined" :class="sectionClass">
     <div class="max-w-[1248px] mx-auto px-6">
@@ -7,22 +8,35 @@
           :key="index"
           :is="card.link ? 'a' : 'div'"
           :href="card.link || undefined"
-          class="group/card relative border border-[#636363] overflow-hidden
-                 transition-colors duration-300
+          :target="card.target || undefined"
+          :rel="card.target === '_blank' ? 'noopener noreferrer' : undefined"
+          class="group/card relative border border-[#636363] overflow-hidden transition-colors duration-300
                  focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
           :class="[
             cardBgClass,
             card.link ? 'cursor-pointer' : '',
             cardHoverBgClass,
-            minHeightClass,
+            minHeightClass
           ]"
         >
+          <!-- pinned image -->
+          <img
+            v-if="(card.image && showPinnedImages)"
+            :src="card.image"
+            :alt="card.imageAlt || ''"
+            class="pointer-events-none select-none absolute bottom-0 right-0 z-0 max-w-none opacity-95"
+            :class="imageClass"
+            loading="lazy"
+          />
+
+          <!-- content -->
           <div class="relative z-10 flex flex-col h-full">
             <div class="p-10 pb-0">
               <!-- fixed text box (как в HeroFullstack) -->
-              <div class="max-w-[293px]">
-                <h3 class="text-xl font-semibold leading-tight text-left" :class="titleClass">
-                  <span v-if="card.icon" class="mr-2">{{ card.icon }}</span>{{ card.title }}
+              <div :class="textBoxMaxWidthClass">
+                <h3 class="text-left leading-tight" :class="titleClass">
+                  <span v-if="card.icon" class="mr-2">{{ card.icon }}</span>
+                  {{ card.title }}
                 </h3>
 
                 <p class="text-left mt-5 leading-relaxed" :class="descriptionClass">
@@ -30,33 +44,29 @@
                 </p>
               </div>
 
-              <!-- round arrow -->
-              <div class="mt-7">
+              <!-- round arrow (optional) -->
+              <div v-if="(card.showArrow ?? showArrow)" class="mt-7">
                 <span
-                  class="inline-flex items-center justify-center w-10 h-10 rounded-full
+                  class="inline-flex items-center justify-center rounded-full
                          border border-white/30 bg-white/5 text-white/90
                          transition-all duration-300
                          group-hover/card:bg-white/10 group-hover/card:border-white/55
                          group-hover/card:shadow-[0_0_0_6px_rgba(255,255,255,0.06)]"
+                  :class="arrowSizeClass"
                   aria-hidden="true"
                 >
                   <font-awesome
-                    :icon="['fas', 'arrow-right']"
-                    class="text-[12px] transition-transform duration-300 group-hover/card:translate-x-[2px]"
+                    :icon="arrowIcon"
+                    class="transition-transform duration-300 group-hover/card:translate-x-[2px]"
+                    :class="arrowIconSizeClass"
                     aria-hidden="true"
                   />
                 </span>
               </div>
             </div>
 
-            <!-- pinned image (optional) -->
-            <img
-              v-if="card.image"
-              :src="card.image"
-              alt=""
-              class="pointer-events-none select-none absolute bottom-0 right-0 z-0
-                     max-w-none opacity-95"
-            />
+            <!-- spacer (чтобы низ/картинка не ломали высоту) -->
+            <div class="flex-1"></div>
           </div>
         </component>
       </div>
@@ -68,18 +78,32 @@
 const props = defineProps({
   id: { type: String, default: "" },
 
-  // массив карточек: { icon?, title, description, link?, image? }
+  // layout
+  sectionClass: { type: String, default: "" },
+  gridClass: { type: String, default: "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" },
+  minHeightClass: { type: String, default: "min-h-[420px]" },
+
+  // cards
+  // card: { icon?, title, description, link?, target?, image?, imageAlt?, showArrow? }
   cards: { type: Array, default: () => [] },
 
-  // layout
-  sectionClass: { type: String, default: "py-20" },
-  gridClass: { type: String, default: "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" },
-  minHeightClass: { type: String, default: "min-h-[320px]" },
-
-  // styles
+  // styles (black)
   cardBgClass: { type: String, default: "bg-[#161616]" },
   cardHoverBgClass: { type: String, default: "hover:bg-[#1a1a1a]" },
-  titleClass: { type: String, default: "text-white" },
+
+  // text box (fixed width like HeroFullstack)
+  textBoxMaxWidthClass: { type: String, default: "max-w-[293px]" },
+  titleClass: { type: String, default: "text-white text-xl font-semibold" },
   descriptionClass: { type: String, default: "text-[#999999]" },
+
+  // pinned images
+  showPinnedImages: { type: Boolean, default: true },
+  imageClass: { type: String, default: "" },
+
+  // arrow
+  showArrow: { type: Boolean, default: true },
+  arrowIcon: { type: Array, default: () => ["fas", "arrow-right"] },
+  arrowSizeClass: { type: String, default: "w-10 h-10" },
+  arrowIconSizeClass: { type: String, default: "text-[12px]" },
 });
 </script>
