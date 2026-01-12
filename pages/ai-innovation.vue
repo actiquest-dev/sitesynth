@@ -122,26 +122,38 @@
 
   <BannerSection text="What We Offer" />
 
-  <WhatWeOfferAi
-    id="what-we-offer-ai"
+   <!-- ✅ ЗАМЕНА Column -> FeatureCards (черные, без кнопки, с картинками) -->
+  <FeatureCards
+    id="what-you-get"
+    sectionClass="bg-[#161616] pb-20"
+    :showArrow="false"
     :cards="[
       {
-        title: '🧭 AI Strategy & Use-Case Mapping',
+        title: 'Clear Brand Architecture',
         description:
-          'We identify where AI can add real value — across product, operations, or internal tooling. → Discovery workshops, automation audits, risk/benefit framing',
-        link: '#',
+          'Atomic, flexible, and organized — built for scaling without clutter.',
+        image:
+          '/assets/new-assets/solutions-page/solutions/ai-infused-innovation-and-rd/cards/card-ai-roadmap.svg',
+        imageClass:
+          'w-[420px] md:w-[460px] lg:w-[520px] translate-x-[18px] translate-y-[18px]',
       },
       {
-        title: '🛠️ Rapid Prototyping with AI',
+           title: 'User Journey Maps',
         description:
-          'We build proof-of-concepts using modern AI APIs and open-source tools. → GPT-4, Claude, local LLMs, RAG, LangChain, Whisper, vector search',
-        link: '#',
+          'Clear maps of how users move through your product — across all key journeys.',
+        image:
+          '/assets/new-assets/solutions-page/solutions/ai-infused-innovation-and-rd/cards/card-team.svg',
+        imageClass:
+          'w-[420px] md:w-[460px] lg:w-[520px] translate-x-[18px] translate-y-[18px]',
       },
       {
-        title: '🧪 Integrated AI in Product & Design',
+        title: 'Pattern Usage Guidelines',
         description:
-          'We embed AI into design workflows and product experiences — responsibly and at speed. → UX copy generation, AI-powered assistants, personalized content flows',
-        link: '#',
+          'Know exactly when and how to use each pattern — no guessing, no inconsistency.',
+        image:
+          '/assets/new-assets/solutions-page/solutions/ai-infused-innovation-and-rd/cards/card-prototyping.svg',
+        imageClass:
+          'w-[420px] md:w-[460px] lg:w-[520px] translate-x-[18px] translate-y-[18px]',
       },
     ]"
   />
@@ -180,47 +192,34 @@
   />
 
   <BannerSection text="What You Get" />
-
-  <!-- ✅ ЗАМЕНА Column -> FeatureCards (черные, без кнопки, с картинками) -->
-  <FeatureCards
+  <Column
     id="what-you-get"
-    sectionClass="bg-[#161616] pb-20"
-    :showArrow="false"
-    :cards="[
+    class="pb-20"
+    :columns="[
       {
         icon: '🧬',
+        imageAlt: 'Brand Icon',
         title: 'Clear Brand Architecture',
+        headerTag: 'h3',
         description:
           'Atomic, flexible, and organized — built for scaling without clutter.',
-        image:
-          '/assets/new-assets/solutions-page/solutions/ai-infused-innovation-and-rd/cards/card-ai-roadmap.svg',
-        imageClass:
-          'w-[420px] md:w-[460px] lg:w-[520px] translate-x-[18px] translate-y-[18px]',
       },
       {
         icon: '🗺️',
         title: 'User Journey Maps',
+        headerTag: 'h3',
         description:
           'Clear maps of how users move through your product — across all key journeys.',
-        image:
-          '/assets/new-assets/solutions-page/solutions/ai-infused-innovation-and-rd/cards/card-team.svg',
-        imageClass:
-          'w-[420px] md:w-[460px] lg:w-[520px] translate-x-[18px] translate-y-[18px]',
       },
       {
         icon: '⚡',
         title: 'Pattern Usage Guidelines',
+        headerTag: 'h3',
         description:
           'Know exactly when and how to use each pattern — no guessing, no inconsistency.',
-        image:
-          '/assets/new-assets/solutions-page/solutions/ai-infused-innovation-and-rd/cards/card-prototyping.svg',
-        imageClass:
-          'w-[420px] md:w-[460px] lg:w-[520px] translate-x-[18px] translate-y-[18px]',
       },
     ]"
   />
-
-  <!-- оставила второй Column как был -->
   <Column
     id="design-system"
     class="pb-20"
