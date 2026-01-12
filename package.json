@@ -14,7 +14,6 @@
   "dependencies": {
     "@nuxt/fonts": "^0.12.1",
     "@nuxt/image": "^1.10.0",
-    "@nuxtjs/sitemap": "^7.4.11",
     "@tsparticles/engine": "^3.8.1",
     "@tsparticles/slim": "^3.8.1",
     "@tsparticles/vue3": "^3.0.1",
@@ -31,6 +30,7 @@
     "@fortawesome/free-brands-svg-icons": "^7.1.0",
     "@fortawesome/free-regular-svg-icons": "^7.1.0",
     "@fortawesome/free-solid-svg-icons": "^7.1.0",
+    "@nuxtjs/sitemap": "^7.5.2",
     "@nuxtjs/tailwindcss": "^7.0.0-beta.0",
     "@zadigetvoltaire/nuxt-gtm": "^0.0.13",
     "sass": "^1.94.2"
