@@ -129,7 +129,7 @@ export default defineNuxtConfig({
     debug: true,
   },
 
-  // Sitemap configuration - auto-discovers all pages from pages/ directory
+  // Sitemap configuration
   sitemap: {
     hostname: "https://www.sitesynth.com",
     gzip: true,
