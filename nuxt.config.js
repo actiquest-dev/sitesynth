@@ -129,7 +129,7 @@ export default defineNuxtConfig({
     debug: true,
   },
 
-  // Sitemap configuration
+  // Sitemap configuration - auto-discovers all pages from pages/ directory
   sitemap: {
     hostname: "https://www.sitesynth.com",
     gzip: true,
@@ -138,85 +138,5 @@ export default defineNuxtConfig({
       priority: 0.8,
       lastmod: new Date().toISOString().split("T")[0],
     },
-    urls: [
-      {
-        loc: "/",
-        changefreq: "weekly",
-        priority: 1.0,
-        lastmod: new Date().toISOString().split("T")[0],
-      },
-      {
-        loc: "/about-us",
-        changefreq: "weekly",
-        priority: 0.8,
-        lastmod: new Date().toISOString().split("T")[0],
-      },
-      {
-        loc: "/ux-and-design-system",
-        changefreq: "weekly",
-        priority: 0.9,
-        lastmod: new Date().toISOString().split("T")[0],
-      },
-      {
-        loc: "/brand-driven-product-strategy",
-        changefreq: "weekly",
-        priority: 0.9,
-        lastmod: new Date().toISOString().split("T")[0],
-      },
-      {
-        loc: "/careers",
-        changefreq: "weekly",
-        priority: 0.7,
-        lastmod: new Date().toISOString().split("T")[0],
-      },
-      {
-        loc: "/careers/full-stack-developer",
-        changefreq: "weekly",
-        priority: 0.6,
-        lastmod: new Date().toISOString().split("T")[0],
-      },
-      {
-        loc: "/careers/marketing-manager",
-        changefreq: "weekly",
-        priority: 0.6,
-        lastmod: new Date().toISOString().split("T")[0],
-      },
-      {
-        loc: "/careers/ux-ui-designer",
-        changefreq: "weekly",
-        priority: 0.6,
-        lastmod: new Date().toISOString().split("T")[0],
-      },
-      {
-        loc: "/scoresynth",
-        changefreq: "weekly",
-        priority: 0.8,
-        lastmod: new Date().toISOString().split("T")[0],
-      },
-      {
-        loc: "/ai-innovation",
-        changefreq: "weekly",
-        priority: 0.9,
-        lastmod: new Date().toISOString().split("T")[0],
-      },
-      {
-        loc: "/full-stack-implementation",
-        changefreq: "weekly",
-        priority: 0.9,
-        lastmod: new Date().toISOString().split("T")[0],
-      },
-      {
-        loc: "/contact-us",
-        changefreq: "weekly",
-        priority: 0.8,
-        lastmod: new Date().toISOString().split("T")[0],
-      },
-      {
-        loc: "/privacy-and-policy",
-        changefreq: "yearly",
-        priority: 0.3,
-        lastmod: new Date().toISOString().split("T")[0],
-      },
-    ],
   },
 });
