@@ -1,64 +1,84 @@
 <template>
   <section :id="id || undefined" :class="sectionClass">
-    <div class="max-w-[1248px] mx-auto px-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-        <div
+    <div :class="containerClass">
+      <div :class="gridClass">
+        <component
           v-for="(card, index) in cards"
           :key="index"
-          class="group/card relative overflow-hidden border border-[#636363]
-                 bg-white/[0.07] transition-colors duration-300
-                 hover:bg-white/[0.10]
-                 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30
-                 rounded-none"
-          :class="[
-            minHeightClass,
-            enableBlur ? 'backdrop-blur-md' : '',
-            cardClass
-          ]"
+          :is="card.link ? 'a' : 'div'"
+          :href="card.link || undefined"
+          class="group relative border overflow-hidden transition-colors duration-300"
+          :class="cardClass"
         >
-          <!-- subtle inner vignette (можешь убрать если не надо) -->
-          <div
-            class="absolute inset-0 pointer-events-none opacity-100"
-            style="
-              background:
-                radial-gradient(120% 120% at 20% 0%, rgba(141, 53, 255, 0.18) 0%, rgba(0,0,0,0) 55%),
-                radial-gradient(120% 120% at 100% 100%, rgba(255,255,255,0.10) 0%, rgba(0,0,0,0) 55%),
-                radial-gradient(120% 120% at 50% 120%, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0) 60%);
-            "
-          ></div>
-
-          <div class="relative z-10 p-11">
-            <img
-              v-if="card.iconSrc"
-              :src="card.iconSrc"
-              :alt="card.iconAlt || ''"
-              class="w-7 h-7 opacity-95"
-            />
-            <div v-else-if="card.icon" class="text-2xl leading-none opacity-95">
-              {{ card.icon }}
+          <div class="p-10 md:p-12">
+            <!-- icon -->
+            <div v-if="card.iconSrc || card.icon" class="mb-6">
+              <img
+                v-if="card.iconSrc"
+                :src="card.iconSrc"
+                :alt="card.iconAlt || ''"
+                class="w-7 h-7 select-none pointer-events-none"
+              />
+              <span v-else class="text-2xl leading-none">{{ card.icon }}</span>
             </div>
 
-            <h3 class="mt-6 text-2xl font-semibold text-white leading-tight">
+            <!-- title -->
+            <h3 class="text-white text-2xl font-semibold leading-tight">
               {{ card.title }}
             </h3>
 
-            <p class="mt-4 text-[#999999] leading-relaxed max-w-[42ch]">
+            <!-- description -->
+            <p class="mt-4 text-[#999999] leading-relaxed">
               {{ card.description }}
             </p>
           </div>
-        </div>
+
+          <!-- hover overlay (очень мягко) -->
+          <div
+            class="absolute inset-0 pointer-events-none opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+            style="background: rgba(255,255,255,0.03)"
+          />
+        </component>
       </div>
     </div>
   </section>
 </template>
 
 <script setup>
+import { computed } from "vue";
+
 const props = defineProps({
   id: { type: String, default: "" },
-  sectionClass: { type: String, default: "bg-[#161616] pb-20" },
-  cards: { type: Array, default: () => [] }, // [{ iconSrc?, iconAlt?, icon?, title, description }]
-  enableBlur: { type: Boolean, default: true },
-  minHeightClass: { type: String, default: "min-h-[280px]" },
-  cardClass: { type: String, default: "" },
+
+  // layout
+  sectionClass: { type: String, default: "bg-[#161616] py-20" },
+  containerClass: { type: String, default: "max-w-[1248px] mx-auto px-6" },
+  gridClass: {
+    type: String,
+    default: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[49px]",
+  },
+
+  // visuals
+  borderColor: { type: String, default: "#636363" },
+  cardBgOpacity: { type: Number, default: 0.07 }, // 7%
+  blur: { type: Boolean, default: false }, // backdrop blur
+
+  // content
+  cards: { type: Array, default: () => [] },
+});
+
+const cardClass = computed(() => {
+  const bg = `bg-white/[${props.cardBgOpacity}]`; // tailwind arbitrary opacity
+  const border = `border-[${props.borderColor}]`;
+
+  return [
+    "no-underline", // если будет <a>
+    "focus:outline-none",
+    "focus-visible:ring-2 focus-visible:ring-white/30",
+    "min-h-[260px]",
+    bg,
+    border,
+    props.blur ? "backdrop-blur-md" : "",
+  ].join(" ");
 });
 </script>
