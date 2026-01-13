@@ -139,56 +139,37 @@
     contentClass="text-[#DDDDDD] max-w-[1248px] px-6 mx-auto text-4xl"
   />
 
-  <Column
-    id="column-what-you-get"
-    headerTextColor="text-[#DDDDDD]"
-    backgroundColor="bg-[#161616]"
-    :columns="[
-      {
-        icon: '🧬',
-        imageAlt: 'Brand Icon',
-        title: 'Clear Brand Architecture',
-        headerTag: 'h3',
-        description:
-          'Atomic, flexible, and organized — built for scaling without clutter.',
-      },
-      {
-        icon: '🗺️',
-        title: 'User Journey Maps',
-        headerTag: 'h3',
-        description:
-          'Clear maps of how users move through your product — across all key journeys.',
-      },
-      {
-        icon: '⚡',
-        title: 'Pattern Usage Guidelines',
-        headerTag: 'h3',
-        description:
-          'Know exactly when and how to use each pattern — no guessing, no inconsistency.',
-      },
-    ]"
-  />
-  <Column
-    id="column-design-system-documentation"
-    headerTextColor="text-[#DDDDDD]"
-    backgroundColor="bg-[#161616]"
-    :columns="[
-      {
-        icon: '📘 ',
-        title: 'Design System Documentation',
-        headerTag: 'h3',
-        description:
-          'Everything documented and ready in Figma’s Dev Mode, Zeroheight, or your preferred platform.',
-      },
-      {
-        icon: '🛠️',
-        title: 'Practical, Living Docs',
-        headerTag: 'h3',
-        description:
-          'Practical, living docs that support day-to-day work — not just sit in a folder.',
-      },
-    ]"
-  />
+  <WhatYouGetSection
+  id="what-you-get"
+  sectionClass="bg-[#161616] pb-20"
+  :cards="[
+    {
+      iconSrc: '/assets/icons/code.svg',
+      title: 'Clear Brand Architecture',
+      description: 'Atomic, flexible, and organized — built for scaling without clutter.',
+    },
+    {
+      iconSrc: '/assets/icons/monitor-mobbile.svg',
+      title: 'User Journey Maps',
+      description: 'Clear maps of how users move through your product — across all key journeys.',
+    },
+    {
+      iconSrc: '/assets/icons/flash.svg',
+      title: 'Pattern Usage Guidelines',
+      description: 'Know exactly when and how to use each pattern — no guessing, no inconsistency.',
+    },
+    {
+      iconSrc: '/assets/icons/key-square.svg',
+      title: 'Design System Documentation',
+      description: 'Everything documented and ready in Figma Dev Mode, Zeroheight, or your preferred platform.',
+    },
+    {
+      iconSrc: '/assets/icons/setting-2.svg',
+      title: 'Practical, Living Docs',
+      description: 'Practical docs that support day-to-day work — not just sit in a folder.',
+    },
+  ]"
+/>
   <WhiteSection
     id="white-section-get-started"
     bgImage="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/below-pattern.svg"
