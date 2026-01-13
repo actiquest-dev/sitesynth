@@ -139,49 +139,56 @@
     contentClass="text-[#DDDDDD] max-w-[1248px] px-6 mx-auto text-4xl"
   />
 
-<WhatYouGetSection
+  <WhatYouGetSection
   id="what-you-get"
-  sectionClass="bg-[#161616] pb-20"
-  :items="[
+  sectionClass="bg-[#161616] py-20"
+  :blur="true"
+  :cards="[
     {
       iconSrc: '/assets/icons/monitor-mobbile.svg',
       title: 'Production Front-End',
-      description:
-        'Shippable UI built in React/Vue with accessibility and performance baked in.',
+      description: 'Shippable UI built in React/Vue with accessibility and performance baked in.',
     },
     {
       iconSrc: '/assets/icons/code.svg',
       title: 'Scalable Back-End',
-      description:
-        'Scalable APIs and services built with clean architecture, validation, and versioning.',
+      description: 'Scalable APIs and services built with clean architecture, validation, and versioning.',
     },
     {
       iconSrc: '/assets/icons/key-square.svg',
       title: 'Auth & Permissions',
-      description:
-        'Secure auth, roles, and permissions that match real business workflows exactly.',
+      description: 'Secure auth, roles, and permissions that match real business workflows exactly.',
     },
     {
       iconSrc: '/assets/icons/driver-2.svg',
       title: 'Data Foundations',
-      description:
-        'Databases, migrations, and data models designed for growth and change safely.',
+      description: 'Databases, migrations, and data models designed for growth and change safely.',
     },
     {
       iconSrc: '/assets/icons/flash.svg',
       title: 'CI/CD & Deployments',
-      description:
-        'CI/CD pipelines, environments, and deployments set up for predictable, repeatable releases.',
+      description: 'CI/CD pipelines, environments, and deployments set up for predictable, repeatable releases.',
     },
     {
       iconSrc: '/assets/icons/setting-2.svg',
       title: 'Maintainable Delivery',
-      description:
-        'Testing, monitoring, and handoff docs so your team can maintain confidently.',
+      description: 'Testing, monitoring, and handoff docs so your team can maintain confidently.',
     },
   ]"
 />
 
+  <WhiteSection
+    id="white-section-get-started"
+    bgImage="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/below-pattern.svg"
+    class="pt-[8rem] pb-[8rem]"
+    bgColor="bg-[#161616]"
+    title="Get Started Today"
+    description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you’re becoming."
+    primaryText="Start a Project"
+    primaryLink="/contact-us"
+    secondaryText="Book a Call"
+    secondaryLink="/contact-us"
+  />
   <FooterSection />
 </template>
 
