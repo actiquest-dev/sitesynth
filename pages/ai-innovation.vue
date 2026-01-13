@@ -197,7 +197,7 @@
   id="what-you-get"
   title="What You Get"
   :showTitle="true"
-  sectionClass="bg-[#161616] py-24"
+  sectionClass="bg-[#161616] py-0"
   :useBlur="true"
   :useVignette="true"
   :cards="[
