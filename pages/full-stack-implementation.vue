@@ -141,7 +141,7 @@
 
   <WhatYouGetSection
   id="what-you-get"
-  sectionClass="bg-[#161616] py-20"
+  sectionClass="bg-[#161616] py-0"
   :blur="true"
   :cards="[
     {
