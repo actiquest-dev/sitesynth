@@ -58,7 +58,7 @@
   <TwoColumnsDesign
     id="stats-ai"
     sectionBgColor=""
-    leftColumnBgColor="bg-[#191919]"
+    leftColumnBgColor="bg-[#161616]"
     rightColumnBgColor="bg-[#161616]"
     textColorleft="text-[#161616]"
     textColorRight="text-white"
