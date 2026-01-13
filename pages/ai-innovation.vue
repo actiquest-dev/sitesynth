@@ -192,54 +192,54 @@
   />
 
   <BannerSection text="What You Get" />
-  <Column
-    id="what-you-get"
-    class="pb-20"
-    :columns="[
-      {
-        icon: '🧬',
-        imageAlt: 'Brand Icon',
-        title: 'Clear Brand Architecture',
-        headerTag: 'h3',
-        description:
-          'Atomic, flexible, and organized — built for scaling without clutter.',
-      },
-      {
-        icon: '🗺️',
-        title: 'User Journey Maps',
-        headerTag: 'h3',
-        description:
-          'Clear maps of how users move through your product — across all key journeys.',
-      },
-      {
-        icon: '⚡',
-        title: 'Pattern Usage Guidelines',
-        headerTag: 'h3',
-        description:
-          'Know exactly when and how to use each pattern — no guessing, no inconsistency.',
-      },
-    ]"
-  />
-  <Column
-    id="design-system"
-    class="pb-20"
-    :columns="[
-      {
-        icon: '📘 ',
-        title: 'Design System Documentation',
-        headerTag: 'h3',
-        description:
-          'Everything documented and ready in Figma’s Dev Mode, Zeroheight, or your preferred platform.',
-      },
-      {
-        icon: '🛠️',
-        title: 'Practical, Living Docs',
-        headerTag: 'h3',
-        description:
-          'Practical, living docs that support day-to-day work — not just sit in a folder.',
-      },
-    ]"
-  />
+  
+<WhatYouGetSection
+  id="what-you-get"
+  title="What You Get"
+  :showTitle="true"
+  sectionClass="bg-[#161616] py-24"
+  :useBlur="true"
+  :useVignette="true"
+  :cards="[
+    {
+      iconSrc: '/assets/icons/task-square.svg',
+      title: 'Use-Case Shortlist',
+      description:
+        'Shortlist high-impact AI opportunities with ROI, feasibility, and risks assessed.',
+    },
+    {
+      iconSrc: '/assets/icons/eye.svg',
+      title: 'Data Readiness Plan',
+      description:
+        'Audit data sources, access, quality, and governance before building anything.',
+    },
+    {
+      iconSrc: '/assets/icons/code.svg',
+      title: 'Prototype in Weeks',
+      description:
+        'Build a working prototype fast using your docs, tools, systems.',
+    },
+    {
+      iconSrc: '/assets/icons/chart.svg',
+      title: 'Evaluations & Benchmarks',
+      description:
+        'Define evals, test sets, and metrics to measure quality reliably.',
+    },
+    {
+      iconSrc: '/assets/icons/shield-tick.svg',
+      title: 'Guardrails & Compliance',
+      description:
+        'Add safety, privacy, and compliance guardrails for real-world deployment.',
+    },
+    {
+      iconSrc: '/assets/icons/book.svg',
+      title: 'Handoff & Enablement',
+      description:
+        'Ship with docs, training, and ownership so your team scales.',
+    },
+  ]"
+/>
+
 
   <WhiteSection
     id="get-started-today"
