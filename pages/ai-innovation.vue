@@ -163,7 +163,7 @@
   <TwoColumnSection
     id="membria"
     class="pb-20"
-    class="py-0"
+    sectionClass="bg-[#161616] py-0"
     leftPadding="pl-[4rem] pt-[2rem] md:pt-[0rem]"
     rightPadding=""
     :leftContent="{
