@@ -148,37 +148,37 @@
   sectionClass="bg-[#161616] pb-20 pt-0"
   :cards="[
     {
-      icon: '/assets/icons/routing-2.svg',
+      iconSrc: '/assets/icons/routing-2.svg',
       title: 'Strategic Foundation',
       description:
         'A clear product direction rooted in your brand’s purpose, promise, and personality — not just market trends or feature requests.',
     },
     {
-      icon: '/assets/icons/messages.svg',
+      iconSrc: '/assets/icons/messages.svg',
       title: 'Messaging Frameworks',
       description:
         'Positioning, voice, and messaging pillars your whole team can rally around — consistent across product, marketing, and sales.',
     },
     {
-      icon: '/assets/icons/people.svg',
+      iconSrc: '/assets/icons/people.svg',
       title: 'Cross-Team Alignment',
       description:
         'Collaborative tools and rituals to keep design, product, and business stakeholders aligned — from kickoff to launch.',
     },
     {
-      icon: '/assets/icons/judge.svg',
+      iconSrc: '/assets/icons/judge.svg',
       title: 'Decision-Making Criteria',
       description:
         'Shared principles that help your team move faster — and know why they’re making the choices they are.',
     },
     {
-      icon: '/assets/icons/box.svg',
+      iconSrc: '/assets/icons/box.svg',
       title: 'Actionable Product Architecture',
       description:
         'Feature roadmaps and IA built around real user needs and business priorities — not guesswork.',
     },
     {
-      icon: '/assets/icons/task-square.svg',
+      iconSrc: '/assets/icons/task-square.svg',
       title: 'Delivery Blueprint',
       description:
         'A practical handoff package for build — specs, edge cases, acceptance criteria, and next steps your team can execute.',
