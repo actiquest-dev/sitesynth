@@ -165,7 +165,7 @@
   />
   <ColumnsAndBackground
     title="Why Choose ScoreSynth?"
-    background="/assets/new-assets/products-page/product/score-synth/harmonie van bornem.webp"
+    background="/assets/new-assets/products-page/product/score-synth/harmonie-van-bornem.webp"
     :leftElements="[
       {
         title: '🎼 Composers & Arrangers',
