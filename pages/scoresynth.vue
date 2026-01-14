@@ -164,40 +164,46 @@
     glowEffect="GlowRed"
   />
   <ColumnsAndBackground
-    title="Why Choose ScoreSynth?"
-    background="/assets/new-assets/products-page/product/score-synth/harmonie-van-bornem.webp"
-    :leftElements="[
-      {
-        title: '🎼 Composers & Arrangers',
-        paragraph: 'From piano sketches to full orchestration — in minutes.',
-      },
-      {
-        title: '🎓 Educators & Students',
-        paragraph: 'Create ensemble-ready arrangements for any skill level.',
-      },
-      {
-        title: '📝 Publishers & Copyists',
-        paragraph: 'Save time preparing, cleaning, and formatting music.',
-      },
-    ]"
-    :rightElements="[
-      {
-        title: '🎧 Producers & Creators',
-        paragraph:
-          'Generate string sections, cinematic textures, or jazz combos on demand.',
-      },
-      {
-        title: '🎻 Conductors & Ensembles',
-        paragraph:
-          'Need parts for a non-standard group? SynthScore adapts to your setup.',
-      },
-      {
-        title: '🧠  Curious Hobbyists',
-        paragraph:
-          'Not a pro? No problem. Play with ideas, hear them instantly, and learn by doing — no steep learning curve.',
-      },
-    ]"
-  />
+  id="who-scoresynth-is-for"
+  title="Who ScoreSynth Is For:"
+  sectionClass="bg-[#161616] py-20"
+  backgroundImage="/assets/REPLACE-WITH-YOUR-BG-IMAGE.jpg"
+  :overlay="true"
+  :overlayOpacity="0.35"
+  :cards="[
+    {
+      iconSrc: '/assets/icons/icons-scoresynth/love-music.svg',
+      title: 'Composers & Arrangers',
+      description: 'From piano sketches to full orchestration — in minutes.',
+    },
+    {
+      iconSrc: '/assets/icons/icons-scoresynth/microphone-2.svg',
+      title: 'Producers & Creators',
+      description: 'Generate string sections, cinematic textures, or jazz combos on demand.',
+    },
+    {
+      iconSrc: '/assets/icons/icons-scoresynth/music-edit.svg',
+      title: 'Publishers & Copyists',
+      description: 'Save time preparing, cleaning, and formatting music.',
+    },
+    {
+      iconSrc: '/assets/icons/icons-scoresynth/teacher.svg',
+      title: 'Educators & Students',
+      description: 'Create ensemble-ready arrangements for any skill level.',
+    },
+    {
+      iconSrc: '/assets/icons/icons-scoresynth/violin.svg',
+      title: 'Conductors & Ensembles',
+      description: 'Need parts for a non-standard group? SynthScore adapts to your setup.',
+    },
+    {
+      iconSrc: '/assets/icons/icons-scoresynth/music-filter.svg',
+      title: 'Curious Hobbyists',
+      description: 'Not a pro? No problem. Play with ideas, hear them instantly, and learn by doing — no steep learning curve.',
+    },
+  ]"
+/>
+
   <WhiteSection
     hover="#AA3733"
     class="pb-[8rem] pt-[8rem]"
