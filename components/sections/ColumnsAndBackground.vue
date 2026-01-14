@@ -1,90 +1,64 @@
 <template>
-  <section
-    :id="id || undefined"
-    :class="['relative overflow-hidden', sectionClass]"
-  >
-    <!-- Glow behind everything -->
-    <GlowEffect class="absolute inset-0 z-0 pointer-events-none" />
-
-    <!-- Background image (optional) -->
+  <section :id="id || undefined" :class="['relative overflow-hidden', sectionClass]">
+    <!-- Background image layer -->
     <div
       v-if="backgroundImage"
-      class="absolute inset-0 z-0 pointer-events-none"
+      class="absolute inset-0 pointer-events-none"
       :style="bgStyle"
-      aria-hidden="true"
-    ></div>
+    />
 
-    <!-- Dark overlay (optional, helps text contrast) -->
+    <!-- Optional dark overlay for readability -->
     <div
       v-if="overlay"
-      class="absolute inset-0 z-[1] pointer-events-none"
-      :style="{ backgroundColor: overlayColor }"
-      aria-hidden="true"
-    ></div>
+      class="absolute inset-0 pointer-events-none"
+      :style="overlayStyle"
+    />
 
-    <div class="relative z-10 max-w-[1248px] mx-auto px-6 py-16">
-      <!-- Optional header -->
-      <div v-if="title || subtitle" class="text-center mb-12">
-        <h2 v-if="title" class="text-white text-4xl font-extrabold">
-          {{ title }}
-        </h2>
-        <p v-if="subtitle" class="text-[#999999] mt-4 max-w-3xl mx-auto">
-          {{ subtitle }}
-        </p>
-      </div>
+    <!-- Content -->
+    <div :class="['relative z-10', containerClass]">
+      <h2 v-if="title" :class="titleClass">
+        {{ title }}
+      </h2>
 
-      <!-- Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div
-          v-for="(card, index) in normalizedCards"
+      <div :class="gridClass">
+        <component
+          v-for="(card, index) in cards"
           :key="index"
-          class="border border-[#636363] bg-[#161616]/70 backdrop-blur-[5.699999809265137px] p-8"
+          :is="card.link ? 'a' : 'div'"
+          :href="card.link || undefined"
+          class="group relative border overflow-hidden transition-colors duration-300 no-underline
+                 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+          :style="cardStyle"
         >
-          <div class="flex items-start gap-4">
-            <!-- Icon (svg/png) -->
-            <img
-              v-if="card.iconSrc"
-              :src="card.iconSrc"
-              :alt="card.iconAlt || ''"
-              class="w-10 h-10 object-contain flex-shrink-0"
-              loading="lazy"
-            />
-
-            <div class="min-w-0">
-              <component
-                :is="card.headerTag || 'h3'"
-                class="text-white text-xl font-semibold leading-tight"
-              >
-                {{ card.title }}
-              </component>
-
-              <p class="text-[#999999] mt-3 leading-relaxed">
-                {{ card.description }}
-              </p>
+          <div class="p-10 md:p-12">
+            <!-- icon -->
+            <div v-if="card.iconSrc || card.icon" class="mb-6">
+              <img
+                v-if="card.iconSrc"
+                :src="card.iconSrc"
+                :alt="card.iconAlt || ''"
+                class="w-7 h-7 select-none pointer-events-none"
+              />
+              <span v-else class="text-2xl leading-none">{{ card.icon }}</span>
             </div>
+
+            <!-- title -->
+            <h3 class="text-white text-2xl font-semibold leading-tight">
+              {{ card.title }}
+            </h3>
+
+            <!-- description -->
+            <p class="mt-4 text-[#999999] leading-relaxed">
+              {{ card.description }}
+            </p>
           </div>
 
-          <!-- Optional link (disabled by default) -->
-          <a
-            v-if="showLinks && card.link"
-            :href="card.link"
-            class="text-[#8CB0FF] mt-6 w-auto max-w-max py-2 font-semibold inline-flex items-center gap-2 group/link relative"
-          >
-            <span>{{ linkText }}</span>
-
-            <font-awesome
-              :icon="['fas', 'chevron-right']"
-              class="text-sm relative top-[1px] transition-transform duration-300 group-hover/link:translate-x-1"
-              aria-hidden="true"
-            />
-
-            <!-- Animated underline -->
-            <span
-              class="absolute bottom-0 left-0 h-[2px] bg-[#8CB0FF] w-0 group-hover/link:w-full transition-all duration-300"
-              aria-hidden="true"
-            ></span>
-          </a>
-        </div>
+          <!-- мягкий hover -->
+          <div
+            class="absolute inset-0 pointer-events-none opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+            style="background: rgba(255,255,255,0.03)"
+          />
+        </component>
       </div>
     </div>
   </section>
@@ -96,51 +70,58 @@ import { computed } from "vue";
 const props = defineProps({
   id: { type: String, default: "" },
 
-  // section styling
+  // layout
   sectionClass: { type: String, default: "bg-[#161616] py-20" },
+  containerClass: { type: String, default: "max-w-[1248px] mx-auto px-6" },
+  gridClass: {
+    type: String,
+    default: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[49px]",
+  },
+
+  // header
+  title: { type: String, default: "" },
+  titleClass: {
+    type: String,
+    default: "text-white text-4xl md:text-5xl font-semibold text-center mb-16",
+  },
+
+  // background image
   backgroundImage: { type: String, default: "" },
+  backgroundPosition: { type: String, default: "center" },
+  backgroundSize: { type: String, default: "cover" },
+
+  // overlay above bg image
   overlay: { type: Boolean, default: true },
   overlayOpacity: { type: Number, default: 0.35 },
 
-  // optional header
-  title: { type: String, default: "" },
-  subtitle: { type: String, default: "" },
+  // card visuals
+  borderColor: { type: String, default: "#636363" },
+  cardBackground: { type: String, default: "rgba(22, 22, 22, 0.70)" },
+  blur: { type: Boolean, default: true },
+  blurPx: { type: Number, default: 5.7 },
 
-  // new API (recommended)
-  cards: { type: Array, default: () => [] }, // [{ iconSrc?, iconAlt?, title, description, headerTag?, link? }]
-
-  // old API (backward compatible with your previous ColumnsAndBackground.vue)
-  leftElements: { type: Array, default: () => [] },  // [{ title, paragraph, headerTag? }]
-  rightElements: { type: Array, default: () => [] }, // [{ title, paragraph, headerTag? }]
-
-  // links
-  showLinks: { type: Boolean, default: false },
-  linkText: { type: String, default: "Read more" },
+  // content
+  cards: { type: Array, default: () => [] },
 });
 
-const bgStyle = computed(() => {
-  if (!props.backgroundImage) return {};
-  return {
-    backgroundImage: `url(${props.backgroundImage})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-  };
-});
+const bgStyle = computed(() => ({
+  backgroundImage: `url(${props.backgroundImage})`,
+  backgroundPosition: props.backgroundPosition,
+  backgroundRepeat: "no-repeat",
+  backgroundSize: props.backgroundSize,
+}));
 
-const overlayColor = computed(() => {
-  const a = Math.max(0, Math.min(1, Number(props.overlayOpacity) || 0));
-  return `rgba(22, 22, 22, ${a})`;
-});
+const overlayStyle = computed(() => ({
+  background: `rgba(0,0,0,${props.overlayOpacity})`,
+}));
 
-const normalizedCards = computed(() => {
-  if (Array.isArray(props.cards) && props.cards.length) return props.cards;
-
-  // Map old structure: { title, paragraph, headerTag? } -> { title, description }
-  return [...(props.leftElements || []), ...(props.rightElements || [])].map((el) => ({
-    title: el?.title,
-    description: el?.paragraph,
-    headerTag: el?.headerTag || "h3",
-  }));
-});
+const cardStyle = computed(() => ({
+  borderColor: props.borderColor,
+  background: props.cardBackground,
+  // без скруглений специально
+  borderRadius: "0px",
+  minHeight: "260px",
+  backdropFilter: props.blur ? `blur(${props.blurPx}px)` : "none",
+  WebkitBackdropFilter: props.blur ? `blur(${props.blurPx}px)` : "none",
+}));
 </script>
