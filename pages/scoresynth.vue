@@ -167,7 +167,7 @@
   id="who-scoresynth-is-for"
   title="Who ScoreSynth Is For:"
   sectionClass="bg-[#161616] py-20"
-  backgroundImage="/assets/REPLACE-WITH-YOUR-BG-IMAGE.jpg"
+  backgroundImage="/assets/new-assets/products-page/product/score-synth/harmonie-van-bornem.webp"
   :overlay="true"
   :overlayOpacity="0.35"
   :cards="[
