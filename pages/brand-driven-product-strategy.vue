@@ -142,53 +142,50 @@
     imageSrc="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/dev-collaboration.svg"
   />
   <BannerSection text="What You Get" />
-  <Column
-    id="what-you-get"
-    :columns="[
-      {
-        icon: '🧠',
-        imageAlt: 'Brand Icon',
-        title: 'Strategic Foundation',
-        headerTag: 'h3',
-        description:
-          'A clear product direction rooted in your brand’s purpose, promise, and personality — not just market trends or feature requests.',
-      },
-      {
-        icon: '🧱',
-        title: 'Messaging Frameworks',
-        headerTag: 'h3',
-        description:
-          'Positioning, voice, and messaging pillars your whole team can rally around — consistent across product, marketing, and sales.',
-      },
-      {
-        icon: '🗺️',
-        title: 'Cross-Team Alignment',
-        headerTag: 'h3',
-        description:
-          'Collaborative tools and rituals to keep design, product, and business stakeholders aligned — from kickoff to launch.',
-      },
-    ]"
-  />
-  <Column
-    id="design-system"
-    class="pb-20"
-    :columns="[
-      {
-        icon: '🧪',
-        title: 'Decision-Making Criteria',
-        headerTag: 'h3',
-        description:
-          'Shared principles that help your team move faster — and know why they\'re making the choices they are.',
-      },
-      {
-        icon: '🚧',
-        title: 'Actionable Product Architecture',
-        headerTag: 'h3',
-        description:
-          'Feature roadmaps and IA built around real user needs and business priorities — not guesswork.',
-      },
-    ]"
-  />
+  <WhatYouGetSection
+  id="what-you-get"
+  :showTitle="false"
+  sectionClass="bg-[#161616] pb-20 pt-0"
+  :cards="[
+    {
+      icon: '/assets/icons/routing-2.svg',
+      title: 'Strategic Foundation',
+      description:
+        'A clear product direction rooted in your brand’s purpose, promise, and personality — not just market trends or feature requests.',
+    },
+    {
+      icon: '/assets/icons/messages.svg',
+      title: 'Messaging Frameworks',
+      description:
+        'Positioning, voice, and messaging pillars your whole team can rally around — consistent across product, marketing, and sales.',
+    },
+    {
+      icon: '/assets/icons/people.svg',
+      title: 'Cross-Team Alignment',
+      description:
+        'Collaborative tools and rituals to keep design, product, and business stakeholders aligned — from kickoff to launch.',
+    },
+    {
+      icon: '/assets/icons/judge.svg',
+      title: 'Decision-Making Criteria',
+      description:
+        'Shared principles that help your team move faster — and know why they’re making the choices they are.',
+    },
+    {
+      icon: '/assets/icons/box.svg',
+      title: 'Actionable Product Architecture',
+      description:
+        'Feature roadmaps and IA built around real user needs and business priorities — not guesswork.',
+    },
+    {
+      icon: '/assets/icons/task-square.svg',
+      title: 'Delivery Blueprint',
+      description:
+        'A practical handoff package for build — specs, edge cases, acceptance criteria, and next steps your team can execute.',
+    },
+  ]"
+/>
+
   <WhiteSection
     id="get-started-today"
     bgImage="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/below-pattern.svg"
