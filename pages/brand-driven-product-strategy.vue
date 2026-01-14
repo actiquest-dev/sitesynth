@@ -151,37 +151,37 @@
       iconSrc: '/assets/icons/routing-2.svg',
       title: 'Strategic Foundation',
       description:
-        'A clear product direction rooted in your brand’s purpose, promise, and personality — not just market trends or feature requests.',
+        'A clear product direction rooted in your brand’s purpose, promise, and personality.',
     },
     {
       iconSrc: '/assets/icons/messages.svg',
       title: 'Messaging Frameworks',
       description:
-        'Positioning, voice, and messaging pillars your whole team can rally around — consistent across product, marketing, and sales.',
+        'Positioning, voice, and messaging pillars across product, marketing, and sales.',
     },
     {
       iconSrc: '/assets/icons/people.svg',
       title: 'Cross-Team Alignment',
       description:
-        'Collaborative tools and rituals to keep design, product, and business stakeholders aligned — from kickoff to launch.',
+        'Collaborative tools and rituals to keep design, product, and business stakeholders aligned .',
     },
     {
       iconSrc: '/assets/icons/judge.svg',
       title: 'Decision-Making Criteria',
       description:
-        'Shared principles that help your team move faster — and know why they’re making the choices they are.',
+        'Shared principles that help your team move faster.',
     },
     {
       iconSrc: '/assets/icons/box.svg',
       title: 'Actionable Product Architecture',
       description:
-        'Feature roadmaps and IA built around real user needs and business priorities — not guesswork.',
+        'Feature roadmaps and IA built around real user needs and business priorities.',
     },
     {
       iconSrc: '/assets/icons/task-square.svg',
       title: 'Delivery Blueprint',
       description:
-        'A practical handoff package for build — specs, edge cases, acceptance criteria, and next steps your team can execute.',
+        'A practical handoff package for build — specs, edge cases, acceptance criteria.',
     },
   ]"
 />
