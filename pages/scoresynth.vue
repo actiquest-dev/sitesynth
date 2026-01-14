@@ -172,7 +172,7 @@
   :overlayOpacity="0.35"
   :cards="[
     {
-      iconSrc: '/assets/icons/icons-scoresynth/love-music.svg',
+      iconSrc: '/assets/icons/icons-scoresynth/music-filter.svg',
       title: 'Composers & Arrangers',
       description: 'From piano sketches to full orchestration — in minutes.',
     },
@@ -197,7 +197,7 @@
       description: 'Need parts for a non-standard group? SynthScore adapts to your setup.',
     },
     {
-      iconSrc: '/assets/icons/icons-scoresynth/music-filter.svg',
+      iconSrc: '/assets/icons/icons-scoresynth/love-music.svg',
       title: 'Curious Hobbyists',
       description: 'Not a pro? No problem. Play with ideas, hear them instantly, and learn by doing — no steep learning curve.',
     },
