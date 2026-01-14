@@ -104,53 +104,43 @@
 
   <BannerSection id="what-you-get" text="What You Get" />
 
-  <Column
-    id="what-you-get-columns"
-    :columns="[
-      {
-        icon: '🧩',
-        imageAlt: 'Brand Icon',
-        title: 'Centralized Figma System',
-        headerTag: 'h3',
-        description:
-          'Atomic, flexible, and organized - built for scaling without clutter.',
-      },
-      {
-        icon: '🧭',
-        title: 'UX Flow Diagrams & Interaction Logic',
-        headerTag: 'h3',
-        description:
-          'Clear maps of how users move through your product - across all key journeys.',
-      },
-      {
-        icon: '📐',
-        title: 'Pattern Usage Guidelines',
-        headerTag: 'h3',
-        description:
-          'Know exactly when and how to use each pattern - no guessing, no inconsistency.',
-      },
-    ]"
-  />
-
-  <Column
-    id="what-you-get-docs"
-    :columns="[
-      {
-        icon: '📚',
-        title: 'Design System Documentation',
-        headerTag: 'h3',
-        description:
-          'Everything documented and ready in Figma’s Dev Mode, Zeroheight, or your preferred platform.',
-      },
-      {
-        icon: '🔄',
-        title: 'Practical, Living Docs',
-        headerTag: 'h3',
-        description:
-          'Practical, living docs that support day-to-day work - not just sit in a folder.',
-      },
-    ]"
-  />
+  <WhatYouGetSection
+  id="what-you-get"
+  sectionClass="bg-[#161616] py-0"
+  :blur="true"
+  :cards="[
+    {
+      iconSrc: '/assets/icons/figma.svg',
+      title: 'Figma System',
+      description: 'Single source of truth for UI, tokens, and variants.',
+    },
+    {
+      iconSrc: '/assets/icons/routing-2.svg',
+      title: 'UX Flows',
+      description: 'Journeys, states, and edge cases mapped clearly.',
+    },
+    {
+      iconSrc: '/assets/icons/hierarchy-square-2.svg',
+      title: 'Usage Rules',
+      description: 'When to use patterns — with do/don’t examples.',
+    },
+    {
+      iconSrc: '/assets/icons/document-code.svg',
+      title: 'Dev Specs',
+      description: 'Specs for spacing, states, and behavior — ready to build.',
+    },
+    {
+      iconSrc: '/assets/icons/book.svg',
+      title: 'System Docs',
+      description: 'Naming, structure, and usage in Dev Mode or your tool.',
+    },
+    {
+      iconSrc: '/assets/icons/messages.svg',
+      title: 'Living Docs',
+      description: 'Docs that stay updated: checklists, notes, decisions.',
+    },
+  ]"
+/>
 
   <WhiteSection
     id="get-started-today"
