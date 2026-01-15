@@ -106,52 +106,53 @@
   />
 
   <BannerSection text="Our Culture, Your Benefits" />
-  <Column
-    id="what-you-get"
-    class="pb-20"
-    :columns="[
-      {
-        icon: '🌍',
-        title: 'Work From Anywhere',
-        headerTag: 'h3',
-        description:
-          'Remote-first with real flexibility. We collaborate across time zones — no commuting required.',
-      },
-      {
-        icon: '🧠',
-        title: 'Do Meaningful Work',
-        headerTag: 'h3',
-        description:
-          'We work on things we believe in — from AI tools to design systems. No filler projects, no meaningless features.',
-      },
-      {
-        icon: '🎯',
-        title: 'Small Team, Big Ownership',
-        headerTag: 'h3',
-        description:
-          'You’ll own your work, shape decisions, and see your impact. No middle layers, no silos.',
-      },
-    ]"
-  />
-  <Column
-    id="design-system"
-    class="pb-20"
-    :columns="[
-      {
-        icon: '🤝',
-        title: 'Trusted Partnerships',
-        headerTag: 'h3',
-        description:
-          'No outsourcing loops. We work closely and directly — with teammates and with clients.',
-      },
-      {
-        icon: '🎵',
-        title: 'Side Projects Welcome',
-        headerTag: 'h3',
-        description:
-          'Building your own thing? We get it — we’re doing the same. We support makers, not just employees.',
-      },
-    ]"
+  <WhatYouGetSection
+  id="what-you-get"
+  sectionClass="bg-[#161616] py-0"
+  :blur="true"
+  :cards="[
+    {
+      iconSrc: '/assets/icons/global.svg',
+      title: 'Work From Anywhere',
+      description: 'Remote-first with real flexibility. We collaborate across time zones — no commuting required.',
+    },
+    {
+      iconSrc: '/assets/icons/flash.svg',
+      title: 'Do Meaningful Work',
+      description: 'We work on things we believe in — from AI tools to design systems.',
+    },
+    {
+      iconSrc: '/assets/icons/crown.svg',
+      title: 'Small Team, Big Ownership',
+      description: 'When to use patterns — with do/don’t examples.',
+    },
+    {
+      iconSrc: '/assets/icons/like-shapes.svg',
+      title: 'Trusted Partnerships',
+      description: 'No outsourcing loops. We work closely and directly — with teammates and with clients.',
+    },
+    {
+      iconSrc: '/assets/icons/messages.svg',
+      title: 'Clear Communication',
+      description: 'We keep things simple: async by default, honest feedback, and written context.',
+    },
+    {
+      iconSrc: '/assets/icons/music.svg',
+      title: 'Side Projects Welcome',
+      description: 'Building your own thing? We get it — we’re doing the same. We support makers, not just employees.',
+    },
+  ]"
+/>
+  <Testimonial
+    id="testimonial-koen"
+    imageSrc="/assets/new-assets/people-for-CTA/oval-koen.png"
+    personName="Koen Vergauwen"
+    personTitle="Head of Growth"
+    quoteTitle="We are not a family"
+    quoteText="We’re a team with a shared mission. Healthy boundaries, honest feedback, and a bias toward doing great work — that’s the culture we want around us."
+    ctaText="Get in touch"
+    ctaLink="contact-us"
+    class="pb-32 pt-32"
   />
   <FooterSection />
 </template>
