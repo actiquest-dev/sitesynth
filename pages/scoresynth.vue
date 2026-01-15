@@ -33,8 +33,25 @@
     centerImg="/assets/new-assets/products-page/product/score-synth/how-works/UiOverPattern.webp"
     centerImgAlt="ScoreSynth UI Interface"
   />
-
-
+  
+ <HeroGeneric
+    glowEffect="GlowRed"
+    paddingClasses="pt-[6rem] pb-[6rem]"
+    :content="[
+      { tag: 'h2', text: 'How ScoreSynth Works', margin: 'mb-6' },
+      {
+        tag: 'h3',
+        text: 'From sound to score — in just a few steps.',
+        margin: 'mb-8',
+      },
+      {
+        tag: 'p',
+        text: 'Whether you’re humming a melody, exporting a MIDI, or uploading a full demo track, ScoreSynth transforms your input into a professionally arranged orchestral score. Heres how:',
+        margin: 'mb-0',
+      },
+    ]"
+  />
+  
   <ProcessSection
     accentColor="text-[#AA3733]"
     imageClass="px-10 py-10"
@@ -134,23 +151,6 @@
       </div>
     </template>
   </TwoColumnsDesign>
-  <HeroGeneric
-    glowEffect="GlowRed"
-    paddingClasses="pt-[6rem] pb-[6rem]"
-    :content="[
-      { tag: 'h2', text: 'How ScoreSynth Works', margin: 'mb-6' },
-      {
-        tag: 'h3',
-        text: 'From sound to score — in just a few steps.',
-        margin: 'mb-8',
-      },
-      {
-        tag: 'p',
-        text: 'Whether you’re humming a melody, exporting a MIDI, or uploading a full demo track, ScoreSynth transforms your input into a professionally arranged orchestral score. Heres how:',
-        margin: 'mb-0',
-      },
-    ]"
-  />
   
   <TestimonialScoreSynth
     hoverbg="hover:bg-[#AA3733]"
