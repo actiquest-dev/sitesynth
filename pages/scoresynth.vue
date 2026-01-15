@@ -96,7 +96,24 @@
     ]"
   />
 
-   <TwoColumnsDesign
+   
+  
+  <TestimonialScoreSynth
+    hoverbg="hover:bg-[#AA3733]"
+    hoverborder="hover:border-[#AA3733]"
+    quoteColor="text-[#AA3733]"
+    imageSrc="/assets/new-assets/people-for-CTA/oval-mayya-red.png"
+    personName="Mayya Aprosina"
+    personTitle="CEO & Product Owner"
+    quoteTitle="Bridging two worlds — music and technology."
+    quoteText="I come from both worlds: digital product building and the craft of musical notation. ScoreSynth brings them together so anyone can turn an idea into clear, playable sheet music — starting today."
+    ctaText="Get in touch"
+    ctaLink="/contact-us"
+    class="pb-[8rem] pt-[8rem]"
+    glowEffect="GlowRed"
+  />
+
+  <TwoColumnsDesign
     glowEffect="GlowRed"
     sectionBgColor="bg-[#161616]"
     leftColumnBgColor="bg-[#161616]"
@@ -141,20 +158,6 @@
     </template>
   </TwoColumnsDesign>
   
-  <TestimonialScoreSynth
-    hoverbg="hover:bg-[#AA3733]"
-    hoverborder="hover:border-[#AA3733]"
-    quoteColor="text-[#AA3733]"
-    imageSrc="/assets/new-assets/people-for-CTA/oval-mayya-red.png"
-    personName="Mayya Aprosina"
-    personTitle="CEO & Product Owner"
-    quoteTitle="Bridging two worlds — music and technology."
-    quoteText="I come from both worlds: digital product building and the craft of musical notation. ScoreSynth brings them together so anyone can turn an idea into clear, playable sheet music — starting today."
-    ctaText="Get in touch"
-    ctaLink="/contact-us"
-    class="pb-[8rem] pt-[8rem]"
-    glowEffect="GlowRed"
-  />
   <ColumnsAndBackground
   id="who-scoresynth-is-for"
   title="Who ScoreSynth Is For:"
