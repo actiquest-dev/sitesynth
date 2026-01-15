@@ -56,8 +56,8 @@
         <div class="max-w-[600px] mr-auto px-6 md:px-0 md:pl-16">
           <p class="text-white font-bold mb-4">
             Rooted in effectiveness, openness, and craftsmanship. We're a small
-            but dedicated team—designers, strategists, and full-stack
-            developers—working in sync to deliver integrated solutions that
+            but dedicated team — designers, strategists, and full-stack
+            developers — working in sync to deliver integrated solutions that
             break down silos and drive lasting impact.
           </p>
         </div>
@@ -79,7 +79,7 @@
           <p class="text-[#999999] text-normal font-light mb-4">
             We’re based in Sint-Amands, Belgium, in a small office within a
             beautifully restored historical building by the Schelde river. It’s
-            not flashy—but it's meaningful: rooted, quiet, and real.
+            not flashy — but it's meaningful: rooted, quiet, and real.
           </p>
           <h3 class="text-white text-2xl mt-12 mb-12">
             Easy reach of partners, clients, and collaborators across Europe.
@@ -88,7 +88,7 @@
             Strategically located between Antwerp, Brussels, and Ghent, we
             remain deeply connected to Europe’s major economic hubs—while
             keeping focus where it matters most. This little town gives us
-            clarity and calm—and the flexibility to move quickly when clients
+            clarity and calm — and the flexibility to move quickly when clients
             need us.
           </p>
         </div>
