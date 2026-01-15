@@ -33,7 +33,16 @@
     centerImg="/assets/new-assets/products-page/product/score-synth/how-works/UiOverPattern.webp"
     centerImgAlt="ScoreSynth UI Interface"
   />
-  
+    <BannerSection
+    id="How ScoreSynth Works"
+    tag="h2"
+    text="How ScoreSynth Work"
+    tag="h3"
+    text="From sound to score — in just a few steps."
+    tag="p"
+    text="Whether you’re humming a melody, exporting a MIDI, or uploading a full demo track, ScoreSynth transforms your input into a professionally arranged orchestral score. Heres how"
+  />
+
  <HeroGeneric
     glowEffect="GlowRed"
     paddingClasses="pt-[6rem] pb-[6rem]"
