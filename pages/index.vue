@@ -181,7 +181,7 @@
   id="why-sitesynth"
   sectionClass="bg-[#161616] py-0"
   title="Why SiteSynth?"
-  description="Some text bla bla bla"
+  description="Most teams lose time in translation: strategy to design, design to code, code to marketing. We keep it in one loop, so what you ship matches what you planned, and what users feel matches what you intended."
   typicalLabel="Typical Consultancy"
   siteSynthLabel="SiteSynth"
   defaultTab="typical"
