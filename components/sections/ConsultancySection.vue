@@ -10,11 +10,11 @@
     <GlowEffect />
 
     <!-- Content wrapper -->
-    <div class="relative z-10 max-w-[1248px] mx-auto px-6">
+    <div class="relative z-10 max-w-[1248px] mx-auto px-6">           
       <div class="grid grid-cols-1 md:grid-cols-2">
         <!-- LEFT -->
         <div class="py-20 md:pr-16 md:border-r border-[#636363]">
-          <h2 class="text-white text-5xl font-extrabold leading-tight">
+          <h2 class="text-white text-3xl font-bold leading-tight">
             {{ title }}
           </h2>
 
