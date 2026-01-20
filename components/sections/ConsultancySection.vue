@@ -9,7 +9,7 @@
   >
     <GlowEffect />
 
-    <!-- FULL-BLEED right background (from center to viewport right edge on md+) -->
+    <!-- FULL-BLEED right background -->
     <div
       class="right-bleed-bg"
       :class="activeTab === 'typical' ? 'right-bleed-bg--typical' : 'right-bleed-bg--sitesynth'"
@@ -21,11 +21,41 @@
       <div class="grid grid-cols-1 md:grid-cols-2">
         <!-- LEFT -->
         <div class="py-20 md:pr-16 md:border-r border-[#636363]">
-          <h2 class="text-white text-3xl font-bold leading-tight">
+          <h2 v-if="title" class="text-white text-3xl font-bold leading-tight">
             {{ title }}
           </h2>
 
-          <p v-if="description" class="mt-10 text-[#999999] leading-relaxed max-w-[420px]">
+          <!-- New: rich text elements like your other section -->
+          <div v-if="hasLeftTextElements" class="mt-10 max-w-[420px]">
+            <div
+              v-for="(item, index) in leftTextElements"
+              :key="index"
+              class="mb-4 last:mb-0"
+            >
+              <component :is="item.tag" :class="getTextClasses(item.tag)">
+                <!-- If item.parts exists -> render strong spans safely -->
+                <template v-if="item.parts && item.parts.length">
+                  <template v-for="(part, pIdx) in item.parts" :key="pIdx">
+                    <strong v-if="part.strong" class="text-white font-semibold">
+                      {{ part.text }}
+                    </strong>
+                    <span v-else>{{ part.text }}</span>
+                  </template>
+                </template>
+
+                <!-- Else -> plain content -->
+                <template v-else>
+                  {{ item.content }}
+                </template>
+              </component>
+            </div>
+          </div>
+
+          <!-- Backward-compatible: old description string -->
+          <p
+            v-else-if="description"
+            class="mt-10 text-[#999999] leading-relaxed max-w-[420px]"
+          >
             {{ description }}
           </p>
         </div>
@@ -104,7 +134,13 @@ const props = defineProps({
 
   // Left column
   title: { type: String, default: "Why SiteSynth?" },
+
+  // Old simple description (kept for compatibility)
   description: { type: String, default: "" },
+
+  // New: rich text elements like in your example
+  // item: { tag: 'p'|'h3'..., content?: string, parts?: [{text, strong?}] }
+  leftTextElements: { type: Array, default: () => [] },
 
   // Tabs labels
   typicalLabel: { type: String, default: "Typical Consultancy" },
@@ -119,7 +155,7 @@ const props = defineProps({
   siteSynthIconFallback: { type: String, default: "/assets/icons/other/tick-circle.svg" },
 
   // default tab
-  defaultTab: { type: String, default: "typical" }, // 'typical' | 'sitesynth'
+  defaultTab: { type: String, default: "typical" },
 });
 
 const activeTab = ref(props.defaultTab === "sitesynth" ? "sitesynth" : "typical");
@@ -133,12 +169,12 @@ const currentCards = computed(() =>
   activeTab.value === "typical" ? props.typicalCards : props.siteSynthCards
 );
 
+const hasLeftTextElements = computed(() => Array.isArray(props.leftTextElements) && props.leftTextElements.length > 0);
+
 function setTab(tab) {
   if (activeTab.value === tab) return;
 
   activeTab.value = tab;
-
-  // re-run animation on tab switch
   revealKey.value += 1;
   isRevealed.value = false;
 
@@ -150,7 +186,6 @@ function setTab(tab) {
 }
 
 onMounted(() => {
-  // reveal on scroll
   io = new IntersectionObserver(
     (entries) => {
       const entry = entries[0];
@@ -166,6 +201,27 @@ onBeforeUnmount(() => {
   if (io && sectionRef.value) io.unobserve(sectionRef.value);
   if (io) io.disconnect();
 });
+
+function getTextClasses(tag) {
+  switch (tag) {
+    case "h1":
+      return "text-white text-4xl font-bold mb-4";
+    case "h2":
+      return "text-white text-3xl font-bold mb-3";
+    case "h3":
+      return "text-white text-2xl font-bold mb-3";
+    case "h4":
+      return "text-white text-xl font-semibold mb-2";
+    case "h5":
+      return "text-white text-lg font-semibold mb-2";
+    case "h6":
+      return "text-white text-base font-semibold mb-2";
+    case "p":
+      return "text-[#999999] leading-relaxed";
+    default:
+      return "text-[#999999]";
+  }
+}
 </script>
 
 <style scoped>
@@ -186,7 +242,6 @@ onBeforeUnmount(() => {
   position: absolute;
   top: 0;
   bottom: 0;
-
   left: 0;
   right: 0;
 
@@ -211,7 +266,6 @@ onBeforeUnmount(() => {
   }
 }
 
-/* Typical = red */
 .right-bleed-bg--typical {
   background:
     radial-gradient(1400px 800px at 110% -10%, rgba(170, 55, 51, 0.62), rgba(170, 55, 51, 0) 65%),
@@ -219,7 +273,6 @@ onBeforeUnmount(() => {
     radial-gradient(1200px 900px at 30% 120%, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0) 60%);
 }
 
-/* SiteSynth = green */
 .right-bleed-bg--sitesynth {
   background:
     radial-gradient(1400px 800px at 110% -10%, rgba(46, 187, 103, 0.55), rgba(46, 187, 103, 0) 65%),
@@ -253,3 +306,4 @@ onBeforeUnmount(() => {
   }
 }
 </style>
+
