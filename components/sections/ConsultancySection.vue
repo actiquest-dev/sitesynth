@@ -25,6 +25,9 @@
 
         <!-- RIGHT -->
         <div class="py-20 md:pl-16 relative">
+          <!-- Animated corner gradient background -->
+          <div class="right-bg" aria-hidden="true"></div>
+
           <!-- Tabs -->
           <div class="relative z-10 flex items-center gap-8 mb-12">
             <button
@@ -143,6 +146,7 @@ function setTab(tab) {
 }
 
 onMounted(() => {
+  // reveal on scroll
   io = new IntersectionObserver(
     (entries) => {
       const entry = entries[0];
@@ -172,4 +176,39 @@ onBeforeUnmount(() => {
   transform: translateY(0px);
   transition: opacity 450ms ease, transform 450ms ease;
 }
+
+/* Right column animated "corner" gradient */
+.right-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+
+  background:
+    radial-gradient(900px 520px at 110% -10%, rgba(141, 53, 255, 0.55), rgba(141, 53, 255, 0) 60%),
+    radial-gradient(700px 420px at 85% 35%, rgba(46, 187, 103, 0.18), rgba(46, 187, 103, 0) 60%),
+    radial-gradient(900px 700px at 20% 120%, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0) 55%);
+
+  filter: blur(18px);
+  opacity: 0.95;
+
+  transform: translate3d(0, 0, 0);
+  animation: rightGlowDrift 10s ease-in-out infinite alternate;
+}
+
+@keyframes rightGlowDrift {
+  0% {
+    transform: translate3d(0px, 0px, 0);
+  }
+  100% {
+    transform: translate3d(-24px, 14px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .right-bg {
+    animation: none;
+  }
+}
 </style>
+
