@@ -25,13 +25,6 @@
 
         <!-- RIGHT -->
         <div class="py-20 md:pl-16 relative">
-          <!-- Right background (only for SiteSynth tab, like in your mock) -->
-          <div
-            v-if="activeTab === 'sitesynth'"
-            class="absolute inset-0 pointer-events-none"
-            :style="siteSynthBgStyle"
-            aria-hidden="true"
-          />
 
           <!-- Tabs -->
           <div class="relative z-10 flex items-center gap-8 mb-12">
@@ -52,17 +45,6 @@
             >
               {{ siteSynthLabel }}
             </button>
-
-            <!-- simple slider underline -->
-            <div class="absolute -bottom-2 left-0 h-[2px] w-full bg-transparent">
-              <div
-                class="h-[2px] w-[140px] bg-white/40 transition-transform duration-300"
-                :style="{
-                  transform: activeTab === 'typical' ? 'translateX(0px)' : `translateX(${typicalUnderlineOffset}px)`,
-                }"
-              />
-            </div>
-          </div>
 
           <!-- Cards -->
           <div class="relative z-10 grid grid-cols-1 gap-8">
@@ -150,12 +132,6 @@ const currentCards = computed(() =>
   activeTab.value === "typical" ? props.typicalCards : props.siteSynthCards
 );
 
-const siteSynthBgStyle = computed(() => ({
-  background: props.siteSynthBg?.background || "",
-}));
-
-// underline offset (roughly after first tab label)
-const typicalUnderlineOffset = 190;
 
 function setTab(tab) {
   if (activeTab.value === tab) return;
