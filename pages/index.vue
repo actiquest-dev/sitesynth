@@ -1,224 +1,269 @@
 <template>
-  <section
-    ref="sectionRef"
-    :id="id || undefined"
-    class="bg-[#161616]"
-  >
-    <div class="max-w-[1248px] mx-auto px-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 md:border border-[#636363]">
-        <!-- LEFT -->
-        <div class="py-20 md:pr-16 md:border-r border-[#636363]">
-          <h2 class="text-white text-6xl font-extrabold leading-tight">
-            {{ title }}
-          </h2>
+  <HeaderSection />
+  <HeroIndex
+    id="hero-index"
+    title="No silos. <span class='glow-text'>Just synthesis.</span>"
+    subtitle="Where product, brand, and tech finally align"
+    backgroundImage="/assets/new-assets/test/sitesynth-animated-gradient-v2.svg"
+  />
 
-          <p
-            v-if="description"
-            class="mt-10 text-[#999999] leading-relaxed max-w-[420px]"
-          >
-            {{ description }}
-          </p>
-        </div>
+  <Carousel
+    id="carousel-logos"
+    :images="[
+      {
+        src: '/assets/new-assets/home-page/home/clients-logo/BMIL.png',
+        alt: 'BMI logo',
+        link: 'https://www.bmileisure.com/',
+      },
+      {
+        src: '/assets/new-assets/home-page/home/clients-logo/CB.png',
+        alt: 'CB logo',
+        link: 'https://conceptbooth.com/',
+      },
+      {
+        src: '/assets/new-assets/home-page/home/clients-logo/baakn.png',
+        alt: 'Baakn Logo',
+        link: 'https://baakn.be/',
+      },
+      {
+        src: '/assets/new-assets/home-page/home/clients-logo/helan.png',
+        alt: 'Helan Logo',
+        link: 'https://www.helan.be/',
+      },
+      {
+        src: '/assets/new-assets/home-page/home/clients-logo/idalko.png',
+        alt: 'idalko Logo',
+        link: 'https://idalko.com/',
+      },
+      {
+        src: '/assets/new-assets/home-page/home/clients-logo/actiq.png',
+        alt: 'Actiq Logo',
+        link: 'https://www.actiq.xyz/',
+      },
+      {
+        src: '/assets/new-assets/home-page/home/clients-logo/cherchi.svg',
+        alt: 'Cherchi Logo',
+        link: 'https://www.cherchilaw.com/',
+      },
+      {
+        src: '/assets/new-assets/home-page/home/clients-logo/tech-paw.svg',
+        alt: 'Tech Paw Logo',
+        link: 'https://www.tech-paw.com/',
+      },
+    ]"
+  />
+  <BannerSection id="banner-what-we-offer" tag="h2" text="What We Offer" />
+  <WhatWeOfferSection
+    id="what-we-offer"
+    :offers="[
+      {
+        imageSrc:
+          '/assets/new-assets/home-page/home/cards/brand-driven-product-strategy.svg',
+        imageAlt: 'Brand Thinking',
+        title: 'Brand-Led Product Thinking',
+        description:
+          'We help you build digital products aligned with your brand voice and vision.',
+        link: '/brand-driven-product-strategy',
+      },
+      {
+        imageSrc:
+          '/assets/new-assets/home-page/home/cards/ux-and-design-systems.svg',
+        imageAlt: 'Design Systems',
+        title: 'Design Systems & UX Architecture',
+        description:
+          'We craft scalable design systems and UX flows that bridge user needs and developer logic.',
+        link: '/ux-and-design-system',
+      },
+      {
+        imageSrc:
+          '/assets/new-assets/home-page/home/cards/development-support.svg',
+        imageAlt: 'Implementation Support',
+        title: 'Full-Stack Implementation Support',
+        description:
+          'From prototypes to production, we collaborate closely with your dev team — or bring our own.',
+        link: '/full-stack-implementation',
+      },
+      {
+        imageSrc:
+          '/assets/new-assets/home-page/home/cards/ai-powered-workflows.svg',
+        imageAlt: 'AI Innovation',
+        title: 'AI-Infused Innovation & R&D',
+        description:
+          'We bring forward-thinking, AI-powered tooling into the design and development process.',
+        link: '/ai-innovation',
+      },
+    ]"
+  />
+  <ProcessSection
+    id="process-what-we-offer"
+    imageClass=""
+    imageAlt="Synth"
+    :images="[
+      {
+        src: '/assets/new-assets/home-page/home/what-we-offer/Discover.webp',
+        alt: 'Discover - Business Goals Analysis',
+      },
+      {
+        src: '/assets/new-assets/home-page/home/what-we-offer/Define.webp',
+        alt: 'Define - Challenge Clarification',
+      },
+      {
+        src: '/assets/new-assets/home-page/home/what-we-offer/Design.webp',
+        alt: 'Design - Systems and Flows',
+      },
+      {
+        src: '/assets/new-assets/home-page/home/what-we-offer/Deliver.webp',
+        alt: 'Deliver - Design Implementation',
+      },
+    ]"
+    :sections="[
+      {
+        title: '1. Discover',
+        description: 'We dive into your business goals, users, and context.',
+        link: '/',
+        linkText: 'Tell us your story first',
+      },
+      {
+        title: '2. Define',
+        description: 'We clarify the challenge and craft a shared direction.',
+        link: '/brand-driven-product-strategy',
+        linkText: 'How connect brand and product',
+      },
+      {
+        title: '3. Design',
+        description: 'Systems, visuals, and flows — always aligned.',
+        link: '/ux-and-design-system',
+        linkText: 'How we build design systems',
+      },
+      {
+        title: '4. Deliver',
+        description: 'Bringing designs to life with clarity and collaboration.',
+        link: '/full-stack-implementation',
+        linkText: 'How we bring designs to life',
+      },
+    ]"
+  />
 
-        <!-- RIGHT -->
-        <div class="py-20 md:pl-16">
-          <!-- Tabs (без линии снизу) -->
-          <div class="flex justify-center md:justify-start mb-10">
-            <div class="relative inline-flex border border-[#636363] bg-[#161616] overflow-hidden">
-              <!-- sliding indicator -->
-              <div
-                class="absolute top-0 bottom-0 w-1/2 bg-white/5 transition-transform duration-300"
-                :style="{ transform: activeTab === 'left' ? 'translateX(0%)' : 'translateX(100%)' }"
-              />
+  <BannerSection
+    id="banner-new-ai-product"
+    tag="h2"
+    text="New AI product we are working on"
+  />
 
-              <button
-                type="button"
-                class="relative z-10 px-6 py-3 text-sm font-semibold transition-opacity"
-                :class="activeTab === 'left'
-                  ? 'text-white opacity-100'
-                  : 'text-white/50 opacity-80 hover:opacity-100'"
-                @click="setTab('left')"
-              >
-                {{ leftTitle }}
-              </button>
+  <TwoColumnSection
+    id="two-column-score-synth"
+    class="pb-20"
+    leftPadding="pl-[4rem] pt-[2rem] md:pt-[0rem]"
+    rightPadding=""
+    :leftContent="{
+      image: { src: '/assets/ScoreSynth.svg', alt: 'Innovation Icon' },
+      imageText: { tag: 'h3', content: 'ScoreSynth' },
+      textElements: [
+        { tag: 'h4', content: 'From sound to score — in just a few steps.' },
+        {
+          tag: 'p',
+          content:
+            'We integrate cutting-edge AI tools to streamline your design and development process, reducing time-to-market while maintaining quality.',
+        },
+      ],
+      link: { href: '/scoresynth', text: 'Discover more about our product' },
+    }"
+    :rightContent="{
+      image: {
+        src: 'assets/new-assets/home-page/home/cta/score-synth-feature-image.webp',
+        alt: 'AI Development Process',
+        class: 'w-full h-auto rounded-lg',
+      },
+    }"
+  />
 
-              <button
-                type="button"
-                class="relative z-10 px-6 py-3 text-sm font-semibold transition-opacity"
-                :class="activeTab === 'right'
-                  ? 'text-white opacity-100'
-                  : 'text-white/50 opacity-80 hover:opacity-100'"
-                @click="setTab('right')"
-              >
-                {{ rightTitle }}
-              </button>
-            </div>
-          </div>
+<ConsultancySection
+  id="why-sitesynth"
+  sectionClass="bg-[#161616] py-0"
+  title="Why SiteSynth?"
+  description="Some text bla bla bla"
+  typicalLabel="Typical Consultancy"
+  siteSynthLabel="SiteSynth"
+  defaultTab="typical"
+  :typicalCards="[
+    {
+      iconSrc: '/assets/icons/other/info-circle.svg',
+      title: 'One-Size-Fits-All',
+      description: 'Rigid, prepackaged solutions applied to everyone.',
+    },
+    {
+      iconSrc: '/assets/icons/other/info-circle.svg',
+      title: 'Siloed & Fragmented',
+      description: 'Tech, design, and marketing handled in isolation.',
+    },
+    {
+      iconSrc: '/assets/icons/other/info-circle.svg',
+      title: 'Slow & Overcomplicated',
+      description:
+        'Manual workflows, outdated tools, and complexity that wastes time — and your budget.',
+    },
+  ]"
+  :siteSynthCards="[
+    {
+      iconSrc: '/assets/icons/other/tick-circle.svg',
+      title: 'Custom by Design',
+      description: 'Tailored strategies designed for your unique context.',
+    },
+    {
+      iconSrc: '/assets/icons/other/tick-circle.svg',
+      title: 'Seamless Collaboration',
+      description:
+        'We unify strategy, development, and branding — no silos, no handoff gaps.',
+    },
+    {
+      iconSrc: '/assets/icons/other/tick-circle.svg',
+      title: 'Agile & AI-Powered',
+      description:
+        'We use AI-powered tools to accelerate delivery, reduce cost, and stay ahead.',
+    },
+  ]"
+/>
 
-          <!-- Cards -->
-          <div class="space-y-8">
-            <div
-              v-for="(item, index) in activeItems"
-              :key="activeTab + '-' + index"
-              class="border bg-[#161616] will-change-transform transition-all duration-500"
-              :class="cardBorderClass"
-              :style="cardStyle(index)"
-            >
-              <div class="p-10">
-                <div class="flex items-start gap-5">
-                  <img
-                    class="w-7 h-7 mt-1 select-none pointer-events-none"
-                    :src="item.iconSrc || activeIconSrc"
-                    :alt="item.iconAlt || ''"
-                  />
-
-                  <div>
-                    <h3 class="text-white text-2xl font-semibold leading-tight">
-                      {{ item.title }}
-                    </h3>
-                    <p class="mt-4 text-[#999999] leading-relaxed">
-                      {{ item.description }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- /Cards -->
-        </div>
-      </div>
-    </div>
-  </section>
+  <Testimonial
+    id="testimonial-koen"
+    imageSrc="/assets/new-assets/people-for-CTA/oval-koen.png"
+    personName="Koen Vergauwen"
+    personTitle="Head of Growth"
+    quoteTitle="Simplicity takes effort"
+    quoteText="It takes real effort to cut through the noise and get to what matters. But that’s where momentum begins. At SiteSynth, we believe clarity is a competitive advantage. That’s why we work to make the complex simple — and the simple successful."
+    ctaText="Get in touch"
+    ctaLink="contact-us"
+    class="pb-32 pt-32"
+  />
+  <FooterSection />
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { seoConfig, structuredData } from "~/config/seo";
 
-const props = defineProps({
-  id: { type: String, default: "" },
+// SEO Configuration - using centralized config
+const siteUrl = useRuntimeConfig().public?.siteUrl;
+const seo = seoConfig.home;
 
-  // LEFT column
-  title: { type: String, default: "Why SiteSynth?" },
-  description: { type: String, default: "" },
-
-  // Tabs
-  leftTitle: { type: String, default: "Typical Consultancy" },
-  rightTitle: { type: String, default: "SiteSynth" },
-
-  // Content
-  leftItems: { type: Array, default: () => [] },
-  rightItems: { type: Array, default: () => [] },
-
-  // Default icons (если item.iconSrc не задан)
-  leftIconSrc: { type: String, default: "/assets/icons/other/info-circle.svg" },
-  rightIconSrc: { type: String, default: "/assets/icons/other/tick-circle.svg" },
-
-  // Optional: отключить анимацию (если надо)
-  animateOnScroll: { type: Boolean, default: true },
+useSeoMeta({
+  title: seo.title,
+  description: seo.description,
+  keywords: seo.keywords,
+  ogTitle: seo.ogTitle,
+  ogDescription: seo.ogDescription,
+  ogImage: `${siteUrl}/assets/shareimage.png`,
+  ogImageAlt: "SiteSynth - Strategic Design & Development Company",
+  twitterTitle: seo.twitterTitle,
+  twitterDescription: seo.twitterDescription,
+  twitterImage: `${siteUrl}/assets/shareimage.png`,
 });
 
-const sectionRef = ref(null);
-
-const activeTab = ref("left"); // default
-const inView = ref(false);
-const reduceMotion = ref(false);
-
-let io = null;
-let timeouts = [];
-
-const setTab = (tab) => {
-  activeTab.value = tab;
-};
-
-const activeItems = computed(() =>
-  activeTab.value === "left" ? props.leftItems : props.rightItems
-);
-
-const activeIconSrc = computed(() =>
-  activeTab.value === "left" ? props.leftIconSrc : props.rightIconSrc
-);
-
-const cardBorderClass = computed(() =>
-  activeTab.value === "left" ? "border-[#AA3733]" : "border-[#3CA76B]"
-);
-
-const shouldAnimate = computed(() => props.animateOnScroll && !reduceMotion.value);
-
-const cardStyle = (index) => {
-  if (!shouldAnimate.value) {
-    return { opacity: 1, transform: "translateY(0px)" };
-  }
-
-  if (!inView.value) {
-    return { opacity: 0, transform: "translateY(12px)" };
-  }
-
-  return {
-    transitionDelay: `${index * 140}ms`,
-    opacity: 1,
-    transform: "translateY(0px)",
-  };
-};
-
-const resetAnim = () => {
-  inView.value = false;
-  timeouts.forEach((t) => clearTimeout(t));
-  timeouts = [];
-};
-
-const isInViewport = (el) => {
-  if (!el) return false;
-  const r = el.getBoundingClientRect();
-  const vh = window.innerHeight || document.documentElement.clientHeight;
-  return r.top < vh * 0.85 && r.bottom > 0;
-};
-
-onMounted(() => {
-  // prefers-reduced-motion
-  try {
-    reduceMotion.value = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
-  } catch (e) {
-    reduceMotion.value = false;
-  }
-
-  if (!shouldAnimate.value) {
-    inView.value = true;
-    return;
-  }
-
-  // Fallback: если секция уже видна, сразу показываем
-  requestAnimationFrame(() => {
-    if (isInViewport(sectionRef.value)) inView.value = true;
-  });
-
-  // Observer на всю секцию (надежнее)
-  io = new IntersectionObserver(
-    (entries) => {
-      const e = entries[0];
-      if (!e) return;
-      if (e.isIntersecting) inView.value = true;
+useHead({
+  script: [
+    {
+      type: "application/ld+json",
+      children: JSON.stringify(structuredData.homePage(siteUrl)),
     },
-    { threshold: 0.2, rootMargin: "0px 0px -10% 0px" }
-  );
-
-  if (sectionRef.value) io.observe(sectionRef.value);
-});
-
-onBeforeUnmount(() => {
-  if (io && sectionRef.value) io.unobserve(sectionRef.value);
-  if (io) io.disconnect();
-  resetAnim();
-});
-
-// При переключении таба: заново проигрываем появление (если анимации включены)
-watch(activeTab, () => {
-  if (!shouldAnimate.value) return;
-
-  resetAnim();
-  const t = setTimeout(() => {
-    inView.value = true;
-  }, 30);
-  timeouts.push(t);
+  ],
 });
 </script>
-
