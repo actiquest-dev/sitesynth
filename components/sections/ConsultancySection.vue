@@ -10,7 +10,7 @@
     <GlowEffect />
 
     <!-- Content wrapper -->
-    <div class="relative z-10 max-w-[1248px] mx-auto px-6">           
+    <div class="relative z-10 max-w-[1248px] mx-auto px-6">
       <div class="grid grid-cols-1 md:grid-cols-2">
         <!-- LEFT -->
         <div class="py-20 md:pr-16 md:border-r border-[#636363]">
@@ -25,13 +25,14 @@
 
         <!-- RIGHT -->
         <div class="py-20 md:pl-16 relative">
-
           <!-- Tabs -->
           <div class="relative z-10 flex items-center gap-8 mb-12">
             <button
               type="button"
               class="text-lg font-semibold transition-opacity"
-              :class="activeTab === 'typical' ? 'text-white opacity-100' : 'text-white/35 opacity-100 hover:text-white/60'"
+              :class="activeTab === 'typical'
+                ? 'text-white opacity-100'
+                : 'text-white/35 opacity-100 hover:text-white/60'"
               @click="setTab('typical')"
             >
               {{ typicalLabel }}
@@ -40,11 +41,14 @@
             <button
               type="button"
               class="text-lg font-semibold transition-opacity"
-              :class="activeTab === 'sitesynth' ? 'text-white opacity-100' : 'text-white/35 opacity-100 hover:text-white/60'"
+              :class="activeTab === 'sitesynth'
+                ? 'text-white opacity-100'
+                : 'text-white/35 opacity-100 hover:text-white/60'"
               @click="setTab('sitesynth')"
             >
               {{ siteSynthLabel }}
             </button>
+          </div>
 
           <!-- Cards -->
           <div class="relative z-10 grid grid-cols-1 gap-8">
@@ -103,19 +107,9 @@ const props = defineProps({
   typicalCards: { type: Array, default: () => [] },
   siteSynthCards: { type: Array, default: () => [] },
 
-  // Icons fallback (your uploaded ones)
+  // Icons fallback
   typicalIconFallback: { type: String, default: "/assets/icons/other/info-circle.svg" },
   siteSynthIconFallback: { type: String, default: "/assets/icons/other/tick-circle.svg" },
-
-  // Right background when SiteSynth active
-  siteSynthBg: {
-    type: Object,
-    default: () => ({
-      // adjust if you want another look
-      background:
-        "radial-gradient(900px 420px at 90% 10%, rgba(141,53,255,0.55), rgba(141,53,255,0) 70%)",
-    }),
-  },
 
   // default tab
   defaultTab: { type: String, default: "typical" }, // 'typical' | 'sitesynth'
@@ -132,7 +126,6 @@ const currentCards = computed(() =>
   activeTab.value === "typical" ? props.typicalCards : props.siteSynthCards
 );
 
-
 function setTab(tab) {
   if (activeTab.value === tab) return;
 
@@ -141,8 +134,8 @@ function setTab(tab) {
   // re-run animation on tab switch
   revealKey.value += 1;
   isRevealed.value = false;
+
   nextTick(() => {
-    // small tick to ensure DOM is re-created
     requestAnimationFrame(() => {
       isRevealed.value = true;
     });
@@ -150,14 +143,10 @@ function setTab(tab) {
 }
 
 onMounted(() => {
-  // reveal on scroll (once you reach the section)
   io = new IntersectionObserver(
     (entries) => {
       const entry = entries[0];
-      if (!entry) return;
-      if (entry.isIntersecting) {
-        isRevealed.value = true;
-      }
+      if (entry?.isIntersecting) isRevealed.value = true;
     },
     { threshold: 0.18 }
   );
@@ -184,4 +173,3 @@ onBeforeUnmount(() => {
   transition: opacity 450ms ease, transform 450ms ease;
 }
 </style>
-
