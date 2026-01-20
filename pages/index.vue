@@ -177,48 +177,53 @@
     }"
   />
 
-  <ConsultancySection
-    id="consultancy-typical"
-    leftTitle="Typical Consultancy"
-    :leftItems="[
-      {
-        icon: '🚫',
-        title: 'One-Size-Fits-All',
-        description: 'Rigid, prepackaged solutions applied to everyone.',
-      },
-      {
-        icon: '🚫',
-        title: 'Siloed & Fragmented',
-        description: 'Tech, design, and marketing handled in isolation.',
-      },
-      {
-        icon: '🚫',
-        title: 'Slow & Overcomplicated',
-        description:
-          'Manual workflows, outdated tools, and complexity that wastes time — and your budget.',
-      },
-    ]"
-    rightTitle="SiteSynth"
-    :rightItems="[
-      {
-        icon: '✅',
-        title: 'Custom by Design',
-        description: 'Tailored strategies designed for your unique context.',
-      },
-      {
-        icon: '✅',
-        title: 'Seamless Collaboration',
-        description:
-          'We unify strategy, development, and branding — no silos, no handoff gaps.',
-      },
-      {
-        icon: '✅',
-        title: 'Agile & AI-Powered',
-        description:
-          'We use AI-powered tools to accelerate delivery, reduce cost, and stay ahead.',
-      },
-    ]"
-  />
+<ConsultancySection
+  id="why-sitesynth"
+  sectionClass="bg-[#161616] py-0"
+  title="Why SiteSynth?"
+  description="Some text bla bla bla"
+  typicalLabel="Typical Consultancy"
+  siteSynthLabel="SiteSynth"
+  defaultTab="typical"
+  :typicalCards="[
+    {
+      iconSrc: '/assets/icons/other/info-circle.svg',
+      title: 'One-Size-Fits-All',
+      description: 'Rigid, prepackaged solutions applied to everyone.',
+    },
+    {
+      iconSrc: '/assets/icons/other/info-circle.svg',
+      title: 'Siloed & Fragmented',
+      description: 'Tech, design, and marketing handled in isolation.',
+    },
+    {
+      iconSrc: '/assets/icons/other/info-circle.svg',
+      title: 'Slow & Overcomplicated',
+      description:
+        'Manual workflows, outdated tools, and complexity that wastes time — and your budget.',
+    },
+  ]"
+  :siteSynthCards="[
+    {
+      iconSrc: '/assets/icons/other/tick-circle.svg',
+      title: 'Custom by Design',
+      description: 'Tailored strategies designed for your unique context.',
+    },
+    {
+      iconSrc: '/assets/icons/other/tick-circle.svg',
+      title: 'Seamless Collaboration',
+      description:
+        'We unify strategy, development, and branding — no silos, no handoff gaps.',
+    },
+    {
+      iconSrc: '/assets/icons/other/tick-circle.svg',
+      title: 'Agile & AI-Powered',
+      description:
+        'We use AI-powered tools to accelerate delivery, reduce cost, and stay ahead.',
+    },
+  ]"
+/>
+
   <Testimonial
     id="testimonial-koen"
     imageSrc="/assets/new-assets/people-for-CTA/oval-koen.png"
