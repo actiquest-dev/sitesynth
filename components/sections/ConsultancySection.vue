@@ -24,9 +24,13 @@
         </div>
 
         <!-- RIGHT -->
-        <div class="py-20 md:pl-16 relative">
+        <div class="py-20 md:pl-16 relative overflow-hidden">
           <!-- Animated corner gradient background -->
-          <div class="right-bg" aria-hidden="true"></div>
+          <div
+            class="right-bg"
+            :class="activeTab === 'typical' ? 'right-bg--typical' : 'right-bg--sitesynth'"
+            aria-hidden="true"
+          ></div>
 
           <!-- Tabs -->
           <div class="relative z-10 flex items-center gap-8 mb-12">
@@ -58,7 +62,7 @@
             <div
               v-for="(card, idx) in currentCards"
               :key="`${activeTab}-${revealKey}-${idx}`"
-              class="relative border border-[#636363] bg-[#161616] overflow-hidden"
+              class="relative border border-[#636363] bg-[#161616]/85 backdrop-blur-[2px] overflow-hidden"
               :class="[
                 'p-8 md:p-10',
                 isRevealed ? 'card-in' : 'card-out',
@@ -177,31 +181,45 @@ onBeforeUnmount(() => {
   transition: opacity 450ms ease, transform 450ms ease;
 }
 
-/* Right column animated "corner" gradient */
+/* Right column animated "corner" gradient (changes by active tab) */
 .right-bg {
   position: absolute;
-  inset: 0;
+
+  /* bigger than the column => no "boxed" look */
+  inset: -260px;
+
   pointer-events: none;
   z-index: 0;
 
-  background:
-    radial-gradient(900px 520px at 110% -10%, rgba(141, 53, 255, 0.55), rgba(141, 53, 255, 0) 60%),
-    radial-gradient(700px 420px at 85% 35%, rgba(46, 187, 103, 0.18), rgba(46, 187, 103, 0) 60%),
-    radial-gradient(900px 700px at 20% 120%, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0) 55%);
-
-  filter: blur(18px);
+  filter: blur(34px);
   opacity: 0.95;
 
   transform: translate3d(0, 0, 0);
-  animation: rightGlowDrift 10s ease-in-out infinite alternate;
+  animation: rightGlowDrift 12s ease-in-out infinite alternate;
+}
+
+/* Typical = red */
+.right-bg--typical {
+  background:
+    radial-gradient(1200px 700px at 110% -10%, rgba(170, 55, 51, 0.55), rgba(170, 55, 51, 0) 62%),
+    radial-gradient(900px 560px at 70% 25%, rgba(170, 55, 51, 0.22), rgba(170, 55, 51, 0) 60%),
+    radial-gradient(900px 700px at 15% 115%, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0) 58%);
+}
+
+/* SiteSynth = green */
+.right-bg--sitesynth {
+  background:
+    radial-gradient(1200px 700px at 110% -10%, rgba(46, 187, 103, 0.45), rgba(46, 187, 103, 0) 62%),
+    radial-gradient(900px 560px at 70% 25%, rgba(46, 187, 103, 0.20), rgba(46, 187, 103, 0) 60%),
+    radial-gradient(900px 700px at 15% 115%, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0) 58%);
 }
 
 @keyframes rightGlowDrift {
   0% {
-    transform: translate3d(0px, 0px, 0);
+    transform: translate3d(40px, -20px, 0) scale(1);
   }
   100% {
-    transform: translate3d(-24px, 14px, 0);
+    transform: translate3d(-20px, 30px, 0) scale(1.05);
   }
 }
 
