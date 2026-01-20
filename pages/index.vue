@@ -182,6 +182,17 @@
   sectionClass="bg-[#161616] py-0"
   title="Why SiteSynth?"
   description="Most teams lose time in translation: strategy → design, design → code, and code → go-to-market. We keep everything in one loop, so what you ship matches what you planned — and what users feel matches what you intended. No handoff gaps. No “almost right” implementations."
+  :leftContent="{
+      textElements: [
+        { tag: 'h4', content: 'From sound to score — in just a few steps.' },
+        {
+          tag: 'p',
+          content:
+            'We integrate cutting-edge AI tools to streamline your design and development process, reducing time-to-market while maintaining quality.',
+        },
+      ],
+      link: { href: '/scoresynth', text: 'Discover more about our product' },
+    }"
   typicalLabel="Typical Consultancy"
   siteSynthLabel="SiteSynth"
   defaultTab="typical"
