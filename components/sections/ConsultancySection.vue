@@ -9,6 +9,13 @@
   >
     <GlowEffect />
 
+    <!-- FULL-BLEED right background (from center to viewport right edge on md+) -->
+    <div
+      class="right-bleed-bg"
+      :class="activeTab === 'typical' ? 'right-bleed-bg--typical' : 'right-bleed-bg--sitesynth'"
+      aria-hidden="true"
+    ></div>
+
     <!-- Content wrapper -->
     <div class="relative z-10 max-w-[1248px] mx-auto px-6">
       <div class="grid grid-cols-1 md:grid-cols-2">
@@ -24,14 +31,7 @@
         </div>
 
         <!-- RIGHT -->
-        <div class="py-20 md:pl-16 relative overflow-hidden">
-          <!-- Animated corner gradient background -->
-          <div
-            class="right-bg"
-            :class="activeTab === 'typical' ? 'right-bg--typical' : 'right-bg--sitesynth'"
-            aria-hidden="true"
-          ></div>
-
+        <div class="py-20 md:pl-16 relative">
           <!-- Tabs -->
           <div class="relative z-10 flex items-center gap-8 mb-12">
             <button
@@ -181,52 +181,75 @@ onBeforeUnmount(() => {
   transition: opacity 450ms ease, transform 450ms ease;
 }
 
-/* Right column animated "corner" gradient (changes by active tab) */
-.right-bg {
+/* Full-bleed background: mobile full width, md+ from center to right edge */
+.right-bleed-bg {
   position: absolute;
+  top: 0;
+  bottom: 0;
 
-  /* bigger than the column => no "boxed" look */
-  inset: -260px;
+  left: 0;
+  right: 0;
 
   pointer-events: none;
   z-index: 0;
 
-  filter: blur(34px);
-  opacity: 0.95;
+  filter: blur(42px);
+  opacity: 0.92;
 
   transform: translate3d(0, 0, 0);
-  animation: rightGlowDrift 12s ease-in-out infinite alternate;
+  will-change: transform, opacity, filter;
+
+  animation:
+    rightGlowDrift 14s ease-in-out infinite alternate,
+    rightGlowPulse 6.5s ease-in-out infinite;
+}
+
+@media (min-width: 768px) {
+  .right-bleed-bg {
+    left: 50%;
+    right: 0;
+  }
 }
 
 /* Typical = red */
-.right-bg--typical {
+.right-bleed-bg--typical {
   background:
-    radial-gradient(1200px 700px at 110% -10%, rgba(170, 55, 51, 0.55), rgba(170, 55, 51, 0) 62%),
-    radial-gradient(900px 560px at 70% 25%, rgba(170, 55, 51, 0.22), rgba(170, 55, 51, 0) 60%),
-    radial-gradient(900px 700px at 15% 115%, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0) 58%);
+    radial-gradient(1400px 800px at 110% -10%, rgba(170, 55, 51, 0.62), rgba(170, 55, 51, 0) 65%),
+    radial-gradient(1100px 700px at 85% 30%, rgba(170, 55, 51, 0.22), rgba(170, 55, 51, 0) 62%),
+    radial-gradient(1200px 900px at 30% 120%, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0) 60%);
 }
 
 /* SiteSynth = green */
-.right-bg--sitesynth {
+.right-bleed-bg--sitesynth {
   background:
-    radial-gradient(1200px 700px at 110% -10%, rgba(46, 187, 103, 0.45), rgba(46, 187, 103, 0) 62%),
-    radial-gradient(900px 560px at 70% 25%, rgba(46, 187, 103, 0.20), rgba(46, 187, 103, 0) 60%),
-    radial-gradient(900px 700px at 15% 115%, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0) 58%);
+    radial-gradient(1400px 800px at 110% -10%, rgba(46, 187, 103, 0.55), rgba(46, 187, 103, 0) 65%),
+    radial-gradient(1100px 700px at 85% 30%, rgba(46, 187, 103, 0.20), rgba(46, 187, 103, 0) 62%),
+    radial-gradient(1200px 900px at 30% 120%, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0) 60%);
 }
 
 @keyframes rightGlowDrift {
   0% {
-    transform: translate3d(40px, -20px, 0) scale(1);
+    transform: translate3d(40px, -20px, 0) scale(1.00);
   }
   100% {
-    transform: translate3d(-20px, 30px, 0) scale(1.05);
+    transform: translate3d(-30px, 35px, 0) scale(1.06);
+  }
+}
+
+@keyframes rightGlowPulse {
+  0%, 100% {
+    opacity: 0.88;
+    filter: blur(44px);
+  }
+  50% {
+    opacity: 0.98;
+    filter: blur(38px);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .right-bg {
+  .right-bleed-bg {
     animation: none;
   }
 }
 </style>
-
