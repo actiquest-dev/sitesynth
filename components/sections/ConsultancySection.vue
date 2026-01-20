@@ -1,9 +1,5 @@
 <template>
-  <section
-    ref="sectionRef"
-    :id="id || undefined"
-    class="bg-[#161616]"
-  >
+  <section :id="id || undefined" class="bg-[#161616]">
     <div class="max-w-[1248px] mx-auto px-6">
       <div class="grid grid-cols-1 md:grid-cols-2 md:border border-[#636363]">
         <!-- LEFT -->
@@ -22,9 +18,11 @@
 
         <!-- RIGHT -->
         <div class="py-20 md:pl-16">
-          <!-- Tabs (без линии снизу) -->
+          <!-- Tabs (без линии снизу + без градиента) -->
           <div class="flex justify-center md:justify-start mb-10">
-            <div class="relative inline-flex border border-[#636363] bg-[#161616] overflow-hidden">
+            <div
+              class="relative inline-flex border border-[#636363] bg-[#161616] overflow-hidden"
+            >
               <!-- sliding indicator -->
               <div
                 class="absolute top-0 bottom-0 w-1/2 bg-white/5 transition-transform duration-300"
@@ -34,9 +32,7 @@
               <button
                 type="button"
                 class="relative z-10 px-6 py-3 text-sm font-semibold transition-opacity"
-                :class="activeTab === 'left'
-                  ? 'text-white opacity-100'
-                  : 'text-white/50 opacity-80 hover:opacity-100'"
+                :class="activeTab === 'left' ? 'text-white opacity-100' : 'text-white/50 opacity-80 hover:opacity-100'"
                 @click="setTab('left')"
               >
                 {{ leftTitle }}
@@ -45,9 +41,7 @@
               <button
                 type="button"
                 class="relative z-10 px-6 py-3 text-sm font-semibold transition-opacity"
-                :class="activeTab === 'right'
-                  ? 'text-white opacity-100'
-                  : 'text-white/50 opacity-80 hover:opacity-100'"
+                :class="activeTab === 'right' ? 'text-white opacity-100' : 'text-white/50 opacity-80 hover:opacity-100'"
                 @click="setTab('right')"
               >
                 {{ rightTitle }}
@@ -56,11 +50,11 @@
           </div>
 
           <!-- Cards -->
-          <div class="space-y-8">
+          <div ref="cardsWrap" class="space-y-8">
             <div
               v-for="(item, index) in activeItems"
               :key="activeTab + '-' + index"
-              class="border bg-[#161616] will-change-transform transition-all duration-500"
+              class="border bg-[#161616] transition-all duration-500 will-change-transform"
               :class="cardBorderClass"
               :style="cardStyle(index)"
             >
@@ -83,8 +77,9 @@
                 </div>
               </div>
             </div>
+
+            <!-- (никаких underline/линий под табами и никаких градиентов) -->
           </div>
-          <!-- /Cards -->
         </div>
       </div>
     </div>
@@ -101,27 +96,22 @@ const props = defineProps({
   title: { type: String, default: "Why SiteSynth?" },
   description: { type: String, default: "" },
 
-  // Tabs
+  // Tab labels
   leftTitle: { type: String, default: "Typical Consultancy" },
   rightTitle: { type: String, default: "SiteSynth" },
 
-  // Content
+  // Cards
   leftItems: { type: Array, default: () => [] },
   rightItems: { type: Array, default: () => [] },
 
-  // Default icons (если item.iconSrc не задан)
+  // Icons (defaults)
   leftIconSrc: { type: String, default: "/assets/icons/other/info-circle.svg" },
   rightIconSrc: { type: String, default: "/assets/icons/other/tick-circle.svg" },
-
-  // Optional: отключить анимацию (если надо)
-  animateOnScroll: { type: Boolean, default: true },
 });
 
-const sectionRef = ref(null);
-
-const activeTab = ref("left"); // default
+const activeTab = ref("left"); // default = Typical Consultancy
 const inView = ref(false);
-const reduceMotion = ref(false);
+const cardsWrap = ref(null);
 
 let io = null;
 let timeouts = [];
@@ -138,27 +128,10 @@ const activeIconSrc = computed(() =>
   activeTab.value === "left" ? props.leftIconSrc : props.rightIconSrc
 );
 
+// Borders: red for left, green for right
 const cardBorderClass = computed(() =>
   activeTab.value === "left" ? "border-[#AA3733]" : "border-[#3CA76B]"
 );
-
-const shouldAnimate = computed(() => props.animateOnScroll && !reduceMotion.value);
-
-const cardStyle = (index) => {
-  if (!shouldAnimate.value) {
-    return { opacity: 1, transform: "translateY(0px)" };
-  }
-
-  if (!inView.value) {
-    return { opacity: 0, transform: "translateY(12px)" };
-  }
-
-  return {
-    transitionDelay: `${index * 140}ms`,
-    opacity: 1,
-    transform: "translateY(0px)",
-  };
-};
 
 const resetAnim = () => {
   inView.value = false;
@@ -166,60 +139,56 @@ const resetAnim = () => {
   timeouts = [];
 };
 
-const isInViewport = (el) => {
-  if (!el) return false;
-  const r = el.getBoundingClientRect();
-  const vh = window.innerHeight || document.documentElement.clientHeight;
-  return r.top < vh * 0.85 && r.bottom > 0;
+const cardStyle = (index) => {
+  // sequential appear only after section is in view
+  const delay = index * 140;
+
+  // if not in view -> hidden
+  if (!inView.value) {
+    return {
+      opacity: 0,
+      transform: "translateY(12px)",
+    };
+  }
+
+  return {
+    transitionDelay: `${delay}ms`,
+    opacity: 1,
+    transform: "translateY(0px)",
+  };
 };
 
 onMounted(() => {
-  // prefers-reduced-motion
-  try {
-    reduceMotion.value = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
-  } catch (e) {
-    reduceMotion.value = false;
-  }
-
-  if (!shouldAnimate.value) {
-    inView.value = true;
-    return;
-  }
-
-  // Fallback: если секция уже видна, сразу показываем
-  requestAnimationFrame(() => {
-    if (isInViewport(sectionRef.value)) inView.value = true;
-  });
-
-  // Observer на всю секцию (надежнее)
   io = new IntersectionObserver(
     (entries) => {
       const e = entries[0];
       if (!e) return;
-      if (e.isIntersecting) inView.value = true;
+
+      if (e.isIntersecting) {
+        // trigger once
+        inView.value = true;
+      }
     },
-    { threshold: 0.2, rootMargin: "0px 0px -10% 0px" }
+    { threshold: 0.25 }
   );
 
-  if (sectionRef.value) io.observe(sectionRef.value);
+  if (cardsWrap.value) io.observe(cardsWrap.value);
 });
 
 onBeforeUnmount(() => {
-  if (io && sectionRef.value) io.unobserve(sectionRef.value);
+  if (io && cardsWrap.value) io.unobserve(cardsWrap.value);
   if (io) io.disconnect();
   resetAnim();
 });
 
-// При переключении таба: заново проигрываем появление (если анимации включены)
+// when switching tabs, replay animation (optional)
 watch(activeTab, () => {
-  if (!shouldAnimate.value) return;
-
   resetAnim();
+  // small tick so browser applies initial hidden styles
   const t = setTimeout(() => {
     inView.value = true;
   }, 30);
   timeouts.push(t);
 });
 </script>
-
 
