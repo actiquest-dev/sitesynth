@@ -181,7 +181,7 @@
   id="why-sitesynth"
   sectionClass="bg-[#161616] py-0"
   title="Why SiteSynth?"
-  description="Most teams lose time in translation: strategy to design, design to code, code to marketing. We keep it in one loop, so what you ship matches what you planned, and what users feel matches what you intended."
+  description="Most teams lose time in translation: strategy → design, design → code, and code → go-to-market. We keep everything in one loop, so what you ship matches what you planned — and what users feel matches what you intended. No handoff gaps. No “almost right” implementations."
   typicalLabel="Typical Consultancy"
   siteSynthLabel="SiteSynth"
   defaultTab="typical"
