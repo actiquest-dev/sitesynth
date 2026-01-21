@@ -19,7 +19,7 @@
     <!-- Content wrapper -->
     <div class="relative z-10 max-w-[1248px] mx-auto px-6">
       <div class="grid grid-cols-1 md:grid-cols-2">
-       <!-- LEFT -->
+        <!-- LEFT -->
         <div class="py-20 md:pr-16 md:border-r border-[#636363]">
           <h2 v-if="title" class="text-white text-3xl font-bold leading-tight">
             {{ title }}
@@ -80,7 +80,6 @@
             </div>
           </div>
         </div>
-
 
         <!-- RIGHT -->
         <div class="py-20 md:pl-16 relative">
@@ -172,12 +171,11 @@ const props = defineProps({
   // Old simple description (kept for compatibility)
   description: { type: String, default: "" },
 
-  // New: rich text elements like in your example
   // item: { tag: 'p'|'h3'..., content?: string, parts?: [{text, strong?}] }
   leftTextElements: { type: Array, default: () => [] },
 
-  // New wrapper prop (what your page is passing now)
-  leftContent: { type: Object, default: null },
+  // wrapper prop (optional)
+  leftContent: { type: Object, default: () => null },
 
   // Tabs labels
   typicalLabel: { type: String, default: "Typical Consultancy" },
@@ -212,6 +210,47 @@ const currentCards = computed(() =>
   activeTab.value === "typical" ? props.typicalCards : props.siteSynthCards
 );
 
+/** ✅ FIX: extra content source + link + helpers */
+const leftExtras = computed(() => {
+  const fromLeftContent = props.leftContent?.textElements;
+  if (Array.isArray(fromLeftContent) && fromLeftContent.length) return fromLeftContent;
+
+  const fromProp = props.leftTextElements;
+  if (Array.isArray(fromProp) && fromProp.length) return fromProp;
+
+  return [];
+});
+
+const leftLink = computed(() => {
+  const link = props.leftContent?.link;
+  return link && typeof link === "object" ? link : null;
+});
+
+const hasLeftExtras = computed(() => leftExtras.value.length > 0);
+
+function isExternal(href) {
+  return /^https?:\/\//.test(href || "");
+}
+
+function getTextClasses(tag) {
+  switch (tag) {
+    case "h1":
+      return "text-white text-4xl font-bold mb-4";
+    case "h2":
+      return "text-white text-3xl font-bold mb-3";
+    case "h3":
+      return "text-white text-2xl font-bold mb-2";
+    case "h4":
+      return "text-white text-xl font-semibold mb-2";
+    case "h5":
+      return "text-white text-lg font-semibold mb-2";
+    case "p":
+      return "text-[#999999] leading-relaxed";
+    default:
+      return "text-[#999999]";
+  }
+}
+
 function setTab(tab) {
   if (activeTab.value === tab) return;
 
@@ -229,6 +268,12 @@ function setTab(tab) {
 }
 
 onMounted(() => {
+  // ✅ safety: if IO not available, just reveal
+  if (typeof window === "undefined" || !("IntersectionObserver" in window)) {
+    isRevealed.value = true;
+    return;
+  }
+
   io = new IntersectionObserver(
     (entries) => {
       const entry = entries?.[0];
@@ -348,4 +393,3 @@ onBeforeUnmount(() => {
   }
 }
 </style>
-
