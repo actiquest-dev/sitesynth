@@ -181,63 +181,61 @@
     }"
   />
 
-  <ConsultancySection
+<ConsultancySection
   id="why-sitesynth"
   sectionClass="bg-[#161616] py-0"
   title="Why SiteSynth?"
   description="Most teams lose time in translation: strategy → design, design → code, and code → go-to-market. We keep everything in one loop, so what you ship matches what you planned — and what users feel matches what you intended. No handoff gaps. No “almost right” implementations."
-  :leftContent="{
-    textElements: [
-      { tag: 'h4', content: 'No handoffs. No “almost right”.' },
-      {
-        tag: 'p',
-        content:
-          'We’re not a “we do everything” agency. We’re a small senior team that cares about craft, clarity, and shipping. If that’s your vibe, you’ll get us.',
-      },
-    ],
-    link: { href: '/about-us', text: 'Meet the team' },
-  }"
-    typicalLabel="Typical Consultancy"
-    siteSynthLabel="SiteSynth"
-    defaultTab="typical"
-    :typicalCards="[
-      {
-        iconSrc: '/assets/icons/other/info-circle.svg',
-        title: 'One-Size-Fits-All',
-        description: 'Rigid, prepackaged solutions applied to everyone.',
-      },
-      {
-        iconSrc: '/assets/icons/other/info-circle.svg',
-        title: 'Siloed & Fragmented',
-        description: 'Tech, design, and marketing handled in isolation.',
-      },
-      {
-        iconSrc: '/assets/icons/other/info-circle.svg',
-        title: 'Slow & Overcomplicated',
-        description:
-          'Manual workflows, outdated tools, and complexity that wastes time — and your budget.',
-      },
-    ]"
-    :siteSynthCards="[
-      {
-        iconSrc: '/assets/icons/other/tick-circle.svg',
-        title: 'Custom by Design',
-        description: 'Tailored strategies designed for your unique context.',
-      },
-      {
-        iconSrc: '/assets/icons/other/tick-circle.svg',
-        title: 'Seamless Collaboration',
-        description:
-          'We unify strategy, development, and branding — no silos, no handoff gaps.',
-      },
-      {
-        iconSrc: '/assets/icons/other/tick-circle.svg',
-        title: 'Agile & AI-Powered',
-        description:
-          'We use AI-powered tools to accelerate delivery, reduce cost, and stay ahead.',
-      },
-    ]"
-  />
+  :leftTextElements="[
+    { tag: 'h4', content: 'No handoffs. No “almost right”.' },
+    {
+      tag: 'p',
+      content:
+        'We’re a small senior team that values craft and shipping. If you prefer clear ownership over agency chaos, you’ll feel at home with us.',
+    },
+  ]"
+  :leftLink="{ href: '/about-us', text: 'Meet the team' }"
+  typicalLabel="Typical Consultancy"
+  siteSynthLabel="SiteSynth"
+  defaultTab="typical"
+  :typicalCards="[
+    {
+      iconSrc: '/assets/icons/other/info-circle.svg',
+      title: 'One-Size-Fits-All',
+      description: 'Rigid, prepackaged solutions applied to everyone.',
+    },
+    {
+      iconSrc: '/assets/icons/other/info-circle.svg',
+      title: 'Siloed & Fragmented',
+      description: 'Tech, design, and marketing handled in isolation.',
+    },
+    {
+      iconSrc: '/assets/icons/other/info-circle.svg',
+      title: 'Slow & Overcomplicated',
+      description:
+        'Manual workflows, outdated tools, and complexity that wastes time — and your budget.',
+    },
+  ]"
+  :siteSynthCards="[
+    {
+      iconSrc: '/assets/icons/other/tick-circle.svg',
+      title: 'Custom by Design',
+      description: 'Tailored strategies designed for your unique context.',
+    },
+    {
+      iconSrc: '/assets/icons/other/tick-circle.svg',
+      title: 'Seamless Collaboration',
+      description:
+        'We unify strategy, development, and branding — no silos, no handoff gaps.',
+    },
+    {
+      iconSrc: '/assets/icons/other/tick-circle.svg',
+      title: 'Agile & AI-Powered',
+      description:
+        'We use AI-powered tools to accelerate delivery, reduce cost, and stay ahead.',
+    },
+  ]"
+/>
 
   <Testimonial
     id="testimonial-koen"
