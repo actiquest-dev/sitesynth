@@ -19,19 +19,68 @@
     <!-- Content wrapper -->
     <div class="relative z-10 max-w-[1248px] mx-auto px-6">
       <div class="grid grid-cols-1 md:grid-cols-2">
-        <!-- LEFT -->
+       <!-- LEFT -->
         <div class="py-20 md:pr-16 md:border-r border-[#636363]">
-          <h2 class="text-white text-3xl font-bold leading-tight">
+          <h2 v-if="title" class="text-white text-3xl font-bold leading-tight">
             {{ title }}
           </h2>
 
+          <!-- Description (kept for compatibility) -->
           <p
             v-if="description"
             class="mt-10 text-[#999999] leading-relaxed max-w-[420px]"
           >
             {{ description }}
           </p>
+
+          <!-- Extra left content (leftContent.textElements OR leftTextElements) -->
+          <div v-if="hasLeftExtras" class="mt-12 max-w-[520px]">
+            <div
+              v-for="(item, index) in leftExtras"
+              :key="index"
+              class="mb-4 last:mb-0"
+            >
+              <component :is="item.tag" :class="getTextClasses(item.tag)">
+                <template v-if="item.parts && item.parts.length">
+                  <template v-for="(part, pIdx) in item.parts" :key="pIdx">
+                    <strong v-if="part.strong" class="text-white font-semibold">
+                      {{ part.text }}
+                    </strong>
+                    <span v-else>{{ part.text }}</span>
+                  </template>
+                </template>
+
+                <template v-else>
+                  {{ item.content }}
+                </template>
+              </component>
+            </div>
+
+            <!-- Optional link under the extra content -->
+            <div v-if="leftLink?.href" class="mt-6">
+              <a
+                v-if="isExternal(leftLink.href)"
+                :href="leftLink.href"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 text-[#8CB0FF] font-semibold hover:opacity-90 transition"
+              >
+                <span>{{ leftLink.text || "Learn more" }}</span>
+                <span aria-hidden="true">→</span>
+              </a>
+
+              <NuxtLink
+                v-else
+                :to="leftLink.href"
+                class="inline-flex items-center gap-2 text-[#8CB0FF] font-semibold hover:opacity-90 transition"
+              >
+                <span>{{ leftLink.text || "Learn more" }}</span>
+                <span aria-hidden="true">→</span>
+              </NuxtLink>
+            </div>
+          </div>
         </div>
+
 
         <!-- RIGHT -->
         <div class="py-20 md:pl-16 relative">
