@@ -168,7 +168,16 @@ const props = defineProps({
 
   // Left column
   title: { type: String, default: "Why SiteSynth?" },
+
+  // Old simple description (kept for compatibility)
   description: { type: String, default: "" },
+
+  // New: rich text elements like in your example
+  // item: { tag: 'p'|'h3'..., content?: string, parts?: [{text, strong?}] }
+  leftTextElements: { type: Array, default: () => [] },
+
+  // New wrapper prop (what your page is passing now)
+  leftContent: { type: Object, default: null },
 
   // Tabs labels
   typicalLabel: { type: String, default: "Typical Consultancy" },
