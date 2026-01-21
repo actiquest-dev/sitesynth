@@ -1,28 +1,66 @@
 <template>
-  <section :id="id || undefined" :class="['relative text-white overflow-hidden', sectionClass]">
-    <GlowEffect class="absolute inset-0 z-0 pointer-events-none" />
+  <section
+    :id="id || undefined"
+    :class="[
+      'relative overflow-hidden border-t border-b border-[#636363] bg-[#161616]',
+      sectionClass,
+    ]"
+    ref="sectionRef"
+  >
+    <GlowEffect />
 
+    <!-- FULL-BLEED right background -->
+    <div
+      class="right-bleed-bg"
+      :class="
+        activeTab === 'typical'
+          ? 'right-bleed-bg--typical'
+          : 'right-bleed-bg--sitesynth'
+      "
+      aria-hidden="true"
+    />
+
+    <!-- Content wrapper -->
     <div class="relative z-10 max-w-[1248px] mx-auto px-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 border-t border-b border-[#636363]">
+      <div class="grid grid-cols-1 md:grid-cols-2">
         <!-- LEFT -->
         <div class="py-20 md:pr-16 md:border-r border-[#636363]">
-          <h2 class="text-white text-5xl font-extrabold leading-tight">
+          <h2 v-if="title" class="text-white text-3xl font-bold leading-tight">
             {{ title }}
           </h2>
 
-          <p v-if="description && !leftTextElements?.length" class="mt-10 text-[#999999] leading-relaxed max-w-[420px]">
+          <!-- Description (kept for compatibility) -->
+          <p
+            v-if="description"
+            class="mt-10 text-[#999999] leading-relaxed max-w-[420px]"
+          >
             {{ description }}
           </p>
 
-          <div v-if="leftTextElements?.length" class="mt-10 max-w-[420px]">
-            <div v-for="(textItem, index) in leftTextElements" :key="index" class="mb-4">
-              <component :is="textItem.tag" :class="getTextClasses(textItem.tag)">
-                {{ textItem.content }}
+          <!-- Extra left content (leftContent.textElements OR leftTextElements) -->
+          <div v-if="hasLeftExtras" class="mt-12 max-w-[520px]">
+            <div
+              v-for="(item, index) in leftExtras"
+              :key="index"
+              class="mb-4 last:mb-0"
+            >
+              <component :is="item.tag" :class="getTextClasses(item.tag)">
+                <template v-if="item.parts && item.parts.length">
+                  <template v-for="(part, pIdx) in item.parts" :key="pIdx">
+                    <strong v-if="part.strong" class="text-white font-semibold">
+                      {{ part.text }}
+                    </strong>
+                    <span v-else>{{ part.text }}</span>
+                  </template>
+                </template>
+
+                <template v-else>
+                  {{ item.content }}
+                </template>
               </component>
             </div>
-          </div>
 
-          <!-- LINK (animated like your example) -->
+            <!-- LINK (animated like your example) -->
           <a
             v-if="leftLink?.href"
             :href="leftLink.href"
@@ -46,49 +84,73 @@
             ></div>
           </a>
         </div>
-
+          
         <!-- RIGHT -->
         <div class="py-20 md:pl-16">
-          <!-- Toggle -->
-          <div class="inline-flex rounded-full border border-[#636363] overflow-hidden">
+          <!-- Tabs -->
+          <div class="flex items-center gap-3">
             <button
-              class="px-6 py-3 text-sm font-semibold transition-colors duration-200"
-              :class="activeTab === 'typical' ? 'bg-white text-[#161616]' : 'bg-transparent text-white'"
-              @click="activeTab = 'typical'"
+              type="button"
+              @click="setTab('typical')"
+              :class="[
+                'px-5 py-2 rounded-full border border-[#636363] text-sm font-semibold transition',
+                activeTab === 'typical'
+                  ? 'bg-white text-[#161616] border-white'
+                  : 'bg-transparent text-white hover:bg-white/10',
+              ]"
             >
               {{ typicalLabel }}
             </button>
+
             <button
-              class="px-6 py-3 text-sm font-semibold transition-colors duration-200"
-              :class="activeTab === 'sitesynth' ? 'bg-white text-[#161616]' : 'bg-transparent text-white'"
-              @click="activeTab = 'sitesynth'"
+              type="button"
+              @click="setTab('sitesynth')"
+              :class="[
+                'px-5 py-2 rounded-full border border-[#636363] text-sm font-semibold transition',
+                activeTab === 'sitesynth'
+                  ? 'bg-white text-[#161616] border-white'
+                  : 'bg-transparent text-white hover:bg-white/10',
+              ]"
             >
               {{ siteSynthLabel }}
             </button>
           </div>
 
-          <div class="mt-10 grid gap-6">
-            <div
-              v-for="(card, index) in currentCards"
-              :key="index"
-              class="border border-[#636363] bg-[#ffffff14] backdrop-blur p-6 rounded-2xl"
-            >
-              <div class="flex items-start gap-4">
-                <img :src="card.iconSrc" alt="" class="w-6 h-6 mt-1 opacity-90" />
-                <div>
-                  <h3 class="text-white text-lg font-semibold">
-                    {{ card.title }}
-                  </h3>
-                  <p class="text-[#999999] mt-2 leading-relaxed">
-                    {{ card.description }}
-                  </p>
+          <!-- Cards -->
+          <div class="mt-10">
+            <div :key="revealKey">
+              <div class="grid gap-5">
+                <div
+                  v-for="(card, idx) in currentCards"
+                  :key="idx"
+                  :class="[
+                    'border border-[#636363] bg-[#ffffff14] backdrop-blur p-6 transition',
+                    isRevealed ? 'card-in' : 'card-out',
+                  ]"
+                  :style="{ transitionDelay: `${idx * 70}ms` }"
+                >
+                  <div class="flex items-start gap-4">
+                    <img
+                      v-if="card.iconSrc"
+                      :src="card.iconSrc"
+                      alt=""
+                      class="w-6 h-6 mt-[2px] opacity-90"
+                    />
+
+                    <div>
+                      <h3 class="text-white text-2xl font-semibold leading-tight">
+                        {{ card.title }}
+                      </h3>
+                      <p class="mt-3 text-[#999999] leading-relaxed">
+                        {{ card.description }}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-
-          <!-- Optional: right-side bleed (if you use it in your layout) -->
-          <div class="right-bleed-overlay" aria-hidden="true"></div>
+          <!-- /Cards -->
         </div>
       </div>
     </div>
@@ -96,52 +158,111 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, nextTick } from "vue";
 
 const props = defineProps({
   id: { type: String, default: "" },
-  sectionClass: { type: String, default: "bg-[#161616] py-0" },
+  sectionClass: { type: String, default: "" },
 
-  title: { type: String, default: "" },
+  // Left column
+  title: { type: String, default: "Why SiteSynth?" },
+
+  // Old simple description (kept for compatibility)
   description: { type: String, default: "" },
 
-  // ✅ instead of leftContent
+  // New: rich text elements like in your example
+  // item: { tag: 'p'|'h3'..., content?: string, parts?: [{text, strong?}] }
   leftTextElements: { type: Array, default: () => [] },
 
-  // ✅ new prop for the animated link
-  leftLink: {
-    type: Object,
-    default: null, // { href: string, text: string, target?: string }
-  },
+  // New wrapper prop (what your page is passing now)
+  leftContent: { type: Object, default: null },
 
+  // Tabs labels
   typicalLabel: { type: String, default: "Typical Consultancy" },
   siteSynthLabel: { type: String, default: "SiteSynth" },
-  defaultTab: { type: String, default: "typical" },
 
+  // Cards
   typicalCards: { type: Array, default: () => [] },
   siteSynthCards: { type: Array, default: () => [] },
+
+  // default tab
+  defaultTab: { type: String, default: "typical" },
 });
 
-const activeTab = ref(props.defaultTab);
+const activeTab = ref(props.defaultTab === "sitesynth" ? "sitesynth" : "typical");
+const revealKey = ref(0);
+const isRevealed = ref(false);
 
-const currentCards = computed(() => {
-  return activeTab.value === "typical" ? props.typicalCards : props.siteSynthCards;
+const sectionRef = ref(null);
+let io;
+
+const currentCards = computed(() =>
+  activeTab.value === "typical" ? props.typicalCards : props.siteSynthCards
+);
+
+const leftExtras = computed(() => {
+  if (
+    props.leftContent?.textElements &&
+    Array.isArray(props.leftContent.textElements) &&
+    props.leftContent.textElements.length
+  ) {
+    return props.leftContent.textElements;
+  }
+  return props.leftTextElements;
+});
+
+const leftLink = computed(() => {
+  return props.leftContent?.link || null;
+});
+
+const hasLeftExtras = computed(
+  () => Array.isArray(leftExtras.value) && leftExtras.value.length > 0
+);
+
+function isExternal(href) {
+  return /^https?:\/\//.test(href || "");
+}
+
+function setTab(tab) {
+  if (activeTab.value === tab) return;
+
+  activeTab.value = tab;
+  revealKey.value += 1;
+  isRevealed.value = false;
+
+  nextTick(() => {
+    requestAnimationFrame(() => {
+      isRevealed.value = true;
+    });
+  });
+}
+
+onMounted(() => {
+  io = new IntersectionObserver(
+    (entries) => {
+      const entry = entries[0];
+      if (!entry) return;
+      if (entry.isIntersecting) {
+        isRevealed.value = true;
+        io?.disconnect();
+      }
+    },
+    { threshold: 0.25, rootMargin: "0px 0px -10% 0px" }
+  );
+
+  if (sectionRef.value) io.observe(sectionRef.value);
+});
+
+onBeforeUnmount(() => {
+  io?.disconnect();
 });
 
 function getTextClasses(tag) {
   switch (tag) {
-    case "h1":
-      return "text-white text-4xl font-bold mb-4";
-    case "h2":
-      return "text-white text-3xl font-bold mb-3";
     case "h3":
-      return "text-white text-2xl font-bold mb-3";
+      return "text-white text-2xl font-bold leading-tight";
     case "h4":
-      return "text-white text-xl font-semibold mb-2";
-    case "h5":
-      return "text-white text-lg font-semibold mb-2";
-    case "h6":
-      return "text-white text-base font-semibold mb-2";
+      return "text-white text-xl font-semibold leading-tight";
     case "p":
       return "text-[#999999] leading-relaxed";
     default:
@@ -151,13 +272,64 @@ function getTextClasses(tag) {
 </script>
 
 <style scoped>
-.right-bleed-overlay {
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 40vw;
-  height: 100%;
-  pointer-events: none;
+.card-out {
   opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 450ms ease, transform 450ms ease;
+}
+
+.card-in {
+  opacity: 1;
+  transform: translateY(0px);
+}
+
+.right-bleed-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 1;
+  transition: opacity 300ms ease;
+}
+
+/* Adjust these backgrounds if you want different feel per tab */
+.right-bleed-bg--typical {
+  background: radial-gradient(
+    1200px 600px at 85% 50%,
+    rgba(140, 176, 255, 0.14),
+    transparent 60%
+  );
+  animation: breathe 6s ease-in-out infinite;
+}
+
+.right-bleed-bg--sitesynth {
+  background: radial-gradient(
+    1200px 600px at 85% 50%,
+    rgba(141, 53, 255, 0.14),
+    transparent 60%
+  );
+  animation: breathe 6s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0% {
+    opacity: 0.78;
+    filter: blur(44px);
+  }
+  50% {
+    opacity: 0.98;
+    filter: blur(38px);
+  }
+  100% {
+    opacity: 0.78;
+    filter: blur(44px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .right-bleed-bg {
+    animation: none;
+  }
 }
 </style>
+
