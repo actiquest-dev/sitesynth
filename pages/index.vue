@@ -184,8 +184,17 @@
 <ConsultancySection
   id="why-sitesynth"
   sectionClass="bg-[#161616] py-0"
-  title="From strategy to shipped product — without handoff gaps."
-  description="Most teams lose time in translation: strategy → design, design → code, and code → go-to-market. We keep everything in one loop, so what you ship matches what you planned, and what users experience matches what you intended."
+  title="Why SiteSynth?"
+  description="Most teams lose time in translation: strategy → design, design → code, and code → go-to-market. We keep everything in one loop, so what you ship matches what you planned — and what users feel matches what you intended. No handoff gaps. No “almost right” implementations."
+  :leftTextElements="[
+    { tag: 'h4', content: 'No handoffs. No “almost right”.' },
+    {
+      tag: 'p',
+      content:
+        'We’re a small senior team that values craft and shipping. If you prefer clear ownership over agency chaos, you’ll feel at home with us.',
+    },
+  ]"
+  :leftLink="{ href: '/about-us', text: 'Meet the team' }"
   typicalLabel="Typical Consultancy"
   siteSynthLabel="SiteSynth"
   defaultTab="typical"
@@ -227,8 +236,6 @@
     },
   ]"
 />
-
-
 
   <Testimonial
     id="testimonial-koen"
