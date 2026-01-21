@@ -36,30 +36,29 @@
         <!-- RIGHT -->
         <div class="py-20 md:pl-16 relative">
           <!-- Tabs -->
-          <div class="flex items-center gap-3">
+          <div class="relative z-10 flex items-center gap-8 mb-12">
             <button
               type="button"
-              @click="setTab('typical')"
-              :class="[
-                'px-5 py-2 rounded-full border border-[#636363] text-sm font-semibold transition',
+              class="text-lg font-semibold transition-opacity"
+              :class="
                 activeTab === 'typical'
-                  ? 'bg-white text-[#161616] border-white'
-                  : 'bg-transparent text-white hover:bg-white/10',
-              ]"
+                  ? 'text-white opacity-100'
+                  : 'text-white/35 opacity-100 hover:text-white/60'
+              "
+              @click="setTab('typical')"
             >
               {{ typicalLabel }}
             </button>
 
-
             <button
               type="button"
-              @click="setTab('sitesynth')"
-              :class="[
-                'px-5 py-2 rounded-full border border-[#636363] text-sm font-semibold transition',
+              class="text-lg font-semibold transition-opacity"
+              :class="
                 activeTab === 'sitesynth'
-                  ? 'bg-white text-[#161616] border-white'
-                  : 'bg-transparent text-white hover:bg-white/10',
-              ]"
+                  ? 'text-white opacity-100'
+                  : 'text-white/35 opacity-100 hover:text-white/60'
+              "
+              @click="setTab('sitesynth')"
             >
               {{ siteSynthLabel }}
             </button>
