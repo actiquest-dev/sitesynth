@@ -271,25 +271,36 @@ function getTextClasses(tag) {
 }
 </script>
 
-<style scoped>
 .card-out {
   opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 450ms ease, transform 450ms ease;
+  transform: translate3d(0, 8px, 0) scale(0.99);
+  filter: blur(6px);
+  transition:
+    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform, filter;
 }
 
 .card-in {
   opacity: 1;
-  transform: translateY(0px);
+  transform: translate3d(0, 0, 0) scale(1);
+  filter: blur(0px);
+  transition:
+    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform, filter;
 }
 
-.right-bleed-bg {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 1;
-  transition: opacity 300ms ease;
+/* Optional: respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .card-out,
+  .card-in {
+    transition: none;
+    transform: none;
+    filter: none;
+  }
 }
 
 /* Adjust these backgrounds if you want different feel per tab */
