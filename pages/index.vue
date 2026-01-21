@@ -1,5 +1,6 @@
 <template>
   <HeaderSection />
+
   <HeroIndex
     id="hero-index"
     title="No silos. <span class='glow-text'>Just synthesis.</span>"
@@ -52,7 +53,9 @@
       },
     ]"
   />
+
   <BannerSection id="banner-what-we-offer" tag="h2" text="What We Offer" />
+
   <WhatWeOfferSection
     id="what-we-offer"
     :offers="[
@@ -94,6 +97,7 @@
       },
     ]"
   />
+
   <ProcessSection
     id="process-what-we-offer"
     imageClass=""
@@ -170,7 +174,7 @@
     }"
     :rightContent="{
       image: {
-        src: 'assets/new-assets/home-page/home/cta/score-synth-feature-image.webp',
+        src: '/assets/new-assets/home-page/home/cta/score-synth-feature-image.webp',
         alt: 'AI Development Process',
         class: 'w-full h-auto rounded-lg',
       },
@@ -234,7 +238,7 @@
       },
     ]"
   />
-  
+
   <Testimonial
     id="testimonial-koen"
     imageSrc="/assets/new-assets/people-for-CTA/oval-koen.png"
@@ -243,9 +247,10 @@
     quoteTitle="Simplicity takes effort"
     quoteText="It takes real effort to cut through the noise and get to what matters. But that’s where momentum begins. At SiteSynth, we believe clarity is a competitive advantage. That’s why we work to make the complex simple — and the simple successful."
     ctaText="Get in touch"
-    ctaLink="contact-us"
+    ctaLink="/contact-us"
     class="pb-32 pt-32"
   />
+
   <FooterSection />
 </template>
 
