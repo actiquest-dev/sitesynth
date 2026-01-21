@@ -53,6 +53,7 @@ watch(
 );
 
 const handleInput = (value, phoneObject) => {
+  // NOTE: emits value + phoneObject (2 args)
   emit("update:modelValue", value, phoneObject);
 };
 </script>
@@ -69,10 +70,34 @@ const handleInput = (value, phoneObject) => {
   border: none !important;
 }
 
+/* --- Smaller flag + compact dropdown --- */
 .vue-tel-input .vti__dropdown {
   background-color: #232323 !important;
   border: 1px solid #333 !important;
   border-radius: 0.5rem 0 0 0.5rem !important;
+
+  /* make the left part a bit tighter */
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+.vue-tel-input .vti__flag {
+  /* subtle compact look (10–15% smaller) */
+  transform: scale(0.85);
+  transform-origin: center;
+}
+
+/* If flags are rendered via <img> */
+.vue-tel-input .vti__flag img {
+  width: 16px !important;
+  height: 12px !important;
+}
+
+/* Optional: slightly smaller arrow */
+.vue-tel-input .vti__dropdown-arrow {
+  color: #999999 !important;
+  transform: scale(0.85);
+  transform-origin: center;
 }
 
 .vue-tel-input .vti__dropdown:hover {
@@ -117,10 +142,6 @@ const handleInput = (value, phoneObject) => {
 
 .vue-tel-input .vti__input::placeholder {
   color: #666666 !important;
-}
-
-.vue-tel-input .vti__dropdown-arrow {
-  color: #999999 !important;
 }
 
 .vue-tel-input .vti__search_box {
