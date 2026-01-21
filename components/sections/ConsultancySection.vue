@@ -60,31 +60,31 @@
               </component>
             </div>
 
-            <!-- LINK (animated like your example) -->
-          <a
-            v-if="leftLink?.href"
-            :href="leftLink.href"
-            :target="leftLink.target || '_self'"
-            class="text-[#8CB0FF] mt-6 w-auto max-w-max py-2 font-semibold inline-flex items-center gap-2 group/link relative"
-          >
-            <span>{{ leftLink.text }}</span>
+            <!-- Optional link under the extra content -->
+            <div v-if="leftLink?.href" class="mt-6">
+              <a
+                v-if="isExternal(leftLink.href)"
+                :href="leftLink.href"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 text-[#8CB0FF] font-semibold hover:opacity-90 transition"
+              >
+                <span>{{ leftLink.text || "Learn more" }}</span>
+                <span aria-hidden="true">→</span>
+              </a>
 
-            <svg
-              class="w-3 h-3 relative top-[1px] transition-transform duration-300 group-hover/link:translate-x-1"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <path d="M7.5 4.5L12.5 10L7.5 15.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-
-            <div
-              class="absolute bottom-0 left-0 h-[2px] bg-[#8CB0FF] w-0 group-hover/link:w-full transition-all duration-300"
-            ></div>
-          </a>
+              <NuxtLink
+                v-else
+                :to="leftLink.href"
+                class="inline-flex items-center gap-2 text-[#8CB0FF] font-semibold hover:opacity-90 transition"
+              >
+                <span>{{ leftLink.text || "Learn more" }}</span>
+                <span aria-hidden="true">→</span>
+              </NuxtLink>
+            </div>
+          </div>
         </div>
-          
+
         <!-- RIGHT -->
         <div class="py-20 md:pl-16">
           <!-- Tabs -->
@@ -332,4 +332,5 @@ function getTextClasses(tag) {
   }
 }
 </style>
+
 
