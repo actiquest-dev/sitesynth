@@ -182,21 +182,21 @@
   />
 
   <ConsultancySection
-    id="why-sitesynth"
-    sectionClass="bg-[#161616] py-0"
-    title="Why SiteSynth?"
-    description="Most teams lose time in translation: strategy → design, design → code, and code → go-to-market. We keep everything in one loop, so what you ship matches what you planned — and what users feel matches what you intended. No handoff gaps. No “almost right” implementations."
-    :leftContent="{
-      textElements: [
-        { tag: 'h4', content: 'No handoffs. No “almost right”.' },
-        {
-          tag: 'p',
-          content:
-            'Most delays come from translation between teams. We keep strategy, design, and build in one loop, so decisions stay consistent and delivery stays clean.',
-        },
-      ],
-      link: { href: '/full-stack-implementation', text: 'Explore full-stack delivery' },
-    }"
+  id="why-sitesynth"
+  sectionClass="bg-[#161616] py-0"
+  title="Why SiteSynth?"
+  description="Most teams lose time in translation: strategy → design, design → code, and code → go-to-market. We keep everything in one loop, so what you ship matches what you planned — and what users feel matches what you intended. No handoff gaps. No “almost right” implementations."
+  :leftContent="{
+    textElements: [
+      { tag: 'h4', content: 'No handoffs. No “almost right”.' },
+      {
+        tag: 'p',
+        content:
+          'We’re not a “we do everything” agency. We’re a small senior team that cares about craft, clarity, and shipping. If that’s your vibe, you’ll get us.',
+      },
+    ],
+    link: { href: '/about-us', text: 'Meet the team' },
+  }"
     typicalLabel="Typical Consultancy"
     siteSynthLabel="SiteSynth"
     defaultTab="typical"
