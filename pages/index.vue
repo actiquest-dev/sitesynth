@@ -185,9 +185,9 @@
   id="why-sitesynth"
   sectionClass="bg-[#161616] py-0"
   title="Why SiteSynth?"
-  description="Most teams lose time in translation: strategy → design, design → code, and code → go-to-market. We keep everything in one loop, so what you ship matches what you planned — and what users feel matches what you intended. No handoff gaps. No “almost right” implementations."
+  description="Most teams lose time when work gets passed around: strategy becomes design, design becomes code, and the final result drifts from the original intent. We keep it in one loop, so what you ship matches what you planned — and what users experience matches what you meant. No handoff gaps. No “almost right” execution."
   :leftTextElements="[
-    { tag: 'h4', content: 'No handoffs. No “almost right”.' },
+    { tag: 'h4', content: 'No handoffs. No “almost right”' },
     {
       tag: 'p',
       content:
