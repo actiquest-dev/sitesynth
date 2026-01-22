@@ -198,7 +198,7 @@
                       type="tel"
                       id="phone"
                       name="phone"
-                      placeholder="+1 (555) 000-0000"
+                      placeholder="04 12 345 678 "
                       v-model="formData.phone"
                       class="w-full bg-[#1a1a1a] border border-[#333] rounded-0 px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]"
                     />
