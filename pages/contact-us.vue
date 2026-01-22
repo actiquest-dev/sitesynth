@@ -190,7 +190,7 @@
               </div>
             </div>
 
-            <!-- Topic -->
+<!-- Topic -->
 <div>
   <label
     class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium"
@@ -199,7 +199,10 @@
     Topic *
   </label>
 
-  <div class="relative">
+  <!-- wrapper for focus-based rotation -->
+  <div
+    class="relative group"
+  >
     <select
       id="topic"
       name="topic"
@@ -214,19 +217,17 @@
       <option value="other">Other</option>
     </select>
 
-    <!-- Chevron icon (no FontAwesome, build-safe) -->
+    <!-- FontAwesome-like chevron-down (no FA dependency) -->
     <svg
-      class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#8CB0FF]"
+      class="topic-chevron pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#8CB0FF]"
       width="14"
       height="14"
-      viewBox="0 0 20 20"
+      viewBox="0 0 320 512"
       fill="currentColor"
       aria-hidden="true"
     >
       <path
-        fill-rule="evenodd"
-        d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08z"
-        clip-rule="evenodd"
+        d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0L160 256.3l96.5-96.5c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.4 9.4-24.6 9.4-34 0z"
       />
     </svg>
   </div>
