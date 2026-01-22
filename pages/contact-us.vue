@@ -85,6 +85,7 @@
     <!-- ПРАВАЯ КОЛОНКА: ФОРМА -->
     <template #right>
       <div class="py-24 bg-[#161616] flex items-center justify-center">
+       <div class="absolute inset-0 bg-[#161616] z-[0] pointer-events-none">
         <div class="max-w-[600px] w-full px-6">
           <form class="space-y-6" @submit.prevent="handleSubmit">
             <!-- Заголовок формы -->
