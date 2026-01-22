@@ -32,8 +32,8 @@
 
         <!-- content -->
         <div class="relative z-[2] max-w-[600px] ml-auto pr-12">
-          <h2 class="text-white text-3xl sm:text-4xl mb-10 font-bold">
-            Talk to our team.
+          <h2 class="text-white text-3xl font-bold mb-2">
+            Let's see where we can start
           </h2>
 
           <!-- 2 cards (как ConsultancySection) -->
