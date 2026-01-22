@@ -238,26 +238,21 @@
                   <option value="other">Other</option>
                 </select>
 
-                <!-- chevron like FA (no dependency) -->
-                <svg
-                  class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#999999] transition-transform duration-200 group-focus-within:rotate-180"
-                  width="18"
-                  height="12"
-                  viewBox="0 0 24 14"
-                  fill="none"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M2 2L12 12L22 2"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    opacity="0.9"
-                  />
-                </svg>
-              </div>
-            </div>
+                <!-- FontAwesome-like chevron-down (no FA dependency) -->
+    <svg
+      class="topic-chevron pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#999999]"
+      width="18"
+      height="14"
+      viewBox="0 0 320 512"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path
+        d="M201.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 338.7 54.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"
+      />
+    </svg>
+  </div>
+</div>
 
             <!-- Message -->
             <div>
