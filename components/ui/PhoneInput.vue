@@ -14,7 +14,7 @@ import { VueTelInput } from "vue-tel-input";
 // import "vue-tel-input/vue-tel-input.css";
 
 onMounted(async () => {
-  // load CSS only when component is mounted on client
+  // Load CSS only on client (SSR-friendly)
   await import("vue-tel-input/vue-tel-input.css");
 });
 
@@ -59,7 +59,7 @@ const handleInput = (value, phoneObject) => {
 </script>
 
 <style>
-/* Custom dark theme styling for vue-tel-input */
+/* Root wrapper */
 .vue-tel-input {
   border: none !important;
   background-color: transparent !important;
@@ -70,19 +70,37 @@ const handleInput = (value, phoneObject) => {
   border: none !important;
 }
 
-/* --- Smaller flag + compact dropdown --- */
+/* Left dropdown (flag + dial code + arrow) */
 .vue-tel-input .vti__dropdown {
   background-color: #232323 !important;
   border: 1px solid #333 !important;
   border-radius: 0.5rem 0 0 0.5rem !important;
-
-  /* make the left part a bit tighter */
   padding-left: 10px !important;
-  padding-right: 10px !important;
+  padding-right: 12px !important; /* gives the arrow some air */
 }
 
+.vue-tel-input .vti__dropdown:hover {
+  background-color: #2a2a2a !important;
+}
+
+/* ---- Fix: flag too close to arrow ---- */
+/* In many versions, .vti__selection wraps flag + dialCode + arrow */
+.vue-tel-input .vti__selection {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important; /* adjust: 6–10px */
+}
+
+/* Fallback: push arrow away if gap isn't applied */
+.vue-tel-input .vti__dropdown-arrow {
+  color: #999999 !important;
+  margin-left: 8px !important;
+  transform: scale(0.85);
+  transform-origin: center;
+}
+
+/* Smaller flag (subtle) */
 .vue-tel-input .vti__flag {
-  /* subtle compact look (10–15% smaller) */
   transform: scale(0.85);
   transform-origin: center;
 }
@@ -93,17 +111,7 @@ const handleInput = (value, phoneObject) => {
   height: 12px !important;
 }
 
-/* Optional: slightly smaller arrow */
-.vue-tel-input .vti__dropdown-arrow {
-  color: #999999 !important;
-  transform: scale(0.85);
-  transform-origin: center;
-}
-
-.vue-tel-input .vti__dropdown:hover {
-  background-color: #2a2a2a !important;
-}
-
+/* Dropdown list */
 .vue-tel-input .vti__dropdown-list {
   background-color: #232323 !important;
   border: 1px solid #333 !important;
@@ -126,6 +134,7 @@ const handleInput = (value, phoneObject) => {
   color: white !important;
 }
 
+/* Right input */
 .vue-tel-input .vti__input {
   background-color: #232323 !important;
   border: 1px solid #333 !important;
@@ -144,6 +153,7 @@ const handleInput = (value, phoneObject) => {
   color: #666666 !important;
 }
 
+/* Search inside dropdown */
 .vue-tel-input .vti__search_box {
   background-color: #1a1a1a !important;
   border: 1px solid #333 !important;
