@@ -23,8 +23,8 @@
     <div
       class="absolute pointer-events-none z-0 opacity-100"
       style="
-        right: -40px;
-        bottom: -60px;
+        right: 0px;
+        bottom: 0px;
         width: clamp(320px, 38vw, 560px);
         height: clamp(320px, 38vw, 560px);
         background-image: url('/assets/gradients/gradient_right_corner.svg');
