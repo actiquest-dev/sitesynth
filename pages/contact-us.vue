@@ -28,6 +28,16 @@
     <!-- ЛЕВАЯ КОЛОНКА: текст -->
     <template #left>
       <div class="py-24 md:border-r border-[#636363] bg-[#161616]">
+                <!-- градиент в нижнем левом углу -->
+        <div
+          class="absolute inset-0 pointer-events-none opacity-100 z-0"
+          style="
+            background-image: url('/assets/gradients/gradient_right_corner.svg');
+            background-size: cover;
+            background-position: bottom left;
+            background-repeat: no-repeat;
+          "
+        ></div>
         <div class="max-w-[600px] ml-auto pr-12">
           <h2 class="text-white text-3xl sm:text-4xl mb-6 font-bold">
             Talk to our team.
