@@ -181,7 +181,7 @@
                   <PhoneInput
                     v-model="formData.phone"
                     :input-options="{
-                      placeholder: '+1 (555) 000-0000',
+                      placeholder: '04 23 456 789',
                       id: 'phone',
                       name: 'phone',
                       class:
