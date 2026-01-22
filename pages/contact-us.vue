@@ -234,16 +234,21 @@
       <option value="other">Other</option>
     </select>
 
-    <!-- Use the same FontAwesome chevron as DesktopMenu -->
-    <template #arrow-icon>
-      <font-awesome
-        :icon="['fas', 'chevron-down']"
-        class="vti__fa-arrow"
-        aria-hidden="true"
+    <!-- FontAwesome-like chevron-down (no FA dependency) -->
+    <svg
+      class="topic-chevron pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#8CB0FF]"
+      width="14"
+      height="14"
+      viewBox="0 0 320 512"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path
+        d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0L160 256.3l96.5-96.5c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.4 9.4-24.6 9.4-34 0z"
       />
-    </template>
-  </VueTelInput>
-</template>
+    </svg>
+  </div>
+</div>
 
             <!-- Message -->
             <div>
