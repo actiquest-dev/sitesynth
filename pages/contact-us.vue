@@ -23,7 +23,7 @@
             bottom: -60px;
             width: 560px;
             height: 560px;
-            background-image: url('/assets/gradients/gradient_right_corner.svg');
+            background-image: url('/assets/gradients/big-gradient-corner.svg');
             background-repeat: no-repeat;
             background-position: bottom right;
             background-size: contain;
