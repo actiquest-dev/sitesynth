@@ -7,13 +7,13 @@
     :content="[
       {
         tag: 'h1',
-        text: 'Let\'s build something<br> meaningful — together.',
+        text: 'Let\\'s build something<br> meaningful — together.',
         margin: 'mb-8',
         html: true,
       },
       {
         tag: 'p',
-        text: 'Whether you\'re looking to launch a new product, align your brand, or join our team — we\'d love to hear from you. Drop us a message and we\'ll get back to you soon.',
+        text: 'Whether you\\'re looking to launch a new product, align your brand, or join our team — we\\'d love to hear from you. Drop us a message and we\\'ll get back to you soon.',
         margin: 'mb-0',
       },
     ]"
@@ -25,64 +25,80 @@
     leftColumnBgColor="bg-[#161616]"
     rightColumnBgColor="bg-[#161616]"
   >
-   <!-- ЛЕВАЯ КОЛОНКА: текст -->
-<template #left>
-  <div class="relative overflow-hidden py-24 md:border-r border-[#636363] bg-[#161616]">
-    <!-- gradient только в нижнем правом углу левой колонки -->
-    <div
-      class="absolute pointer-events-none z-[1] opacity-100"
-      style="
-        right: -40px;
-        bottom: -60px;
-        width: 560px;
-        height: 560px;
-        background-image: url('/assets/gradients/gradient_right_corner.svg');
-        background-repeat: no-repeat;
-        background-position: bottom right;
-        background-size: contain;
-      "
-    ></div>
+    <!-- LEFT -->
+    <template #left>
+      <div
+        class="relative overflow-hidden py-24 md:border-r border-[#636363] bg-[#161616]"
+      >
+        <!-- gradient только в нижнем правом углу левой колонки -->
+        <div
+          class="absolute pointer-events-none z-[1] opacity-100"
+          style="
+            right: -40px;
+            bottom: -60px;
+            width: 560px;
+            height: 560px;
+            background-image: url('/assets/gradients/gradient_right_corner.svg');
+            background-repeat: no-repeat;
+            background-position: bottom right;
+            background-size: contain;
+          "
+        ></div>
 
-    <!-- контент поверх градиента -->
-    <div class="relative z-[2] max-w-[600px] ml-auto pr-12">
-      <h2 class="text-white text-3xl sm:text-4xl mb-6 font-bold">
-        Talk to our team.
-      </h2>
+        <!-- контент поверх градиента -->
+        <div class="relative z-[2] max-w-[600px] ml-auto pr-12">
+          <h2 class="text-white text-3xl sm:text-4xl mb-10 font-bold">
+            Talk to our team.
+          </h2>
 
-      <h3 class="text-white text-xl font-semibold mb-3 mt-8">
-        🧩 Start a custom project
-      </h3>
-      <p class="text-[#999999] text-sm leading-relaxed mb-6">
-        Let's discuss how SiteSynth can help your company design scalable
-        systems, ship faster, and elevate user experience.
-      </p>
+          <!-- 2 карточки как в ConsultancySection -->
+          <div class="space-y-10">
+            <InfoCard
+              title="Start a custom project"
+              description="Tell us what you’re building and where it’s stuck. We’ll propose a clear plan, scope, and next steps — from strategy to design to build."
+            >
+              <template #icon>
+                <img
+                  src="/assets/icons/document-code.svg"
+                  alt=""
+                  class="w-6 h-6 select-none pointer-events-none mt-[2px]"
+                />
+              </template>
+            </InfoCard>
 
-      <h3 class="text-white text-xl font-semibold mb-3 mt-8">
-        🤝 Explore a partnership
-      </h3>
-      <p class="text-[#999999] text-sm leading-relaxed mb-12">
-        Let's discuss how SiteSynth can help your company design scalable
-        systems, ship faster, and elevate user experience.
-      </p>
+            <InfoCard
+              title="Explore a partnership"
+              description="Need a long-term team to ship with you? We plug into your workflow, take ownership of specific areas, and deliver consistently — without handoff pain."
+            >
+              <template #icon>
+                <img
+                  src="/assets/icons/people.svg"
+                  alt=""
+                  class="w-6 h-6 select-none pointer-events-none mt-[2px]"
+                />
+              </template>
+            </InfoCard>
+          </div>
 
-      <p class="text-[#999999] text-sm leading-relaxed mb-2">
-        We're based in Belgium and work globally.
-      </p>
-      <p class="text-[#999999] text-sm leading-relaxed">
-        Prefer email? Reach us at
-        <a
-          class="text-[#8CB0FF] hover:text-white transition"
-          href="mailto:hello@sitesynth.com"
-        >
-          hello@sitesynth.com
-        </a>
-      </p>
-    </div>
-  </div>
-</template>
+          <div class="mt-12">
+            <p class="text-[#999999] text-sm leading-relaxed mb-2">
+              We're based in Belgium and work globally.
+            </p>
+            <p class="text-[#999999] text-sm leading-relaxed">
+              Prefer email? Reach us at
+              <a
+                class="text-[#8CB0FF] hover:text-white transition"
+                href="mailto:hello@sitesynth.com"
+              >
+                hello@sitesynth.com
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </template>
 
-
-    <!-- ПРАВАЯ КОЛОНКА: ФОРМА -->
+    <!-- RIGHT -->
     <template #right>
       <div class="py-24 bg-[#161616] flex items-center justify-center">
         <div class="max-w-[600px] w-full px-6">
@@ -198,7 +214,7 @@
                       type="tel"
                       id="phone"
                       name="phone"
-                      placeholder="04 12 345 678 "
+                      placeholder="04 12 345 678"
                       v-model="formData.phone"
                       class="w-full bg-[#1a1a1a] border border-[#333] rounded-0 px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]"
                     />
@@ -207,48 +223,45 @@
               </div>
             </div>
 
-<!-- Topic -->
-<div>
-  <label
-    class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium"
-    for="topic"
-  >
-    Topic *
-  </label>
+            <!-- Topic -->
+            <div>
+              <label
+                class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium"
+                for="topic"
+              >
+                Topic *
+              </label>
 
-  <!-- wrapper for focus-based rotation -->
-  <div
-    class="relative group"
-  >
-    <select
-      id="topic"
-      name="topic"
-      v-model="formData.topic"
-      required
-      class="w-full bg-[#1a1a1a] border border-[#333] rounded-0 px-4 py-3 pr-10 text-sm text-white appearance-none focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444] cursor-pointer"
-    >
-      <option value="">Select a topic</option>
-      <option value="project">Start a custom project</option>
-      <option value="partnership">Explore a partnership</option>
-      <option value="career">Career opportunity</option>
-      <option value="other">Other</option>
-    </select>
+              <div class="relative">
+                <select
+                  id="topic"
+                  name="topic"
+                  v-model="formData.topic"
+                  required
+                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-0 px-4 py-3 pr-10 text-sm text-white appearance-none focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444] cursor-pointer"
+                >
+                  <option value="">Select a topic</option>
+                  <option value="project">Start a custom project</option>
+                  <option value="partnership">Explore a partnership</option>
+                  <option value="career">Career opportunity</option>
+                  <option value="other">Other</option>
+                </select>
 
-    <!-- FontAwesome-like chevron-down (no FA dependency) -->
-    <svg
-      class="topic-chevron pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#999999]"
-      width="18"
-      height="14"
-      viewBox="0 0 320 512"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path
-        d="M201.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 338.7 54.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"
-      />
-    </svg>
-  </div>
-</div>
+                <!-- твой svg chevron -->
+                <svg
+                  class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#999999]"
+                  width="18"
+                  height="14"
+                  viewBox="0 0 320 512"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M201.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 338.7 54.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"
+                  />
+                </svg>
+              </div>
+            </div>
 
             <!-- Message -->
             <div>
@@ -308,11 +321,14 @@
 <script setup>
 import { seoConfig, structuredData } from "~/config/seo";
 
+// если auto-import components выключен — оставь этот импорт
+import InfoCard from "~/components/ui/InfoCard.vue";
+
 const { formData, state, handleSubmit } = useContactForm();
 
-// SEO Configuration - using centralized config
 const siteUrl = useRuntimeConfig().public?.siteUrl;
 const seo = seoConfig.contact;
+
 useSeoMeta({
   title: seo.title,
   description: seo.description,
