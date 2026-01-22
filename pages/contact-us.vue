@@ -7,13 +7,13 @@
     :content="[
       {
         tag: 'h1',
-        text: 'Let\'s build something<br> meaningful — together.',
+        text: 'Let\\'s build something<br> meaningful — together.',
         margin: 'mb-8',
         html: true,
       },
       {
         tag: 'p',
-        text: 'Whether you\'re looking to launch a new product, align your brand, or join our team — we\'d love to hear from you. Drop us a message and we\'ll get back to you soon.',
+        text: 'Whether you\\'re looking to launch a new product, align your brand, or join our team — we\\'d love to hear from you. Drop us a message and we\\'ll get back to you soon.',
         margin: 'mb-0',
       },
     ]"
@@ -212,11 +212,13 @@
                   <option value="career">Career opportunity</option>
                   <option value="other">Other</option>
                 </select>
-                <span
+
+                <!-- replaced ▼ with FontAwesome chevron (same as DesktopMenu) -->
+                <font-awesome
+                  :icon="['fas', 'chevron-down']"
                   class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#8CB0FF] text-sm"
-                >
-                  ▼
-                </span>
+                  aria-hidden="true"
+                />
               </div>
             </div>
 
