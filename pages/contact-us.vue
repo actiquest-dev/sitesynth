@@ -225,7 +225,7 @@
       name="topic"
       v-model="formData.topic"
       required
-      class="w-full bg-[#1a1a1a] border border-[#333] rounded-0 px-4 py-3 pr-10 text-sm text-white appearance-none focus:outline-none focus:ring-1 focus:ring-[#999999] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444] cursor-pointer"
+      class="w-full bg-[#1a1a1a] border border-[#333] rounded-0 px-4 py-3 pr-10 text-sm text-white appearance-none focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444] cursor-pointer"
     >
       <option value="">Select a topic</option>
       <option value="project">Start a custom project</option>
