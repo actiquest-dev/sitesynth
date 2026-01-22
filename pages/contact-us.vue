@@ -28,16 +28,24 @@
     <!-- ЛЕВАЯ КОЛОНКА: текст -->
     <template #left>
       <div class="py-24 md:border-r border-[#636363] bg-[#161616]">
-                <!-- градиент в нижнем левом углу -->
-        <div
-          class="absolute inset-0 pointer-events-none opacity-100 z-0"
-          style="
-            background-image: url('/assets/gradients/gradient_right_corner.svg');
-            background-size: cover;
-            background-position: bottom left;
-            background-repeat: no-repeat;
-          "
-        ></div>
+<template #left>
+  <div class="relative overflow-hidden py-24 md:border-r border-[#636363] bg-[#161616]">
+    
+    <!-- gradient только в нижнем правом углу левой колонки -->
+    <div
+      class="absolute pointer-events-none z-0 opacity-100"
+      style="
+        right: -40px;
+        bottom: -60px;
+        width: clamp(320px, 38vw, 560px);
+        height: clamp(320px, 38vw, 560px);
+        background-image: url('/assets/gradients/gradient_right_corner.svg');
+        background-repeat: no-repeat;
+        background-position: bottom right;
+        background-size: contain;
+      "
+    ></div>
+    
         <div class="max-w-[600px] ml-auto pr-12">
           <h2 class="text-white text-3xl sm:text-4xl mb-6 font-bold">
             Talk to our team.
