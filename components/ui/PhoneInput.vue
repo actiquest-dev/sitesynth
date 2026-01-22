@@ -83,7 +83,7 @@ const handleInput = (value, phoneObject) => {
 .vue-tel-input .vti__dropdown {
   background-color: #232323 !important;
   border: 1px solid #333 !important;
-  border-radius: 0.5rem 0 0 0.5rem !important;
+  border-radius: 0 !important;
 
   padding-left: 10px !important;
   padding-right: 12px !important;
@@ -135,7 +135,7 @@ const handleInput = (value, phoneObject) => {
 .vue-tel-input .vti__dropdown-list {
   background-color: #232323 !important;
   border: 1px solid #333 !important;
-  border-radius: 0.5rem !important;
+  border-radius:0 !important;
   max-height: 200px !important;
   overflow-y: auto !important;
 }
@@ -158,7 +158,7 @@ const handleInput = (value, phoneObject) => {
 .vue-tel-input .vti__input {
   background-color: #232323 !important;
   border: 1px solid #333 !important;
-  border-radius: 0 0.5rem 0.5rem 0 !important;
+  border-radius: 0 !important;
   color: white !important;
 
   padding: 0.75rem 1rem !important;
@@ -192,7 +192,7 @@ const handleInput = (value, phoneObject) => {
   color: white !important;
   padding: 8px !important;
   margin: 8px !important;
-  border-radius: 0.5rem !important;
+  border-radius: 0 !important;
 
   font-size: 0.875rem !important;
   line-height: 1.25rem !important;
