@@ -191,34 +191,46 @@
             </div>
 
             <!-- Topic -->
-            <div>
-              <label
-                class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium"
-                for="topic"
-              >
-                Topic *
-              </label>
-              <div class="relative">
-                <select
-                  id="topic"
-                  name="topic"
-                  v-model="formData.topic"
-                  required
-                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 pr-10 text-sm text-white appearance-none focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444] cursor-pointer"
-                >
-                  <option value="">Select a topic</option>
-                  <option value="project">Start a custom project</option>
-                  <option value="partnership">Explore a partnership</option>
-                  <option value="career">Career opportunity</option>
-                  <option value="other">Other</option>
-                </select>
-                <span
-                  class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#8CB0FF] text-sm"
-                >
-                  ▼
-                </span>
-              </div>
-            </div>
+<div>
+  <label
+    class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium"
+    for="topic"
+  >
+    Topic *
+  </label>
+
+  <div class="relative">
+    <select
+      id="topic"
+      name="topic"
+      v-model="formData.topic"
+      required
+      class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 pr-10 text-sm text-white appearance-none focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444] cursor-pointer"
+    >
+      <option value="">Select a topic</option>
+      <option value="project">Start a custom project</option>
+      <option value="partnership">Explore a partnership</option>
+      <option value="career">Career opportunity</option>
+      <option value="other">Other</option>
+    </select>
+
+    <!-- Chevron icon (no FontAwesome, build-safe) -->
+    <svg
+      class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#8CB0FF]"
+      width="14"
+      height="14"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path
+        fill-rule="evenodd"
+        d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08z"
+        clip-rule="evenodd"
+      />
+    </svg>
+  </div>
+</div>
 
             <!-- Message -->
             <div>
