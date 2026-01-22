@@ -2,24 +2,9 @@
   <HeaderSection />
 
   <!-- HERO -->
-  <ContactHero
-    glowEffect="GlowBlue"
-    :content="[
-      {
-        tag: 'h1',
-        text: 'Let\\'s build something<br> meaningful — together.',
-        margin: 'mb-8',
-        html: true,
-      },
-      {
-        tag: 'p',
-        text: 'Whether you\\'re looking to launch a new product, align your brand, or join our team — we\\'d love to hear from you. Drop us a message and we\\'ll get back to you soon.',
-        margin: 'mb-0',
-      },
-    ]"
-  />
+  <ContactHero glowEffect="GlowBlue" :content="heroContent" />
 
-  <!-- ДВЕ КОЛОНКИ: слева копирайт, справа форма -->
+  <!-- TWO COLUMNS -->
   <TwoColumnsDesign
     sectionBgColor="bg-[#161616]"
     leftColumnBgColor="bg-[#161616]"
@@ -45,13 +30,13 @@
           "
         ></div>
 
-        <!-- контент поверх градиента -->
+        <!-- content -->
         <div class="relative z-[2] max-w-[600px] ml-auto pr-12">
           <h2 class="text-white text-3xl sm:text-4xl mb-10 font-bold">
             Talk to our team.
           </h2>
 
-          <!-- 2 карточки как в ConsultancySection -->
+          <!-- 2 cards (как ConsultancySection) -->
           <div class="space-y-10">
             <InfoCard
               title="Start a custom project"
@@ -59,9 +44,10 @@
             >
               <template #icon>
                 <img
-                  src="/assets/icons/document-code.svg"
+                  src="/assets/icons/box.svg"
                   alt=""
-                  class="w-6 h-6 select-none pointer-events-none mt-[2px]"
+                  class="w-9 h-9"
+                  loading="lazy"
                 />
               </template>
             </InfoCard>
@@ -72,15 +58,16 @@
             >
               <template #icon>
                 <img
-                  src="/assets/icons/people.svg"
+                  src="/assets/icons/messages.svg"
                   alt=""
-                  class="w-6 h-6 select-none pointer-events-none mt-[2px]"
+                  class="w-9 h-9"
+                  loading="lazy"
                 />
               </template>
             </InfoCard>
           </div>
 
-          <div class="mt-12">
+          <div class="mt-14">
             <p class="text-[#999999] text-sm leading-relaxed mb-2">
               We're based in Belgium and work globally.
             </p>
@@ -100,10 +87,14 @@
 
     <!-- RIGHT -->
     <template #right>
-      <div class="py-24 bg-[#161616] flex items-center justify-center">
-        <div class="max-w-[600px] w-full px-6">
+      <!-- relative + overlay mask to kill glow on the right column -->
+      <div class="relative py-24 bg-[#161616] flex items-center justify-center">
+        <!-- glow mask -->
+        <div class="absolute inset-0 bg-[#161616] z-0 pointer-events-none"></div>
+
+        <div class="relative z-10 max-w-[600px] w-full px-6">
           <form class="space-y-6" @submit.prevent="handleSubmit">
-            <!-- Заголовок формы -->
+            <!-- Header -->
             <div class="mb-8">
               <h2 class="text-white text-3xl font-bold mb-2">
                 Tell us how we can help
@@ -114,7 +105,7 @@
               </p>
             </div>
 
-            <!-- Сообщения об успехе / ошибке -->
+            <!-- Success / Error -->
             <div
               v-if="state.submitMessage"
               class="p-4 bg-green-600/15 border border-green-500/50 rounded-0 text-sm text-green-300"
@@ -128,7 +119,7 @@
               ✕ {{ state.submitError }}
             </div>
 
-            <!-- Ряд 1: Имя + Компания -->
+            <!-- Row 1 -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label
@@ -166,7 +157,7 @@
               </div>
             </div>
 
-            <!-- Ряд 2: Email + Телефон -->
+            <!-- Row 2 -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label
@@ -232,7 +223,7 @@
                 Topic *
               </label>
 
-              <div class="relative">
+              <div class="relative group">
                 <select
                   id="topic"
                   name="topic"
@@ -247,17 +238,22 @@
                   <option value="other">Other</option>
                 </select>
 
-                <!-- твой svg chevron -->
+                <!-- chevron like FA (no dependency) -->
                 <svg
-                  class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#999999]"
+                  class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#999999] transition-transform duration-200 group-focus-within:rotate-180"
                   width="18"
-                  height="14"
-                  viewBox="0 0 320 512"
-                  fill="currentColor"
+                  height="12"
+                  viewBox="0 0 24 14"
+                  fill="none"
                   aria-hidden="true"
                 >
                   <path
-                    d="M201.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 338.7 54.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"
+                    d="M2 2L12 12L22 2"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    opacity="0.9"
                   />
                 </svg>
               </div>
@@ -282,7 +278,7 @@
               ></textarea>
             </div>
 
-            <!-- Чекбокс -->
+            <!-- Consent -->
             <label class="flex items-start gap-3 cursor-pointer group">
               <input
                 type="checkbox"
@@ -298,7 +294,7 @@
               </span>
             </label>
 
-            <!-- Кнопка -->
+            <!-- Submit -->
             <button
               type="submit"
               :disabled="state.isSubmitting"
@@ -312,20 +308,30 @@
     </template>
   </TwoColumnsDesign>
 
-  <!-- Map Section -->
   <MapboxSection />
-
   <FooterSection />
 </template>
 
 <script setup>
 import { seoConfig, structuredData } from "~/config/seo";
 
-// если auto-import components выключен — оставь этот импорт
-import InfoCard from "~/components/ui/InfoCard.vue";
-
 const { formData, state, handleSubmit } = useContactForm();
 
+const heroContent = [
+  {
+    tag: "h1",
+    text: "Let's build something<br> meaningful — together.",
+    margin: "mb-8",
+    html: true,
+  },
+  {
+    tag: "p",
+    text: "Whether you're looking to launch a new product, align your brand, or join our team — we'd love to hear from you. Drop us a message and we'll get back to you soon.",
+    margin: "mb-0",
+  },
+];
+
+// SEO
 const siteUrl = useRuntimeConfig().public?.siteUrl;
 const seo = seoConfig.contact;
 
