@@ -17,58 +17,43 @@
     textColorleft="text-white"
     textColorRight="text-white"
   >
-<template #left>
-  <div class="relative overflow-hidden py-24 md:border-r border-[#636363] bg-[#161616]">
-    <!-- gradient только в нижнем правом углу левой колонки -->
-    <div
-      class="absolute pointer-events-none z-0 opacity-100"
-      style="
-        right: 0px;
-        bottom: 0px;
-        width: clamp(320px, 38vw, 560px);
-        height: clamp(320px, 38vw, 560px);
-        background-image: url('/assets/gradients/gradient_right_corner.svg');
-        background-repeat: no-repeat;
-        background-position: bottom right;
-        background-size: contain;
-      "
-    ></div>
+    <template #left>
+      <div class="py-24 md:border-r border-[#636363] bg-[#161616] relative">
+        <!-- градиент в нижнем левом углу -->
+        <div
+          class="absolute inset-0 pointer-events-none opacity-100 z-0"
+          style="
+            background-image: url('/assets/gradients/gradient_right_corner.svg');
+            background-size: cover;
+            background-position: bottom left;
+            background-repeat: no-repeat;
+          "
+        ></div>
 
-    <!-- контент поверх фона -->
-    <div class="relative z-10 max-w-[600px] ml-auto pr-12">
-      <h2 class="text-white text-3xl sm:text-4xl mb-6 font-bold">
-        Talk to our team.
-      </h2>
+        <!-- контент поверх градиента -->
+        <div class="relative z-10 max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
+          <h3 class="text-white text-lg mb-2">WHY YOU NEED FIGMA?</h3>
+          <h2 class="text-white text-4xl font-bold mb-4">
+            — design debt is real. So is handoff hell.
+          </h2>
+        </div>
+      </div>
+    </template>
 
-      <h3 class="text-white text-xl font-semibold mb-3 mt-8">
-        🧩 Start a custom project
-      </h3>
-      <p class="text-[#999999] text-sm leading-relaxed mb-6">
-        Let's discuss how SiteSynth can help your company design scalable
-        systems, ship faster, and elevate user experience.
-      </p>
-
-      <h3 class="text-white text-xl font-semibold mb-3 mt-8">
-        🤝 Explore a partnership
-      </h3>
-      <p class="text-[#999999] text-sm leading-relaxed mb-12">
-        Let's discuss how SiteSynth can help your company design scalable
-        systems, ship faster, and elevate user experience.
-      </p>
-
-      <p class="text-[#999999] text-sm leading-relaxed mb-2">
-        We're based in Belgium and work globally.
-      </p>
-      <p class="text-[#999999] text-sm leading-relaxed">
-        Prefer email? Reach us at
-        <a class="text-[#8CB0FF] hover:text-white transition" href="mailto:hello@sitesynth.com">
-          hello@sitesynth.com
-        </a>
-      </p>
-    </div>
-  </div>
-</template>
-
+    <template #right>
+      <div class="py-24 bg-[#161616]">
+        <div class="max-w-[600px] mr-auto px-6 md:px-0 md:pl-16">
+          <p class="text-white font-bold mb-4">
+            When teams move fast without systems, the result is chaos:
+            duplicated components, messy UX, endless revisions, and frustrated
+            developers.
+            <br />
+            We fix that by putting structure where it matters - in the product’s
+            foundation.
+          </p>
+        </div>
+      </div>
+    </template>
   </TwoColumnsDesign>
 
   <FigmaSection
