@@ -7,13 +7,13 @@
     :content="[
       {
         tag: 'h1',
-        text: 'Let\\'s build something<br> meaningful — together.',
+        text: `Let's build something<br> meaningful — together.`,
         margin: 'mb-8',
         html: true,
       },
       {
         tag: 'p',
-        text: 'Whether you\\'re looking to launch a new product, align your brand, or join our team — we\\'d love to hear from you. Drop us a message and we\\'ll get back to you soon.',
+        text: `Whether you're looking to launch a new product, align your brand, or join our team — we'd love to hear from you. Drop us a message and we'll get back to you soon.`,
         margin: 'mb-0',
       },
     ]"
@@ -198,6 +198,7 @@
               >
                 Topic *
               </label>
+
               <div class="relative">
                 <select
                   id="topic"
@@ -213,8 +214,8 @@
                   <option value="other">Other</option>
                 </select>
 
-                <!-- replaced ▼ with FontAwesome chevron (same as DesktopMenu) -->
-                <font-awesome
+                <!-- FontAwesome chevron вместо ▼ -->
+                <FontAwesomeIcon
                   :icon="['fas', 'chevron-down']"
                   class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#8CB0FF] text-sm"
                   aria-hidden="true"
@@ -278,6 +279,7 @@
 </template>
 
 <script setup>
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { seoConfig, structuredData } from "~/config/seo";
 
 const { formData, state, handleSubmit } = useContactForm();
@@ -285,6 +287,7 @@ const { formData, state, handleSubmit } = useContactForm();
 // SEO Configuration - using centralized config
 const siteUrl = useRuntimeConfig().public?.siteUrl;
 const seo = seoConfig.contact;
+
 useSeoMeta({
   title: seo.title,
   description: seo.description,
@@ -307,3 +310,4 @@ useHead({
   ],
 });
 </script>
+
