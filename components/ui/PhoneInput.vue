@@ -28,7 +28,7 @@ const props = defineProps({
     default: () => ({
       placeholder: "Enter phone",
       styleClasses:
-        "w-full bg-[#232323] border border-[#333] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-[#8CB0FF]",
+        "w-full bg-[#232323] border border-[#333] rounded-lg px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]",
     }),
   },
   dropdownOptions: {
@@ -75,6 +75,7 @@ const handleInput = (value, phoneObject) => {
   background-color: #232323 !important;
   border: 1px solid #333 !important;
   border-radius: 0.5rem 0 0 0.5rem !important;
+
   padding-left: 10px !important;
   padding-right: 12px !important; /* gives the arrow some air */
 }
@@ -140,7 +141,11 @@ const handleInput = (value, phoneObject) => {
   border: 1px solid #333 !important;
   border-radius: 0 0.5rem 0.5rem 0 !important;
   color: white !important;
-  padding: 0.75rem 1rem !important;
+
+  /* match your other inputs */
+  padding: 0.75rem 1rem !important; /* same as px-4 py-3 */
+  font-size: 0.875rem !important;   /* Tailwind text-sm */
+  line-height: 1.25rem !important;
 }
 
 .vue-tel-input .vti__input:focus {
@@ -151,6 +156,17 @@ const handleInput = (value, phoneObject) => {
 
 .vue-tel-input .vti__input::placeholder {
   color: #666666 !important;
+
+  /* force same placeholder size */
+  font-size: 0.875rem !important; /* Tailwind text-sm */
+  line-height: 1.25rem !important;
+}
+
+/* Also normalize selection text (dial code, etc.) */
+.vue-tel-input .vti__selection,
+.vue-tel-input .vti__dial-code {
+  font-size: 0.875rem !important; /* Tailwind text-sm */
+  line-height: 1.25rem !important;
 }
 
 /* Search inside dropdown */
@@ -161,6 +177,9 @@ const handleInput = (value, phoneObject) => {
   padding: 8px !important;
   margin: 8px !important;
   border-radius: 0.5rem !important;
+
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important;
 }
 
 .vue-tel-input .vti__search_box:focus {
@@ -168,3 +187,4 @@ const handleInput = (value, phoneObject) => {
   border-color: #8cb0ff !important;
 }
 </style>
+
