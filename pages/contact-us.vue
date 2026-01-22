@@ -32,7 +32,7 @@
 
         <!-- content -->
         <div class="relative z-[2] max-w-[600px] ml-auto pr-12">
-          <h2 class="text-white text-3xl font-bold mb-2">
+          <h2 class="text-white text-3xl font-bold mb-10">
             Let's see where we can start
           </h2>
 
