@@ -37,7 +37,7 @@ const props = defineProps({
     default: () => ({
       placeholder: "Enter phone",
       styleClasses:
-        "w-full bg-[#232323] border border-[#333] rounded-lg px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]",
+        "w-full bg-[#232323] border border-[#333] rounded-0 px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]",
     }),
   },
   dropdownOptions: {
