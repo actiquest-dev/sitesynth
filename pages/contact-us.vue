@@ -7,13 +7,13 @@
     :content="[
       {
         tag: 'h1',
-        text: `Let's build something<br> meaningful — together.`,
+        text: \"Let's build something<br> meaningful — together.\",
         margin: 'mb-8',
         html: true,
       },
       {
         tag: 'p',
-        text: `Whether you're looking to launch a new product, align your brand, or join our team — we'd love to hear from you. Drop us a message and we'll get back to you soon.`,
+        text: \"Whether you're looking to launch a new product, align your brand, or join our team — we'd love to hear from you. Drop us a message and we'll get back to you soon.\",
         margin: 'mb-0',
       },
     ]"
@@ -214,12 +214,21 @@
                   <option value="other">Other</option>
                 </select>
 
-                <!-- FontAwesome chevron вместо ▼ -->
-                <FontAwesomeIcon
-                  :icon="['fas', 'chevron-down']"
-                  class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#8CB0FF] text-sm"
+                <!-- Inline chevron (no FontAwesome, no build issues) -->
+                <svg
+                  class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#8CB0FF]"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
                   aria-hidden="true"
-                />
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
               </div>
             </div>
 
@@ -279,7 +288,6 @@
 </template>
 
 <script setup>
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { seoConfig, structuredData } from "~/config/seo";
 
 const { formData, state, handleSubmit } = useContactForm();
