@@ -101,13 +101,13 @@
             <!-- Сообщения об успехе / ошибке -->
             <div
               v-if="state.submitMessage"
-              class="p-4 bg-green-600/15 border border-green-500/50 rounded-lg text-sm text-green-300"
+              class="p-4 bg-green-600/15 border border-green-500/50 rounded-0 text-sm text-green-300"
             >
               ✓ {{ state.submitMessage }}
             </div>
             <div
               v-if="state.submitError"
-              class="p-4 bg-red-600/15 border border-red-500/50 rounded-lg text-sm text-red-300"
+              class="p-4 bg-red-600/15 border border-red-500/50 rounded-0 text-sm text-red-300"
             >
               ✕ {{ state.submitError }}
             </div>
@@ -128,7 +128,7 @@
                   v-model="formData.fullName"
                   placeholder="John Doe"
                   required
-                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]"
+                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-0 px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]"
                 />
               </div>
 
@@ -145,7 +145,7 @@
                   type="text"
                   v-model="formData.company"
                   placeholder="Your company"
-                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]"
+                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-0 px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]"
                 />
               </div>
             </div>
@@ -166,7 +166,7 @@
                   v-model="formData.email"
                   placeholder="hello@example.com"
                   required
-                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]"
+                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-0 px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]"
                 />
               </div>
 
@@ -185,7 +185,7 @@
                       id: 'phone',
                       name: 'phone',
                       class:
-                        'w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]',
+                        'w-full bg-[#1a1a1a] border border-[#333] rounded-0 px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]',
                     }"
                     :dropdown-options="{
                       showDialCodeInSelection: true,
@@ -200,7 +200,7 @@
                       name="phone"
                       placeholder="+1 (555) 000-0000"
                       v-model="formData.phone"
-                      class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]"
+                      class="w-full bg-[#1a1a1a] border border-[#333] rounded-0 px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444]"
                     />
                   </template>
                 </ClientOnly>
@@ -225,7 +225,7 @@
       name="topic"
       v-model="formData.topic"
       required
-      class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 pr-10 text-sm text-white appearance-none focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444] cursor-pointer"
+      class="w-full bg-[#1a1a1a] border border-[#333] rounded-0 px-4 py-3 pr-10 text-sm text-white appearance-none focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444] cursor-pointer"
     >
       <option value="">Select a topic</option>
       <option value="project">Start a custom project</option>
@@ -265,7 +265,7 @@
                 v-model="formData.message"
                 placeholder="Tell us more about your project..."
                 required
-                class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444] resize-none"
+                class="w-full bg-[#1a1a1a] border border-[#333] rounded-0 px-4 py-3 text-sm text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444] resize-none"
               ></textarea>
             </div>
 
@@ -289,7 +289,7 @@
             <button
               type="submit"
               :disabled="state.isSubmitting"
-              class="w-full px-6 py-3 border border-white rounded-lg text-sm font-semibold text-white bg-transparent hover:bg-white hover:text-black transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed mt-6"
+              class="w-full px-6 py-3 border border-white rounded-0 text-sm font-semibold text-white bg-transparent hover:bg-white hover:text-black transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed mt-6"
             >
               {{ state.isSubmitting ? "Sending..." : "Send Message" }}
             </button>
