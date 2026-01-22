@@ -236,7 +236,7 @@
 
     <!-- FontAwesome-like chevron-down (no FA dependency) -->
     <svg
-      class="topic-chevron pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#8CB0FF]"
+      class="topic-chevron pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#999999]"
       width="18"
       height="14"
       viewBox="0 0 320 512"
