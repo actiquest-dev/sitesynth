@@ -73,25 +73,20 @@
         </div>
       </div>
 
-      <!-- Right Column (Image) -->
-      <div
-        v-if="getCurrentImageSrc"
-        :class="`${imageClass} relative border-l border-[#636363]`"
-        :style="{ minHeight: containerHeight + 'px' }"
-      >
-        <transition name="image-fade" mode="out-in" appear>
-          <img
-            :key="getCurrentImageSrc"
-            :src="getCurrentImageSrc"
-            :alt="getCurrentImageAlt"
-            class="absolute inset-0 w-full h-full object-cover"
-            @load="updateContainerHeight"
-          />
-        </transition>
-      </div>
-    </div>
-  </section>
-</template>
+<!-- Right Column (Image) -->
+<div
+  v-if="getCurrentImageSrc"
+  class="relative border-t border-[#636363] md:border-t-0 md:border-l"
+>
+  <transition name="image-fade" mode="out-in" appear>
+    <img
+      :key="getCurrentImageSrc"
+      :src="getCurrentImageSrc"
+      :alt="getCurrentImageAlt"
+      class="w-full h-full block object-cover"
+    />
+  </transition>
+</div>
 
 <script setup>
 import { ref, computed } from "vue";
