@@ -1,4 +1,6 @@
 <template>
+  <HeaderSection />
+  
   <HeroGeneric
     glowEffect="GlowRed"
     backgroundImage="/assets/hero-scoresynth-bg.webp"
