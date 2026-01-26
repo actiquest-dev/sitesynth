@@ -4,49 +4,49 @@
     hoverborder="hover:border-[#AA3733]"
   />
   <HeroGeneric
-  glowEffect="GlowRed"
-  backgroundImage="/assets/hero-scoresynth-bg.webp"
-  backgroundPosition="bg-right-bottom"
-  :logo="{
-    src: '/assets/ScoreSynth.svg',
-    alt: 'ScoreSynth Logo',
-    class: 'h-20 w-auto',
-  }"
-  paddingClasses="paddingClasses="flex items-center justify-center h-[100vh]"
-  :content="[
-    { tag: 'h1', text: 'ScoreSynth', margin: 'mb-6' },
-    {
-      tag: 'h2',
-      text: 'Turn ideas into full scores. In minutes.',
-      margin: 'mb-8',
-    },
-    {
-      tag: 'p',
-      text: 'ScoreSynth is an AI-powered tool that transcribes, arranges, and scores music into professional orchestral sheet music — from just audio or MIDI input.',
-      margin: 'mb-0',
-    },
-  ]"
->
-  <template #media>
-    <div class="w-full flex justify-center mt-12">
-      <img
-        src="/assets/new-assets/products-page/product/score-synth/how-works/UiOverPattern.webp"
-        alt="ScoreSynth UI overview"
-        class="max-w-full h-auto"
-        loading="lazy"
-      />
-    </div>
-  </template>
-</HeroGeneric>
-  
-<ScoreSynthSection
+    glowEffect="GlowRed"
+    backgroundImage="/assets/hero-scoresynth-bg.webp"
+    backgroundPosition="bg-right-bottom"
+    :logo="{
+      src: '/assets/ScoreSynth.svg',
+      alt: 'ScoreSynth Logo',
+      class: 'h-20 w-auto',
+    }"
+    paddingClasses="pt-[10rem] flex flex-col"
+    :content="[
+      { tag: 'h1', text: 'ScoreSynth', margin: 'mb-6' },
+      {
+        tag: 'h2',
+        text: 'Turn ideas into full scores. In minutes.',
+        margin: 'mb-8',
+      },
+      {
+        tag: 'p',
+        text: 'ScoreSynth is an AI-powered tool that transcribes, arranges, and scores music into professional orchestral sheet music — from just audio or MIDI input.',
+        margin: 'mb-0',
+      },
+    ]"
+  >
+    <template #media>
+      <div class="w-full flex justify-center">
+        <img
+          src="/assets/new-assets/products-page/product/score-synth/how-works/UiOverPattern.webp"
+          alt="ScoreSynth UI overview"
+          class="max-w-full h-auto"
+          loading="lazy"
+        />
+      </div>
+    </template>
+  </HeroGeneric>
+
+  <ScoreSynthSection
     id="How ScoreSynth Works"
     title="How ScoreSynth Works"
     h3="From sound to score — in just a few steps."
     description="Whether you’re humming a melody, exporting a MIDI, or uploading a full demo track, ScoreSynth transforms your input into a professionally arranged orchestral score. Heres how:"
   />
 
-   <ProcessSection
+  <ProcessSection
     accentColor="text-[#AA3733]"
     imageClass="px-10 py-10"
     imageAlt="Synth"
@@ -101,8 +101,6 @@
     ]"
   />
 
-   
-  
   <TestimonialScoreSynth
     hoverbg="hover:bg-[#AA3733]"
     hoverborder="hover:border-[#AA3733]"
@@ -162,47 +160,50 @@
       </div>
     </template>
   </TwoColumnsDesign>
-  
+
   <ColumnsAndBackground
-  id="who-scoresynth-is-for"
-  title="Who ScoreSynth Is For:"
-  sectionClass="bg-[#161616] py-20"
-  backgroundImage="/assets/new-assets/products-page/product/score-synth/harmonie-van-bornem.webp"
-  :overlay="true"
-  :overlayOpacity="0.35"
-  :cards="[
-    {
-      iconSrc: '/assets/icons/icons-scoresynth/music-filter.svg',
-      title: 'Composers & Arrangers',
-      description: 'From piano sketches to full orchestration — in minutes.',
-    },
-    {
-      iconSrc: '/assets/icons/icons-scoresynth/microphone-2.svg',
-      title: 'Producers & Creators',
-      description: 'Generate string sections, cinematic textures, or jazz combos on demand.',
-    },
-    {
-      iconSrc: '/assets/icons/icons-scoresynth/music-edit.svg',
-      title: 'Publishers & Copyists',
-      description: 'Save time preparing, cleaning, and formatting music.',
-    },
-    {
-      iconSrc: '/assets/icons/icons-scoresynth/teacher.svg',
-      title: 'Educators & Students',
-      description: 'Create ensemble-ready arrangements for any skill level.',
-    },
-    {
-      iconSrc: '/assets/icons/icons-scoresynth/violin.svg',
-      title: 'Conductors & Ensembles',
-      description: 'Need parts for a non-standard group? SynthScore adapts to your setup.',
-    },
-    {
-      iconSrc: '/assets/icons/icons-scoresynth/love-music.svg',
-      title: 'Curious Hobbyists',
-      description: 'Not a pro? No problem. Play with ideas, hear them instantly, and learn by doing — no steep learning curve.',
-    },
-  ]"
-/>
+    id="who-scoresynth-is-for"
+    title="Who ScoreSynth Is For:"
+    sectionClass="bg-[#161616] py-20"
+    backgroundImage="/assets/new-assets/products-page/product/score-synth/harmonie-van-bornem.webp"
+    :overlay="true"
+    :overlayOpacity="0.35"
+    :cards="[
+      {
+        iconSrc: '/assets/icons/icons-scoresynth/music-filter.svg',
+        title: 'Composers & Arrangers',
+        description: 'From piano sketches to full orchestration — in minutes.',
+      },
+      {
+        iconSrc: '/assets/icons/icons-scoresynth/microphone-2.svg',
+        title: 'Producers & Creators',
+        description:
+          'Generate string sections, cinematic textures, or jazz combos on demand.',
+      },
+      {
+        iconSrc: '/assets/icons/icons-scoresynth/music-edit.svg',
+        title: 'Publishers & Copyists',
+        description: 'Save time preparing, cleaning, and formatting music.',
+      },
+      {
+        iconSrc: '/assets/icons/icons-scoresynth/teacher.svg',
+        title: 'Educators & Students',
+        description: 'Create ensemble-ready arrangements for any skill level.',
+      },
+      {
+        iconSrc: '/assets/icons/icons-scoresynth/violin.svg',
+        title: 'Conductors & Ensembles',
+        description:
+          'Need parts for a non-standard group? SynthScore adapts to your setup.',
+      },
+      {
+        iconSrc: '/assets/icons/icons-scoresynth/love-music.svg',
+        title: 'Curious Hobbyists',
+        description:
+          'Not a pro? No problem. Play with ideas, hear them instantly, and learn by doing — no steep learning curve.',
+      },
+    ]"
+  />
 
   <WhiteSection
     hover="#AA3733"
