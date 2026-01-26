@@ -28,7 +28,7 @@
         <img
           src="/assets/new-assets/products-page/product/score-synth/how-works/UiOverPattern.webp"
           alt="ScoreSynth UI overview"
-          class="w-full h-auto rounded-xl border border-white/15"
+          class="max-w-full h-auto"
           loading="lazy"
         />
       </div>
