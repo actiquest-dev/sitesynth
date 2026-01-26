@@ -12,7 +12,7 @@
     alt: 'ScoreSynth Logo',
     class: 'h-20 w-auto',
   }"
-  paddingClasses="flex items-center justify-center min-h-[calc(100vh-80px)]"
+  paddingClasses="flex flex-col justify-center min-h-[calc(100vh-80px)]"
   :content="[
     { tag: 'h1', text: 'ScoreSynth', margin: 'mb-6' },
     {
@@ -28,7 +28,7 @@
   ]"
 >
   <template #media>
-    <div class="w-full flex justify-center">
+    <div class="w-full flex justify-center mt-12">
       <img
         src="/assets/new-assets/products-page/product/score-synth/how-works/UiOverPattern.webp"
         alt="ScoreSynth UI overview"
