@@ -4,41 +4,41 @@
     hoverborder="hover:border-[#AA3733]"
   />
   <HeroGeneric
-    glowEffect="GlowRed"
-    backgroundImage="/assets/hero-scoresynth-bg.webp"
-    backgroundPosition="bg-right-bottom"
-    :logo="{
-      src: '/assets/ScoreSynth.svg',
-      alt: 'ScoreSynth Logo',
-      class: 'h-20 w-auto',
-    }"
-     paddingClasses="flex items-center justify-center h-[100vh] pt-[80px]"
-    :content="[
-      { tag: 'h1', text: 'ScoreSynth', margin: 'mb-6' },
-      {
-        tag: 'h2',
-        text: 'Turn ideas into full scores. In minutes.',
-        margin: 'mb-8',
-      },
-      {
-        tag: 'p',
-        text: 'ScoreSynth is an AI-powered tool that transcribes, arranges, and scores music into professional orchestral sheet music — from just audio or MIDI input.',
-        margin: 'mb-0',
-      },
-    ]"
-  >
-    <template #media>
-      <div class="w-full max-w-[880px]">
-        <img
-          src="/assets/new-assets/products-page/product/score-synth/how-works/UiOverPattern.webp"
-          alt="ScoreSynth UI overview"
-          class="max-w-full h-auto"
-          loading="lazy"
-        />
-      </div>
-    </template>
-  </HeroGeneric>
-
+  glowEffect="GlowRed"
+  backgroundImage="/assets/hero-scoresynth-bg.webp"
+  backgroundPosition="bg-right-bottom"
+  :logo="{
+    src: '/assets/ScoreSynth.svg',
+    alt: 'ScoreSynth Logo',
+    class: 'h-20 w-auto',
+  }"
+  paddingClasses="flex items-center justify-center min-h-[calc(100vh-80px)]"
+  :content="[
+    { tag: 'h1', text: 'ScoreSynth', margin: 'mb-6' },
+    {
+      tag: 'h2',
+      text: 'Turn ideas into full scores. In minutes.',
+      margin: 'mb-8',
+    },
+    {
+      tag: 'p',
+      text: 'ScoreSynth is an AI-powered tool that transcribes, arranges, and scores music into professional orchestral sheet music — from just audio or MIDI input.',
+      margin: 'mb-0',
+    },
+  ]"
+>
+  <template #media>
+    <div class="w-full flex justify-center">
+      <img
+        src="/assets/new-assets/products-page/product/score-synth/how-works/UiOverPattern.webp"
+        alt="ScoreSynth UI overview"
+        class="max-w-full h-auto"
+        loading="lazy"
+      />
+    </div>
+  </template>
+</HeroGeneric>
+  
   <ScoreSynthSection
     id="how-scoresynth-works"
     title="How ScoreSynth Works"
