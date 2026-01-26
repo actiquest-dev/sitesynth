@@ -32,6 +32,14 @@
             <span v-html="element.text"></span>
           </component>
         </div>
+
+        <!-- ✅ NEW: Media / Image slot -->
+        <div
+          v-if="$slots.media"
+          class="mt-12 flex justify-center"
+        >
+          <slot name="media" />
+        </div>
       </div>
     </div>
   </section>
@@ -48,20 +56,10 @@ const props = defineProps({
   logo: {
     type: Object,
     default: null,
-    // Structure: { src: String, alt?: String, class?: String }
   },
   content: {
     type: Array,
     required: true,
-    // Structure:
-    // [
-    //   {
-    //     tag: String,        // h1, h2, h3, h4, h5, h6, p, span, div
-    //     text: String,       // The content text
-    //     textColor?: String, // Custom text color (optional)
-    //     margin?: String     // Custom margin classes (optional)
-    //   }
-    // ]
   },
   glowEffect: {
     type: String,
@@ -81,7 +79,7 @@ const props = defineProps({
   },
 });
 
-// Computed style for background image
+// Background image style
 const backgroundImageStyle = computed(() => {
   if (props.backgroundImage) {
     return {
@@ -94,7 +92,7 @@ const backgroundImageStyle = computed(() => {
   return {};
 });
 
-// Function to get appropriate CSS classes based on tag
+// Text styles
 const getElementClasses = (tag, customTextColor) => {
   const textColor = customTextColor || "text-white";
 
@@ -118,14 +116,14 @@ const getElementClasses = (tag, customTextColor) => {
   }
 };
 
-// Dynamically load the glow component by name from the effects folder
+// Glow component loader
 const selectedGlowEffect = computed(() =>
   defineAsyncComponent(() =>
     import(`@/components/effects/${props.glowEffect}.vue`)
   )
 );
 
-// Function to get margin classes
+// Margins
 const getElementMargin = (customMargin) => {
   return customMargin || "mb-8";
 };
