@@ -37,10 +37,6 @@
           class="w-full h-auto rounded-xl border border-white/15"
           loading="lazy"
         />
-      </div>
-    </template>
-  </HeroGeneric>
-</template>
 
     <OneColumnImage
     glowEffect="GlowRed"
