@@ -3,6 +3,7 @@
     hoverbg="hover:bg-[#AA3733]"
     hoverborder="hover:border-[#AA3733]"
   />
+
   <HeroGeneric
     glowEffect="GlowRed"
     backgroundImage="/assets/hero-scoresynth-bg.webp"
@@ -26,7 +27,20 @@
         margin: 'mb-0',
       },
     ]"
-  />
+  >
+    <!-- Media slot -->
+    <template #media>
+      <div class="w-full max-w-[880px]">
+        <img
+          src="/assets/new-assets/products-page/product/score-synth/how-works/UiOverPattern.webp"
+          alt="ScoreSynth UI overview"
+          class="w-full h-auto rounded-xl border border-white/15"
+          loading="lazy"
+        />
+      </div>
+    </template>
+  </HeroGeneric>
+</template>
 
     <OneColumnImage
     glowEffect="GlowRed"
