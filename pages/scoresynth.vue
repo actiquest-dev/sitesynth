@@ -39,48 +39,70 @@
   </template>
 </HeroGeneric>
   
-  <ScoreSynthSection
-    id="how-scoresynth-works"
+<ScoreSynthSection
+    id="How ScoreSynth Works"
     title="How ScoreSynth Works"
     h3="From sound to score — in just a few steps."
-    description="Whether you’re humming a melody, exporting a MIDI, or uploading a full demo track, ScoreSynth transforms your input into a professionally arranged orchestral score."
+    description="Whether you’re humming a melody, exporting a MIDI, or uploading a full demo track, ScoreSynth transforms your input into a professionally arranged orchestral score. Heres how:"
   />
 
-  <ProcessSection
+   <ProcessSection
     accentColor="text-[#AA3733]"
     imageClass="px-10 py-10"
-    imageAlt="ScoreSynth process"
+    imageAlt="Synth"
     :images="[
-      { src: '/assets/new-assets/products-page/product/score-synth/accordion/upload-your-source.webp' },
-      { src: '/assets/new-assets/products-page/product/score-synth/accordion/ai-analyzes-separates-the-music.webp' },
-      { src: '/assets/new-assets/products-page/product/score-synth/accordion/transcription-into-digital-notes.webp' },
-      { src: '/assets/new-assets/products-page/product/score-synth/accordion/orchestration-with-intelligence.webp' },
-      { src: '/assets/new-assets/products-page/product/score-synth/accordion/ready-out-put.webp' },
+      {
+        src: '/assets/new-assets/products-page/product/score-synth/accordion/upload-your-source.webp',
+        alt: 'Discover - Business Goals Analysis',
+      },
+      {
+        src: '/assets/new-assets/products-page/product/score-synth/accordion/ai-analyzes-separates-the-music.webp',
+        alt: 'Define - Challenge Clarification',
+      },
+      {
+        src: '/assets/new-assets/products-page/product/score-synth/accordion/transcription-into-digital-notes.webp',
+        alt: 'Design - Systems and Flows',
+      },
+      {
+        src: '/assets/new-assets/products-page/product/score-synth/accordion/orchestration-with-intelligence.webp',
+        alt: 'Deliver - Design Implementation',
+      },
+      {
+        src: '/assets/new-assets/products-page/product/score-synth/accordion/ready-out-put.webp',
+        alt: 'Deliver - Design Implementation',
+      },
     ]"
     :sections="[
       {
         title: 'Upload your source',
-        description: 'MP3, WAV, MIDI, MusicXML, scanned sheet music, or text prompts.',
+        description:
+          'ScoreSynth accepts MP3, WAV, MIDI, MusicXML, or even scanned sheet music. You can also describe your request using a text prompt — or combine multiple songs for AI to arrange.',
       },
       {
-        title: 'AI analyzes & separates',
-        description: 'Source separation isolates musical layers.',
+        title: 'AI Analyzes & Separates the Music',
+        description:
+          'With AI source separation (Demucs), we isolate key musical layers so the system understands what each instrument or voice is doing.',
       },
       {
-        title: 'Transcription',
-        description: 'Audio and MIDI are converted into structured digital notation.',
+        title: 'Transcription into digital notes',
+        description:
+          'Our transcription engine (MT3) converts the input into structured digital notes, accurately reflecting melody, harmony, and timing.',
       },
       {
-        title: 'Orchestration',
-        description: 'Parts are assigned to real instruments with musical intent.',
+        title: 'Orchestration with intelligence',
+        description:
+          'ScoreSynth assigns parts to real instruments using a custom orchestration model. Just pick the ensemble type and difficulty — or describe what you want.',
       },
       {
-        title: 'Output',
-        description: 'Clean PDF and MusicXML, ready to play or edit.',
+        title: 'Output: Ready-to-use sheet music',
+        description:
+          'Get clean PDF and MusicXML files, ready for printing or editing. Every version includes AI playback so you can preview the arrangement.',
       },
     ]"
   />
 
+   
+  
   <TestimonialScoreSynth
     hoverbg="hover:bg-[#AA3733]"
     hoverborder="hover:border-[#AA3733]"
@@ -89,7 +111,7 @@
     personName="Mayya Aprosina"
     personTitle="CEO & Product Owner"
     quoteTitle="Bridging two worlds — music and technology."
-    quoteText="ScoreSynth brings musical ideas into clear, playable sheet music."
+    quoteText="I come from both worlds: digital product building and the craft of musical notation. ScoreSynth brings them together so anyone can turn an idea into clear, playable sheet music — starting today."
     ctaText="Get in touch"
     ctaLink="/contact-us"
     class="pb-[8rem] pt-[8rem]"
@@ -104,44 +126,83 @@
   >
     <template #left>
       <div class="py-24 md:border-r border-[#636363] bg-[#161616]">
-        <div class="max-w-[600px] ml-auto px-6 md:pr-16">
+        <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
           <h2 class="text-white text-3xl sm:text-4xl mb-6">
             From Musician to Builder.
           </h2>
-          <p class="text-[#999999] mb-4">
+          <p class="text-[#999999] text-normal font-light mb-4">
             Before founding SiteSynth, I was a musician.
           </p>
           <p class="text-[#999999]">
-            Conservatory training, orchestras, composers, arrangers — then
-            technology. ScoreSynth reconnects those worlds.
+            I studied at the conservatory, spent years immersed in orchestras,
+            and worked closely with composers, arrangers, and ensembles of all
+            shapes and sizes. And while I eventually moved into technology and
+            development, my passion for music never left.
+          </p>
+          <h3 class="text-white text-2xl mt-4 mb-4">
+            With SynthScore, we’re removing that barrier.
+          </h3>
+          <p class="text-[#999999] text-normal font-light">
+            It’s not just software — it’s a bridge. A way to unify creativity
+            and accessibility. Whether you're a professional composer or a
+            hobbyist with a melody in your head, SynthScore helps turn that
+            spark into something performable — fast.
           </p>
         </div>
       </div>
     </template>
 
     <template #right>
-      <img
-        src="/assets/new-assets/products-page/product/score-synth/about.webp"
-        alt="ScoreSynth background"
-        class="h-full w-full object-cover"
-      />
+      <div>
+        <img
+          src="/assets/new-assets/products-page/product/score-synth/about.webp"
+          alt="ScoreSynth Image"
+          class="h-full w-full object-cover"
+        />
+      </div>
     </template>
   </TwoColumnsDesign>
-
+  
   <ColumnsAndBackground
-    id="who-scoresynth-is-for"
-    title="Who ScoreSynth Is For"
-    sectionClass="bg-[#161616] py-20"
-    backgroundImage="/assets/new-assets/products-page/product/score-synth/harmonie-van-bornem.webp"
-    :overlay="true"
-    :overlayOpacity="0.35"
-    :cards="[
-      { title: 'Composers & Arrangers', description: 'From sketches to full scores.' },
-      { title: 'Producers & Creators', description: 'Generate orchestral textures.' },
-      { title: 'Educators & Students', description: 'Ensemble-ready arrangements.' },
-      { title: 'Ensembles', description: 'Adapt scores to real performers.' },
-    ]"
-  />
+  id="who-scoresynth-is-for"
+  title="Who ScoreSynth Is For:"
+  sectionClass="bg-[#161616] py-20"
+  backgroundImage="/assets/new-assets/products-page/product/score-synth/harmonie-van-bornem.webp"
+  :overlay="true"
+  :overlayOpacity="0.35"
+  :cards="[
+    {
+      iconSrc: '/assets/icons/icons-scoresynth/music-filter.svg',
+      title: 'Composers & Arrangers',
+      description: 'From piano sketches to full orchestration — in minutes.',
+    },
+    {
+      iconSrc: '/assets/icons/icons-scoresynth/microphone-2.svg',
+      title: 'Producers & Creators',
+      description: 'Generate string sections, cinematic textures, or jazz combos on demand.',
+    },
+    {
+      iconSrc: '/assets/icons/icons-scoresynth/music-edit.svg',
+      title: 'Publishers & Copyists',
+      description: 'Save time preparing, cleaning, and formatting music.',
+    },
+    {
+      iconSrc: '/assets/icons/icons-scoresynth/teacher.svg',
+      title: 'Educators & Students',
+      description: 'Create ensemble-ready arrangements for any skill level.',
+    },
+    {
+      iconSrc: '/assets/icons/icons-scoresynth/violin.svg',
+      title: 'Conductors & Ensembles',
+      description: 'Need parts for a non-standard group? SynthScore adapts to your setup.',
+    },
+    {
+      iconSrc: '/assets/icons/icons-scoresynth/love-music.svg',
+      title: 'Curious Hobbyists',
+      description: 'Not a pro? No problem. Play with ideas, hear them instantly, and learn by doing — no steep learning curve.',
+    },
+  ]"
+/>
 
   <WhiteSection
     hover="#AA3733"
@@ -150,7 +211,7 @@
     bgInside="bg-[#161616]"
     textColor="text-white"
     title="Get Started Today"
-    description="Turn musical ideas into readable, playable scores."
+    description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you're becoming."
     primaryText="Start a Project"
     primaryLink="/contact-us"
     secondaryText="Book a Call"
@@ -158,21 +219,19 @@
     glowEffect="GlowRed"
     gradientImage="/assets/gradients/gradient-for-banner-section-red.svg"
   />
-
   <FooterSection />
 </template>
 
 <script setup>
 import { seoConfig, structuredData } from "~/config/seo";
 
+// SEO Configuration - using centralized config
 const siteUrl = useRuntimeConfig().public?.siteUrl;
 const seo = seoConfig.scoresynth;
-
 useSeoMeta({
   title: seo.title,
   description: seo.description,
   keywords: seo.keywords,
-
   ogTitle: seo.ogTitle,
   ogDescription: seo.ogDescription,
   ogImage: `${siteUrl}/assets/shareimage.png`,
