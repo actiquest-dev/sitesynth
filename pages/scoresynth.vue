@@ -46,60 +46,66 @@
     description="Whether you’re humming a melody, exporting a MIDI, or uploading a full demo track, ScoreSynth transforms your input into a professionally arranged orchestral score. Heres how:"
   />
 
-  <SectionsProcessSectionScoreSynth
-    accentColor="text-[#AA3733]"
-    imageClass="px-10 py-10"
-    imageAlt="Synth"
-    :images="[
-      {
-        src: '/assets/new-assets/products-page/product/score-synth/accordion/upload-your-source.webp',
-        alt: 'Discover - Business Goals Analysis',
-      },
-      {
-        src: '/assets/new-assets/products-page/product/score-synth/accordion/ai-analyzes-separates-the-music.webp',
-        alt: 'Define - Challenge Clarification',
-      },
-      {
-        src: '/assets/new-assets/products-page/product/score-synth/accordion/transcription-into-digital-notes.webp',
-        alt: 'Design - Systems and Flows',
-      },
-      {
-        src: '/assets/new-assets/products-page/product/score-synth/accordion/orchestration-with-intelligence.webp',
-        alt: 'Deliver - Design Implementation',
-      },
-      {
-        src: '/assets/new-assets/products-page/product/score-synth/accordion/ready-out-put.webp',
-        alt: 'Deliver - Design Implementation',
-      },
-    ]"
-    :sections="[
-      {
-        title: 'Upload your source',
-        description:
-          'ScoreSynth accepts MP3, WAV, MIDI, MusicXML, or even scanned sheet music. You can also describe your request using a text prompt — or combine multiple songs for AI to arrange.',
-      },
-      {
-        title: 'AI Analyzes & Separates the Music',
-        description:
-          'With AI source separation (Demucs), we isolate key musical layers so the system understands what each instrument or voice is doing.',
-      },
-      {
-        title: 'Transcription into digital notes',
-        description:
-          'Our transcription engine (MT3) converts the input into structured digital notes, accurately reflecting melody, harmony, and timing.',
-      },
-      {
-        title: 'Orchestration with intelligence',
-        description:
-          'ScoreSynth assigns parts to real instruments using a custom orchestration model. Just pick the ensemble type and difficulty — or describe what you want.',
-      },
-      {
-        title: 'Output: Ready-to-use sheet music',
-        description:
-          'Get clean PDF and MusicXML files, ready for printing or editing. Every version includes AI playback so you can preview the arrangement.',
-      },
-    ]"
-  />
+ <ScoreSynthSection
+  id="how-scoresynth-works"
+  title="How ScoreSynth Works"
+  h3="From sound to score — in just a few steps."
+  description="Whether you’re humming a melody, exporting a MIDI, or uploading a full demo track, ScoreSynth transforms your input into a professionally arranged orchestral score. Here's how:"
+/>
+
+<ProcessSectionScoreSynth
+  accentColor="text-[#AA3733]"
+  imageAlt="Synth"
+  :images="[
+    {
+      src: '/assets/new-assets/products-page/product/score-synth/accordion/upload-your-source.webp',
+      alt: 'Upload your source',
+    },
+    {
+      src: '/assets/new-assets/products-page/product/score-synth/accordion/ai-analyzes-separates-the-music.webp',
+      alt: 'AI analyzes and separates the music',
+    },
+    {
+      src: '/assets/new-assets/products-page/product/score-synth/accordion/transcription-into-digital-notes.webp',
+      alt: 'Transcription into digital notes',
+    },
+    {
+      src: '/assets/new-assets/products-page/product/score-synth/accordion/orchestration-with-intelligence.webp',
+      alt: 'Orchestration with intelligence',
+    },
+    {
+      src: '/assets/new-assets/products-page/product/score-synth/accordion/ready-out-put.webp',
+      alt: 'Ready output',
+    },
+  ]"
+  :sections="[
+    {
+      title: 'Upload your source',
+      description:
+        'ScoreSynth accepts MP3, WAV, MIDI, MusicXML, or even scanned sheet music. You can also describe your request using a text prompt — or combine multiple songs for AI to arrange.',
+    },
+    {
+      title: 'AI Analyzes & Separates the Music',
+      description:
+        'With AI source separation (Demucs), we isolate key musical layers so the system understands what each instrument or voice is doing.',
+    },
+    {
+      title: 'Transcription into digital notes',
+      description:
+        'Our transcription engine (MT3) converts the input into structured digital notes, accurately reflecting melody, harmony, and timing.',
+    },
+    {
+      title: 'Orchestration with intelligence',
+      description:
+        'ScoreSynth assigns parts to real instruments using a custom orchestration model. Just pick the ensemble type and difficulty — or describe what you want.',
+    },
+    {
+      title: 'Output: Ready-to-use sheet music',
+      description:
+        'Get clean PDF and MusicXML files, ready for printing or editing. Every version includes AI playback so you can preview the arrangement.',
+    },
+  ]"
+/>
 
   <TestimonialScoreSynth
     hoverbg="hover:bg-[#AA3733]"
