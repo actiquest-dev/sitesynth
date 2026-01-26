@@ -1,6 +1,8 @@
 <template>
-  <HeaderSection />
-  
+  <HeaderSection
+    hoverbg="hover:bg-[#AA3733]"
+    hoverborder="hover:border-[#AA3733]"
+  />
   <HeroGeneric
     glowEffect="GlowRed"
     backgroundImage="/assets/hero-scoresynth-bg.webp"
