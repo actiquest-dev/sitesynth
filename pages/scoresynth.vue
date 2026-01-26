@@ -1,9 +1,4 @@
 <template>
-  <HeaderSection
-    hoverbg="hover:bg-[#AA3733]"
-    hoverborder="hover:border-[#AA3733]"
-  />
-
   <HeroGeneric
     glowEffect="GlowRed"
     backgroundImage="/assets/hero-scoresynth-bg.webp"
@@ -28,7 +23,6 @@
       },
     ]"
   >
-    <!-- Media slot -->
     <template #media>
       <div class="w-full max-w-[880px]">
         <img
@@ -37,6 +31,11 @@
           class="w-full h-auto rounded-xl border border-white/15"
           loading="lazy"
         />
+      </div>
+    </template>
+  </HeroGeneric>
+</template>
+
 
     <OneColumnImage
     glowEffect="GlowRed"
