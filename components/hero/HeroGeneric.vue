@@ -1,4 +1,4 @@
-<template>
+<template> 
   <section
     :id="id || undefined"
     class="relative bg-[#161616] text-white group overflow-hidden bg-cover bg-no-repeat"
