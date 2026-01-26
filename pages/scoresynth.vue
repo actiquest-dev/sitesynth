@@ -12,7 +12,7 @@
     alt: 'ScoreSynth Logo',
     class: 'h-20 w-auto',
   }"
-  paddingClasses="flex flex-col justify-center min-h-[calc(100vh-80px)]"
+  paddingClasses="paddingClasses="flex items-center justify-center h-[100vh]"
   :content="[
     { tag: 'h1', text: 'ScoreSynth', margin: 'mb-6' },
     {
