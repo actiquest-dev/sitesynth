@@ -8,7 +8,11 @@
     <component :is="selectedGlowEffect" />
     <ParticleEffect />
 
-    <div class="relative max-w-[1248px] mx-auto px-6" :class="paddingClasses">
+    <div
+      class="relative max-w-[1248px] mx-auto px-6"
+      :class="paddingClasses"
+    >
+      <!-- TEXT BLOCK -->
       <div class="text-center px-6 max-w-4xl mx-auto">
         <!-- Logo -->
         <div v-if="logo" class="mb-8 flex justify-center">
@@ -32,14 +36,14 @@
             <span v-html="element.text"></span>
           </component>
         </div>
+      </div>
 
-        <!-- ✅ NEW: Media / Image slot -->
-        <div
-          v-if="$slots.media"
-          class="max-w-full h-auto"
-        >
-          <slot name="media" />
-        </div>
+      <!-- MEDIA BLOCK (OUTSIDE text container) -->
+      <div
+        v-if="$slots.media"
+        class="mt-12 w-full flex justify-center"
+      >
+        <slot name="media" />
       </div>
     </div>
   </section>
