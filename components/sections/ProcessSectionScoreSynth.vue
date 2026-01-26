@@ -52,14 +52,21 @@
         </div>
       </div>
 
-      <!-- Right Image (full-bleed) -->
-      <div class="border-t border-[#636363] md:border-t-0">
-        <img
-          :src="rightImgSrc"
-          :alt="rightImgAlt"
-          class="w-full h-full block object-cover"
-        />
+      <!-- Right Column (Image) -->
+      <div
+        v-if="getCurrentImageSrc"
+        class="relative border-t border-[#636363] md:border-t-0 md:border-l"
+      >
+        <transition name="image-fade" mode="out-in" appear>
+          <img
+            :key="getCurrentImageSrc"
+            :src="getCurrentImageSrc"
+            :alt="getCurrentImageAlt"
+            class="w-full h-full block object-cover"
+          />
+        </transition>
       </div>
+
     </div>
   </section>
 </template>
