@@ -46,7 +46,7 @@
     description="Whether you’re humming a melody, exporting a MIDI, or uploading a full demo track, ScoreSynth transforms your input into a professionally arranged orchestral score. Heres how:"
   />
 
-  <SectionsProcessSectionScoreSynth
+  <ProcessSectionScoreSynth
     accentColor="text-[#AA3733]"
     imageClass="px-10 py-10"
     imageAlt="Synth"
