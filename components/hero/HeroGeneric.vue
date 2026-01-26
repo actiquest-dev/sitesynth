@@ -36,7 +36,7 @@
         <!-- ✅ NEW: Media / Image slot -->
         <div
           v-if="$slots.media"
-          class="mt-12 flex justify-center"
+          class="max-w-full h-auto"
         >
           <slot name="media" />
         </div>
