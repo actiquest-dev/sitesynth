@@ -39,13 +39,6 @@
     </template>
   </HeroGeneric>
 
-  <ScoreSynthSection
-    id="How ScoreSynth Works"
-    title="How ScoreSynth Works"
-    h3="From sound to score — in just a few steps."
-    description="Whether you’re humming a melody, exporting a MIDI, or uploading a full demo track, ScoreSynth transforms your input into a professionally arranged orchestral score. Heres how:"
-  />
-
  <ScoreSynthSection
   id="how-scoresynth-works"
   title="How ScoreSynth Works"
