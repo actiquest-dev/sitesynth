@@ -88,12 +88,14 @@
           :src="getCurrentImageSrc"
           :alt="getCurrentImageAlt"
           class="absolute inset-0 w-full h-full object-cover"
-        />
-      </transition>
+       />
+            </transition>
+          </div>
+        </div>
+      </div>
+
     </div>
-  </div>
-</div>
-</section>
+  </section>
 </template>
 
 <script setup>
