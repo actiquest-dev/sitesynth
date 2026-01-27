@@ -90,7 +90,8 @@
     </transition>
    </div>
   </div>
- </section>
+ </div>
+</section>
 </template>
 
 <script setup>
