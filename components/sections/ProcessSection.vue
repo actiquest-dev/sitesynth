@@ -76,24 +76,23 @@
 <!-- Right Column (Image) -->
 <div
   v-if="getCurrentImageSrc"
-  :class="[
-    'relative md:border-l md:border-[#636363]',
-    openIndex !== -1 ? 'border-t border-[#636363] md:border-t-0' : 'border-t-0'
-  ]"
+  class="relative md:border-l md:border-[#636363]"
 >
-  <!-- FIXED IMAGE VIEWPORT -->
-  <div class="relative w-full h-[420px] md:h-[520px] overflow-hidden">
-    <transition name="image-swap" mode="out-in">
-      <img
-        :key="getCurrentImageSrc"
-        :src="getCurrentImageSrc"
-        :alt="getCurrentImageAlt"
-        class="absolute inset-0 w-full h-full object-cover"
-      />
-    </transition>
-   </div>
+  <!-- вертикальный отступ для линии -->
+  <div class="pt-6 md:pt-0">
+    <!-- фиксированный viewport картинки -->
+    <div class="relative w-full h-[420px] md:h-[520px] overflow-hidden">
+      <transition name="image-swap" mode="out-in">
+        <img
+          :key="getCurrentImageSrc"
+          :src="getCurrentImageSrc"
+          :alt="getCurrentImageAlt"
+          class="absolute inset-0 w-full h-full object-cover"
+        />
+      </transition>
+    </div>
   </div>
- </div>
+</div>
 </section>
 </template>
 
