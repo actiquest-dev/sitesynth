@@ -74,23 +74,24 @@
       </div>
 
       <!-- Right Column (Image) -->
-      <div
-        v-if="getCurrentImageSrc"
-        :class="`${imageClass} relative border-l border-[#636363]`"
-        :style="{ minHeight: containerHeight + 'px' }"
-      >
-        <transition name="image-fade" mode="out-in" appear>
-          <img
-            :key="getCurrentImageSrc"
-            :src="getCurrentImageSrc"
-            :alt="getCurrentImageAlt"
-            class="absolute inset-0 w-full h-full object-cover"
-            @load="updateContainerHeight"
-          />
-        </transition>
-      </div>
-    </div>
-  </section>
+<!-- Right Column (Image) -->
+<div
+  v-if="getCurrentImageSrc"
+  class="relative border-l border-[#636363]"
+>
+  <!-- FIXED IMAGE VIEWPORT -->
+  <div class="relative w-full h-[420px] md:h-[520px] overflow-hidden">
+    <transition name="image-swap" mode="out-in">
+      <img
+        :key="getCurrentImageSrc"
+        :src="getCurrentImageSrc"
+        :alt="getCurrentImageAlt"
+        class="absolute inset-0 w-full h-full object-cover"
+      />
+    </transition>
+  </div>
+</div>
+</section>
 </template>
 
 <script setup>
@@ -161,18 +162,20 @@ const getCurrentImageAlt = computed(() => {
 </script>
 
 <style scoped>
-.image-fade-enter-active,
-.image-fade-leave-active {
-  transition: opacity 0.5s ease-in-out;
+.image-swap-enter-active,
+.image-swap-leave-active {
+  transition:
+    opacity 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.image-fade-enter-from,
-.image-fade-leave-to {
+.image-swap-enter-from {
   opacity: 0;
+  transform: translateY(6px) scale(0.985);
 }
 
-.image-fade-enter-to,
-.image-fade-leave-from {
-  opacity: 1;
+.image-swap-leave-to {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.985);
 }
 </style>
