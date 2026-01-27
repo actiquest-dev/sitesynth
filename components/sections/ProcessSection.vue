@@ -76,7 +76,10 @@
 <!-- Right Column (Image) -->
 <div
   v-if="getCurrentImageSrc"
-  class="relative border-l border-[#636363]"
+  :class="[
+    'relative md:border-l md:border-[#636363]',
+    openIndex !== -1 ? 'border-t border-[#636363] md:border-t-0' : 'border-t-0'
+  ]"
 >
   <!-- FIXED IMAGE VIEWPORT -->
   <div class="relative w-full h-[420px] md:h-[520px] overflow-hidden">
