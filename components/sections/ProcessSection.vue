@@ -73,7 +73,6 @@
         </div>
       </div>
 
-      <!-- Right Column (Image) -->
 <!-- Right Column (Image) -->
 <div
   v-if="getCurrentImageSrc"
@@ -89,9 +88,9 @@
         class="absolute inset-0 w-full h-full object-cover"
       />
     </transition>
+   </div>
   </div>
-</div>
-</section>
+ </section>
 </template>
 
 <script setup>
