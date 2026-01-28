@@ -22,18 +22,25 @@
       </div>
 
       <!-- Таблетки -->
-      <div class="mt-12 flex flex-wrap justify-center gap-4 max-w-3xl mx-auto">
+      <div class="mt-10 sm:mt-12 flex flex-wrap justify-center gap-2 sm:gap-4 max-w-3xl mx-auto">
         <div
           v-for="(tag, index) in tags"
           :key="index"
           :style="{ '--i': index }"
           :class="[
-            'group tag-pill cursor-default border-[2px] rounded-full p-[3px]',
+            'group tag-pill cursor-default rounded-full',
+            // ✅ mobile compact
+            'border p-[2px]',
+            // ✅ desktop as before
+            'sm:border-[2px] sm:p-[3px]',
             tag.strokeClass,
           ]"
         >
           <div
-            class="tag-pill-inner rounded-full bg-[#161616] px-12 py-2 text-lg font-medium text-white/90 transition-all duration-300 group-hover:bg-[#181818]"
+            class="tag-pill-inner rounded-full bg-[#161616]
+                   px-4 py-1 text-sm
+                   sm:px-12 sm:py-2 sm:text-lg
+                   font-medium text-white/90 transition-all duration-300 group-hover:bg-[#181818]"
           >
             {{ tag.label }}
           </div>
@@ -44,28 +51,18 @@
 </template>
 
 <script setup>
-import { computed, defineAsyncComponent } from "vue";
-import ParticleEffect from "@/components/effects/ParticleEffect.vue";
+import { computed, defineAsyncComponent } from "vue"
+import ParticleEffect from "@/components/effects/ParticleEffect.vue"
 
 const props = defineProps({
-  content: {
-    type: Array,
-    required: true,
-  },
-  glowEffect: {
-    type: String,
-    default: "GlowBlue",
-  },
-});
+  content: { type: Array, required: true },
+  glowEffect: { type: String, default: "GlowBlue" },
+})
 
-// динамический импорт glow-эффекта
 const selectedGlowEffect = computed(() =>
-  defineAsyncComponent(() =>
-    import(`@/components/effects/${props.glowEffect}.vue`)
-  )
-);
+  defineAsyncComponent(() => import(`@/components/effects/${props.glowEffect}.vue`))
+)
 
-// таблетки под заголовком (value-пилюли SiteSynth)
 const tags = [
   { label: "Product-First", strokeClass: "stroke-blue" },
   { label: "Design-Led", strokeClass: "stroke-white" },
@@ -75,59 +72,35 @@ const tags = [
   { label: "Transparent Scope", strokeClass: "stroke-purple" },
   { label: "Clean Handoff", strokeClass: "stroke-white" },
   { label: "AI-Ready Stack", strokeClass: "stroke-red" },
-];
+]
 
-// стили текста (как в HeroGeneric)
 const getClasses = (tag) => {
   switch (tag) {
     case "h1":
-      return "text-4xl sm:text-5xl font-extrabold leading-tight";
+      return "text-4xl sm:text-5xl font-extrabold leading-tight"
     case "h2":
-      return "text-3xl sm:text-4xl font-bold";
+      return "text-3xl sm:text-4xl font-bold"
     case "p":
-      return "text-base sm:text-lg text-[#d4d4d4]";
+      return "text-base sm:text-lg text-[#d4d4d4]"
     default:
-      return "text-white";
+      return "text-white"
   }
-};
+}
 </script>
 
 <style scoped>
-.stroke-blue {
-  border-color: #0900ff;
-  border-style: solid;
-}
+.stroke-blue { border-color: #0900ff; border-style: solid; }
+.stroke-purple { border-color: #7b38fc; border-style: solid; }
+.stroke-magenta { border-color: #a620ff; border-style: solid; }
+.stroke-red { border-color: #aa3733; border-style: solid; }
+.stroke-white { border-color: #ffffff; border-style: solid; }
 
-.stroke-purple {
-  border-color: #7b38fc;
-  border-style: solid;
-}
-
-.stroke-magenta {
-  border-color: #a620ff;
-  border-style: solid;
-}
-
-.stroke-red {
-  border-color: #aa3733;
-  border-style: solid;
-}
-
-.stroke-white {
-  border-color: #ffffff;
-  border-style: solid;
-}
-
-/* ---------- ТАБЛЕТКИ БЕЗ АНИМАЦИИ УГЛОВ ---------- */
-
-/* Внешняя оболочка таблетки */
 .tag-pill {
   border-radius: 9999px;
   transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Внутренняя часть: круглая + появление */
 .tag-pill-inner {
   border-radius: 9999px;
   opacity: 0;
@@ -140,7 +113,13 @@ const getClasses = (tag) => {
   animation-delay: calc(var(--i) * 90ms);
 }
 
-/* Hover: только поднимается и меняет фон */
+/* ✅ mobile: no infinite pulse */
+@media (max-width: 639px) {
+  .tag-pill-inner {
+    animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+}
+
 .tag-pill:hover {
   transform: translateY(-3px);
   box-shadow: 0 0 18px rgba(144, 144, 255, 0.32);
@@ -152,28 +131,15 @@ const getClasses = (tag) => {
   transform: translateY(0);
 }
 
-/* Плавное появление */
 @keyframes fadeUp {
-  0% {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
-/* Мягкий пульс */
 @keyframes softPulse {
-  0% {
-    box-shadow: 0 0 0 rgba(144, 144, 255, 0);
-  }
-  50% {
-    box-shadow: 0 0 14px rgba(144, 144, 255, 0.22);
-  }
-  100% {
-    box-shadow: 0 0 0 rgba(144, 144, 255, 0);
-  }
+  0% { box-shadow: 0 0 0 rgba(144, 144, 255, 0); }
+  50% { box-shadow: 0 0 14px rgba(144, 144, 255, 0.22); }
+  100% { box-shadow: 0 0 0 rgba(144, 144, 255, 0); }
 }
 </style>
+
