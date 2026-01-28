@@ -1,13 +1,9 @@
 <template>
   <section class="relative bg-[#161616] text-white overflow-hidden">
-    <!-- Glow-эффект -->
     <component :is="selectedGlowEffect" />
-
-    <!-- Частицы / звёзды -->
     <ParticleEffect />
 
     <div class="relative max-w-[1248px] mx-auto px-6 pt-48 pb-24">
-      <!-- Заголовок + подпись -->
       <div class="text-center max-w-4xl mx-auto">
         <div
           v-for="(item, index) in content"
@@ -22,15 +18,15 @@
       </div>
 
       <!-- Таблетки -->
-      <div class="mt-10 sm:mt-12 flex flex-wrap justify-center gap-2 sm:gap-4 max-w-3xl mx-auto">
+      <div class="mt-10 sm:mt-12 flex flex-wrap justify-center gap-3 sm:gap-4 max-w-3xl mx-auto">
         <div
           v-for="(tag, index) in tags"
           :key="index"
           :style="{ '--i': index }"
           :class="[
             'group tag-pill cursor-default rounded-full',
-            // ✅ mobile compact
-            'border p-[2px]',
+            // ✅ mobile (bigger + thicker)
+            'border-[2px] p-[3px]',
             // ✅ desktop as before
             'sm:border-[2px] sm:p-[3px]',
             tag.strokeClass,
@@ -38,7 +34,7 @@
         >
           <div
             class="tag-pill-inner rounded-full bg-[#161616]
-                   px-4 py-1 text-sm
+                   px-6 py-[6px] text-[15px]
                    sm:px-12 sm:py-2 sm:text-lg
                    font-medium text-white/90 transition-all duration-300 group-hover:bg-[#181818]"
           >
@@ -113,7 +109,6 @@ const getClasses = (tag) => {
   animation-delay: calc(var(--i) * 90ms);
 }
 
-/* ✅ mobile: no infinite pulse */
 @media (max-width: 639px) {
   .tag-pill-inner {
     animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
