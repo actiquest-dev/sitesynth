@@ -48,10 +48,10 @@
                 </div>
               </div>
 
-              <!-- CTA button (GOST) -->
+              <!-- CTA button (desktop: like testimonial size) -->
               <span
                 class="shrink-0 inline-flex items-center justify-center text-center font-semibold
-                       w-[260px] h-11 px-6
+                       h-11 px-10 text-sm
                        bg-[#161616] text-white border border-[#161616]
                        transition-colors duration-[1000ms]
                        hover:bg-[#8D35FF] hover:border-[#8D35FF]"
@@ -69,10 +69,10 @@
                 {{ job.description }}
               </div>
 
-              <!-- CTA button (GOST) -->
+              <!-- CTA button (mobile: full width) -->
               <span
-                class="mt-6 inline-flex items-center justify-center text-center font-semibold
-                       w-full max-w-[260px] h-11 px-6
+                class="mt-6 inline-flex items-center justify-center w-full text-center font-semibold
+                       h-11 px-6 text-base
                        bg-[#161616] text-white border border-[#161616]
                        transition-colors duration-[1000ms]
                        hover:bg-[#8D35FF] hover:border-[#8D35FF]"
@@ -104,7 +104,6 @@
 
             <!-- DESKTOP ROW -->
             <div class="relative z-10 hidden md:flex items-center h-[140px]">
-              <!-- LEFT IMAGE -->
               <div class="h-full w-[220px] flex items-stretch">
                 <img
                   :src="job.image"
@@ -113,7 +112,6 @@
                 />
               </div>
 
-              <!-- TEXT -->
               <div class="flex-1 px-12">
                 <div class="text-white text-2xl font-semibold leading-tight">
                   {{ job.title }}
@@ -123,7 +121,6 @@
                 </div>
               </div>
 
-              <!-- RIGHT ICON -->
               <div class="w-[180px] flex items-center justify-center">
                 <span class="text-[#636363] group-hover:text-white transition-colors duration-200">
                   <i class="fa fa-chevron-right transition-transform duration-200 group-hover:translate-x-1"></i>
@@ -206,4 +203,3 @@ const onLeave = (e) => {
   filter: blur(60px);
 }
 </style>
-
