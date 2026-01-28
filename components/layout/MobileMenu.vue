@@ -25,7 +25,6 @@
             />
           </div>
 
-          <!-- Submenu -->
           <transition name="fade">
             <div v-if="openSubmenus[index]">
               <div class="mt-3 flex flex-col space-y-2">
@@ -41,6 +40,7 @@
             </div>
           </transition>
         </template>
+
         <template v-else>
           <NuxtLink
             :to="item.link"
@@ -52,10 +52,13 @@
       </div>
     </nav>
 
-    <!-- CTA BUTTON -->
+    <!-- CTA BUTTON (mobile full width, white, dark border, purple hover) -->
     <NuxtLink
       :to="cta.link"
-      class="button btn-2 px-4 py-2 text-white font-semibold"
+      class="inline-flex items-center justify-center font-semibold transition-colors duration-[1000ms]
+             w-full max-w-sm h-11 px-6
+             bg-white text-[#161616] border border-[#161616]
+             hover:bg-[#8D35FF] hover:border-[#8D35FF] hover:text-white"
     >
       <span>{{ cta.text }}</span>
     </NuxtLink>
@@ -79,53 +82,32 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref } from "vue"
 
-defineProps({ menuOpen: Boolean });
+defineProps({ menuOpen: Boolean })
 
-const openSubmenus = ref({});
+const openSubmenus = ref({})
 function toggleSubmenu(index) {
-  openSubmenus.value[index] = !openSubmenus.value[index];
+  openSubmenus.value[index] = !openSubmenus.value[index]
 }
 
-// NAVIGATION
 const navItems = [
   {
     label: "Product",
     link: "#",
     subItems: [
-      {
-        imageSrc: "/assets/score-synth.svg",
-        label: "ScoreSynth",
-        link: "/scoresynth/",
-      },
-      {
-        imageSrc: "/assets/membria.svg",
-        label: "Membria",
-        link: "https://membria.ai/",
-        target: "_blank",
-      },
-      {
-        imageSrc: "/assets/ai-live-pod.svg",
-        label: "AI Live Pod",
-        link: "https://ailivepod.framer.website/product",
-        target: "_blank",
-      },
+      { imageSrc: "/assets/score-synth.svg", label: "ScoreSynth", link: "/scoresynth/" },
+      { imageSrc: "/assets/membria.svg", label: "Membria", link: "https://membria.ai/", target: "_blank" },
+      { imageSrc: "/assets/ai-live-pod.svg", label: "AI Live Pod", link: "https://ailivepod.framer.website/product", target: "_blank" },
     ],
   },
   {
     label: "Solutions",
     link: "#",
     subItems: [
-      {
-        label: "Brand-Driven Product Strategy",
-        link: "/brand-driven-product-strategy",
-      },
+      { label: "Brand-Driven Product Strategy", link: "/brand-driven-product-strategy" },
       { label: "UX & Design Systems", link: "/ux-and-design-system" },
-      {
-        label: "Development Support & Execution",
-        link: "/full-stack-implementation",
-      },
+      { label: "Development Support & Execution", link: "/full-stack-implementation" },
       { label: "AI-Powered Workflows & Innovation", link: "/ai-innovation" },
     ],
   },
@@ -141,49 +123,20 @@ const navItems = [
     label: "Opportunities",
     link: "#",
     subItems: [
-      {
-        label: "Full Stack Developer",
-        link: "/careers/full-stack-developer",
-      },
-      {
-        label: "UX/UI Designer",
-        link: "/careers/ux-ui-designer",
-      },
-      {
-        label: "Marketing Manager",
-        link: "/careers/marketing-manager",
-      },
+      { label: "Full Stack Developer", link: "/careers/full-stack-developer" },
+      { label: "UX/UI Designer", link: "/careers/ux-ui-designer" },
+      { label: "Marketing Manager", link: "/careers/marketing-manager" },
     ],
   },
-];
+]
 
-// CTA
-const cta = { text: "Get started", link: "/contact-us" };
+const cta = { text: "Get started", link: "/contact-us" }
 
-// SOCIAL ICONS
 const socials = [
-  {
-    name: "LinkedIn",
-    url: "https://www.linkedin.com/company/sitesynth/",
-    icon: ["fab", "linkedin"],
-    hoverBg: "hover:bg-[#0A66C2]",
-    target: "_blank",
-  },
-  {
-    name: "X",
-    url: "https://x.com/sitesynth/",
-    icon: ["fab", "twitter"],
-    hoverBg: "hover:bg-[#26a7de]",
-    target: "_blank",
-  },
-  {
-    name: "Mail",
-    url: "mailto:hello@sitesynth.com",
-    icon: ["fas", "envelope"],
-    hoverBg: "hover:bg-[#CB1620]",
-    target: "_blank",
-  },
-];
+  { name: "LinkedIn", url: "https://www.linkedin.com/company/sitesynth/", icon: ["fab", "linkedin"], hoverBg: "hover:bg-[#0A66C2]", target: "_blank" },
+  { name: "X", url: "https://x.com/sitesynth/", icon: ["fab", "twitter"], hoverBg: "hover:bg-[#26a7de]", target: "_blank" },
+  { name: "Mail", url: "mailto:hello@sitesynth.com", icon: ["fas", "envelope"], hoverBg: "hover:bg-[#CB1620]", target: "_blank" },
+]
 </script>
 
 <style scoped>
