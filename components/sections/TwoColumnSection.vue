@@ -24,9 +24,9 @@
         <div
           :class="[
             'flex flex-col justify-center relative z-10',
-            // ✅ mobile padding (fix)
-            'px-8 py-10',
-            // ✅ keep your existing prop padding for md+
+            // ✅ mobile only padding (desktop unchanged)
+            'px-8 py-10 md:px-0 md:py-0',
+            // keep existing padding props (as before)
             leftPadding,
           ].join(' ')"
         >
@@ -78,9 +78,9 @@
         <div
           :class="[
             'flex flex-col justify-center items-center relative z-10',
-            // ✅ mobile padding (fix)
-            'px-8 pb-10',
-            // ✅ keep your existing prop padding for md+
+            // ✅ mobile only padding (desktop unchanged)
+            'px-8 pb-10 md:px-0 md:pb-0',
+            // keep existing padding props (as before)
             rightPadding,
           ].join(' ')"
         >
@@ -99,6 +99,7 @@
 defineProps({
   id: { type: String, default: "" },
 
+  // по умолчанию как было
   sectionClass: { type: String, default: "pb-40" },
 
   leftContent: { type: Object, required: true },
