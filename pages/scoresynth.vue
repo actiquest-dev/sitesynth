@@ -17,7 +17,7 @@
       { tag: 'h1', text: 'ScoreSynth', margin: 'mb-6' },
       {
         tag: 'h2',
-        text: 'Turn ideas into full scores. In minutes.',
+        text: 'Turn ideas into full scores, In minutes',
         margin: 'mb-8',
       },
       {
@@ -42,7 +42,7 @@
  <ScoreSynthSection
   id="how-scoresynth-works"
   title="How ScoreSynth Works"
-  h3="From sound to score — in just a few steps."
+  h3="From sound to score — in just a few steps"
   description="Whether you’re humming a melody, exporting a MIDI, or uploading a full demo track, ScoreSynth transforms your input into a professionally arranged orchestral score. Here's how:"
 />
 
@@ -107,7 +107,7 @@
     imageSrc="/assets/new-assets/people-for-CTA/oval-mayya-red.png"
     personName="Mayya Aprosina"
     personTitle="CEO & Product Owner"
-    quoteTitle="Bridging two worlds — music and technology."
+    quoteTitle="Bridging two worlds — music and technology"
     quoteText="I come from both worlds: digital product building and the craft of musical notation. ScoreSynth brings them together so anyone can turn an idea into clear, playable sheet music — starting today."
     ctaText="Get in touch"
     ctaLink="/contact-us"
@@ -125,10 +125,10 @@
       <div class="py-24 md:border-r border-[#636363] bg-[#161616]">
         <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
           <h2 class="text-white text-3xl sm:text-4xl mb-6">
-            From Musician to Builder.
+            From Musician to Builder
           </h2>
           <p class="text-[#999999] text-normal font-light mb-4">
-            Before founding SiteSynth, I was a musician.
+            Before founding SiteSynth, I was a musician
           </p>
           <p class="text-[#999999]">
             I studied at the conservatory, spent years immersed in orchestras,
@@ -137,7 +137,7 @@
             development, my passion for music never left.
           </p>
           <h3 class="text-white text-2xl mt-4 mb-4">
-            With SynthScore, we’re removing that barrier.
+            With SynthScore, we’re removing that barrier
           </h3>
           <p class="text-[#999999] text-normal font-light">
             It’s not just software — it’s a bridge. A way to unify creativity
