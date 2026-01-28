@@ -65,9 +65,12 @@
                 {{ job.description }}
               </div>
 
+              <!-- CTA button: "by our GOST" -->
               <span
-                class="mt-6 block w-full text-center bg-[#161616] text-white py-4 text-base font-semibold
-                       border border-[#161616] transition-colors duration-200 active:bg-[#333333]"
+                class="mt-6 inline-flex items-center justify-center w-full h-11 px-6 text-center font-semibold
+                       bg-white text-[#161616] border border-[#161616]
+                       transition-colors duration-[1000ms]
+                       hover:bg-[#8D35FF] hover:border-[#8D35FF] hover:text-white"
               >
                 {{ job.linkText || "Apply" }}
               </span>
@@ -88,9 +91,7 @@
             @mouseleave="onLeave"
           >
             <!-- mouse-follow glow -->
-            <div
-              class="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-            >
+            <div class="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200">
               <div class="glow" />
             </div>
 
@@ -149,39 +150,39 @@ const props = defineProps({
   id: { type: String, default: "" },
   backgroundColor: { type: String, default: "bg-[#161616]" },
   jobs: { type: Array, required: true },
-});
+})
 
 const isCta = (job) => {
-  const bg = String(job.bgColor || "").toLowerCase();
-  const link = String(job.link || "");
-  return bg.includes("dddddd") || link.startsWith("mailto:");
-};
+  const bg = String(job.bgColor || "").toLowerCase()
+  const link = String(job.link || "")
+  return bg.includes("dddddd") || link.startsWith("mailto:")
+}
 
 // mouse-follow glow (per hovered row)
 const setPos = (el, x, y) => {
-  el.style.setProperty("--mx", `${x}px`);
-  el.style.setProperty("--my", `${y}px`);
-};
+  el.style.setProperty("--mx", `${x}px`)
+  el.style.setProperty("--my", `${y}px`)
+}
 
 const onEnter = (e) => {
-  const el = e.currentTarget;
-  const rect = el.getBoundingClientRect();
-  setPos(el, rect.width / 2, rect.height / 2);
-};
+  const el = e.currentTarget
+  const rect = el.getBoundingClientRect()
+  setPos(el, rect.width / 2, rect.height / 2)
+}
 
 const onMove = (e) => {
-  const el = e.currentTarget;
-  const rect = el.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  setPos(el, x, y);
-};
+  const el = e.currentTarget
+  const rect = el.getBoundingClientRect()
+  const x = e.clientX - rect.left
+  const y = e.clientY - rect.top
+  setPos(el, x, y)
+}
 
 const onLeave = (e) => {
-  const el = e.currentTarget;
-  const rect = el.getBoundingClientRect();
-  setPos(el, rect.width / 2, rect.height / 2);
-};
+  const el = e.currentTarget
+  const rect = el.getBoundingClientRect()
+  setPos(el, rect.width / 2, rect.height / 2)
+}
 </script>
 
 <style scoped>
