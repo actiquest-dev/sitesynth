@@ -48,15 +48,19 @@
                 </div>
               </div>
 
+              <!-- CTA button (GOST) -->
               <span
-                class="shrink-0 bg-[#161616] text-white px-10 py-3 text-sm font-semibold
-                       border border-[#161616] transition-colors duration-200 hover:bg-[#333333]"
+                class="shrink-0 inline-flex items-center justify-center text-center font-semibold
+                       w-[260px] h-11 px-6
+                       bg-[#161616] text-white border border-[#161616]
+                       transition-colors duration-[1000ms]
+                       hover:bg-[#8D35FF] hover:border-[#8D35FF]"
               >
                 {{ job.linkText || "Apply" }}
               </span>
             </div>
 
-            <!-- MOBILE CTA layout (как в референсе) -->
+            <!-- MOBILE CTA layout -->
             <div class="relative z-10 md:hidden p-6">
               <div class="text-[#161616] text-3xl font-semibold leading-tight">
                 {{ job.title }}
@@ -65,12 +69,13 @@
                 {{ job.description }}
               </div>
 
-              <!-- CTA button: "by our GOST" -->
+              <!-- CTA button (GOST) -->
               <span
-                class="mt-6 inline-flex items-center justify-center w-full h-11 px-6 text-center font-semibold
-                       bg-white text-[#161616] border border-[#161616]
+                class="mt-6 inline-flex items-center justify-center text-center font-semibold
+                       w-full max-w-[260px] h-11 px-6
+                       bg-[#161616] text-white border border-[#161616]
                        transition-colors duration-[1000ms]
-                       hover:bg-[#8D35FF] hover:border-[#8D35FF] hover:text-white"
+                       hover:bg-[#8D35FF] hover:border-[#8D35FF]"
               >
                 {{ job.linkText || "Apply" }}
               </span>
@@ -91,13 +96,15 @@
             @mouseleave="onLeave"
           >
             <!-- mouse-follow glow -->
-            <div class="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <div
+              class="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+            >
               <div class="glow" />
             </div>
 
             <!-- DESKTOP ROW -->
             <div class="relative z-10 hidden md:flex items-center h-[140px]">
-              <!-- LEFT IMAGE (flush left, чуть меньше) -->
+              <!-- LEFT IMAGE -->
               <div class="h-full w-[220px] flex items-stretch">
                 <img
                   :src="job.image"
@@ -124,7 +131,7 @@
               </div>
             </div>
 
-            <!-- MOBILE ROW (картинки нет, как ты просила) -->
+            <!-- MOBILE ROW -->
             <div class="relative z-10 md:hidden p-8">
               <div class="text-white text-4xl font-semibold leading-tight">
                 {{ job.title }}
