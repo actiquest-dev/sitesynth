@@ -14,8 +14,7 @@
         <div
           class="absolute inset-0 pointer-events-none opacity-100"
           :style="{
-            backgroundImage:
-              'url(/assets/gradients/gradient-for-banner-section.svg)',
+            backgroundImage: 'url(/assets/gradients/gradient-for-banner-section.svg)',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
@@ -23,9 +22,7 @@
         ></div>
 
         <!-- Left Column (1/3) -->
-        <div
-          class="flex flex-col justify-center items-center text-center relative z-10"
-        >
+        <div class="flex flex-col justify-center items-center text-center relative z-10">
           <img
             :src="imageSrc"
             :alt="personName"
@@ -36,14 +33,8 @@
         </div>
 
         <!-- Right Column (2/3) -->
-        <div
-          class="md:col-span-2 flex flex-col justify-center px-6 relative z-10"
-        >
-          <font-awesome
-            icon="quote-left"
-            class="text-6xl"
-            :class="quoteColor"
-          />
+        <div class="md:col-span-2 flex flex-col justify-center px-6 relative z-10">
+          <font-awesome icon="quote-left" class="text-6xl" :class="quoteColor" />
 
           <h3 class="text-4xl font-black text-white mt-4 mb-6">
             {{ quoteTitle }}
@@ -52,7 +43,18 @@
 
           <a
             :href="ctaLink"
-            :class="`border-[1px] border-white ${hoverbg} hover:text-white ${hoverborder} bg-white text-[#161616] mt-6 w-auto max-w-max px-4 py-2 font-semibold transition-colors duration-[1000ms]`"
+            :class="[
+              // base: match your preferred CTA style
+              'border border-white bg-white text-[#161616] font-semibold transition-colors duration-[1000ms] inline-flex items-center justify-center',
+              // mobile: consistent sizing
+              'w-full h-11 px-6 mt-6',
+              // sm+: keep your existing desktop behavior
+              'sm:w-auto sm:max-w-max sm:px-4 sm:py-2',
+              // existing hover behavior
+              hoverbg,
+              hoverborder,
+              'hover:text-white',
+            ].join(' ')"
           >
             <span>{{ ctaText }}</span>
           </a>
@@ -63,13 +65,10 @@
 </template>
 
 <script setup>
-import { computed, resolveComponent } from "vue";
+import { computed, resolveComponent } from "vue"
 
 const props = defineProps({
-  id: {
-    type: String,
-    default: "",
-  },
+  id: { type: String, default: "" },
   imageSrc: String,
   personName: String,
   personTitle: String,
@@ -77,28 +76,15 @@ const props = defineProps({
   quoteText: String,
   ctaText: String,
   ctaLink: String,
-  glowEffect: {
-    type: String,
-    default: "GlowEffect",
-  },
-  quoteColor: {
-    type: String,
-    default: "text-[#A620FF]",
-  },
-  hoverbg: {
-    type: String,
-    default: "hover:bg-[#8D35FF]",
-  },
-  hoverborder: {
-    type: String,
-    default: "hover:border-[#8D35FF]",
-  },
-});
+  glowEffect: { type: String, default: "GlowEffect" },
+  quoteColor: { type: String, default: "text-[#A620FF]" },
+  hoverbg: { type: String, default: "hover:bg-[#8D35FF]" },
+  hoverborder: { type: String, default: "hover:border-[#8D35FF]" },
+})
 
 const selectedGlowEffect = computed(() => {
-  if (props.glowEffect === "GlowRed") {
-    return resolveComponent("GlowRed");
-  }
-  return resolveComponent("GlowEffect");
-});
+  if (props.glowEffect === "GlowRed") return resolveComponent("GlowRed")
+  return resolveComponent("GlowEffect")
+})
 </script>
+
