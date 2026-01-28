@@ -13,19 +13,16 @@
         <div
           class="absolute inset-0 pointer-events-none opacity-100"
           :style="{
-            backgroundImage: 'url(/assets/gradients/gradient-for-banner-section.svg)',
+            backgroundImage:
+              'url(/assets/gradients/gradient-for-banner-section.svg)',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
           }"
         ></div>
 
-        <!-- Left Column (mobile divider line) -->
-        <div
-          :class="`flex flex-col justify-center ${leftPadding} relative z-10
-                   border-b border-[#636363] md:border-b-0
-                   pb-10 md:pb-0`"
-        >
+        <!-- Left Column -->
+        <div :class="`flex flex-col justify-center ${leftPadding} relative z-10`">
           <div class="flex items-center gap-4 mb-6">
             <img
               :src="leftContent.image.src"
