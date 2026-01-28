@@ -176,7 +176,7 @@
       image: {
         src: '/assets/new-assets/home-page/home/cta/score-synth-feature-image.webp',
         alt: 'AI Development Process',
-        class: 'w-full h-auto rounded-lg',
+        class: 'w-full h-auto rounded-0',
       },
     }"
   />
