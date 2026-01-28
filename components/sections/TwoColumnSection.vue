@@ -13,7 +13,8 @@
         <div
           class="absolute inset-0 pointer-events-none opacity-100"
           :style="{
-            backgroundImage: 'url(/assets/gradients/gradient-for-banner-section.svg)',
+            backgroundImage:
+              'url(/assets/gradients/gradient-for-banner-section.svg)',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
@@ -21,15 +22,7 @@
         ></div>
 
         <!-- Left Column -->
-        <div
-          :class="[
-            'flex flex-col justify-center relative z-10',
-            // ✅ mobile only padding (desktop unchanged)
-            'px-8 py-10 md:px-0 md:py-0',
-            // keep existing padding props (as before)
-            leftPadding,
-          ].join(' ')"
-        >
+        <div :class="`flex flex-col justify-center ${leftPadding} relative z-10`">
           <div class="flex items-center gap-4 mb-6">
             <img
               :src="leftContent.image.src"
@@ -76,13 +69,7 @@
 
         <!-- Right Column -->
         <div
-          :class="[
-            'flex flex-col justify-center items-center relative z-10',
-            // ✅ mobile only padding (desktop unchanged)
-            'px-8 pb-10 md:px-0 md:pb-0',
-            // keep existing padding props (as before)
-            rightPadding,
-          ].join(' ')"
+          :class="`flex flex-col justify-center items-center ${rightPadding} relative z-10`"
         >
           <img
             :src="rightContent.image.src"
