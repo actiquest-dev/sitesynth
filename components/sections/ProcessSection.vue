@@ -4,9 +4,8 @@
     class="border-b border-t border-[#636363] bg-[#161616]"
   >
     <div class="max-w-[1248px] mx-auto px-6 grid grid-cols-1 md:grid-cols-2">
-
-      <!-- LEFT COLUMN (Accordion) -->
-      <div class="my-auto pr-12 md:border-r md:border-[#636363]">
+      <!-- Left Column (Expandable Sections) -->
+      <div class="my-auto pr-12">
         <div
           v-for="(section, index) in sections"
           :key="index"
@@ -25,13 +24,13 @@
             {{ section.title }}
             <span
               v-if="openIndex !== index"
-              :class="`${accentColor} transition-opacity duration-300`"
+              :class="`${accentColor} toggle-btn transition-opacity duration-300`"
             >
               +
             </span>
           </h3>
 
-          <!-- Accordion body -->
+          <!-- Плавная анимация как у GitHub -->
           <div
             :ref="(el) => setContentRef(el, index)"
             class="overflow-hidden transition-[max-height,opacity,transform] duration-300 ease-out"
@@ -42,9 +41,7 @@
                   : '0px',
               opacity: openIndex === index ? 1 : 0,
               transform:
-                openIndex === index
-                  ? 'translateY(0)'
-                  : 'translateY(-4px)',
+                openIndex === index ? 'translateY(0)' : 'translateY(-4px)',
             }"
           >
             <p class="text-[#999999] mt-2">
@@ -70,24 +67,28 @@
 
               <div
                 class="absolute bottom-0 left-0 h-[2px] bg-[#8CB0FF] w-0 group-hover/link:w-full transition-all duration-300"
-              />
+              ></div>
             </a>
           </div>
         </div>
       </div>
 
-      <!-- RIGHT COLUMN (Image) -->
-      <div v-if="getCurrentImageSrc" class="relative">
-        <!-- фиксированный viewport -->
-        <div class="pt-6 md:pt-0">
-          <div class="relative w-full h-[420px] md:h-[520px] overflow-hidden">
-            <transition name="image-swap" mode="out-in">
-              <img
-                :key="getCurrentImageSrc"
-                :src="getCurrentImageSrc"
-                :alt="getCurrentImageAlt"
-                class="absolute inset-0 w-full h-full object-cover"
-              />
+<!-- Right Column (Image) -->
+<div
+  v-if="getCurrentImageSrc"
+  class="relative md:border-l md:border-[#636363]"
+>
+  <!-- вертикальный отступ для линии -->
+  <div class="pt-6 md:pt-0">
+    <!-- фиксированный viewport картинки -->
+    <div class="relative w-full h-[420px] md:h-[520px] overflow-hidden">
+      <transition name="image-swap" mode="out-in">
+        <img
+          :key="getCurrentImageSrc"
+          :src="getCurrentImageSrc"
+          :alt="getCurrentImageAlt"
+          class="absolute inset-0 w-full h-full object-cover"
+       />
             </transition>
           </div>
         </div>
@@ -105,16 +106,11 @@ const props = defineProps({
     type: String,
     default: "",
   },
-  sections: {
-    type: Array,
-    required: true,
-  },
-  images: {
-    type: Array,
-    default: () => [],
-  },
+  sections: Array,
   imageSrc: String,
   imageAlt: String,
+  imageClass: String,
+  images: Array,
   accentColor: {
     type: String,
     default: "text-[#8CB0FF]",
@@ -122,8 +118,12 @@ const props = defineProps({
 });
 
 const openIndex = ref(0);
+const containerHeight = ref(400);
+
+// высоты контента аккордеона
 const contentHeights = ref([]);
 
+// запоминаем реальные высоты блоков
 function setContentRef(el, idx) {
   if (el) {
     contentHeights.value[idx] = el.scrollHeight;
@@ -131,19 +131,35 @@ function setContentRef(el, idx) {
 }
 
 function toggle(idx) {
+  // как на GitHub: повторный клик закрывает
   openIndex.value = openIndex.value === idx ? -1 : idx;
 }
 
+function updateContainerHeight(event) {
+  const img = event.target;
+  const naturalHeight = img.naturalHeight;
+  const naturalWidth = img.naturalWidth;
+  const containerWidth = img.offsetWidth;
+
+  const scaledHeight = (naturalHeight / naturalWidth) * containerWidth;
+
+  if (scaledHeight > containerHeight.value) {
+    containerHeight.value = scaledHeight;
+  }
+}
+
 const getCurrentImageSrc = computed(() => {
-  if (props.images?.length) {
-    return props.images[openIndex.value]?.src || props.images[0]?.src;
+  if (props.images && props.images.length > 0) {
+    const currentImage = props.images[openIndex.value] || props.images[0];
+    return currentImage ? currentImage.src : null;
   }
   return props.imageSrc || null;
 });
 
 const getCurrentImageAlt = computed(() => {
-  if (props.images?.length) {
-    return props.images[openIndex.value]?.alt || "";
+  if (props.images && props.images.length > 0) {
+    const currentImage = props.images[openIndex.value] || props.images[0];
+    return currentImage ? currentImage.alt : "";
   }
   return props.imageAlt || "";
 });
