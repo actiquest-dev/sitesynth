@@ -6,7 +6,7 @@
     <!-- grid full width -->
     <div class="grid grid-cols-1 md:grid-cols-2">
       <!-- LEFT COLUMN -->
-      <div class="py-12 md:border-r border-[#636363] min-w-0">
+      <div class="py-12 md:border-r border-[#636363]">
         <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-12">
           <div
             v-for="(section, index) in sections"
@@ -33,7 +33,6 @@
                 +
               </span>
             </h3>
-
             <!-- Accordion body -->
             <div
               :ref="(el) => setContentRef(el, index)"
