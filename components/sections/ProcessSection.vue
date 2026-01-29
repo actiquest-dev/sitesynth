@@ -5,17 +5,19 @@
   >
     <div class="max-w-[1248px] mx-auto px-6 grid grid-cols-1 md:grid-cols-2">
       <!-- Left Column (Expandable Sections) -->
-      <div class="my-auto pr-12">
+      <div class="my-auto pr-0 md:pr-12">
         <div
           v-for="(section, index) in sections"
           :key="index"
-          class="toggle-section group border-t border-[#636363] pt-5 mt-4"
+          class="toggle-section group border-t border-[#636363] pt-5 mt-4
+                 -mx-6 px-6 md:mx-0 md:px-0"
           :class="index === 0 ? 'border-t-0' : ''"
         >
           <h3
             @click="toggle(index)"
             :class="[
-              'flex items-center justify-between cursor-pointer transition-colors duration-200',
+              'w-full flex items-center justify-between cursor-pointer transition-colors duration-200',
+              'py-3 md:py-0',
               openIndex === index
                 ? 'text-white text-2xl font-bold'
                 : 'text-[#636363] text-2xl font-semibold group-hover:text-white',
@@ -30,7 +32,7 @@
             </span>
           </h3>
 
-          <!-- Плавная анимация как у GitHub -->
+          <!-- Smooth accordion -->
           <div
             :ref="(el) => setContentRef(el, index)"
             class="overflow-hidden transition-[max-height,opacity,transform] duration-300 ease-out"
@@ -73,103 +75,70 @@
         </div>
       </div>
 
-<!-- Right Column (Image) -->
-<div
-  v-if="getCurrentImageSrc"
-  class="relative md:border-l md:border-[#636363]"
->
-  <!-- вертикальный отступ для линии -->
-  <div class="pt-6 md:pt-0">
-    <!-- фиксированный viewport картинки -->
-    <div class="relative w-full h-[420px] md:h-[520px] overflow-hidden">
-      <transition name="image-swap" mode="out-in">
-        <img
-          :key="getCurrentImageSrc"
-          :src="getCurrentImageSrc"
-          :alt="getCurrentImageAlt"
-          class="absolute inset-0 w-full h-full object-cover"
-       />
+      <!-- Right Column (Image) -->
+      <div v-if="getCurrentImageSrc" class="relative md:border-l md:border-[#636363]">
+        <div class="pt-6 md:pt-0">
+          <div class="relative w-full h-[420px] md:h-[520px] overflow-hidden">
+            <transition name="image-swap" mode="out-in">
+              <img
+                :key="getCurrentImageSrc"
+                :src="getCurrentImageSrc"
+                :alt="getCurrentImageAlt"
+                class="absolute inset-0 w-full h-full object-cover"
+              />
             </transition>
           </div>
         </div>
       </div>
-
     </div>
   </section>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed } from "vue"
 
 const props = defineProps({
-  id: {
-    type: String,
-    default: "",
-  },
+  id: { type: String, default: "" },
   sections: Array,
   imageSrc: String,
   imageAlt: String,
   imageClass: String,
   images: Array,
-  accentColor: {
-    type: String,
-    default: "text-[#8CB0FF]",
-  },
-});
+  accentColor: { type: String, default: "text-[#8CB0FF]" },
+})
 
-const openIndex = ref(0);
-const containerHeight = ref(400);
+const openIndex = ref(0)
+const contentHeights = ref([])
 
-// высоты контента аккордеона
-const contentHeights = ref([]);
-
-// запоминаем реальные высоты блоков
 function setContentRef(el, idx) {
-  if (el) {
-    contentHeights.value[idx] = el.scrollHeight;
-  }
+  if (el) contentHeights.value[idx] = el.scrollHeight
 }
 
 function toggle(idx) {
-  // как на GitHub: повторный клик закрывает
-  openIndex.value = openIndex.value === idx ? -1 : idx;
-}
-
-function updateContainerHeight(event) {
-  const img = event.target;
-  const naturalHeight = img.naturalHeight;
-  const naturalWidth = img.naturalWidth;
-  const containerWidth = img.offsetWidth;
-
-  const scaledHeight = (naturalHeight / naturalWidth) * containerWidth;
-
-  if (scaledHeight > containerHeight.value) {
-    containerHeight.value = scaledHeight;
-  }
+  openIndex.value = openIndex.value === idx ? -1 : idx
 }
 
 const getCurrentImageSrc = computed(() => {
   if (props.images && props.images.length > 0) {
-    const currentImage = props.images[openIndex.value] || props.images[0];
-    return currentImage ? currentImage.src : null;
+    const currentImage = props.images[openIndex.value] || props.images[0]
+    return currentImage ? currentImage.src : null
   }
-  return props.imageSrc || null;
-});
+  return props.imageSrc || null
+})
 
 const getCurrentImageAlt = computed(() => {
   if (props.images && props.images.length > 0) {
-    const currentImage = props.images[openIndex.value] || props.images[0];
-    return currentImage ? currentImage.alt : "";
+    const currentImage = props.images[openIndex.value] || props.images[0]
+    return currentImage ? currentImage.alt : ""
   }
-  return props.imageAlt || "";
-});
+  return props.imageAlt || ""
+})
 </script>
 
 <style scoped>
 .image-swap-enter-active,
 .image-swap-leave-active {
-  transition:
-    opacity 420ms cubic-bezier(0.22, 1, 0.36, 1),
+  transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1),
     transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
