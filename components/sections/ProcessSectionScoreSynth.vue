@@ -1,7 +1,7 @@
 <template>
   <section
     :id="id || undefined"
-    class="border-b border-t border-[#636363] bg-[#161616] overflow-x-hidden"
+    class="border-b border-t border-[#636363] bg-[#161616]"
   >
     <!-- grid full width -->
     <div class="grid grid-cols-1 md:grid-cols-2">
@@ -33,6 +33,7 @@
                 +
               </span>
             </h3>
+
             <!-- Accordion body -->
             <div
               :ref="(el) => setContentRef(el, index)"
@@ -58,17 +59,15 @@
       <!-- RIGHT COLUMN -->
       <div
         v-if="getCurrentImageSrc"
-        class="relative border-t border-[#636363] md:border-t-0 min-w-0"
+        class="relative border-t border-[#636363] md:border-t-0"
       >
-        <!-- FIXED IMAGE VIEWPORT -->
-        <div class="relative w-full h-[360px] sm:h-[420px] md:h-[520px] overflow-hidden">
+        <div class="relative w-full h-[420px] md:h-[520px] overflow-hidden">
           <transition name="image-swap" mode="out-in">
             <img
               :key="getCurrentImageSrc"
               :src="getCurrentImageSrc"
               :alt="getCurrentImageAlt"
-              class="absolute inset-0 w-full h-full max-w-full block
-                     object-contain md:object-cover"
+              class="absolute inset-0 w-full h-full object-cover"
             />
           </transition>
         </div>
@@ -91,6 +90,8 @@ const props = defineProps({
 })
 
 const openIndex = ref(0)
+
+// heights
 const contentHeights = ref([])
 
 function setContentRef(el, idx) {
@@ -121,8 +122,7 @@ const getCurrentImageAlt = computed(() => {
 <style scoped>
 .image-swap-enter-active,
 .image-swap-leave-active {
-  transition:
-    opacity 420ms cubic-bezier(0.22, 1, 0.36, 1),
+  transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1),
     transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
