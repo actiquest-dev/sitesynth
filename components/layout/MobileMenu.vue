@@ -114,19 +114,19 @@
             <span>{{ cta.text }}</span>
           </NuxtLink>
 
-          <!-- SOCIALS (no rounded) -->
-          <div class="flex space-x-6 justify-center">
-            <a
-              v-for="(social, index) in socials"
-              :key="index"
-              :href="social.url"
-              :aria-label="social.name"
-              class="w-10 h-10 flex items-center justify-center transition duration-1000 hover:text-white"
-              :class="social.hoverBg"
-              :target="social.target || null"
-              :rel="social.target === '_blank' ? 'noopener noreferrer' : null"
-            >
-              <font-awesome :icon="social.icon" class="text-xl" />
+<!-- SOCIALS (round again) -->
+<div class="flex space-x-6 justify-center">
+  <a
+    v-for="(social, index) in socials"
+    :key="index"
+    :href="social.url"
+    :aria-label="social.name"
+    class="w-10 h-10 flex items-center justify-center rounded-full transition duration-1000 hover:text-white"
+    :class="social.hoverBg"
+    :target="social.target || null"
+    :rel="social.target === '_blank' ? 'noopener noreferrer' : null"
+  >
+    <font-awesome :icon="social.icon" class="text-xl" />
             </a>
           </div>
         </div>
