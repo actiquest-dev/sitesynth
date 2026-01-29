@@ -5,24 +5,23 @@
       menuOpen ? 'translate-x-0' : '-translate-x-full',
     ]"
   >
-    <!-- SCROLL AREA (only nav scrolls) -->
     <div class="flex flex-col h-full overflow-hidden">
+      <!-- SCROLL AREA (only nav scrolls) -->
       <div class="flex-1 overflow-y-auto">
         <div class="w-full flex flex-col items-center pt-10 px-6">
-          <!-- NAVIGATION -->
           <nav class="flex flex-col w-full max-w-sm">
             <div
               v-for="(item, index) in navItems"
               :key="index"
               class="border-b border-[#333] pb-4 mb-4 last:border-b-0 last:pb-0 last:mb-0"
             >
-              <!-- Parent (with submenu) -->
+              <!-- Parent -->
               <template v-if="item.subItems">
                 <button
                   type="button"
                   class="w-full flex items-center justify-between cursor-pointer bg-transparent"
                   @click="toggleSubmenu(index)"
-                  :aria-expanded="!!openSubmenus[index]"
+                  :aria-expanded="openIndex === index"
                 >
                   <span
                     class="font-medium text-lg"
@@ -34,13 +33,22 @@
                   <font-awesome
                     :icon="['fas', 'chevron-down']"
                     class="transform transition-transform duration-300"
-                    :class="{ 'rotate-180': openSubmenus[index] }"
+                    :class="{ 'rotate-180': openIndex === index }"
                   />
                 </button>
 
-                <!-- Submenu -->
-                <transition name="fade">
-                  <div v-if="openSubmenus[index]" class="mt-4">
+                <!-- Submenu (smooth like accordion) -->
+                <div
+                  :ref="(el) => setSubmenuRef(el, index)"
+                  class="overflow-hidden transition-[max-height,opacity,transform] duration-[420ms]
+                         ease-[cubic-bezier(0.22,1,0.36,1)]"
+                  :style="{
+                    maxHeight: openIndex === index ? (contentHeights[index] || 0) + 'px' : '0px',
+                    opacity: openIndex === index ? 1 : 0,
+                    transform: openIndex === index ? 'translateY(0)' : 'translateY(-4px)',
+                  }"
+                >
+                  <div class="mt-4">
                     <div class="flex flex-col space-y-3">
                       <component
                         v-for="(subItem, subIndex) in item.subItems"
@@ -65,7 +73,7 @@
                           "
                         />
 
-                        <!-- Text (vertically centered) -->
+                        <!-- Text (centered like desktop) -->
                         <div class="flex-1 flex flex-col justify-center">
                           <div class="text-white text-base font-semibold leading-snug">
                             {{ subItem.label }}
@@ -81,7 +89,7 @@
                       </component>
                     </div>
                   </div>
-                </transition>
+                </div>
               </template>
 
               <!-- Single Link -->
@@ -103,7 +111,6 @@
       <!-- FIXED FOOTER (CTA + socials never move) -->
       <div class="shrink-0 w-full bg-[#161616] border-t border-[#333] px-6 py-6">
         <div class="w-full max-w-sm mx-auto space-y-6">
-          <!-- CTA BUTTON (stays fixed) -->
           <NuxtLink
             :to="cta.link"
             class="inline-flex items-center justify-center font-semibold transition-colors duration-[1000ms]
@@ -114,19 +121,19 @@
             <span>{{ cta.text }}</span>
           </NuxtLink>
 
-<!-- SOCIALS (round again) -->
-<div class="flex space-x-6 justify-center">
-  <a
-    v-for="(social, index) in socials"
-    :key="index"
-    :href="social.url"
-    :aria-label="social.name"
-    class="w-10 h-10 flex items-center justify-center rounded-full transition duration-1000 hover:text-white"
-    :class="social.hoverBg"
-    :target="social.target || null"
-    :rel="social.target === '_blank' ? 'noopener noreferrer' : null"
-  >
-    <font-awesome :icon="social.icon" class="text-xl" />
+          <!-- SOCIALS (round again) -->
+          <div class="flex space-x-6 justify-center">
+            <a
+              v-for="(social, index) in socials"
+              :key="index"
+              :href="social.url"
+              :aria-label="social.name"
+              class="w-10 h-10 flex items-center justify-center rounded-full transition duration-1000 hover:text-white"
+              :class="social.hoverBg"
+              :target="social.target || null"
+              :rel="social.target === '_blank' ? 'noopener noreferrer' : null"
+            >
+              <font-awesome :icon="social.icon" class="text-xl" />
             </a>
           </div>
         </div>
@@ -136,15 +143,34 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { ref, nextTick } from "vue"
 
 defineProps({ menuOpen: Boolean })
 
 const route = useRoute()
 
-const openSubmenus = ref({})
-function toggleSubmenu(index) {
-  openSubmenus.value[index] = !openSubmenus.value[index]
+// ONLY ONE OPEN AT A TIME
+const openIndex = ref(-1)
+
+// store submenu refs + heights (like accordion)
+const submenuRefs = ref([])
+const contentHeights = ref([])
+
+function setSubmenuRef(el, idx) {
+  if (!el) return
+  submenuRefs.value[idx] = el
+  contentHeights.value[idx] = el.scrollHeight
+}
+
+async function toggleSubmenu(idx) {
+  openIndex.value = openIndex.value === idx ? -1 : idx
+
+  // update height on open (in case content wraps differently)
+  await nextTick()
+  if (openIndex.value === idx) {
+    const el = submenuRefs.value[idx]
+    if (el) contentHeights.value[idx] = el.scrollHeight
+  }
 }
 
 const isCurrentPage = (link) => {
@@ -153,7 +179,9 @@ const isCurrentPage = (link) => {
 
   const currentPath = route.path
   const linkPath = link.endsWith("/") ? link.slice(0, -1) : link
-  const normalizedCurrent = currentPath.endsWith("/") ? currentPath.slice(0, -1) : currentPath
+  const normalizedCurrent = currentPath.endsWith("/")
+    ? currentPath.slice(0, -1)
+    : currentPath
 
   return normalizedCurrent === linkPath || currentPath.startsWith(linkPath + "/")
 }
@@ -185,9 +213,23 @@ const navItems = [
     label: "Product",
     link: "#",
     subItems: [
-      { imageSrc: "/assets/new-assets/Menu/Product/gray/ScoreSynth.svg", label: "ScoreSynth", link: "/scoresynth" },
-      { imageSrc: "/assets/new-assets/Menu/Product/gray/Membria.svg", label: "Membria", link: "https://membria.ai/", target: "_blank" },
-      { imageSrc: "/assets/new-assets/Menu/Product/gray/AILivePod.svg", label: "AI Live Pod", link: "https://ailivepod.framer.website/product", target: "_blank" },
+      {
+        imageSrc: "/assets/new-assets/Menu/Product/gray/ScoreSynth.svg",
+        label: "ScoreSynth",
+        link: "/scoresynth",
+      },
+      {
+        imageSrc: "/assets/new-assets/Menu/Product/gray/Membria.svg",
+        label: "Membria",
+        link: "https://membria.ai/",
+        target: "_blank",
+      },
+      {
+        imageSrc: "/assets/new-assets/Menu/Product/gray/AILivePod.svg",
+        label: "AI Live Pod",
+        link: "https://ailivepod.framer.website/product",
+        target: "_blank",
+      },
     ],
   },
   {
@@ -234,20 +276,26 @@ const navItems = [
 const cta = { text: "Get started", link: "/contact-us" }
 
 const socials = [
-  { name: "LinkedIn", url: "https://www.linkedin.com/company/sitesynth/", icon: ["fab", "linkedin"], hoverBg: "hover:bg-[#0A66C2]", target: "_blank" },
-  { name: "X", url: "https://x.com/sitesynth/", icon: ["fab", "twitter"], hoverBg: "hover:bg-[#26a7de]", target: "_blank" },
-  { name: "Mail", url: "mailto:hello@sitesynth.com", icon: ["fas", "envelope"], hoverBg: "hover:bg-[#CB1620]", target: "_blank" },
+  {
+    name: "LinkedIn",
+    url: "https://www.linkedin.com/company/sitesynth/",
+    icon: ["fab", "linkedin"],
+    hoverBg: "hover:bg-[#0A66C2]",
+    target: "_blank",
+  },
+  {
+    name: "X",
+    url: "https://x.com/sitesynth/",
+    icon: ["fab", "twitter"],
+    hoverBg: "hover:bg-[#26a7de]",
+    target: "_blank",
+  },
+  {
+    name: "Mail",
+    url: "mailto:hello@sitesynth.com",
+    icon: ["fas", "envelope"],
+    hoverBg: "hover:bg-[#CB1620]",
+    target: "_blank",
+  },
 ]
 </script>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.3s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-  transform: translateY(-5px);
-}
-</style>
