@@ -5,7 +5,9 @@
   >
     <div class="max-w-[1248px] mx-auto px-6 w-full">
       <div
-        class="grid grid-cols-1 md:grid-cols-2 gap-8 relative border border-[#636363] group overflow-hidden"
+        class="grid grid-cols-1 md:grid-cols-2
+               md:gap-8 gap-0
+               relative border border-[#636363] group overflow-hidden"
       >
         <GlowEffect />
 
@@ -13,8 +15,7 @@
         <div
           class="absolute inset-0 pointer-events-none opacity-100"
           :style="{
-            backgroundImage:
-              'url(/assets/gradients/gradient-for-banner-section.svg)',
+            backgroundImage: 'url(/assets/gradients/gradient-for-banner-section.svg)',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
@@ -22,7 +23,16 @@
         ></div>
 
         <!-- Left Column -->
-        <div :class="`flex flex-col justify-center ${leftPadding} relative z-10`">
+        <div
+          :class="[
+            'flex flex-col justify-center relative z-10 min-w-0',
+            // mobile padding (fix “too close to edges”)
+            'px-6 pt-10 pb-10',
+            // desktop keeps your control via leftPadding
+            'md:px-0 md:pt-0 md:pb-0',
+            leftPadding,
+          ]"
+        >
           <div class="flex items-center gap-4 mb-6">
             <img
               :src="leftContent.image.src"
@@ -67,9 +77,18 @@
           </a>
         </div>
 
+        <!-- Mobile divider line between columns -->
+        <div class="md:hidden border-t border-[#636363] relative z-10"></div>
+
         <!-- Right Column -->
         <div
-          :class="`flex flex-col justify-center items-center ${rightPadding} relative z-10`"
+          :class="[
+            'flex flex-col justify-center items-center relative z-10 min-w-0',
+            // mobile padding so image isn't glued to edges
+            'px-6 pb-10',
+            'md:px-0 md:pb-0',
+            rightPadding,
+          ]"
         >
           <img
             :src="rightContent.image.src"
@@ -86,7 +105,6 @@
 defineProps({
   id: { type: String, default: "" },
 
-  // по умолчанию как было
   sectionClass: { type: String, default: "pb-40" },
 
   leftContent: { type: Object, required: true },
@@ -117,3 +135,4 @@ const getTextClasses = (tag) => {
   }
 }
 </script>
+
