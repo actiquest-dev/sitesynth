@@ -5,9 +5,7 @@
   >
     <div class="max-w-[1248px] mx-auto px-6 w-full">
       <div
-        class="grid grid-cols-1 md:grid-cols-2
-               md:gap-8 gap-0
-               relative border border-[#636363] group overflow-hidden"
+        class="grid grid-cols-1 md:grid-cols-2 gap-8 relative border border-[#636363] group overflow-hidden"
       >
         <GlowEffect />
 
@@ -23,16 +21,7 @@
         ></div>
 
         <!-- Left Column -->
-        <div
-          :class="[
-            'flex flex-col justify-center relative z-10 min-w-0',
-            // mobile padding (fix “too close to edges”)
-            'px-6 pt-10 pb-10',
-            // desktop keeps your control via leftPadding
-            'md:px-0 md:pt-0 md:pb-0',
-            leftPadding,
-          ]"
-        >
+        <div :class="`left-col flex flex-col justify-center ${leftPadding} relative z-10`">
           <div class="flex items-center gap-4 mb-6">
             <img
               :src="leftContent.image.src"
@@ -77,18 +66,9 @@
           </a>
         </div>
 
-        <!-- Mobile divider line between columns -->
-        <div class="md:hidden border-t border-[#636363] relative z-10"></div>
-
         <!-- Right Column -->
         <div
-          :class="[
-            'flex flex-col justify-center items-center relative z-10 min-w-0',
-            // mobile padding so image isn't glued to edges
-            'px-6 pb-10',
-            'md:px-0 md:pb-0',
-            rightPadding,
-          ]"
+          :class="`flex flex-col justify-center items-center ${rightPadding} relative z-10`"
         >
           <img
             :src="rightContent.image.src"
@@ -135,4 +115,16 @@ const getTextClasses = (tag) => {
   }
 }
 </script>
+
+<style scoped>
+/* Only mobile: add breathing room so text isn't glued to top/right edge */
+@media (max-width: 767px) {
+  .left-col {
+    padding-top: 2.5rem;   /* ~pt-10 */
+    padding-right: 1.5rem; /* ~pr-6 */
+    padding-left: 1.5rem;  /* ~pl-6 */
+    padding-bottom: 2.5rem;/* ~pb-10 */
+  }
+}
+</style>
 
