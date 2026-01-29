@@ -3,22 +3,23 @@
     :id="id || undefined"
     class="border-b border-t border-[#636363] bg-[#161616]"
   >
-    <!-- ВАЖНО: grid на всю ширину -->
+    <!-- grid full width -->
     <div class="grid grid-cols-1 md:grid-cols-2">
-      
       <!-- LEFT COLUMN -->
       <div class="py-12 md:border-r border-[#636363]">
         <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-12">
           <div
             v-for="(section, index) in sections"
             :key="index"
-            class="toggle-section group border-t border-[#636363] pt-5 mt-4"
+            class="toggle-section group border-t border-[#636363] pt-5 mt-4
+                   -mx-6 px-6 md:mx-0 md:px-0"
             :class="index === 0 ? 'border-t-0' : ''"
           >
             <h3
               @click="toggle(index)"
               :class="[
-                'flex items-center justify-between cursor-pointer transition-colors duration-200',
+                'w-full flex items-center justify-between cursor-pointer transition-colors duration-200',
+                'py-3 md:py-0',
                 openIndex === index
                   ? 'text-white text-2xl font-bold'
                   : 'text-[#636363] text-2xl font-semibold group-hover:text-white',
@@ -44,9 +45,7 @@
                     : '0px',
                 opacity: openIndex === index ? 1 : 0,
                 transform:
-                  openIndex === index
-                    ? 'translateY(0)'
-                    : 'translateY(-4px)',
+                  openIndex === index ? 'translateY(0)' : 'translateY(-4px)',
               }"
             >
               <p class="text-[#999999] mt-2">
@@ -57,99 +56,73 @@
         </div>
       </div>
 
-      <!-- RIGHT COLUMN (1-в-1 как эталон) -->
-<div
-  v-if="getCurrentImageSrc"
-  class="relative border-t border-[#636363] md:border-t-0"
->
-  <!-- FIXED IMAGE VIEWPORT -->
-  <div class="relative w-full h-[420px] md:h-[520px] overflow-hidden">
-    <transition name="image-swap" mode="out-in">
-      <img
-        :key="getCurrentImageSrc"
-        :src="getCurrentImageSrc"
-        :alt="getCurrentImageAlt"
-        class="absolute inset-0 w-full h-full object-cover"
-      />
-    </transition>
-  </div>
-</div>
-</div>
+      <!-- RIGHT COLUMN -->
+      <div
+        v-if="getCurrentImageSrc"
+        class="relative border-t border-[#636363] md:border-t-0"
+      >
+        <div class="relative w-full h-[420px] md:h-[520px] overflow-hidden">
+          <transition name="image-swap" mode="out-in">
+            <img
+              :key="getCurrentImageSrc"
+              :src="getCurrentImageSrc"
+              :alt="getCurrentImageAlt"
+              class="absolute inset-0 w-full h-full object-cover"
+            />
+          </transition>
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed } from "vue"
 
 const props = defineProps({
-  id: {
-    type: String,
-    default: "",
-  },
+  id: { type: String, default: "" },
   sections: Array,
   imageSrc: String,
   imageAlt: String,
   imageClass: String,
   images: Array,
-  accentColor: {
-    type: String,
-    default: "text-[#8CB0FF]",
-  },
-});
+  accentColor: { type: String, default: "text-[#8CB0FF]" },
+})
 
-const openIndex = ref(0);
-const containerHeight = ref(400);
+const openIndex = ref(0)
 
-// высоты контента аккордеона
-const contentHeights = ref([]);
+// heights
+const contentHeights = ref([])
 
-// запоминаем реальные высоты блоков
 function setContentRef(el, idx) {
-  if (el) {
-    contentHeights.value[idx] = el.scrollHeight;
-  }
+  if (el) contentHeights.value[idx] = el.scrollHeight
 }
 
 function toggle(idx) {
-  // как на GitHub: повторный клик закрывает
-  openIndex.value = openIndex.value === idx ? -1 : idx;
-}
-
-function updateContainerHeight(event) {
-  const img = event.target;
-  const naturalHeight = img.naturalHeight;
-  const naturalWidth = img.naturalWidth;
-  const containerWidth = img.offsetWidth;
-
-  const scaledHeight = (naturalHeight / naturalWidth) * containerWidth;
-
-  if (scaledHeight > containerHeight.value) {
-    containerHeight.value = scaledHeight;
-  }
+  openIndex.value = openIndex.value === idx ? -1 : idx
 }
 
 const getCurrentImageSrc = computed(() => {
   if (props.images && props.images.length > 0) {
-    const currentImage = props.images[openIndex.value] || props.images[0];
-    return currentImage ? currentImage.src : null;
+    const currentImage = props.images[openIndex.value] || props.images[0]
+    return currentImage ? currentImage.src : null
   }
-  return props.imageSrc || null;
-});
+  return props.imageSrc || null
+})
 
 const getCurrentImageAlt = computed(() => {
   if (props.images && props.images.length > 0) {
-    const currentImage = props.images[openIndex.value] || props.images[0];
-    return currentImage ? currentImage.alt : "";
+    const currentImage = props.images[openIndex.value] || props.images[0]
+    return currentImage ? currentImage.alt : ""
   }
-  return props.imageAlt || "";
-});
+  return props.imageAlt || ""
+})
 </script>
 
 <style scoped>
 .image-swap-enter-active,
 .image-swap-leave-active {
-  transition:
-    opacity 420ms cubic-bezier(0.22, 1, 0.36, 1),
+  transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1),
     transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
