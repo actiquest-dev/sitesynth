@@ -57,6 +57,10 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: "vercel", // ✅ change from 'static' to 'vercel'
+    routeRules: {
+      // Permanent redirects (301)
+      "/privacy-policy": { redirect: "/privacy-and-policy", prerender: true },
+    },
   },
 
   app: {
