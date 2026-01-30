@@ -13,8 +13,7 @@
         <div
           class="absolute inset-0 pointer-events-none opacity-100"
           :style="{
-            backgroundImage:
-              'url(/assets/gradients/gradient-for-banner-section.svg)',
+            backgroundImage: 'url(/assets/gradients/gradient-for-banner-section.svg)',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
@@ -22,7 +21,7 @@
         ></div>
 
         <!-- Left Column -->
-        <div :class="`flex flex-col justify-center ${leftPadding} relative z-10`">
+        <div :class="`left-col flex flex-col justify-center ${leftPadding} relative z-10`">
           <div class="flex items-center gap-4 mb-6">
             <img
               :src="leftContent.image.src"
@@ -86,7 +85,6 @@
 defineProps({
   id: { type: String, default: "" },
 
-  // по умолчанию как было
   sectionClass: { type: String, default: "pb-40" },
 
   leftContent: { type: Object, required: true },
@@ -117,3 +115,16 @@ const getTextClasses = (tag) => {
   }
 }
 </script>
+
+<style scoped>
+/* Only mobile: add breathing room so text isn't glued to top/right edge */
+@media (max-width: 767px) {
+  .left-col {
+    padding-top: 2.5rem;   /* ~pt-10 */
+    padding-right: 1.5rem; /* ~pr-6 */
+    padding-left: 1.5rem;  /* ~pl-6 */
+    padding-bottom: 2.5rem;/* ~pb-10 */
+  }
+}
+</style>
+

@@ -1,112 +1,280 @@
 <template>
   <div
     :class="[
-      'fixed top-[112px] left-0 w-full h-[calc(100vh-5rem)] bg-[#161616] text-white flex flex-col items-center pt-10 px-6 space-y-6 transition-transform duration-300 z-40 overflow-y-scroll',
+      'fixed top-[112px] left-0 w-full h-[calc(100vh-5rem)] bg-[#161616] text-white z-40 transition-transform duration-300',
       menuOpen ? 'translate-x-0' : '-translate-x-full',
     ]"
   >
-    <!-- NAVIGATION -->
-    <nav class="flex flex-col space-y-4 text-center w-full max-w-sm">
-      <div
-        v-for="(item, index) in navItems"
-        :key="index"
-        class="border-b border-gray-700 pb-4"
-      >
-        <template v-if="item.subItems">
-          <div
-            class="flex items-center justify-between cursor-pointer"
-            @click="toggleSubmenu(index)"
-          >
-            <span class="font-medium text-lg">{{ item.label }}</span>
-            <font-awesome
-              :icon="['fas', 'chevron-down']"
-              class="transform transition-transform duration-300"
-              :class="{ 'rotate-180': openSubmenus[index] }"
-            />
-          </div>
-
-          <!-- Submenu -->
-          <transition name="fade">
-            <div v-if="openSubmenus[index]">
-              <div class="mt-3 flex flex-col space-y-2">
-                <NuxtLink
-                  v-for="(subItem, subIndex) in item.subItems"
-                  :key="subIndex"
-                  :to="subItem.link"
-                  class="text-sm text-gray-300 hover:text-[#A620FF] transition-colors duration-300"
+    <div class="flex flex-col h-full overflow-hidden">
+      <!-- SCROLL AREA (only nav scrolls) -->
+      <div class="flex-1 overflow-y-auto">
+        <div class="w-full flex flex-col items-center pt-10 px-6">
+          <!-- NAVIGATION -->
+          <nav class="flex flex-col w-full max-w-sm">
+            <div
+              v-for="(item, index) in navItems"
+              :key="index"
+              class="border-b border-[#333] pb-4 mb-4 last:border-b-0 last:pb-0 last:mb-0"
+            >
+              <!-- Parent (with submenu) -->
+              <template v-if="item.subItems">
+                <button
+                  type="button"
+                  class="w-full flex items-center justify-between cursor-pointer bg-transparent"
+                  @click="toggleSubmenu(index)"
+                  :aria-expanded="openIndex === index"
                 >
-                  {{ subItem.label }}
-                </NuxtLink>
-              </div>
+                  <span
+                    class="font-medium text-lg"
+                    :class="isCurrentParent(item) ? 'text-white' : 'text-white/90'"
+                  >
+                    {{ item.label }}
+                  </span>
+
+                  <font-awesome
+                    :icon="['fas', 'chevron-down']"
+                    class="transform transition-transform duration-300"
+                    :class="{ 'rotate-180': openIndex === index }"
+                  />
+                </button>
+
+                <!-- Submenu (smooth + tappable on mobile) -->
+                <div
+                  :ref="(el) => setSubmenuRef(el, index)"
+                  class="overflow-hidden transition-[max-height,opacity,transform] duration-[520ms]
+                         ease-[cubic-bezier(0.22,1,0.36,1)]"
+                  :style="{
+                    maxHeight:
+                      openIndex === index
+                        ? (contentHeights[index] || 0) + 'px'
+                        : '0px',
+                    opacity: openIndex === index ? 1 : 0,
+                    transform:
+                      openIndex === index ? 'translateY(0)' : 'translateY(-4px)',
+                    pointerEvents: openIndex === index ? 'auto' : 'none',
+                  }"
+                >
+                  <div class="mt-4">
+                    <div class="flex flex-col space-y-3">
+                      <template
+                        v-for="(subItem, subIndex) in item.subItems"
+                        :key="subIndex"
+                      >
+                        <!-- Internal -->
+                        <NuxtLink
+                          v-if="!isExternal(subItem.link)"
+                          :to="subItem.link"
+                          class="group/item touch-manipulation flex items-center gap-4 p-4
+                                 bg-[#161616] border border-[#333]
+                                 hover:bg-[#1E1E1E] transition-colors duration-300"
+                          :class="isCurrentPage(subItem.link) ? 'border-white/40' : ''"
+                          @click.stop
+                        >
+                          <img
+                            v-if="subItem.imageSrc"
+                            :src="subItem.imageSrc"
+                            :alt="subItem.label"
+                            class="w-14 h-14 object-contain flex-shrink-0 transition-all duration-300"
+                            :class="
+                              isCurrentPage(subItem.link)
+                                ? 'brightness-0 invert'
+                                : 'opacity-80 group-hover/item:opacity-100 group-hover/item:brightness-0 group-hover/item:invert'
+                            "
+                          />
+
+                          <div class="flex-1 flex flex-col justify-center">
+                            <div class="text-white text-base font-semibold leading-snug">
+                              {{ subItem.label }}
+                            </div>
+
+                            <div
+                              v-if="subItem.description"
+                              class="text-[#999999] text-sm mt-1 leading-snug"
+                            >
+                              {{ subItem.description }}
+                            </div>
+                          </div>
+                        </NuxtLink>
+
+                        <!-- External -->
+                        <a
+                          v-else
+                          :href="subItem.link"
+                          :target="
+                            subItem.target ||
+                            (subItem.link.startsWith('http') ? '_blank' : null)
+                          "
+                          :rel="
+                            subItem.target || subItem.link.startsWith('http')
+                              ? 'noopener noreferrer'
+                              : null
+                          "
+                          class="group/item touch-manipulation flex items-center gap-4 p-4
+                                 bg-[#161616] border border-[#333]
+                                 hover:bg-[#1E1E1E] transition-colors duration-300"
+                          @click.stop
+                        >
+                          <img
+                            v-if="subItem.imageSrc"
+                            :src="subItem.imageSrc"
+                            :alt="subItem.label"
+                            class="w-14 h-14 object-contain flex-shrink-0 transition-all duration-300 opacity-80 group-hover/item:opacity-100"
+                          />
+
+                          <div class="flex-1 flex flex-col justify-center">
+                            <div class="text-white text-base font-semibold leading-snug">
+                              {{ subItem.label }}
+                            </div>
+
+                            <div
+                              v-if="subItem.description"
+                              class="text-[#999999] text-sm mt-1 leading-snug"
+                            >
+                              {{ subItem.description }}
+                            </div>
+                          </div>
+                        </a>
+                      </template>
+                    </div>
+                  </div>
+                </div>
+              </template>
+
+              <!-- Single Link -->
+              <template v-else>
+                <component
+                  :is="linkTag(item.link)"
+                  v-bind="linkAttrs(item)"
+                  class="flex items-center justify-between font-medium text-lg cursor-pointer text-white py-2"
+                  :class="isCurrentPage(item.link) ? 'text-white' : 'text-white/90'"
+                >
+                  {{ item.label }}
+                </component>
+              </template>
             </div>
-          </transition>
-        </template>
-        <template v-else>
-          <NuxtLink
-            :to="item.link"
-            class="flex items-center justify-between font-medium text-lg cursor-pointer text-white py-2"
-          >
-            {{ item.label }}
-          </NuxtLink>
-        </template>
+          </nav>
+        </div>
       </div>
-    </nav>
 
-    <!-- CTA BUTTON -->
-    <NuxtLink
-      :to="cta.link"
-      class="button btn-2 px-4 py-2 text-white font-semibold"
-    >
-      <span>{{ cta.text }}</span>
-    </NuxtLink>
+      <!-- FIXED FOOTER (CTA + socials never move) -->
+      <div class="shrink-0 w-full bg-[#161616] border-t border-[#333] px-6 py-6">
+        <div class="w-full max-w-sm mx-auto space-y-6">
+          <!-- CTA BUTTON -->
+          <NuxtLink
+            :to="cta.link"
+            class="inline-flex items-center justify-center font-semibold transition-colors duration-[1000ms]
+                   w-full h-11 px-6
+                   bg-white text-[#161616] border border-[#161616]
+                   hover:bg-[#8D35FF] hover:border-[#8D35FF] hover:text-white"
+          >
+            <span>{{ cta.text }}</span>
+          </NuxtLink>
 
-    <!-- SOCIALS -->
-    <div class="flex space-x-6 mb-20">
-      <a
-        v-for="(social, index) in socials"
-        :key="index"
-        :href="social.url"
-        :aria-label="social.name"
-        class="w-10 h-10 flex items-center justify-center rounded-full transition duration-1000 hover:text-white"
-        :class="social.hoverBg"
-        :target="social.target || null"
-        :rel="social.target === '_blank' ? 'noopener noreferrer' : null"
-      >
-        <font-awesome :icon="social.icon" class="text-xl" />
-      </a>
+          <!-- SOCIALS (round) -->
+          <div class="flex space-x-6 justify-center">
+            <a
+              v-for="(social, index) in socials"
+              :key="index"
+              :href="social.url"
+              :aria-label="social.name"
+              class="w-10 h-10 flex items-center justify-center rounded-full transition duration-1000 hover:text-white"
+              :class="social.hoverBg"
+              :target="social.target || null"
+              :rel="social.target === '_blank' ? 'noopener noreferrer' : null"
+            >
+              <font-awesome :icon="social.icon" class="text-xl" />
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, nextTick } from "vue"
 
-defineProps({ menuOpen: Boolean });
+defineProps({ menuOpen: Boolean })
 
-const openSubmenus = ref({});
-function toggleSubmenu(index) {
-  openSubmenus.value[index] = !openSubmenus.value[index];
+const route = useRoute()
+
+// Only one open at a time
+const openIndex = ref(-1)
+
+// Store submenu refs + heights
+const submenuRefs = ref([])
+const contentHeights = ref([])
+
+function setSubmenuRef(el, idx) {
+  if (!el) return
+  submenuRefs.value[idx] = el
+  contentHeights.value[idx] = el.scrollHeight
 }
 
-// NAVIGATION
+async function toggleSubmenu(idx) {
+  openIndex.value = openIndex.value === idx ? -1 : idx
+
+  // Update height on open (wrap changes etc.)
+  await nextTick()
+  if (openIndex.value === idx) {
+    const el = submenuRefs.value[idx]
+    if (el) contentHeights.value[idx] = el.scrollHeight
+  }
+}
+
+const isCurrentPage = (link) => {
+  if (!link || link === "#") return false
+  if (link.startsWith("http")) return false
+
+  const currentPath = route.path
+  const linkPath = link.endsWith("/") ? link.slice(0, -1) : link
+  const normalizedCurrent = currentPath.endsWith("/")
+    ? currentPath.slice(0, -1)
+    : currentPath
+
+  return normalizedCurrent === linkPath || currentPath.startsWith(linkPath + "/")
+}
+
+const isCurrentParent = (item) => {
+  if (!item.subItems) return false
+  return item.subItems.some((subItem) => isCurrentPage(subItem.link))
+}
+
+const isExternal = (url = "") =>
+  url.startsWith("http") || url.startsWith("mailto:") || url.startsWith("tel:")
+
+const linkTag = (url) => (isExternal(url) ? "a" : "NuxtLink")
+
+const linkAttrs = (obj) => {
+  const url = obj.link
+  if (isExternal(url)) {
+    return {
+      href: url,
+      target: obj.target || (url.startsWith("http") ? "_blank" : null),
+      rel: (obj.target || url.startsWith("http")) ? "noopener noreferrer" : null,
+    }
+  }
+  return { to: url }
+}
+
 const navItems = [
   {
     label: "Product",
     link: "#",
     subItems: [
       {
-        imageSrc: "/assets/score-synth.svg",
+        imageSrc: "/assets/new-assets/Menu/Product/gray/ScoreSynth.svg",
         label: "ScoreSynth",
-        link: "/scoresynth/",
+        link: "/scoresynth",
       },
       {
-        imageSrc: "/assets/membria.svg",
+        imageSrc: "/assets/new-assets/Menu/Product/gray/Membria.svg",
         label: "Membria",
         link: "https://membria.ai/",
         target: "_blank",
       },
       {
-        imageSrc: "/assets/ai-live-pod.svg",
+        imageSrc: "/assets/new-assets/Menu/Product/gray/AILivePod.svg",
         label: "AI Live Pod",
         link: "https://ailivepod.framer.website/product",
         target: "_blank",
@@ -118,49 +286,48 @@ const navItems = [
     link: "#",
     subItems: [
       {
+        imageSrc:
+          "/assets/new-assets/Menu/Solutions/gray/Brand-Driven Product Strategy.svg",
         label: "Brand-Driven Product Strategy",
+        description: "Align product design with your brand’s identity and goals.",
         link: "/brand-driven-product-strategy",
       },
-      { label: "UX & Design Systems", link: "/ux-and-design-system" },
       {
+        imageSrc:
+          "/assets/new-assets/Menu/Solutions/gray/UX & Design Systems.svg",
+        label: "UX & Design Systems",
+        description: "Build consistent, scalable, and user-friendly interfaces.",
+        link: "/ux-and-design-system",
+      },
+      {
+        imageSrc:
+          "/assets/new-assets/Menu/Solutions/gray/Development Support & Execution.svg",
         label: "Development Support & Execution",
+        description: "Turn designs into real, high-quality digital products.",
         link: "/full-stack-implementation",
       },
-      { label: "AI-Powered Workflows & Innovation", link: "/ai-innovation" },
+      {
+        imageSrc:
+          "/assets/new-assets/Menu/Solutions/gray/AI-Powered Workflows & Innovation.svg",
+        label: "AI-Powered Workflows & Innovation",
+        description: "Use smart tools to move faster and reduce cost.",
+        link: "/ai-innovation",
+      },
     ],
   },
   {
     label: "Company",
     link: "#",
     subItems: [
-      { label: "About Us", link: "/about-us" },
-      { label: "Careers", link: "/careers" },
+      { label: "About us", link: "/about-us" },
+      { label: "Contact us", link: "/contact-us" },
     ],
   },
-  {
-    label: "Opportunities",
-    link: "#",
-    subItems: [
-      {
-        label: "Full Stack Developer",
-        link: "/careers/full-stack-developer",
-      },
-      {
-        label: "UX/UI Designer",
-        link: "/careers/ux-ui-designer",
-      },
-      {
-        label: "Marketing Manager",
-        link: "/careers/marketing-manager",
-      },
-    ],
-  },
-];
+  { label: "Careers", link: "/careers" },
+]
 
-// CTA
-const cta = { text: "Get started", link: "/contact-us" };
+const cta = { text: "Get started", link: "/contact-us" }
 
-// SOCIAL ICONS
 const socials = [
   {
     name: "LinkedIn",
@@ -183,17 +350,5 @@ const socials = [
     hoverBg: "hover:bg-[#CB1620]",
     target: "_blank",
   },
-];
+]
 </script>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.3s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-  transform: translateY(-5px);
-}
-</style>

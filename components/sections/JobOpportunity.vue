@@ -48,15 +48,19 @@
                 </div>
               </div>
 
+              <!-- CTA button (desktop: like testimonial size) -->
               <span
-                class="shrink-0 bg-[#161616] text-white px-10 py-3 text-sm font-semibold
-                       border border-[#161616] transition-colors duration-200 hover:bg-[#333333]"
+                class="shrink-0 inline-flex items-center justify-center text-center font-semibold
+                       h-11 px-10 text-sm
+                       bg-[#161616] text-white border border-[#161616]
+                       transition-colors duration-[1000ms]
+                       hover:bg-[#8D35FF] hover:border-[#8D35FF]"
               >
                 {{ job.linkText || "Apply" }}
               </span>
             </div>
 
-            <!-- MOBILE CTA layout (как в референсе) -->
+            <!-- MOBILE CTA layout -->
             <div class="relative z-10 md:hidden p-6">
               <div class="text-[#161616] text-3xl font-semibold leading-tight">
                 {{ job.title }}
@@ -65,9 +69,13 @@
                 {{ job.description }}
               </div>
 
+              <!-- CTA button (mobile: full width) -->
               <span
-                class="mt-6 block w-full text-center bg-[#161616] text-white py-4 text-base font-semibold
-                       border border-[#161616] transition-colors duration-200 active:bg-[#333333]"
+                class="mt-6 inline-flex items-center justify-center w-full text-center font-semibold
+                       h-11 px-6 text-base
+                       bg-[#161616] text-white border border-[#161616]
+                       transition-colors duration-[1000ms]
+                       hover:bg-[#8D35FF] hover:border-[#8D35FF]"
               >
                 {{ job.linkText || "Apply" }}
               </span>
@@ -96,7 +104,6 @@
 
             <!-- DESKTOP ROW -->
             <div class="relative z-10 hidden md:flex items-center h-[140px]">
-              <!-- LEFT IMAGE (flush left, чуть меньше) -->
               <div class="h-full w-[220px] flex items-stretch">
                 <img
                   :src="job.image"
@@ -105,7 +112,6 @@
                 />
               </div>
 
-              <!-- TEXT -->
               <div class="flex-1 px-12">
                 <div class="text-white text-2xl font-semibold leading-tight">
                   {{ job.title }}
@@ -115,7 +121,6 @@
                 </div>
               </div>
 
-              <!-- RIGHT ICON -->
               <div class="w-[180px] flex items-center justify-center">
                 <span class="text-[#636363] group-hover:text-white transition-colors duration-200">
                   <i class="fa fa-chevron-right transition-transform duration-200 group-hover:translate-x-1"></i>
@@ -123,7 +128,7 @@
               </div>
             </div>
 
-            <!-- MOBILE ROW (картинки нет, как ты просила) -->
+            <!-- MOBILE ROW -->
             <div class="relative z-10 md:hidden p-8">
               <div class="text-white text-4xl font-semibold leading-tight">
                 {{ job.title }}
@@ -149,39 +154,39 @@ const props = defineProps({
   id: { type: String, default: "" },
   backgroundColor: { type: String, default: "bg-[#161616]" },
   jobs: { type: Array, required: true },
-});
+})
 
 const isCta = (job) => {
-  const bg = String(job.bgColor || "").toLowerCase();
-  const link = String(job.link || "");
-  return bg.includes("dddddd") || link.startsWith("mailto:");
-};
+  const bg = String(job.bgColor || "").toLowerCase()
+  const link = String(job.link || "")
+  return bg.includes("dddddd") || link.startsWith("mailto:")
+}
 
 // mouse-follow glow (per hovered row)
 const setPos = (el, x, y) => {
-  el.style.setProperty("--mx", `${x}px`);
-  el.style.setProperty("--my", `${y}px`);
-};
+  el.style.setProperty("--mx", `${x}px`)
+  el.style.setProperty("--my", `${y}px`)
+}
 
 const onEnter = (e) => {
-  const el = e.currentTarget;
-  const rect = el.getBoundingClientRect();
-  setPos(el, rect.width / 2, rect.height / 2);
-};
+  const el = e.currentTarget
+  const rect = el.getBoundingClientRect()
+  setPos(el, rect.width / 2, rect.height / 2)
+}
 
 const onMove = (e) => {
-  const el = e.currentTarget;
-  const rect = el.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  setPos(el, x, y);
-};
+  const el = e.currentTarget
+  const rect = el.getBoundingClientRect()
+  const x = e.clientX - rect.left
+  const y = e.clientY - rect.top
+  setPos(el, x, y)
+}
 
 const onLeave = (e) => {
-  const el = e.currentTarget;
-  const rect = el.getBoundingClientRect();
-  setPos(el, rect.width / 2, rect.height / 2);
-};
+  const el = e.currentTarget
+  const rect = el.getBoundingClientRect()
+  setPos(el, rect.width / 2, rect.height / 2)
+}
 </script>
 
 <style scoped>
@@ -198,4 +203,3 @@ const onLeave = (e) => {
   filter: blur(60px);
 }
 </style>
-

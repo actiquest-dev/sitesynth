@@ -4,18 +4,15 @@
     :class="[bgColor, 'flex justify-center bg-cover bg-center bg-no-repeat']"
     :style="backgroundImageStyle"
   >
-    <div
-      class="relative overflow-hidden z-0 testimonial-card max-w-[1248px] mx-auto text-center px-6 group"
-    >
+    <div class="relative overflow-hidden z-0 testimonial-card max-w-[1248px] mx-auto text-center px-6 group">
       <div
         :class="[
           bgInside,
-          'border border-[#636363] py-20 px-20 relative overflow-hidden',
+          'border border-[#636363] py-14 px-6 sm:px-10 md:py-20 md:px-20 relative overflow-hidden',
         ]"
       >
         <component :is="selectedGlowEffect" />
 
-        <!-- Gradient Background -->
         <div
           class="absolute inset-0 pointer-events-none opacity-100"
           :style="{
@@ -26,32 +23,20 @@
           }"
         ></div>
 
-        <!-- Text Content -->
         <div class="flex flex-col items-center relative z-10">
           <h2 :class="[textColor, 'text-4xl font-bold']">{{ title }}</h2>
           <p :class="[textColor, 'my-6']">{{ description }}</p>
 
-          <!-- Call-to-Action Buttons -->
-          <div class="flex flex-col sm:flex-row justify-center gap-4 mt-6">
-            <!-- Primary: black -->
-            <a
-              :href="primaryLink"
-              :class="[
-                'px-6 py-2 border border-[#DDDDDD] bg-[#161616] text-white transition-colors duration-1000 font-semibold',
-                `hover:bg-[${hover}] hover:border-[${hover}] hover:text-white`,
-              ]"
-            >
+          <!-- Buttons: stretch on mobile -->
+          <div
+            class="flex flex-col sm:flex-row justify-center gap-4 mt-6 self-stretch sm:self-auto"
+            :style="{ '--hover': hover }"
+          >
+            <a :href="primaryLink" class="cta-btn cta-primary">
               {{ primaryText }}
             </a>
 
-            <!-- Secondary: DDDDDD -->
-            <a
-              :href="secondaryLink"
-              :class="[
-                'px-6 py-2 border border-[#161616] bg-[#DDDDDD] text-[#161616] transition-colors duration-1000 font-semibold',
-                `hover:bg-[${hover}] hover:border-[${hover}] hover:text-white`,
-              ]"
-            >
+            <a :href="secondaryLink" class="cta-btn cta-secondary">
               {{ secondaryText }}
             </a>
           </div>
@@ -62,7 +47,7 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, computed } from "vue";
+import { defineAsyncComponent, computed } from "vue"
 
 const props = defineProps({
   id: { type: String, default: "" },
@@ -77,23 +62,58 @@ const props = defineProps({
   textColor: { type: String, default: "text-[#161616]" },
   glowEffect: { type: String, default: "GlowEffect" },
   bgImage: { type: String, default: null },
-  gradientImage: {
-    type: String,
-    default: "/assets/gradients/gradient-for-banner-section.svg",
-  },
+  gradientImage: { type: String, default: "/assets/gradients/gradient-for-banner-section.svg" },
   hover: { type: String, default: "#8D35FF" },
-});
+})
 
 const selectedGlowEffect = computed(() =>
-  defineAsyncComponent(() =>
-    import(`@/components/effects/${props.glowEffect}.vue`)
-  )
-);
+  defineAsyncComponent(() => import(`@/components/effects/${props.glowEffect}.vue`))
+)
 
 const backgroundImageStyle = computed(() => {
-  if (props.bgImage) {
-    return { backgroundImage: `url(${props.bgImage})` };
-  }
-  return {};
-});
+  if (props.bgImage) return { backgroundImage: `url(${props.bgImage})` }
+  return {}
+})
 </script>
+
+<style scoped>
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 44px;
+  padding: 0 24px;
+
+  border-width: 1px;
+  font-weight: 600;
+  text-decoration: none;
+
+  transition: color 1000ms, background-color 1000ms, border-color 1000ms;
+}
+
+@media (min-width: 640px) {
+  .cta-btn {
+    width: auto;
+  }
+}
+
+.cta-btn:hover {
+  background: var(--hover);
+  border-color: var(--hover);
+  color: #ffffff;
+}
+
+.cta-primary {
+  background: #161616;
+  color: #ffffff;
+  border-color: #dddddd;
+}
+
+.cta-secondary {
+  background: #dddddd;
+  color: #161616;
+  border-color: #161616;
+}
+</style>

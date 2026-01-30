@@ -64,7 +64,7 @@
     textColorRight="text-white"
   >
     <template #left>
-      <div class="py-24 md:border-r border-[#636363] bg-[#191919]">
+      <div class="py-24 md:border-r border-[#636363] bg-[#161616]">
         <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
           <h2 class="mb-2 text-white leading-none">
             <span class="text-6xl sm:text-7xl font-extrabold">
@@ -187,7 +187,7 @@
       image: {
         src: '/assets/new-assets/solutions-page/solutions/ai-infused-innovation-and-rd/cta/membria-image.webp',
         alt: 'Membria Screenshot',
-        class: 'w-full h-auto rounded-lg',
+        class: 'w-full h-auto rounded-0',
       },
     }"
   />
