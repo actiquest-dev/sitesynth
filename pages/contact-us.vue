@@ -31,7 +31,13 @@
         ></div>
 
         <!-- content -->
-        <div class="relative z-[2] max-w-[600px] ml-auto pr-12">
+        <div
+          class="relative z-[2] max-w-[600px]
+                 px-6 pt-6 pb-0
+                 md:px-0 md:pt-0
+                 mx-auto md:ml-auto md:mr-0
+                 md:pr-12"
+        >
           <h2 class="text-white text-3xl font-bold mb-10">
             Let's see where we can start
           </h2>
@@ -238,21 +244,21 @@
                   <option value="other">Other</option>
                 </select>
 
-                <!-- FontAwesome-like chevron-down (no FA dependency) -->
-    <svg
-      class="topic-chevron pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#999999]"
-      width="18"
-      height="14"
-      viewBox="0 0 320 512"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path
-        d="M201.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 338.7 54.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"
-      />
-    </svg>
-  </div>
-</div>
+                <!-- Chevron -->
+                <svg
+                  class="topic-chevron pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#999999]"
+                  width="18"
+                  height="14"
+                  viewBox="0 0 320 512"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M201.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 338.7 54.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"
+                  />
+                </svg>
+              </div>
+            </div>
 
             <!-- Message -->
             <div>
@@ -352,4 +358,5 @@ useHead({
   ],
 });
 </script>
+
 
