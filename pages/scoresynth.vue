@@ -5,7 +5,7 @@
   />
   <HeroGeneric
     glowEffect="GlowRed"
-    backgroundImage="/assets/hero-scoresynth-bg.webp"
+    backgroundImage=""
     backgroundPosition="bg-right-bottom"
     :logo="{
       src: '/assets/ScoreSynth.svg',
