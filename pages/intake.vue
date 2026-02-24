@@ -1,7 +1,7 @@
 <template>
   <HeaderSection />
 
-  <section class="relative bg-[#161616] min-h-screen pt-20 md:pt-32 pb-16 md:pb-24 overflow-hidden">
+  <section class="relative bg-[#161616] min-h-screen pt-32 md:pt-48 pb-16 md:pb-24 overflow-hidden">
     <!-- Background Effects -->
     <GlowBlue />
     <ParticleEffect />
