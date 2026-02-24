@@ -86,7 +86,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { loadStripe } from '@stripe/js';
+// import { loadStripe } from '@stripe/js';
+
+// Mock loadStripe for now until @stripe/js is installed
+const loadStripe = async () => null;
 
 const props = defineProps({
   amount: {

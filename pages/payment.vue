@@ -227,8 +227,9 @@
                 <span class="text-[#999999] text-sm">
                   Billing address same as shipping
                 </span>
+              </label>
+            </div>
           </div>
-        </div>
 
         <!-- RIGHT COLUMN: Order Summary (40%) -->
         <div class="lg:col-span-1">

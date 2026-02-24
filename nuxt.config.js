@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+// Updated: Nuxt 3.21.1 with future compatibility version 4
 export default defineNuxtConfig({
   compatibilityDate: "2026-01-12",
 
@@ -118,10 +119,10 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     // The private keys which are only available on server-side
-    brevoApiKey: process.env.BREVO_API_KEY,
+    brevoApiKey: process.env.BREVO_API_KEY || '',
     // Public runtime config (available on client & server)
     public: {
-      siteUrl: process.env.SITE_URL,
+      siteUrl: process.env.SITE_URL || 'https://www.sitesynth.com',
     },
   },
 
@@ -145,6 +146,12 @@ export default defineNuxtConfig({
       changefreq: "weekly",
       priority: 0.8,
       lastmod: new Date().toISOString().split("T")[0],
+    },
+  },
+
+  vite: {
+    ssr: {
+      external: ['react', 'react-dom'],
     },
   },
 });
