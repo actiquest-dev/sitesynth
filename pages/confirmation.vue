@@ -1,7 +1,7 @@
 <template>
   <HeaderSection />
 
-  <section class="relative bg-[#161616] min-h-screen flex items-center justify-center py-16 md:py-24 overflow-hidden">
+  <section class="relative bg-[#161616] min-h-screen flex items-center justify-center pt-20 md:pt-32 pb-16 md:pb-24 overflow-hidden">
     <!-- Background Effects -->
     <ParticleEffect />
 

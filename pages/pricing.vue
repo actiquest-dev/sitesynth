@@ -2,7 +2,7 @@
   <HeaderSection />
 
   <!-- HERO SECTION WITH EFFECTS -->
-  <section class="relative bg-[#161616] text-white overflow-hidden py-24 md:py-32">
+  <section class="relative bg-[#161616] text-white overflow-hidden pt-20 md:pt-32 pb-24 md:pb-32">
     <!-- Glow Effects -->
     <GlowBlue />
     <ParticleEffect />
