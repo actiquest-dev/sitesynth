@@ -2,7 +2,7 @@
   <HeaderSection />
 
   <!-- HERO SECTION WITH EFFECTS -->
-  <section class="relative bg-[#161616] text-white overflow-hidden pt-32 md:pt-48 pb-24 md:pb-32">
+  <section class="relative bg-[#161616] text-white overflow-hidden pt-20 md:pt-32 pb-12 md:pb-16">
     <!-- Glow Effects -->
     <GlowBlue />
     <ParticleEffect />
@@ -41,7 +41,7 @@
   </section>
 
   <!-- PRICING CARDS SECTION -->
-  <section class="relative bg-[#161616] py-20 md:py-32">
+  <section class="relative bg-[#161616] py-12 md:py-20">
     <!-- Background Gradients -->
     <div class="absolute inset-0 pointer-events-none overflow-hidden">
       <div
