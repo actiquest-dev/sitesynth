@@ -54,6 +54,8 @@
     ]"
   />
 
+  <AnimatedCountdown />
+
   <BannerSection id="banner-what-we-offer" tag="h2" text="What We Offer" />
 
   <WhatWeOfferSection
