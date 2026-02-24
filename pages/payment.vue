@@ -154,45 +154,12 @@
           <div>
             <h2 class="text-2xl font-bold text-white mb-8">Payment Method</h2>
 
-            <!-- Tabs -->
-            <div class="flex gap-4 mb-8 border-b border-[#333]">
-              <button
-                @click="paymentMethod = 'card'"
-                :class="[
-                  'px-6 py-3 border-b-2 transition font-semibold',
-                  paymentMethod === 'card'
-                    ? 'border-[#0033ff] text-white'
-                    : 'border-transparent text-[#999999] hover:text-white',
-                ]"
-              >
-                Credit Card
-              </button>
-              <button
-                @click="paymentMethod = 'paypal'"
-                :class="[
-                  'px-6 py-3 border-b-2 transition font-semibold',
-                  paymentMethod === 'paypal'
-                    ? 'border-[#0033ff] text-white'
-                    : 'border-transparent text-[#999999] hover:text-white',
-                ]"
-              >
-                PayPal
-              </button>
-              <button
-                @click="paymentMethod = 'bank'"
-                :class="[
-                  'px-6 py-3 border-b-2 transition font-semibold',
-                  paymentMethod === 'bank'
-                    ? 'border-[#0033ff] text-white'
-                    : 'border-transparent text-[#999999] hover:text-white',
-                ]"
-              >
-                Bank Transfer
-              </button>
-            </div>
-
-            <!-- Credit Card Tab -->
-            <div v-if="paymentMethod === 'card'" class="space-y-6">
+            <!-- Stripe Payment Form -->
+            <StripePaymentForm
+              :amount="orderTotal"
+              @payment-success="handlePaymentSuccess"
+              @payment-error="handlePaymentError"
+            />
               <div>
                 <label class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium">
                   Card Number *
@@ -260,80 +227,6 @@
                 <span class="text-[#999999] text-sm">
                   Billing address same as shipping
                 </span>
-              </label>
-            </div>
-
-            <!-- PayPal Tab -->
-            <div v-if="paymentMethod === 'paypal'" class="space-y-6">
-              <p class="text-[#999999]">
-                You will be redirected to PayPal to complete the payment securely.
-              </p>
-              <button
-                class="w-full px-6 py-3 bg-[#0070BA] text-white rounded-lg font-semibold hover:bg-blue-700 transition"
-              >
-                Pay with PayPal
-              </button>
-              <p class="text-[#999999] text-sm text-center">
-                🔒 Secure payment powered by PayPal
-              </p>
-            </div>
-
-            <!-- Bank Transfer Tab -->
-            <div v-if="paymentMethod === 'bank'" class="space-y-6">
-              <p class="text-[#999999] mb-6">
-                Please transfer the amount to the bank details below. Reference your order number in the transfer.
-              </p>
-
-              <div class="bg-[#1a1a1a] border border-[#333] rounded-lg p-6 space-y-4">
-                <div class="flex justify-between items-center">
-                  <span class="text-[#999999]">Bank Name</span>
-                  <div class="flex items-center gap-2">
-                    <span class="text-white font-mono">ING Belgium</span>
-                    <button
-                      @click="copyToClipboard('ING Belgium')"
-                      class="text-[#0033ff] hover:text-blue-400"
-                    >
-                      📋
-                    </button>
-                  </div>
-                </div>
-
-                <div class="flex justify-between items-center">
-                  <span class="text-[#999999]">Account Number</span>
-                  <div class="flex items-center gap-2">
-                    <span class="text-white font-mono">BE12 3456 7890 ****</span>
-                    <button
-                      @click="copyToClipboard('BE12345678901234')"
-                      class="text-[#0033ff] hover:text-blue-400"
-                    >
-                      📋
-                    </button>
-                  </div>
-                </div>
-
-                <div class="flex justify-between items-center">
-                  <span class="text-[#999999]">Reference</span>
-                  <div class="flex items-center gap-2">
-                    <span class="text-white font-mono">SYN-2026-001234</span>
-                    <button
-                      @click="copyToClipboard('SYN-2026-001234')"
-                      class="text-[#0033ff] hover:text-blue-400"
-                    >
-                      📋
-                    </button>
-                  </div>
-                </div>
-
-                <div class="pt-4 border-t border-[#333] flex justify-between items-center">
-                  <span class="text-[#999999]">Amount</span>
-                  <span class="text-white font-bold text-lg">€1,170</span>
-                </div>
-              </div>
-
-              <p class="text-[#999999] text-sm">
-                We'll send you an invoice confirmation to your email once payment is received.
-              </p>
-            </div>
           </div>
         </div>
 
@@ -416,9 +309,9 @@
 <script setup>
 import { ref } from "vue";
 import GlowRed from "@/components/effects/GlowRed.vue";
+import StripePaymentForm from "@/components/StripePaymentForm.vue";
 
-const paymentMethod = ref("card");
-const isProcessing = ref(false);
+const orderTotal = ref(1170);
 
 const billingData = ref({
   fullName: "",
@@ -431,39 +324,25 @@ const billingData = ref({
   company: "",
 });
 
-const cardData = ref({
-  number: "",
-  expiry: "",
-  cvv: "",
-  holder: "",
-  sameAddress: false,
-});
+const handlePaymentSuccess = async (result) => {
+  // Payment successful - save transaction and redirect to confirmation
+  const sessionData = {
+    chargeId: result.chargeId,
+    amount: result.amount,
+    email: result.email,
+    timestamp: new Date().toISOString(),
+  };
 
-const formatCardNumber = () => {
-  let value = cardData.value.number.replace(/\s/g, "");
-  let formatted = value.match(/.{1,4}/g)?.join(" ") || value;
-  cardData.value.number = formatted;
+  // Save to session storage
+  sessionStorage.setItem('paymentResult', JSON.stringify(sessionData));
+
+  // Redirect to confirmation page
+  navigateTo("/confirmation");
 };
 
-const formatExpiry = () => {
-  let value = cardData.value.expiry.replace(/\D/g, "");
-  if (value.length >= 2) {
-    value = value.slice(0, 2) + "/" + value.slice(2, 4);
-  }
-  cardData.value.expiry = value;
-};
-
-const copyToClipboard = (text) => {
-  navigator.clipboard.writeText(text);
-  alert("Copied to clipboard!");
-};
-
-const submitPayment = async () => {
-  isProcessing.value = true;
-  // Simulate payment processing
-  setTimeout(() => {
-    navigateTo("/confirmation");
-  }, 2000);
+const handlePaymentError = (error) => {
+  console.error('Payment error:', error);
+  // Show error notification
 };
 
 // SEO
