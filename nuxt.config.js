@@ -2,6 +2,10 @@
 export default defineNuxtConfig({
   compatibilityDate: "2026-01-12",
 
+  future: {
+    compatibilityVersion: 4,
+  },
+
   devtools: { enabled: true },
 
   // Remove trailing slashes from URLs
