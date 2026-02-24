@@ -2,12 +2,12 @@
   <HeaderSection />
 
   <!-- HERO SECTION WITH EFFECTS -->
-  <section class="relative bg-[#161616] text-white overflow-hidden pt-20 md:pt-32 pb-16 md:pb-24">
+  <section class="relative bg-[#161616] text-white overflow-hidden pb-16 md:pb-24">
     <!-- Glow Effects -->
     <GlowBlue />
     <ParticleEffect />
 
-    <div class="relative max-w-7xl mx-auto px-6 md:px-12">
+    <div class="relative max-w-7xl mx-auto px-6 md:px-12 pt-20 md:pt-32">
       <div class="text-center mb-12">
         <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mb-8">
           Simple, Transparent<br />
