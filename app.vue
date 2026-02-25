@@ -1,6 +1,8 @@
 <template>
   <Analytics />
   <NuxtPage />
+  <AIChatButton />
+  <AIChatDrawer />
 </template>
 
 <script setup>

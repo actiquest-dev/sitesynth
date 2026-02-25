@@ -7,12 +7,15 @@
     <ParticleEffect />
 
     <!-- Background Gradients -->
-    <div class="absolute inset-0 pointer-events-none opacity-50">
+    <div class="absolute inset-0 pointer-events-none opacity-60">
       <div
-        class="absolute top-20 right-0 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"
+        class="absolute top-20 right-0 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl"
       ></div>
       <div
-        class="absolute bottom-20 left-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"
+        class="absolute bottom-20 left-0 w-96 h-96 bg-purple-500/30 rounded-full blur-3xl"
+      ></div>
+      <div
+        class="absolute top-1/3 right-1/3 w-80 h-80 bg-cyan-500/20 rounded-full blur-3xl"
       ></div>
     </div>
 
@@ -544,13 +547,14 @@
             Next
           </button>
 
-          <NuxtLink
+          <button
             v-if="currentStep === totalSteps"
-            to="/payment"
+            type="button"
+            @click="goToPayment"
             class="flex-1 px-6 py-3 bg-[#8D35FF] text-white text-center rounded-none font-semibold hover:bg-[#7B2EF0] transition"
           >
             Continue to Payment
-          </NuxtLink>
+          </button>
         </div>
       </form>
     </div>
@@ -687,6 +691,16 @@ const calculatePrice = () => {
 
 const isFeatureSelected = (featureId) =>
   formData.value.selectedFeatures.includes(featureId);
+
+// Save intake data and navigate to payment
+const goToPayment = () => {
+  // Save all 5-step form data to sessionStorage
+  sessionStorage.setItem('intakeFormData', JSON.stringify(formData.value));
+  console.log('✅ Intake data saved:', formData.value);
+
+  // Navigate to payment
+  navigateTo('/payment');
+};
 
 // SEO
 const siteUrl = useRuntimeConfig().public?.siteUrl;

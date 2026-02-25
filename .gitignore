@@ -33,3 +33,4 @@ node_modules/
 # Optional: lock files if you want to ignore them (usually not recommended)
 # package-lock.json
 # yarn.lock
+.env.local

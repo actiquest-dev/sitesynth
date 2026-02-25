@@ -31,11 +31,27 @@ export class StripeService {
   static getStripeClient(): Stripe {
     if (!this.stripe) {
       const secretKey = process.env.STRIPE_SECRET_KEY
+      const publishableKey = process.env.STRIPE_PUBLISHABLE_KEY
+
+      // Debug logging
+      console.log('🔍 Stripe Key Debug:')
+      console.log('  STRIPE_SECRET_KEY exists:', !!secretKey)
+      console.log('  STRIPE_SECRET_KEY starts with sk_test:', secretKey?.startsWith('sk_test'))
+      console.log('  STRIPE_PUBLISHABLE_KEY exists:', !!publishableKey)
+      console.log('  STRIPE_PUBLISHABLE_KEY starts with pk_test:', publishableKey?.startsWith('pk_test'))
+
       if (!secretKey) {
         throw new Error('STRIPE_SECRET_KEY is not configured')
       }
+
+      if (!secretKey.startsWith('sk_test') && !secretKey.startsWith('sk_live')) {
+        console.error('❌ ERROR: STRIPE_SECRET_KEY does not look like a real Stripe secret key!')
+        console.error('❌ Value:', secretKey)
+        throw new Error('STRIPE_SECRET_KEY appears to be invalid (should start with sk_test or sk_live)')
+      }
+
       this.stripe = new Stripe(secretKey, {
-        apiVersion: '2024-11-20',
+        apiVersion: '2023-10-16',
       })
     }
     return this.stripe
@@ -127,6 +143,9 @@ export class StripeService {
       })
 
       if (charge.status === 'succeeded') {
+        // Save to NocoBase after successful payment
+        await this.savePaymentToNocoBase(data, charge.id)
+
         return {
           success: true,
           message: 'Payment processed successfully',
@@ -148,6 +167,82 @@ export class StripeService {
         error: error.message || 'Unknown error',
         details: error.type,
       }
+    }
+  }
+
+  // Save payment to NocoBase
+  static async savePaymentToNocoBase(data: PaymentData, chargeId: string): Promise<void> {
+    try {
+      const NOCO_URL = 'http://138.2.134.17:20000'
+      const NOCO_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInJvbGVOYW1lIjoiYWRtaW4iLCJpYXQiOjE3NzIwMzU1NzcsImV4cCI6MzMzMjk2MzU1Nzd9.C1TJacEJ-qy4EVlL0r94l7anWSPhWsQwlOYzLsqooNk'
+
+      // 1. Create client record
+      const clientPayload = {
+        name: data.billingData.fullName,
+        email: data.email,
+        company: data.billingData.company || '',
+        country: data.billingData.country,
+        phone: '',
+        notes: `Created on ${new Date().toISOString()}`,
+      }
+
+      let clientId: number | null = null
+      try {
+        const clientRes = await fetch(`${NOCO_URL}/api/clients:create`, {
+          method: 'POST',
+          headers: {
+            'xc-auth': NOCO_TOKEN,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(clientPayload),
+        })
+
+        if (clientRes.ok) {
+          const clientData = await clientRes.json()
+          clientId = clientData.data?.id
+          console.log('✅ Client saved to NocoBase:', clientId)
+        }
+      } catch (error: any) {
+        console.warn('⚠️ Failed to save client to NocoBase:', error.message)
+      }
+
+      // 2. Create order record
+      const orderPayload = {
+        client_id: clientId,
+        title: 'Website Design Package',
+        status: 'paid',
+        amount: data.amount,
+        currency: 'eur',
+        stripe_charge_id: chargeId,
+        payment_date: new Date().toISOString(),
+        form_data: {
+          // ALL form data from BOTH intake (5 steps) + payment billing
+          intakeFormData: (data as any).intakeFormData,
+          billingData: data.billingData,
+          email: data.email,
+          amount: data.amount,
+          timestamp: new Date().toISOString(),
+        },
+      }
+
+      const orderRes = await fetch(`${NOCO_URL}/api/orders:create`, {
+        method: 'POST',
+        headers: {
+          'xc-auth': NOCO_TOKEN,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderPayload),
+      })
+
+      if (orderRes.ok) {
+        const orderData = await orderRes.json()
+        console.log('✅ Order saved to NocoBase:', orderData.data?.id)
+      } else {
+        console.warn('⚠️ Failed to save order to NocoBase:', await orderRes.text())
+      }
+    } catch (error: any) {
+      console.error('❌ Error saving payment to NocoBase:', error.message)
+      // Don't throw - payment was already processed in Stripe
     }
   }
 
@@ -237,12 +332,32 @@ export class StripeService {
     const stripe = this.getStripeClient()
 
     switch (event.type) {
+      case 'charge.succeeded':
+        console.log('✅ Charge succeeded:', event.data.object.id)
+        // Update order status in NocoBase
+        await this.updateOrderStatusInNocoBase(event.data.object.id, 'paid')
+        return {
+          success: true,
+          message: 'Charge confirmed',
+          chargeId: event.data.object.id,
+        }
+
       case 'payment_intent.succeeded':
         console.log('✅ Payment succeeded:', event.data.object.id)
         return {
           success: true,
           message: 'Payment confirmed',
           intentId: event.data.object.id,
+        }
+
+      case 'charge.failed':
+        console.log('❌ Charge failed:', event.data.object.id)
+        // Update order status in NocoBase
+        await this.updateOrderStatusInNocoBase(event.data.object.id, 'failed')
+        return {
+          success: false,
+          message: 'Charge failed',
+          chargeId: event.data.object.id,
         }
 
       case 'payment_intent.payment_failed':
@@ -255,6 +370,8 @@ export class StripeService {
 
       case 'charge.refunded':
         console.log('💰 Charge refunded:', event.data.object.id)
+        // Update order status in NocoBase
+        await this.updateOrderStatusInNocoBase(event.data.object.id, 'refunded')
         return {
           success: true,
           message: 'Charge refunded',
@@ -264,6 +381,55 @@ export class StripeService {
       default:
         console.log('⚠️ Unhandled event type:', event.type)
         return { message: 'Event received but not processed' }
+    }
+  }
+
+  // Update order status in NocoBase
+  static async updateOrderStatusInNocoBase(chargeId: string, status: string): Promise<void> {
+    try {
+      const NOCO_URL = 'http://138.2.134.17:20000'
+      const NOCO_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInJvbGVOYW1lIjoiYWRtaW4iLCJpYXQiOjE3NzIwMzU1NzcsImV4cCI6MzMzMjk2MzU1Nzd9.C1TJacEJ-qy4EVlL0r94l7anWSPhWsQwlOYzLsqooNk'
+
+      // First, find order by stripe_charge_id
+      const listRes = await fetch(`${NOCO_URL}/api/orders:list`, {
+        headers: {
+          'xc-auth': NOCO_TOKEN,
+        },
+      })
+
+      if (!listRes.ok) {
+        console.warn('Failed to fetch orders from NocoBase')
+        return
+      }
+
+      const listData = await listRes.json()
+      const orders = Array.isArray(listData.data) ? listData.data : listData
+      const order = orders.find((o: any) => o.stripe_charge_id === chargeId)
+
+      if (!order) {
+        console.warn(`Order not found for charge ${chargeId}`)
+        return
+      }
+
+      // Update order status
+      const updateRes = await fetch(`${NOCO_URL}/api/orders:update?id=${order.id}`, {
+        method: 'POST',
+        headers: {
+          'xc-auth': NOCO_TOKEN,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          status,
+        }),
+      })
+
+      if (updateRes.ok) {
+        console.log(`✅ Order ${order.id} status updated to ${status}`)
+      } else {
+        console.warn(`Failed to update order ${order.id}:`, await updateRes.text())
+      }
+    } catch (error: any) {
+      console.error('Error updating order status in NocoBase:', error.message)
     }
   }
 }

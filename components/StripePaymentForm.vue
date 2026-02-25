@@ -85,11 +85,53 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-// import { loadStripe } from '@stripe/js';
+import { ref, onMounted } from 'vue'
+import { useRuntimeConfig } from '#app'
 
-// Mock loadStripe for now until @stripe/js is installed
-const loadStripe = async () => null;
+// Load Stripe.js from CDN
+const loadStripeFromCDN = async (publishableKey: string) => {
+  if (!(window as any).Stripe) {
+    const script = document.createElement('script')
+    script.src = 'https://js.stripe.com/v3/'
+    script.async = true
+    document.head.appendChild(script)
+
+    return new Promise((resolve, reject) => {
+      script.onload = () => {
+        try {
+          if (!publishableKey) {
+            throw new Error('Stripe publishable key is empty')
+          }
+          const stripeInstance = (window as any).Stripe(publishableKey)
+          if (!stripeInstance) {
+            throw new Error('Failed to initialize Stripe - returned null')
+          }
+          resolve(stripeInstance)
+        } catch (error: any) {
+          console.error('❌ Stripe initialization error:', error.message)
+          reject(error)
+        }
+      }
+      script.onerror = () => {
+        reject(new Error('Failed to load Stripe.js from CDN'))
+      }
+    })
+  }
+
+  try {
+    if (!publishableKey) {
+      throw new Error('Stripe publishable key is empty')
+    }
+    const stripeInstance = (window as any).Stripe(publishableKey)
+    if (!stripeInstance) {
+      throw new Error('Failed to initialize Stripe - returned null')
+    }
+    return stripeInstance
+  } catch (error: any) {
+    console.error('❌ Stripe initialization error:', error.message)
+    throw error
+  }
+}
 
 const props = defineProps({
   amount: {
@@ -115,12 +157,23 @@ const email = ref('');
 const country = ref('');
 
 onMounted(async () => {
-  // Initialize Stripe
-  // Replace with your actual publishable key
-  const stripePublishableKey = 'pk_test_51234567890abcdefghijklmnop';
-  stripe.value = await loadStripe(stripePublishableKey);
+  // Initialize Stripe with publishable key from config
+  const config = useRuntimeConfig()
+  const stripePublishableKey = config.public?.stripePublishableKey
 
-  if (stripe.value) {
+  if (!stripePublishableKey) {
+    cardError.value = 'Stripe configuration error. Please contact support.'
+    return
+  }
+
+  try {
+    stripe.value = await loadStripeFromCDN(stripePublishableKey)
+
+    if (!stripe.value) {
+      cardError.value = 'Failed to initialize payment system'
+      return
+    }
+
     elements.value = stripe.value.elements();
     cardElement.value = elements.value.create('card', {
       style: {
@@ -148,6 +201,9 @@ onMounted(async () => {
         cardError.value = '';
       }
     });
+  } catch (error: any) {
+    console.error('❌ Error initializing Stripe in StripePaymentForm:', error.message)
+    cardError.value = `Failed to initialize payment form: ${error.message}`
   }
 });
 

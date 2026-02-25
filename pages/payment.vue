@@ -4,14 +4,18 @@
   <section class="relative bg-[#161616] min-h-screen pt-20 md:pt-32 pb-16 md:pb-24 overflow-hidden">
     <!-- Background Effects -->
     <GlowRed />
+    <ParticleEffect />
 
     <!-- Background Gradients -->
-    <div class="absolute inset-0 pointer-events-none opacity-40">
+    <div class="absolute inset-0 pointer-events-none opacity-50">
       <div
-        class="absolute top-20 right-0 w-96 h-96 bg-red-500/20 rounded-full blur-3xl"
+        class="absolute top-20 right-0 w-96 h-96 bg-red-500/30 rounded-full blur-3xl"
       ></div>
       <div
-        class="absolute bottom-20 left-0 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"
+        class="absolute bottom-20 left-0 w-96 h-96 bg-blue-500/25 rounded-full blur-3xl"
+      ></div>
+      <div
+        class="absolute top-1/2 left-1/2 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl transform -translate-x-1/2"
       ></div>
     </div>
 
@@ -130,13 +134,9 @@
                   class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 text-white focus:outline-none focus:border-b-[#0033ff] transition"
                 >
                   <option value="">Select country</option>
-                  <option value="US">United States</option>
-                  <option value="BE">Belgium</option>
-                  <option value="NL">Netherlands</option>
-                  <option value="DE">Germany</option>
-                  <option value="FR">France</option>
-                  <option value="GB">United Kingdom</option>
-                  <option value="other">Other</option>
+                  <option v-for="country in countries" :key="country.code" :value="country.code">
+                    {{ country.name }}
+                  </option>
                 </select>
               </div>
 
@@ -167,7 +167,7 @@
                 </label>
                 <div
                   id="card-element"
-                  class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 rounded-sm"
+                  class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 rounded-sm min-h-[50px]"
                 ></div>
                 <div v-if="cardError" class="text-[#AA3733] text-sm mt-2">
                   {{ cardError }}
@@ -282,11 +282,14 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import GlowRed from '@/components/effects/GlowRed.vue'
+import ParticleEffect from '@/components/effects/ParticleEffect.vue'
+import { useCursorGlow } from '@/composables/useCursorGlow'
 
-const runtimeConfig = useRuntimeConfig()
-const stripePublishableKey = runtimeConfig.public.stripePublishableKey
+// Initialize cursor glow effect
+useCursorGlow()
 
 const orderTotal = ref(1170)
+let stripePublishableKey = ''
 
 // Stripe refs
 let stripe: any = null
@@ -302,14 +305,45 @@ const loadStripe = async (publishableKey: string) => {
     script.async = true
     document.head.appendChild(script)
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       script.onload = () => {
-        resolve((window as any).Stripe(publishableKey))
+        try {
+          if (!publishableKey) {
+            throw new Error('Stripe publishable key is empty')
+          }
+          const stripeInstance = (window as any).Stripe(publishableKey)
+          if (!stripeInstance) {
+            throw new Error('Failed to initialize Stripe - returned null')
+          }
+          resolve(stripeInstance)
+        } catch (error: any) {
+          console.error('❌ Stripe initialization error:', error.message)
+          reject(error)
+        }
+      }
+      script.onerror = () => {
+        reject(new Error('Failed to load Stripe.js from CDN'))
       }
     })
   }
-  return (window as any).Stripe(publishableKey)
+
+  try {
+    if (!publishableKey) {
+      throw new Error('Stripe publishable key is empty')
+    }
+    const stripeInstance = (window as any).Stripe(publishableKey)
+    if (!stripeInstance) {
+      throw new Error('Failed to initialize Stripe - returned null')
+    }
+    return stripeInstance
+  } catch (error: any) {
+    console.error('❌ Stripe initialization error:', error.message)
+    throw error
+  }
 }
+
+// Get intake data from intake form (saved in sessionStorage)
+const intakeFormData = ref<any>(null)
 
 const billingData = ref({
   fullName: '',
@@ -327,20 +361,75 @@ const billingAddressSameAsShipping = ref(false)
 const isProcessing = ref(false)
 const cardError = ref('')
 const paymentError = ref('')
+const countries = ref<Array<{ code: string; name: string }>>([])
+
+// Load countries from API
+const loadCountries = async () => {
+  try {
+    const response = await fetch('/api/countries')
+    const data = await response.json()
+    if (data.success) {
+      countries.value = data.countries
+    }
+  } catch (error) {
+    console.error('Failed to load countries:', error)
+  }
+}
 
 // Initialize Stripe
 onMounted(async () => {
-  if (!stripePublishableKey) {
-    console.error('Stripe publishable key not configured')
-    paymentError.value = 'Payment system not configured'
+  // Get intake form data from sessionStorage
+  try {
+    const intakeData = sessionStorage.getItem('intakeFormData')
+    if (intakeData) {
+      intakeFormData.value = JSON.parse(intakeData)
+      console.log('✅ Intake data loaded:', intakeFormData.value)
+
+      // Pre-fill email and name from intake form
+      if (intakeFormData.value.email) {
+        billingData.value.email = intakeFormData.value.email
+      }
+      if (intakeFormData.value.fullName) {
+        billingData.value.fullName = intakeFormData.value.fullName
+      }
+      if (intakeFormData.value.companyName) {
+        billingData.value.company = intakeFormData.value.companyName
+      }
+    }
+  } catch (error) {
+    console.warn('Could not load intake data:', error)
+  }
+
+  // Get runtime config on client side
+  try {
+    const config = useRuntimeConfig()
+    stripePublishableKey = config.public?.stripePublishableKey || ''
+
+    if (!stripePublishableKey) {
+      console.error('Stripe publishable key not configured')
+      paymentError.value = 'Payment system not configured'
+      return
+    }
+  } catch (error) {
+    console.error('Error loading config:', error)
+    paymentError.value = 'Failed to load configuration'
     return
   }
 
-  stripe = await loadStripe(stripePublishableKey)
+  // Load countries
+  await loadCountries()
 
-  if (!stripe) {
-    console.error('Failed to load Stripe')
-    paymentError.value = 'Failed to load payment system'
+  try {
+    stripe = await loadStripe(stripePublishableKey)
+
+    if (!stripe) {
+      console.error('Failed to load Stripe')
+      paymentError.value = 'Failed to load payment system'
+      return
+    }
+  } catch (error: any) {
+    console.error('❌ Error initializing Stripe:', error.message)
+    paymentError.value = `Failed to load payment system: ${error.message}`
     return
   }
 
@@ -439,6 +528,8 @@ const submitPayment = async () => {
           country: billingData.value.country,
           company: billingData.value.company,
         },
+        // Include ALL intake form data (5 steps)
+        intakeFormData: intakeFormData.value,
       }),
     })
 
@@ -456,7 +547,9 @@ const submitPayment = async () => {
 
       sessionStorage.setItem('paymentResult', JSON.stringify(sessionData))
 
-      // Redirect to confirmation
+      // Payment successful - redirect to confirmation
+      // User will be able to login via Google or email on the login page
+      console.log('✅ Payment successful, redirecting to confirmation')
       await navigateTo('/confirmation')
     } else {
       paymentError.value = result.error || result.message || 'Payment failed'
@@ -470,7 +563,7 @@ const submitPayment = async () => {
 }
 
 // SEO
-const siteUrl = useRuntimeConfig().public?.siteUrl
+const siteUrl = useRuntimeConfig().public?.siteUrl || 'https://www.sitesynth.com'
 
 useSeoMeta({
   title: 'Payment | SiteSynth',

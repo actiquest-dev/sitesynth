@@ -1,5 +1,14 @@
+// Load .env.local variables
+import dotenv from 'dotenv'
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+dotenv.config({ path: path.join(__dirname, '.env.local') })
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 // Updated: Nuxt 3.21.1 with future compatibility version 4
+
 export default defineNuxtConfig({
   compatibilityDate: "2026-01-12",
 
@@ -122,10 +131,14 @@ export default defineNuxtConfig({
     brevoApiKey: process.env.BREVO_API_KEY || '',
     stripeSecretKey: process.env.STRIPE_SECRET_KEY || '',
     stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
+    supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
     // Public runtime config (available on client & server)
     public: {
       siteUrl: process.env.SITE_URL || 'https://www.sitesynth.com',
       stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY || '',
+      supabaseUrl: process.env.SUPABASE_URL || '',
+      supabaseAnonKey: process.env.SUPABASE_ANON_KEY || '',
+      googleClientId: process.env.NUXT_PUBLIC_GOOGLE_CLIENT_ID || '',
     },
   },
 
