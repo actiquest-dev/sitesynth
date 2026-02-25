@@ -120,9 +120,12 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // The private keys which are only available on server-side
     brevoApiKey: process.env.BREVO_API_KEY || '',
+    stripeSecretKey: process.env.STRIPE_SECRET_KEY || '',
+    stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
     // Public runtime config (available on client & server)
     public: {
       siteUrl: process.env.SITE_URL || 'https://www.sitesynth.com',
+      stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY || '',
     },
   },
 

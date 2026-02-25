@@ -23,7 +23,12 @@
         </span>
       </h1>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+      <!-- Error Message -->
+      <div v-if="paymentError" class="mb-6 p-4 bg-[#AA3733]/20 border border-[#AA3733] rounded-lg">
+        <p class="text-[#AA3733] text-sm">{{ paymentError }}</p>
+      </div>
+
+      <form @submit.prevent="submitPayment" class="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <!-- LEFT COLUMN: Billing Form (60%) -->
         <div class="lg:col-span-2 space-y-12">
           <!-- BILLING INFORMATION -->
@@ -154,63 +159,28 @@
           <div>
             <h2 class="text-2xl font-bold text-white mb-8">Payment Method</h2>
 
-            <!-- Stripe Payment Form -->
-            <StripePaymentForm
-              :amount="orderTotal"
-              @payment-success="handlePaymentSuccess"
-              @payment-error="handlePaymentError"
-            />
+            <div class="space-y-6">
+              <!-- Stripe Card Element -->
               <div>
                 <label class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium">
-                  Card Number *
+                  Card Details *
                 </label>
-                <input
-                  v-model="cardData.number"
-                  type="text"
-                  placeholder="1234 5678 9012 3456"
-                  maxlength="19"
-                  @input="formatCardNumber"
-                  required
-                  class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 text-white placeholder:text-[#555] focus:outline-none focus:border-b-[#0033ff] transition font-mono"
-                />
-              </div>
-
-              <div class="grid grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium">
-                    Expiry Date *
-                  </label>
-                  <input
-                    v-model="cardData.expiry"
-                    type="text"
-                    placeholder="MM/YY"
-                    maxlength="5"
-                    @input="formatExpiry"
-                    required
-                    class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 text-white placeholder:text-[#555] focus:outline-none focus:border-b-[#0033ff] transition font-mono"
-                  />
-                </div>
-                <div>
-                  <label class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium">
-                    CVV *
-                  </label>
-                  <input
-                    v-model="cardData.cvv"
-                    type="password"
-                    placeholder="123"
-                    maxlength="4"
-                    required
-                    class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 text-white placeholder:text-[#555] focus:outline-none focus:border-b-[#0033ff] transition font-mono"
-                  />
+                <div
+                  id="card-element"
+                  class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 rounded-sm"
+                ></div>
+                <div v-if="cardError" class="text-[#AA3733] text-sm mt-2">
+                  {{ cardError }}
                 </div>
               </div>
 
+              <!-- Cardholder Name -->
               <div>
                 <label class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium">
                   Cardholder Name *
                 </label>
                 <input
-                  v-model="cardData.holder"
+                  v-model="cardholderName"
                   type="text"
                   placeholder="John Doe"
                   required
@@ -218,10 +188,11 @@
                 />
               </div>
 
+              <!-- Billing Address Same as Shipping -->
               <label class="flex items-start gap-3">
                 <input
                   type="checkbox"
-                  v-model="cardData.sameAddress"
+                  v-model="billingAddressSameAsShipping"
                   class="w-5 h-5 rounded accent-[#0033ff] mt-0.5 flex-shrink-0"
                 />
                 <span class="text-[#999999] text-sm">
@@ -230,6 +201,7 @@
               </label>
             </div>
           </div>
+        </div>
 
         <!-- RIGHT COLUMN: Order Summary (40%) -->
         <div class="lg:col-span-1">
@@ -291,7 +263,7 @@
               </NuxtLink>
 
               <button
-                @click="submitPayment"
+                type="submit"
                 :disabled="isProcessing"
                 class="w-full px-6 py-3 bg-[#0033ff] text-white rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
@@ -300,60 +272,211 @@
             </div>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   </section>
 
   <FooterSection />
 </template>
 
-<script setup>
-import { ref } from "vue";
-import GlowRed from "@/components/effects/GlowRed.vue";
-import StripePaymentForm from "@/components/StripePaymentForm.vue";
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import GlowRed from '@/components/effects/GlowRed.vue'
 
-const orderTotal = ref(1170);
+const runtimeConfig = useRuntimeConfig()
+const stripePublishableKey = runtimeConfig.public.stripePublishableKey
+
+const orderTotal = ref(1170)
+
+// Stripe refs
+let stripe: any = null
+let elements: any = null
+let cardElement: any = null
+
+// Load Stripe from CDN
+const loadStripe = async (publishableKey: string) => {
+  if (!(window as any).Stripe) {
+    // Load Stripe.js from CDN
+    const script = document.createElement('script')
+    script.src = 'https://js.stripe.com/v3/'
+    script.async = true
+    document.head.appendChild(script)
+
+    return new Promise((resolve) => {
+      script.onload = () => {
+        resolve((window as any).Stripe(publishableKey))
+      }
+    })
+  }
+  return (window as any).Stripe(publishableKey)
+}
 
 const billingData = ref({
-  fullName: "",
-  email: "",
-  street: "",
-  apartment: "",
-  city: "",
-  postal: "",
-  country: "",
-  company: "",
-});
+  fullName: '',
+  email: '',
+  street: '',
+  apartment: '',
+  city: '',
+  postal: '',
+  country: '',
+  company: '',
+})
 
-const handlePaymentSuccess = async (result) => {
-  // Payment successful - save transaction and redirect to confirmation
-  const sessionData = {
-    chargeId: result.chargeId,
-    amount: result.amount,
-    email: result.email,
-    timestamp: new Date().toISOString(),
-  };
+const cardholderName = ref('')
+const billingAddressSameAsShipping = ref(false)
+const isProcessing = ref(false)
+const cardError = ref('')
+const paymentError = ref('')
 
-  // Save to session storage
-  sessionStorage.setItem('paymentResult', JSON.stringify(sessionData));
+// Initialize Stripe
+onMounted(async () => {
+  if (!stripePublishableKey) {
+    console.error('Stripe publishable key not configured')
+    paymentError.value = 'Payment system not configured'
+    return
+  }
 
-  // Redirect to confirmation page
-  navigateTo("/confirmation");
-};
+  stripe = await loadStripe(stripePublishableKey)
 
-const handlePaymentError = (error) => {
-  console.error('Payment error:', error);
-  // Show error notification
-};
+  if (!stripe) {
+    console.error('Failed to load Stripe')
+    paymentError.value = 'Failed to load payment system'
+    return
+  }
+
+  elements = stripe.elements()
+
+  if (!elements) {
+    console.error('Failed to create Stripe elements')
+    paymentError.value = 'Failed to initialize payment form'
+    return
+  }
+
+  cardElement = elements.create('card', {
+    style: {
+      base: {
+        color: '#ffffff',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '16px',
+        '::placeholder': {
+          color: '#555555',
+        },
+      },
+      invalid: {
+        color: '#AA3733',
+      },
+    },
+  })
+
+  cardElement.mount('#card-element')
+
+  // Handle card errors
+  cardElement.addEventListener('change', (event) => {
+    if (event.error) {
+      cardError.value = event.error.message || ''
+    } else {
+      cardError.value = ''
+    }
+  })
+})
+
+const submitPayment = async () => {
+  if (!stripe || !elements || !cardElement) {
+    paymentError.value = 'Payment system not ready'
+    return
+  }
+
+  // Validate form
+  if (!billingData.value.fullName || !billingData.value.email || !billingData.value.street ||
+      !billingData.value.city || !billingData.value.postal || !billingData.value.country) {
+    paymentError.value = 'Please fill in all billing information'
+    return
+  }
+
+  if (!cardholderName.value) {
+    cardError.value = 'Please enter cardholder name'
+    return
+  }
+
+  isProcessing.value = true
+  paymentError.value = ''
+
+  try {
+    // Create token from card element
+    const { token, error } = await stripe.createToken(cardElement, {
+      name: cardholderName.value,
+      address_country: billingData.value.country,
+    })
+
+    if (error) {
+      cardError.value = error.message || 'Failed to create payment token'
+      isProcessing.value = false
+      return
+    }
+
+    if (!token) {
+      paymentError.value = 'Failed to create payment token'
+      isProcessing.value = false
+      return
+    }
+
+    // Send payment to backend
+    const response = await fetch('/api/process-payment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        token: token.id,
+        amount: orderTotal.value,
+        email: billingData.value.email,
+        billingData: {
+          fullName: billingData.value.fullName,
+          street: billingData.value.street,
+          apartment: billingData.value.apartment,
+          city: billingData.value.city,
+          postal: billingData.value.postal,
+          country: billingData.value.country,
+          company: billingData.value.company,
+        },
+      }),
+    })
+
+    const result = await response.json()
+
+    if (result.success) {
+      // Save transaction data
+      const sessionData = {
+        chargeId: result.chargeId,
+        amount: orderTotal.value,
+        email: billingData.value.email,
+        fullName: billingData.value.fullName,
+        timestamp: new Date().toISOString(),
+      }
+
+      sessionStorage.setItem('paymentResult', JSON.stringify(sessionData))
+
+      // Redirect to confirmation
+      await navigateTo('/confirmation')
+    } else {
+      paymentError.value = result.error || result.message || 'Payment failed'
+    }
+  } catch (error: any) {
+    console.error('Payment error:', error)
+    paymentError.value = error.message || 'Payment processing failed'
+  } finally {
+    isProcessing.value = false
+  }
+}
 
 // SEO
-const siteUrl = useRuntimeConfig().public?.siteUrl;
+const siteUrl = useRuntimeConfig().public?.siteUrl
 
 useSeoMeta({
-  title: "Payment | SiteSynth",
-  description: "Complete your payment for SiteSynth services.",
-  ogTitle: "Payment | SiteSynth",
-  ogDescription: "Secure payment processing for SiteSynth.",
+  title: 'Payment | SiteSynth',
+  description: 'Complete your payment for SiteSynth services.',
+  ogTitle: 'Payment | SiteSynth',
+  ogDescription: 'Secure payment processing for SiteSynth.',
   ogImage: `${siteUrl}/assets/shareimage.png`,
-});
+})
 </script>
