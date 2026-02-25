@@ -32,9 +32,9 @@
         <p class="text-[#AA3733] text-sm">{{ paymentError }}</p>
       </div>
 
-      <form @submit.prevent="submitPayment" class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+      <form @submit.prevent="submitPayment" class="grid grid-cols-1 lg:grid-cols-5 gap-12">
         <!-- LEFT COLUMN: Billing Form (60%) -->
-        <div class="lg:col-span-2 space-y-12">
+        <div class="lg:col-span-3 space-y-12">
           <!-- BILLING INFORMATION -->
           <div>
             <h2 class="text-2xl font-bold text-white mb-8">Billing Information</h2>
@@ -50,7 +50,7 @@
                   type="text"
                   placeholder="John Doe"
                   required
-                  class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 text-white placeholder:text-[#555] focus:outline-none focus:border-b-[#0033ff] transition"
+                  class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#0033ff] focus:ring-1 focus:ring-[#0033ff] transition"
                 />
               </div>
 
@@ -64,7 +64,7 @@
                   type="email"
                   placeholder="hello@example.com"
                   required
-                  class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 text-white placeholder:text-[#555] focus:outline-none focus:border-b-[#0033ff] transition"
+                  class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#0033ff] focus:ring-1 focus:ring-[#0033ff] transition"
                 />
               </div>
 
@@ -78,7 +78,7 @@
                   type="text"
                   placeholder="123 Main Street"
                   required
-                  class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 text-white placeholder:text-[#555] focus:outline-none focus:border-b-[#0033ff] transition"
+                  class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#0033ff] focus:ring-1 focus:ring-[#0033ff] transition"
                 />
               </div>
 
@@ -91,7 +91,7 @@
                   v-model="billingData.apartment"
                   type="text"
                   placeholder="Apt 4B"
-                  class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 text-white placeholder:text-[#555] focus:outline-none focus:border-b-[#0033ff] transition"
+                  class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#0033ff] focus:ring-1 focus:ring-[#0033ff] transition"
                 />
               </div>
 
@@ -106,7 +106,7 @@
                     type="text"
                     placeholder="New York"
                     required
-                    class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 text-white placeholder:text-[#555] focus:outline-none focus:border-b-[#0033ff] transition"
+                    class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#0033ff] focus:ring-1 focus:ring-[#0033ff] transition"
                   />
                 </div>
                 <div>
@@ -118,7 +118,7 @@
                     type="text"
                     placeholder="10001"
                     required
-                    class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 text-white placeholder:text-[#555] focus:outline-none focus:border-b-[#0033ff] transition"
+                    class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#0033ff] focus:ring-1 focus:ring-[#0033ff] transition"
                   />
                 </div>
               </div>
@@ -131,7 +131,7 @@
                 <select
                   v-model="billingData.country"
                   required
-                  class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 text-white focus:outline-none focus:border-b-[#0033ff] transition"
+                  class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white focus:outline-none focus:border-[#0033ff] focus:ring-1 focus:ring-[#0033ff] transition"
                 >
                   <option value="">Select country</option>
                   <option v-for="country in countries" :key="country.code" :value="country.code">
@@ -149,7 +149,7 @@
                   v-model="billingData.company"
                   type="text"
                   placeholder="Your company"
-                  class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 text-white placeholder:text-[#555] focus:outline-none focus:border-b-[#0033ff] transition"
+                  class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#0033ff] focus:ring-1 focus:ring-[#0033ff] transition"
                 />
               </div>
             </div>
@@ -159,7 +159,7 @@
           <div>
             <h2 class="text-2xl font-bold text-white mb-8">Payment Method</h2>
 
-            <div class="space-y-6">
+            <div class="space-y-8">
               <!-- Stripe Card Element -->
               <div>
                 <label class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium">
@@ -167,9 +167,9 @@
                 </label>
                 <div
                   id="card-element"
-                  class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 rounded-sm min-h-[50px]"
+                  class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg min-h-[48px]"
                 ></div>
-                <div v-if="cardError" class="text-[#AA3733] text-sm mt-2">
+                <div v-if="cardError" class="text-[#AA3733] text-sm mt-3">
                   {{ cardError }}
                 </div>
               </div>
@@ -184,7 +184,7 @@
                   type="text"
                   placeholder="John Doe"
                   required
-                  class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 text-white placeholder:text-[#555] focus:outline-none focus:border-b-[#0033ff] transition"
+                  class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#0033ff] focus:ring-1 focus:ring-[#0033ff] transition"
                 />
               </div>
 
@@ -204,7 +204,7 @@
         </div>
 
         <!-- RIGHT COLUMN: Order Summary (40%) -->
-        <div class="lg:col-span-1">
+        <div class="lg:col-span-2">
           <div
             class="sticky top-8 border-l-4 border-[#0033ff] bg-[#1a1a1a] p-6 rounded-lg"
           >
