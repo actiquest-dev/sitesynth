@@ -79,7 +79,7 @@
       <div v-if="getCurrentImageSrc" class="relative md:border-l md:border-[#636363]">
         <div class="pt-6 md:pt-0">
           <div class="relative w-full h-[420px] md:h-[520px] overflow-hidden">
-            <transition name="image-swap" mode="out-in">
+            <transition name="image-swap">
               <img
                 :key="getCurrentImageSrc"
                 :src="getCurrentImageSrc"
@@ -138,17 +138,28 @@ const getCurrentImageAlt = computed(() => {
 <style scoped>
 .image-swap-enter-active,
 .image-swap-leave-active {
-  transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, filter;
 }
 
 .image-swap-enter-from {
   opacity: 0;
-  transform: translateY(6px) scale(0.985);
+  filter: blur(8px);
+}
+
+.image-swap-enter-to {
+  opacity: 1;
+  filter: blur(0);
+}
+
+.image-swap-leave-from {
+  opacity: 1;
+  filter: blur(0);
 }
 
 .image-swap-leave-to {
   opacity: 0;
-  transform: translateY(-6px) scale(0.985);
+  filter: blur(8px);
 }
 </style>

@@ -276,7 +276,7 @@ const pricingCards = [
     ],
     cta: {
       text: "Schedule a Call",
-      href: "#",
+      href: "/contact-us",
       className:
         "bg-[#AA3733] text-white hover:bg-red-700 group-hover:shadow-lg group-hover:shadow-red-500/50",
     },
