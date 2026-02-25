@@ -199,7 +199,6 @@
           <p class="text-[#AA3733] text-sm">{{ errorMessage }}</p>
         </div>
       </div>
-      </div>
 
       <!-- Trust Badge -->
       <div class="mt-16 pt-8 border-t border-[#333]">
