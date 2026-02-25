@@ -45,7 +45,7 @@
             :href="ctaLink"
             :class="[
               // base: match your preferred CTA style
-              'border border-white bg-white text-[#161616] font-semibold transition-colors duration-[1000ms] inline-flex items-center justify-center',
+              'border border-white bg-white text-[#161616] font-semibold transition-colors duration-[1000ms] inline-flex items-center justify-center cta-hover',
               // mobile: consistent sizing
               'w-full h-11 px-6 mt-6',
               // sm+: keep your existing desktop behavior

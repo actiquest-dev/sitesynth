@@ -42,7 +42,7 @@
         </div>
       </button>
       <DesktopMenu :hoverbg="hoverbg" :hoverborder="hoverborder" />
-      <MobileMenu :menuOpen="menuOpen" />
+      <MobileMenu :menuOpen="menuOpen" :hoverbg="hoverbg" :hoverborder="hoverborder" />
     </div>
   </header>
 </template>

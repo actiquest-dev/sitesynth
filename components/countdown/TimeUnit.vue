@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col items-center" style="gap: 6px">
-    <FlipGroup :value="padded" :fontSize="32" color="#ffffff" :gap="2" />
+    <FlipGroup :value="padded" :fontSize="32" color="#f2f2f2" :gap="2" />
     <span :style="labelStyle">{{ label }}</span>
   </div>
 </template>

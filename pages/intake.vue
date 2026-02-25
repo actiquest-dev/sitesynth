@@ -1,7 +1,7 @@
 <template>
   <HeaderSection />
 
-  <section class="relative bg-[#161616] min-h-screen pt-20 md:pt-32 pb-16 md:pb-24 overflow-hidden">
+  <section class="relative bg-[#161616] min-h-screen pt-36 md:pt-32 pb-16 md:pb-24 overflow-hidden">
     <!-- Background Effects -->
     <GlowBlue />
     <ParticleEffect />
@@ -27,7 +27,7 @@
             <p class="text-[#999999] text-sm mt-1">Project Setup</p>
           </div>
           <span class="text-right">
-            <span class="text-3xl font-bold text-[#0033ff]">
+            <span class="text-3xl font-bold text-[#8D35FF]">
               {{ Math.round((currentStep / totalSteps) * 100) }}%
             </span>
             <p class="text-[#999999] text-xs">Complete</p>
@@ -70,13 +70,17 @@
               />
               <div
                 :class="[
-                  'p-6 border-2 rounded-lg transition-all',
+                  'p-6 border-2 rounded-none transition-all',
                   formData.service === service.id
-                    ? 'border-[#0033ff] bg-[#0033ff]/10'
+                    ? 'border-[#8D35FF] bg-[#8D35FF]/10'
                     : 'border-[#333] bg-[#1a1a1a] hover:border-[#555]',
                 ]"
               >
-                <div class="text-3xl mb-3">{{ service.icon }}</div>
+                <img
+                  :src="service.iconSrc"
+                  :alt="service.label"
+                  class="w-8 h-8 mb-3 object-contain"
+                />
                 <h4 class="text-white font-semibold">{{ service.label }}</h4>
               </div>
             </label>
@@ -99,32 +103,60 @@
               <label class="block text-[#999999] text-xs uppercase tracking-wide mb-4 font-medium">
                 Complexity *
               </label>
-              <select
-                v-model="formData.complexity"
-                class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition"
-                required
-              >
-                <option value="">Select complexity</option>
-                <option value="simple">Simple</option>
-                <option value="medium">Medium</option>
-                <option value="complex">Complex</option>
-              </select>
+              <div class="relative group">
+                <select
+                  v-model="formData.complexity"
+                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 pr-10 text-sm text-white appearance-none focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444] cursor-pointer"
+                  required
+                >
+                  <option value="">Select complexity</option>
+                  <option value="simple">Simple</option>
+                  <option value="medium">Medium</option>
+                  <option value="complex">Complex</option>
+                </select>
+                <svg
+                  class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#999999]"
+                  width="18"
+                  height="14"
+                  viewBox="0 0 320 512"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M201.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 338.7 54.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"
+                  />
+                </svg>
+              </div>
             </div>
 
             <div v-if="formData.complexity" class="mt-6">
               <label class="block text-[#999999] text-xs uppercase tracking-wide mb-4 font-medium">
                 Package Level *
               </label>
-              <select
-                v-model="formData.packageLevel"
-                class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition"
-                required
-              >
-                <option value="">Select package</option>
-                <option v-for="pkg in availablePackages" :key="pkg" :value="pkg">
-                  {{ pkg }}
-                </option>
-              </select>
+              <div class="relative group">
+                <select
+                  v-model="formData.packageLevel"
+                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 pr-10 text-sm text-white appearance-none focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444] cursor-pointer"
+                  required
+                >
+                  <option value="">Select package</option>
+                  <option v-for="pkg in availablePackages" :key="pkg" :value="pkg">
+                    {{ pkg }}
+                  </option>
+                </select>
+                <svg
+                  class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#999999]"
+                  width="18"
+                  height="14"
+                  viewBox="0 0 320 512"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M201.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 338.7 54.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
         </div>
@@ -144,19 +176,39 @@
             <label
               v-for="feature in features"
               :key="feature.id"
-              class="flex items-start gap-4 p-4 border border-[#333] rounded-lg hover:border-[#555] cursor-pointer transition"
+              class="flex items-center gap-4 p-4 border border-[#333] rounded-none hover:border-[#555] cursor-pointer transition"
             >
               <input
                 type="checkbox"
                 :value="feature.id"
                 v-model="formData.selectedFeatures"
-                class="w-5 h-5 rounded accent-[#0033ff] mt-0.5 flex-shrink-0"
+                class="sr-only"
               />
+              <span
+                :class="[
+                  'w-5 h-5 flex-shrink-0 border bg-[#1a1a1a] flex items-center justify-center transition-all duration-200',
+                  isFeatureSelected(feature.id) ? 'border-[#8D35FF] bg-[#8D35FF]/20' : 'border-[#555]',
+                ]"
+              >
+                <svg
+                  v-if="isFeatureSelected(feature.id)"
+                  class="w-3.5 h-3.5 text-[#8D35FF]"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </span>
               <div class="flex-1">
                 <h4 class="text-white font-semibold">{{ feature.label }}</h4>
                 <p class="text-[#999999] text-sm">{{ feature.description }}</p>
               </div>
-              <span class="text-[#0033ff] font-semibold whitespace-nowrap">
+              <span class="text-[#7a7a7a] font-semibold whitespace-nowrap">
                 {{ feature.price }}
               </span>
             </label>
@@ -166,7 +218,7 @@
           <div class="border-t border-[#333] pt-6">
             <div class="flex justify-between items-center">
               <span class="text-[#999999]">Current Price:</span>
-              <span class="text-2xl font-bold text-[#0033ff]">
+              <span class="text-2xl font-bold text-[#d4d4d4]">
                 €{{ calculatePrice() }}
               </span>
             </div>
@@ -189,40 +241,88 @@
               <label class="block text-[#999999] text-xs uppercase tracking-wide mb-4 font-medium">
                 Budget *
               </label>
-              <select
-                v-model="formData.budget"
-                class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition"
-                required
-              >
-                <option value="">Select budget</option>
-                <option value="starter">Starter (€500)</option>
-                <option value="growth">Growth (€900)</option>
-                <option value="enterprise">Enterprise (Custom)</option>
-              </select>
+              <div class="relative group">
+                <select
+                  v-model="formData.budget"
+                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 pr-10 text-sm text-white appearance-none focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444] cursor-pointer"
+                  required
+                >
+                  <option value="">Select budget</option>
+                  <option value="starter">Starter (€500)</option>
+                  <option value="growth">Growth (€900)</option>
+                  <option value="enterprise">Enterprise (Custom)</option>
+                </select>
+                <svg
+                  class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#999999]"
+                  width="18"
+                  height="14"
+                  viewBox="0 0 320 512"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M201.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 338.7 54.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"
+                  />
+                </svg>
+              </div>
             </div>
 
             <div>
               <label class="block text-[#999999] text-xs uppercase tracking-wide mb-4 font-medium">
                 Timeline Preference *
               </label>
-              <select
-                v-model="formData.timeline"
-                class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition"
-                required
-              >
-                <option value="">Select timeline</option>
-                <option value="5days">5 days (Starter)</option>
-                <option value="7days">7 days (Growth)</option>
-                <option value="custom">Custom (Enterprise)</option>
-              </select>
+              <div class="relative group">
+                <select
+                  v-model="formData.timeline"
+                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 pr-10 text-sm text-white appearance-none focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444] cursor-pointer"
+                  required
+                >
+                  <option value="">Select timeline</option>
+                  <option value="5days">5 days (Starter)</option>
+                  <option value="7days">7 days (Growth)</option>
+                  <option value="custom">Custom (Enterprise)</option>
+                </select>
+                <svg
+                  class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#999999]"
+                  width="18"
+                  height="14"
+                  viewBox="0 0 320 512"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M201.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 338.7 54.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"
+                  />
+                </svg>
+              </div>
             </div>
 
-            <label class="flex items-start gap-3 p-4 border border-[#333] rounded-lg hover:border-[#555] cursor-pointer transition">
+            <label class="flex items-start gap-3 p-4 border border-[#333] rounded-none hover:border-[#555] cursor-pointer transition">
               <input
                 type="checkbox"
                 v-model="formData.rushFee"
-                class="w-5 h-5 rounded accent-[#0033ff] mt-0.5 flex-shrink-0"
+                class="sr-only"
               />
+              <span
+                :class="[
+                  'w-5 h-5 mt-0.5 flex-shrink-0 border bg-[#1a1a1a] flex items-center justify-center transition-all duration-200',
+                  formData.rushFee ? 'border-[#8D35FF] bg-[#8D35FF]/20' : 'border-[#555]',
+                ]"
+              >
+                <svg
+                  v-if="formData.rushFee"
+                  class="w-3.5 h-3.5 text-[#8D35FF]"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </span>
               <div>
                 <h4 class="text-white font-semibold">Need it faster?</h4>
                 <p class="text-[#999999] text-sm">Add rush fee for expedited delivery</p>
@@ -231,7 +331,7 @@
           </div>
 
           <!-- Price Summary -->
-          <div class="border border-[#0033ff] bg-[#1a1a1a] p-6 rounded-lg">
+          <div class="border border-[#0033ff] bg-[#1a1a1a] p-6 rounded-none">
             <p class="text-[#999999] text-sm mb-2">Total Budget:</p>
             <p class="text-4xl font-bold text-[#0033ff]">
               €{{ formData.budget === 'starter' ? 500 : formData.budget === 'growth' ? 900 : 'Custom' }}
@@ -261,7 +361,7 @@
                 type="text"
                 placeholder="John Doe"
                 required
-                class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition"
+                class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition"
               />
             </div>
 
@@ -275,7 +375,7 @@
                 type="email"
                 placeholder="hello@example.com"
                 required
-                class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition"
+                class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition"
               />
             </div>
 
@@ -288,7 +388,7 @@
                 v-model="formData.phone"
                 type="tel"
                 placeholder="+32 (0)4 23 456 789"
-                class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition"
+                class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition"
               />
             </div>
 
@@ -301,7 +401,7 @@
                 v-model="formData.companyName"
                 type="text"
                 placeholder="Your company"
-                class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition"
+                class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition"
               />
             </div>
 
@@ -316,7 +416,7 @@
                 rows="5"
                 required
                 minlength="10"
-                class="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition resize-none"
+                class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition resize-none"
               ></textarea>
             </div>
 
@@ -331,9 +431,20 @@
                     type="radio"
                     value="email"
                     v-model="formData.contactMethod"
-                    class="accent-[#0033ff]"
+                    class="sr-only"
                     required
                   />
+                  <span
+                    :class="[
+                      'w-5 h-5 flex-shrink-0 rounded-full border bg-[#1a1a1a] flex items-center justify-center transition-all duration-200',
+                      formData.contactMethod === 'email' ? 'border-[#8D35FF]' : 'border-[#555]',
+                    ]"
+                  >
+                    <span
+                      v-if="formData.contactMethod === 'email'"
+                      class="w-2.5 h-2.5 rounded-full bg-[#8D35FF]"
+                    ></span>
+                  </span>
                   <span class="text-white">Email</span>
                 </label>
                 <label class="flex items-center gap-3 cursor-pointer">
@@ -341,8 +452,19 @@
                     type="radio"
                     value="phone"
                     v-model="formData.contactMethod"
-                    class="accent-[#0033ff]"
+                    class="sr-only"
                   />
+                  <span
+                    :class="[
+                      'w-5 h-5 flex-shrink-0 rounded-full border bg-[#1a1a1a] flex items-center justify-center transition-all duration-200',
+                      formData.contactMethod === 'phone' ? 'border-[#8D35FF]' : 'border-[#555]',
+                    ]"
+                  >
+                    <span
+                      v-if="formData.contactMethod === 'phone'"
+                      class="w-2.5 h-2.5 rounded-full bg-[#8D35FF]"
+                    ></span>
+                  </span>
                   <span class="text-white">Phone</span>
                 </label>
                 <label class="flex items-center gap-3 cursor-pointer">
@@ -350,8 +472,19 @@
                     type="radio"
                     value="both"
                     v-model="formData.contactMethod"
-                    class="accent-[#0033ff]"
+                    class="sr-only"
                   />
+                  <span
+                    :class="[
+                      'w-5 h-5 flex-shrink-0 rounded-full border bg-[#1a1a1a] flex items-center justify-center transition-all duration-200',
+                      formData.contactMethod === 'both' ? 'border-[#8D35FF]' : 'border-[#555]',
+                    ]"
+                  >
+                    <span
+                      v-if="formData.contactMethod === 'both'"
+                      class="w-2.5 h-2.5 rounded-full bg-[#8D35FF]"
+                    ></span>
+                  </span>
                   <span class="text-white">Both</span>
                 </label>
               </div>
@@ -362,8 +495,28 @@
               <input
                 type="checkbox"
                 v-model="formData.newsletter"
-                class="w-5 h-5 rounded accent-[#0033ff] mt-0.5 flex-shrink-0"
+                class="sr-only"
               />
+              <span
+                :class="[
+                  'w-5 h-5 mt-0.5 flex-shrink-0 border bg-[#1a1a1a] flex items-center justify-center transition-all duration-200',
+                  formData.newsletter ? 'border-[#8D35FF] bg-[#8D35FF]/20' : 'border-[#555]',
+                ]"
+              >
+                <svg
+                  v-if="formData.newsletter"
+                  class="w-3.5 h-3.5 text-[#8D35FF]"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </span>
               <span class="text-[#999999] text-sm leading-relaxed">
                 Subscribe to our updates and project insights
               </span>
@@ -377,7 +530,7 @@
             v-if="currentStep > 1"
             type="button"
             @click="previousStep"
-            class="px-6 py-3 border border-[#999999] text-[#999999] rounded-lg font-semibold hover:border-white hover:text-white transition"
+            class="px-6 py-3 border border-[#999999] text-[#999999] rounded-none font-semibold hover:border-white hover:text-white transition"
           >
             Back
           </button>
@@ -386,7 +539,7 @@
             v-if="currentStep < totalSteps"
             type="submit"
             :disabled="!isStepValid"
-            class="flex-1 px-6 py-3 bg-[#0033ff] text-white rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            class="flex-1 px-6 py-3 bg-[#8D35FF] text-white rounded-none font-semibold hover:bg-[#7B2EF0] disabled:opacity-50 disabled:cursor-not-allowed transition"
           >
             Next
           </button>
@@ -394,7 +547,7 @@
           <NuxtLink
             v-if="currentStep === totalSteps"
             to="/payment"
-            class="flex-1 px-6 py-3 bg-[#0033ff] text-white text-center rounded-lg font-semibold hover:bg-blue-700 transition"
+            class="flex-1 px-6 py-3 bg-[#8D35FF] text-white text-center rounded-none font-semibold hover:bg-[#7B2EF0] transition"
           >
             Continue to Payment
           </NuxtLink>
@@ -432,11 +585,11 @@ const formData = ref({
 });
 
 const services = [
-  { id: "mobile", label: "Mobile Adaptation", icon: "📱" },
-  { id: "ecommerce", label: "E-commerce", icon: "🛒" },
-  { id: "blog", label: "Blog/Content Site", icon: "📄" },
-  { id: "portfolio", label: "Portfolio", icon: "🎨" },
-  { id: "custom", label: "Custom", icon: "⭐" },
+  { id: "mobile", label: "Mobile Adaptation", iconSrc: "/assets/icons/monitor-mobbile.svg" },
+  { id: "ecommerce", label: "E-commerce", iconSrc: "/assets/icons/box.svg" },
+  { id: "blog", label: "Blog/Content Site", iconSrc: "/assets/icons/book.svg" },
+  { id: "portfolio", label: "Portfolio", iconSrc: "/assets/icons/eye.svg" },
+  { id: "custom", label: "Custom", iconSrc: "/assets/icons/setting-2.svg" },
 ];
 
 const features = [
@@ -531,6 +684,9 @@ const calculatePrice = () => {
 
   return price;
 };
+
+const isFeatureSelected = (featureId) =>
+  formData.value.selectedFeatures.includes(featureId);
 
 // SEO
 const siteUrl = useRuntimeConfig().public?.siteUrl;

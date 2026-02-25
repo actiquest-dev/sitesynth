@@ -2,14 +2,14 @@
   <HeaderSection />
 
   <!-- HERO SECTION WITH EFFECTS -->
-  <section class="relative bg-[#161616] text-white overflow-hidden pb-16 md:pb-24">
+  <section class="relative bg-[#161616] text-white overflow-hidden pb-16 md:pb-24 border-b border-[#636363]">
     <!-- Glow Effects -->
     <GlowBlue />
     <ParticleEffect />
 
     <div class="relative max-w-7xl mx-auto px-6 md:px-12 pt-20 md:pt-32">
       <div class="text-center mb-12">
-        <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mb-8">
+        <h1 class="text-4xl sm:text-5xl font-extrabold leading-tight mb-8">
           Simple, Transparent<br />
           <span
             class="bg-gradient-to-r from-[#0033ff] via-[#8D35FF] to-[#AA3733] bg-clip-text text-transparent"
@@ -17,71 +17,78 @@
             Pricing
           </span>
         </h1>
-        <p class="text-xl text-[#999999] max-w-2xl mx-auto leading-relaxed">
+        <p class="text-base sm:text-lg text-[#d4d4d4] max-w-2xl mx-auto leading-relaxed">
           Choose the plan that fits your project. Scale up anytime as your
           needs grow.
         </p>
       </div>
 
       <!-- Tag Pills -->
-      <div class="mt-10 flex flex-wrap justify-center gap-3 max-w-3xl mx-auto">
+      <div class="mt-10 sm:mt-12 flex flex-wrap justify-center gap-3 sm:gap-4 max-w-3xl mx-auto">
         <div
-          v-for="tag in pricingTags"
-          :key="tag"
-          class="group tag-pill cursor-default rounded-full border-2 border-[#333] p-[2px] hover:border-[#0033ff] transition-all duration-300"
+          v-for="(tag, index) in pricingTags"
+          :key="tag.label"
+          :style="{ '--i': index }"
+          :class="[
+            'group tag-pill cursor-default rounded-full border-[2px] p-[3px]',
+            tag.strokeClass,
+          ]"
         >
           <div
-            class="tag-pill-inner rounded-full bg-[#161616] px-4 py-2 text-sm font-medium text-white/80 group-hover:text-white transition-all"
+            class="tag-pill-inner rounded-full bg-[#161616] px-6 py-[6px] text-[15px] sm:px-12 sm:py-2 sm:text-lg font-medium text-white/90 transition-all duration-300 group-hover:bg-[#181818]"
           >
-            {{ tag }}
+            {{ tag.label }}
           </div>
         </div>
       </div>
     </div>
   </section>
 
+  <BannerSection id="banner-pricing-plans" tag="h2" text="Choose Your Plan" />
+
   <!-- PRICING CARDS SECTION -->
-  <section class="relative bg-[#161616] py-16 md:py-24">
-    <!-- Background Gradients -->
-    <div class="absolute inset-0 pointer-events-none overflow-hidden">
-      <div
-        class="absolute top-20 right-0 w-96 h-96 bg-gradient-to-br from-[#0033ff]/30 to-transparent rounded-full blur-3xl"
-      ></div>
-      <div
-        class="absolute bottom-20 left-0 w-96 h-96 bg-gradient-to-tr from-[#8D35FF]/30 to-transparent rounded-full blur-3xl"
-      ></div>
-    </div>
-
-    <div class="relative max-w-7xl mx-auto px-6 md:px-12">
-      <h2 class="text-4xl md:text-5xl font-extrabold text-center text-white mb-20">
-        Choose Your Plan
-      </h2>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+  <section class="relative bg-[#161616] border-t border-b border-[#636363]">
+    <div class="relative max-w-[1248px] mx-auto px-6">
+      <div class="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         <!-- Card Component -->
         <div
-          v-for="card in pricingCards"
+          v-for="(card, index) in pricingCards"
           :key="card.id"
-          class="group relative bg-[#1a1a1a] rounded-lg border border-[#333] hover:border-[#0033ff] transition-all duration-300 overflow-hidden h-full"
+          class="group relative overflow-hidden z-0 bg-[#161616] hover:bg-white/5 transition-colors duration-300
+                 border-l border-r border-[#636363]
+                 px-8 py-8 md:px-6 md:py-9
+                 border-b border-[#636363] first:border-t
+                 md:border-b-0 md:first:border-t-0"
         >
-          <!-- Glow on hover -->
+          <GlowBlue />
+
+          <!-- Gradient Background -->
           <div
-            class="absolute inset-0 bg-gradient-to-br from-[#0033ff]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+            class="absolute inset-0 opacity-100 transition-opacity duration-300 pointer-events-none"
+            :style="getPricingGradientStyle(index)"
           ></div>
 
           <!-- Content -->
-          <div class="relative z-10 p-8 flex flex-col h-full">
-            <!-- Badge -->
-            <div v-if="card.badge" class="mb-6">
-              <span
-                class="inline-block px-3 py-1 bg-[#AA3733] text-white text-xs font-semibold rounded"
-              >
-                {{ card.badge }}
-              </span>
-            </div>
-
+          <div class="relative z-10 flex flex-col h-full">
             <!-- Title & Price -->
-            <div class="mb-8">
+            <div class="mb-6">
+              <div class="mb-3 h-7 flex items-start">
+                <span
+                  v-if="card.badge"
+                  :class="[
+                    'inline-flex items-center rounded-full px-2.5 py-1 text-white text-[11px] leading-none font-semibold whitespace-nowrap',
+                    card.badgeClass || 'bg-[#AA3733]',
+                  ]"
+                >
+                  {{ card.badge }}
+                </span>
+                <span
+                  v-else
+                  class="inline-flex items-center rounded-full px-2.5 py-1 text-[11px] leading-none font-semibold whitespace-nowrap opacity-0 select-none"
+                >
+                  Badge
+                </span>
+              </div>
               <h3 class="text-2xl font-bold text-white mb-3">{{ card.title }}</h3>
               <div class="flex items-baseline gap-2">
                 <span class="text-4xl font-extrabold text-white">{{
@@ -94,7 +101,7 @@
             </div>
 
             <!-- Features -->
-            <div class="space-y-3 mb-10 flex-grow">
+            <div class="space-y-3 mb-7 flex-grow">
               <div v-for="feature in card.features" :key="feature" class="flex items-start gap-3">
                 <svg
                   class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"
@@ -112,7 +119,7 @@
             </div>
 
             <!-- Divider & Delivery Time -->
-            <div class="border-t border-[#333] py-4 mb-6">
+            <div class="border-t border-[#333] py-3 mb-5">
               <p class="text-[#999999] text-sm">
                 <span class="font-semibold text-white">{{ card.deliveryLabel }}:</span>
                 {{ card.delivery }}
@@ -123,7 +130,7 @@
             <NuxtLink
               :to="card.cta.href"
               :class="[
-                'w-full px-6 py-3 text-center rounded-lg font-semibold transition-all duration-300 transform group-hover:scale-105',
+                'w-full px-6 py-3 text-center rounded-none font-semibold transition-all duration-300 transform group-hover:scale-105 cta-hover',
                 card.cta.className,
               ]"
             >
@@ -135,32 +142,30 @@
     </div>
   </section>
 
+  <BannerSection id="banner-pricing-faq" tag="h2" text="Frequently Asked Questions" />
+
   <!-- FAQ SECTION -->
-  <section class="relative bg-[#161616] py-16 md:py-24">
+  <section class="relative bg-[#161616] py-16 md:py-24 border-t border-b border-[#636363]">
     <!-- Glow Effect -->
     <GlowRed />
 
     <div class="relative max-w-4xl mx-auto px-6 md:px-12">
-      <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-16 text-center">
-        Frequently Asked Questions
-      </h2>
-
       <div class="space-y-4">
         <div
           v-for="(item, idx) in faqItems"
           :key="idx"
-          class="group border border-[#333] rounded-lg overflow-hidden hover:border-[#0033ff] transition-colors duration-300"
+          class="group border border-[#333] overflow-hidden hover:border-[#8D35FF] transition-colors duration-300"
         >
           <button
             @click="toggleFAQ(idx)"
-            class="w-full px-6 py-4 flex items-center justify-between bg-[#1a1a1a] hover:bg-[#222] transition-colors text-left"
+            class="w-full px-6 py-4 flex items-center justify-between bg-[#1a1a1a] hover:bg-[#202020] transition-colors text-left"
           >
             <span class="text-lg font-semibold text-white">{{ item.question }}</span>
             <svg
               :class="{
                 'rotate-180': expandedFAQ === idx,
               }"
-              class="w-5 h-5 text-[#0033ff] transition-transform duration-300"
+              class="w-5 h-5 text-[#8D35FF] transition-transform duration-300"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -169,18 +174,24 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                d="M19 9l-7 7-7-7"
               />
             </svg>
           </button>
 
           <div
-            v-if="expandedFAQ === idx"
-            class="px-6 py-4 bg-[#161616] border-t border-[#333]"
+            :class="[
+              'grid transition-all duration-300 ease-out',
+              expandedFAQ === idx ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0',
+            ]"
           >
-            <p class="text-[#999999] text-base leading-relaxed">
-              {{ item.answer }}
-            </p>
+            <div class="overflow-hidden">
+              <div class="px-6 py-4 bg-[#161616] border-t border-[#333]">
+                <p class="text-[#999999] text-base leading-relaxed">
+                  {{ item.answer }}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -199,16 +210,18 @@ import ParticleEffect from "@/components/effects/ParticleEffect.vue";
 const expandedFAQ = ref(null);
 
 const pricingTags = [
-  "No Setup Fees",
-  "Flexible Scope",
-  "Pay Once",
-  "Quick Turnaround",
+  { label: "No Setup Fees", strokeClass: "stroke-blue" },
+  { label: "Flexible Scope", strokeClass: "stroke-white" },
+  { label: "Pay Once", strokeClass: "stroke-magenta" },
+  { label: "Quick Turnaround", strokeClass: "stroke-purple" },
 ];
 
 const pricingCards = [
   {
     id: "starter",
     title: "Starter",
+    badge: "Best for your first launch",
+    badgeClass: "bg-[#8D35FF]",
     price: "€500",
     period: null,
     deliveryLabel: "Delivery",
@@ -224,7 +237,7 @@ const pricingCards = [
       text: "Get Started",
       href: "/intake",
       className:
-        "bg-[#0033ff] text-white hover:bg-blue-700 group-hover:shadow-lg group-hover:shadow-blue-500/50",
+        "bg-[#8D35FF] text-white hover:bg-[#7B2EF0] group-hover:shadow-lg group-hover:shadow-[#8D35FF]/50",
     },
   },
   {
@@ -244,7 +257,7 @@ const pricingCards = [
       text: "Get Started",
       href: "/intake",
       className:
-        "bg-[#0033ff] text-white hover:bg-blue-700 group-hover:shadow-lg group-hover:shadow-blue-500/50",
+        "bg-[#8D35FF] text-white hover:bg-[#7B2EF0] group-hover:shadow-lg group-hover:shadow-[#8D35FF]/50",
     },
   },
   {
@@ -285,10 +298,26 @@ const pricingCards = [
       text: "Add to Plan",
       href: "/intake",
       className:
-        "border border-[#0033ff] text-[#0033ff] hover:bg-[#0033ff] hover:text-white group-hover:shadow-lg group-hover:shadow-blue-500/50",
+        "border border-[#8D35FF] text-[#8D35FF] hover:bg-[#8D35FF] hover:text-white group-hover:shadow-lg group-hover:shadow-[#8D35FF]/50",
     },
   },
 ];
+
+const getPricingGradientStyle = (index) => {
+  const gradients = [
+    "url(/assets/gradients/gradient-bottom-left.svg)",
+    "url(/assets/gradients/gradient-top-left.svg)",
+    "url(/assets/gradients/gradient-bottom-right.svg)",
+    "url(/assets/gradients/gradient-top-right.svg)",
+  ];
+
+  return {
+    backgroundImage: gradients[index % 4],
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+  };
+};
 
 const toggleFAQ = (idx) => {
   expandedFAQ.value = expandedFAQ.value === idx ? null : idx;
@@ -344,11 +373,48 @@ useSeoMeta({
 </script>
 
 <style scoped>
-.tag-pill-inner {
-  @apply transition-all duration-300;
+.stroke-blue { border-color: #0900ff; border-style: solid; }
+.stroke-purple { border-color: #7b38fc; border-style: solid; }
+.stroke-magenta { border-color: #a620ff; border-style: solid; }
+.stroke-white { border-color: #ffffff; border-style: solid; }
+
+.tag-pill {
+  border-radius: 9999px;
+  transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.group:hover .tag-pill-inner {
-  @apply bg-[#0033ff]/10;
+.tag-pill-inner {
+  border-radius: 9999px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: background-color 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
+  animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+    softPulse 4s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 90ms);
+}
+
+.tag-pill:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 18px rgba(144, 144, 255, 0.32);
+}
+
+.tag-pill:hover .tag-pill-inner {
+  background-color: #181818;
+  box-shadow: 0 0 18px rgba(144, 144, 255, 0.32);
+  transform: translateY(0);
+}
+
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes softPulse {
+  0% { box-shadow: 0 0 0 rgba(144, 144, 255, 0); }
+  50% { box-shadow: 0 0 14px rgba(144, 144, 255, 0.22); }
+  100% { box-shadow: 0 0 0 rgba(144, 144, 255, 0); }
 }
 </style>

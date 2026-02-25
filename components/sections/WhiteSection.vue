@@ -25,18 +25,18 @@
 
         <div class="flex flex-col items-center relative z-10">
           <h2 :class="[textColor, 'text-4xl font-bold']">{{ title }}</h2>
-          <p :class="[textColor, 'my-6']">{{ description }}</p>
+          <p :class="[descriptionColor, 'my-6']">{{ description }}</p>
 
           <!-- Buttons: stretch on mobile -->
           <div
             class="flex flex-col sm:flex-row justify-center gap-4 mt-6 self-stretch sm:self-auto"
-            :style="{ '--hover': hover }"
+            :style="{ '--hover': hover, '--cta-shadow': ctaShadow }"
           >
-            <a :href="primaryLink" class="cta-btn cta-primary">
+            <a :href="primaryLink" class="cta-btn cta-primary cta-hover">
               {{ primaryText }}
             </a>
 
-            <a :href="secondaryLink" class="cta-btn cta-secondary">
+            <a :href="secondaryLink" class="cta-btn cta-secondary cta-hover">
               {{ secondaryText }}
             </a>
           </div>
@@ -60,6 +60,7 @@ const props = defineProps({
   bgColor: { type: String, default: "bg-[#161616]" },
   bgInside: { type: String, default: "bg-[#DDDDDD]" },
   textColor: { type: String, default: "text-[#161616]" },
+  descriptionColor: { type: String, default: "text-[#4a4a4a]" },
   glowEffect: { type: String, default: "GlowEffect" },
   bgImage: { type: String, default: null },
   gradientImage: { type: String, default: "/assets/gradients/gradient-for-banner-section.svg" },
@@ -74,6 +75,12 @@ const backgroundImageStyle = computed(() => {
   if (props.bgImage) return { backgroundImage: `url(${props.bgImage})` }
   return {}
 })
+
+const ctaShadow = computed(() =>
+  props.hover.toLowerCase() === "#aa3733"
+    ? "rgba(170, 55, 51, 0.3)"
+    : "rgba(141, 53, 255, 0.28)"
+)
 </script>
 
 <style scoped>

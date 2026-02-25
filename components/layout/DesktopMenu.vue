@@ -23,7 +23,7 @@
         <!-- Dropdown Panel with Dynamic Width -->
         <div
           :class="[
-            'absolute top-full left-0 mt-4 bg-[#1E1E1E] border border-[#333] shadow-xl rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50',
+            'absolute top-full left-0 mt-4 bg-[#1E1E1E] border border-[#333] shadow-xl rounded-none opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50',
             item.dropdownWidth,
           ]"
         >
@@ -36,8 +36,8 @@
               <NuxtLink
                 :href="subItem.link"
                 :target="subItem.target"
-                :class="[
-                  'flex items-center space-x-4 hover:bg-[#2A2A2A] p-4 rounded-lg transition-colors duration-300 group/item',
+                  :class="[
+                  'flex items-center space-x-4 hover:bg-[#2A2A2A] p-4 rounded-none transition-colors duration-300 group/item',
                   isCurrentPage(subItem.link) ? 'current' : '',
                 ]"
               >
@@ -46,7 +46,7 @@
                   :src="subItem.imageSrc"
                   alt="Icon"
                   :class="[
-                    'w-14 h-14 rounded object-cover transition-all duration-300',
+                    'w-14 h-14 rounded-none object-cover transition-all duration-300',
                     isCurrentPage(subItem.link)
                       ? 'brightness-0 invert'
                       : 'group-hover/item:brightness-0 group-hover/item:invert',
@@ -86,7 +86,12 @@
       <NuxtLink
         :href="cta.link"
         :target="cta.target"
-        :class="`border border-white ${hoverbg} hover:text-white ${hoverborder} bg-[#161616] text-white px-4 py-2 font-semibold transition-colors duration-1000`"
+        :style="{
+          '--cta-shadow': hoverbg.includes('#AA3733')
+            ? 'rgba(170, 55, 51, 0.3)'
+            : 'rgba(141, 53, 255, 0.28)',
+        }"
+        :class="`border border-white ${hoverbg} hover:text-white ${hoverborder} bg-[#161616] text-white px-4 py-2 font-semibold transition-colors duration-1000 cta-hover`"
       >
         <span>{{ cta.text }}</span>
       </NuxtLink>

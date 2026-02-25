@@ -285,8 +285,28 @@
                 type="checkbox"
                 v-model="formData.consent"
                 required
-                class="w-5 h-5 rounded-md accent-[#8CB0FF] mt-0.5 cursor-pointer shrink-0"
+                class="sr-only"
               />
+              <span
+                :class="[
+                  'w-5 h-5 mt-0.5 shrink-0 border bg-[#1a1a1a] flex items-center justify-center transition-all duration-200',
+                  formData.consent ? 'border-[#8D35FF] bg-[#8D35FF]/20' : 'border-[#555]',
+                ]"
+              >
+                <svg
+                  v-if="formData.consent"
+                  class="w-3.5 h-3.5 text-[#8D35FF]"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </span>
               <span
                 class="text-[#999999] text-xs leading-relaxed group-hover:text-[#bbb] transition"
               >

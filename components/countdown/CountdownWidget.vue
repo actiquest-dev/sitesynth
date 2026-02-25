@@ -44,7 +44,7 @@
                   :key="i"
                   :value="ch"
                   :fontSize="120"
-                  color="#ffffff"
+                  color="#f2f2f2"
                 />
                 <div class="cursor-blink"></div>
               </div>
@@ -165,7 +165,9 @@ const daysFormatted = computed(() => days.value.toString().padStart(2, '0'))
   position: relative;
   z-index: 1;
   width: 100%;
-  background: rgba(15, 15, 20, 0.92);
+  background: rgba(22, 22, 22, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
   display: flex;

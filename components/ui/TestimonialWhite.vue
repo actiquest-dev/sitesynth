@@ -42,10 +42,10 @@
           <!-- CTA BUTTON -->
           <a
             :href="ctaLink"
-            class="mt-6 border border-[#161616] bg-[#161616] text-white font-semibold
-                   inline-flex items-center justify-center
-                   transition-all duration-500 hover:bg-[#8D35FF] hover:border-[#8D35FF]
-                   w-full h-11 px-6
+             class="mt-6 border border-[#161616] bg-[#161616] text-white font-semibold cta-hover
+                    inline-flex items-center justify-center
+                    transition-all duration-500 hover:bg-[#8D35FF] hover:border-[#8D35FF]
+                    w-full h-11 px-6
                    sm:w-auto sm:max-w-max sm:px-5 sm:py-2"
           >
             {{ ctaText }}

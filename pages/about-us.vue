@@ -113,7 +113,7 @@
 
   <!-- Call to action -->
   <WhiteSection
-    hover="#0033ff"
+    hover="#8D35FF"
     glowEffect="GlowBlue"
     id="get-started-today"
     class="pt-32 pb-32"

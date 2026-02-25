@@ -162,10 +162,16 @@
           <!-- CTA BUTTON -->
           <NuxtLink
             :to="cta.link"
-            class="inline-flex items-center justify-center font-semibold transition-colors duration-[1000ms]
-                   w-full h-11 px-6
-                   bg-white text-[#161616] border border-[#161616]
-                   hover:bg-[#8D35FF] hover:border-[#8D35FF] hover:text-white"
+            :style="{
+              '--cta-shadow': hoverbg.includes('#AA3733')
+                ? 'rgba(170, 55, 51, 0.3)'
+                : 'rgba(141, 53, 255, 0.28)',
+            }"
+            :class="[
+              'inline-flex items-center justify-center font-semibold transition-colors duration-[1000ms] cta-hover w-full h-11 px-6 bg-white text-[#161616] border hover:text-white',
+              hoverbg,
+              hoverborder,
+            ].join(' ')"
           >
             <span>{{ cta.text }}</span>
           </NuxtLink>
@@ -194,7 +200,17 @@
 <script setup>
 import { ref, nextTick } from "vue"
 
-defineProps({ menuOpen: Boolean })
+defineProps({
+  menuOpen: Boolean,
+  hoverbg: {
+    type: String,
+    default: 'hover:bg-[#8D35FF]',
+  },
+  hoverborder: {
+    type: String,
+    default: 'hover:border-[#8D35FF]',
+  },
+})
 
 const route = useRoute()
 

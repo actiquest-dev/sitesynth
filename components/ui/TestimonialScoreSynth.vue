@@ -41,8 +41,9 @@
 
           <a
             :href="ctaLink"
+            :style="{ '--cta-shadow': 'rgba(170, 55, 51, 0.3)' }"
             :class="[
-              'border border-white bg-white text-[#161616] font-semibold transition-colors duration-[1000ms] inline-flex items-center justify-center',
+              'border border-white bg-white text-[#161616] font-semibold transition-colors duration-[1000ms] inline-flex items-center justify-center cta-hover',
               'w-full h-11 px-6 mt-6',
               'sm:w-auto sm:max-w-max sm:px-4 sm:py-2',
               hoverbg,

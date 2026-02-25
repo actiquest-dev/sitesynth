@@ -45,15 +45,17 @@ onMounted(() => {
   if (swiperContainer.value) {
     swiper = new Swiper(swiperContainer.value, {
       modules: [Navigation, Autoplay],
-      slidesPerView: 1,
-      spaceBetween: 16,
+      slidesPerView: 2,
+      spaceBetween: 20,
       breakpoints: {
-        640: { slidesPerView: 2, spaceBetween: 20 },
-        1024: { slidesPerView: 6, spaceBetween: 60 },
+        640: { slidesPerView: 3, spaceBetween: 24 },
+        1024: { slidesPerView: 7, spaceBetween: 36 },
       },
       loop: true,
+      speed: 5200,
+      allowTouchMove: false,
       autoplay: {
-        delay: 3000,
+        delay: 0,
         disableOnInteraction: false,
       },
     });
@@ -66,3 +68,29 @@ onBeforeUnmount(() => {
   }
 });
 </script>
+
+<style scoped>
+:deep(.pictures-swiper .swiper-wrapper) {
+  transition-timing-function: linear !important;
+}
+
+:deep(.pictures-swiper .swiper-slide) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:deep(.pictures-swiper .swiper-slide img) {
+  height: 58px;
+  width: auto;
+  max-width: 240px;
+  object-fit: contain;
+}
+
+@media (max-width: 1024px) {
+  :deep(.pictures-swiper .swiper-slide img) {
+    height: 46px;
+    max-width: 210px;
+  }
+}
+</style>

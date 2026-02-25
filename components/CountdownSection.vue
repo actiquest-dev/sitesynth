@@ -1,5 +1,5 @@
 <template>
-  <section class="w-full" style="background: #0a0a0a; padding: 80px 20px; display: flex; justify-content: center">
+  <section class="w-full" style="background: #161616; padding: 80px 20px; display: flex; justify-content: center">
     <div class="relative w-full" style="max-width: 1141px; margin: 0">
     <!-- Spinning glow border layer -->
     <div
@@ -31,31 +31,37 @@
         border: 1px solid #636363;
         overflow: hidden;
         z-index: 1;
-        background: #0a0a0a;
+        background: #161616;
       "
     >
       <!-- Aurora background blobs -->
       <AnimatedBackground />
-
-      <!-- Gradient orb — top-right, pulsing -->
-      <div
-        class="absolute pointer-events-none orb-pulse"
-        style="
-          top: -120px;
-          right: -120px;
-          width: 527px;
-          height: 527px;
-          z-index: 1;
-        "
-      >
-        <OrbSvg style="width: 100%; height: 100%" />
-      </div>
 
       <!-- Left: Text content -->
       <div
         class="flex flex-col justify-center relative"
         style="flex: 1 1 0; padding: 60px 83px; z-index: 2"
       >
+        <span
+          style="
+            display: inline-flex;
+            width: fit-content;
+            margin-bottom: 14px;
+            padding: 6px 10px;
+            border: none;
+            border-radius: 999px;
+            font-family: 'Space Grotesk', 'Roc Grotesk', 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #ffffff;
+            background: #8d35ff;
+          "
+        >
+          Limited Offer
+        </span>
+
         <h1
           class="text-white mb-4"
           style="
@@ -70,7 +76,7 @@
         </h1>
 
         <p
-          class="text-white mb-4"
+          class="mb-4 countdown-subtitle"
           style="
             font-family: 'Space Grotesk', 'Roc Grotesk', 'Inter', sans-serif;
             font-size: clamp(18px, 1.6vw, 24px);
@@ -82,12 +88,11 @@
         </p>
 
         <p
-          class="mb-8"
+          class="mb-8 countdown-paragraph"
           style="
             font-family: 'Inter', sans-serif;
             font-size: 16px;
             font-weight: 500;
-            color: #999;
             max-width: 475px;
             line-height: 1.5;
           "
@@ -97,19 +102,19 @@
         </p>
 
         <button
-          class="transition-colors button-hover"
+          class="transition-colors button-hover cta-hover"
           @click="navigateToPricing"
           @mouseenter="buttonHover = true"
           @mouseleave="buttonHover = false"
           :style="{
-            fontFamily: 'Space Grotesk, Roc Grotesk, Inter, sans-serif',
+            fontFamily: 'Inter, sans-serif',
             fontSize: '16px',
             fontWeight: '700',
-            color: buttonHover ? '#0a0a0a' : '#fff',
-            border: '1px solid #fff',
+            color: buttonHover ? '#fff' : '#161616',
+            border: `1px solid ${buttonHover ? '#8D35FF' : '#fff'}`,
             padding: '10px 18px',
             width: 'fit-content',
-            background: buttonHover ? '#fff' : 'transparent',
+            background: buttonHover ? '#8D35FF' : '#fff',
             cursor: 'pointer',
           }"
         >
@@ -130,7 +135,6 @@
 import { ref } from 'vue'
 import CountdownWidget from './countdown/CountdownWidget.vue'
 import AnimatedBackground from './countdown/AnimatedBackground.vue'
-import OrbSvg from './countdown/OrbSvg.vue'
 
 const router = useRouter()
 const buttonHover = ref(false)
@@ -164,20 +168,12 @@ const navigateToPricing = () => {
   transition: background 0.3s, color 0.3s;
 }
 
-@keyframes orb-breathe {
-  0%,
-  100% {
-    opacity: 0.9;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.06);
-  }
+.countdown-subtitle {
+  color: #ffffff !important;
 }
 
-.orb-pulse {
-  animation: orb-breathe 5s ease-in-out infinite;
+.countdown-paragraph {
+  color: #999999 !important;
 }
 
 .widget-container {

@@ -32,6 +32,32 @@ body {
     font-family: "Inter", sans-serif;
   }
 
+  p {
+    color: #4a4a4a !important;
+  }
+
+  .bg-\[\#161616\] p,
+  .bg-\[\#1a1a1a\] p,
+  .bg-\[\#0a0a0a\] p,
+  [style*="background: #161616"] p,
+  [style*="background:#161616"] p,
+  [style*="background: #1a1a1a"] p,
+  [style*="background:#1a1a1a"] p,
+  [style*="background: #0a0a0a"] p,
+  [style*="background:#0a0a0a"] p {
+    color: #999999 !important;
+  }
+
+  .bg-\[\#DDDDDD\] p,
+  .bg-\[\#ffffff\] p,
+  .bg-white p,
+  [style*="background: #DDDDDD"] p,
+  [style*="background:#DDDDDD"] p,
+  [style*="background: #ffffff"] p,
+  [style*="background:#ffffff"] p {
+    color: #4a4a4a !important;
+  }
+
   &::selection {
     background: #A620FF;
     color: white;
@@ -126,4 +152,18 @@ footer {
       }
     }
   }
+}
+
+.cta-hover {
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 260ms ease,
+    border-color 260ms ease,
+    color 260ms ease;
+  will-change: transform;
+}
+
+.cta-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px var(--cta-shadow, rgba(141, 53, 255, 0.28));
 }
