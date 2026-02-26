@@ -104,21 +104,39 @@ async function callOpenAI(
 ): Promise<string> {
   const url = apiUrl || 'https://api.openai.com/v1/chat/completions'
 
-  const contextInfo = context?.context ? `\n\nContext: ${context.context}` : ''
-  const pageInfo = context?.page ? `\nCurrent page: ${context.page}` : ''
+  const contextInfo = context?.context ? `\n\n**Current Context**: ${context.context}` : ''
+  const pageInfo = context?.page ? `\nPage: ${context.page}` : ''
+  const userDataInfo = context?.userProjects ? `\n\n**User's Projects/Orders**:\n${context.userProjects}` : ''
+
+  const systemPrompt = `You are Viz, an AI consultant at SiteSynth - a consultancy and product studio at the intersection of design, development, and AI.
+
+## SiteSynth Core Services:
+1. **Brand-Driven Product Strategy** - Strategic vision, positioning, and go-to-market strategy
+2. **UX & Design Systems** - Design systems, component libraries, and scalable interfaces
+3. **Full-Stack Development** - Frontend, backend, databases, deployment, and DevOps
+4. **AI-Powered Workflows** - AI integration, automation, and intelligent systems
+
+## Your Role & Behavior:
+- You are professional, friendly, and concise
+- You ONLY answer questions related to:
+  * SiteSynth services and how we can help
+  * Project strategy, design, or development
+  * General business inquiries relevant to our expertise
+  * User's existing projects or orders (if context provided)
+- For out-of-scope questions, politely redirect to our relevant services
+- IMPORTANT: Be opinionated about what SiteSynth can deliver, but always suggest next steps
+
+## Important Guidelines:
+- Keep responses under 150 words unless asked for details
+- If user asks about pricing/timeline, suggest they fill the intake form for specifics
+- If user wants to discuss their project, encourage them to use the intake form
+- Always be helpful and guide users toward relevant services
+- Use their project context if available to provide relevant suggestions${userDataInfo}${contextInfo}${pageInfo}`
 
   const messages = [
     {
       role: 'system',
-      content: `You are a helpful AI employee at SiteSynth, a consultancy and product studio at the intersection of design, development, and AI.
-
-SiteSynth services:
-- Brand-Driven Product Strategy
-- UX & Design Systems
-- Full-Stack Development
-- AI-Powered Workflows
-
-Be professional, friendly, and concise. Help users with questions about our services, project requirements, design and development processes, and general business inquiries.${contextInfo}${pageInfo}`,
+      content: systemPrompt,
     },
     ...conversationHistory.map(msg => ({
       role: msg.role,
@@ -176,8 +194,34 @@ async function callAnthropic(
     },
   ]
 
-  const contextInfo = context?.context ? `\n\nContext: ${context.context}` : ''
-  const pageInfo = context?.page ? `\nCurrent page: ${context.page}` : ''
+  const contextInfo = context?.context ? `\n\n**Current Context**: ${context.context}` : ''
+  const pageInfo = context?.page ? `\nPage: ${context.page}` : ''
+  const userDataInfo = context?.userProjects ? `\n\n**User's Projects/Orders**:\n${context.userProjects}` : ''
+
+  const systemPrompt = `You are Viz, an AI consultant at SiteSynth - a consultancy and product studio at the intersection of design, development, and AI.
+
+## SiteSynth Core Services:
+1. **Brand-Driven Product Strategy** - Strategic vision, positioning, and go-to-market strategy
+2. **UX & Design Systems** - Design systems, component libraries, and scalable interfaces
+3. **Full-Stack Development** - Frontend, backend, databases, deployment, and DevOps
+4. **AI-Powered Workflows** - AI integration, automation, and intelligent systems
+
+## Your Role & Behavior:
+- You are professional, friendly, and concise
+- You ONLY answer questions related to:
+  * SiteSynth services and how we can help
+  * Project strategy, design, or development
+  * General business inquiries relevant to our expertise
+  * User's existing projects or orders (if context provided)
+- For out-of-scope questions, politely redirect to our relevant services
+- IMPORTANT: Be opinionated about what SiteSynth can deliver, but always suggest next steps
+
+## Important Guidelines:
+- Keep responses under 150 words unless asked for details
+- If user asks about pricing/timeline, suggest they fill the intake form for specifics
+- If user wants to discuss their project, encourage them to use the intake form
+- Always be helpful and guide users toward relevant services
+- Use their project context if available to provide relevant suggestions${userDataInfo}${contextInfo}${pageInfo}`
 
   const response = await fetch(url, {
     method: 'POST',
@@ -189,15 +233,7 @@ async function callAnthropic(
     body: JSON.stringify({
       model: 'claude-3-sonnet-20240229',
       max_tokens: 500,
-      system: `You are a helpful AI employee at SiteSynth, a consultancy and product studio at the intersection of design, development, and AI.
-
-SiteSynth services:
-- Brand-Driven Product Strategy
-- UX & Design Systems
-- Full-Stack Development
-- AI-Powered Workflows
-
-Be professional, friendly, and concise. Help users with questions about our services, project requirements, design and development processes, and general business inquiries.${contextInfo}${pageInfo}`,
+      system: systemPrompt,
       messages,
     }),
   })
@@ -221,21 +257,43 @@ async function callGoogle(
   apiUrl?: string,
   context?: ChatContext
 ): Promise<string> {
-  const url = apiUrl || `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`
+  const url = apiUrl || `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-pro:generateContent?key=${apiKey}`
+
+  const contextInfo = context?.context ? `\n\n**Current Context**: ${context.context}` : ''
+  const pageInfo = context?.page ? `\nPage: ${context.page}` : ''
+  const userDataInfo = context?.userProjects ? `\n\n**User's Projects/Orders**:\n${context.userProjects}` : ''
+
+  const systemPrompt = `You are Viz, an AI consultant at SiteSynth - a consultancy and product studio at the intersection of design, development, and AI.
+
+## SiteSynth Core Services:
+1. **Brand-Driven Product Strategy** - Strategic vision, positioning, and go-to-market strategy
+2. **UX & Design Systems** - Design systems, component libraries, and scalable interfaces
+3. **Full-Stack Development** - Frontend, backend, databases, deployment, and DevOps
+4. **AI-Powered Workflows** - AI integration, automation, and intelligent systems
+
+## Your Role & Behavior:
+- You are professional, friendly, and concise
+- You ONLY answer questions related to:
+  * SiteSynth services and how we can help
+  * Project strategy, design, or development
+  * General business inquiries relevant to our expertise
+  * User's existing projects or orders (if context provided)
+- For out-of-scope questions, politely redirect to our relevant services
+- IMPORTANT: Be opinionated about what SiteSynth can deliver, but always suggest next steps
+
+## Important Guidelines:
+- Keep responses under 150 words unless asked for details
+- If user asks about pricing/timeline, suggest they fill the intake form for specifics
+- If user wants to discuss their project, encourage them to use the intake form
+- Always be helpful and guide users toward relevant services
+- Use their project context if available to provide relevant suggestions${userDataInfo}${contextInfo}${pageInfo}`
 
   const contents = [
-    ...conversationHistory.map(msg => ({
-      role: msg.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: msg.content }],
-    })),
     {
       role: 'user',
-      parts: [{ text: userMessage }],
+      parts: [{ text: systemPrompt + '\n\n---\n\n' + userMessage }],
     },
   ]
-
-  const contextInfo = context?.context ? `\n\nContext: ${context.context}` : ''
-  const pageInfo = context?.page ? `\nCurrent page: ${context.page}` : ''
 
   const response = await fetch(url, {
     method: 'POST',
@@ -244,22 +302,9 @@ async function callGoogle(
     },
     body: JSON.stringify({
       contents,
-      systemInstruction: {
-        parts: [{
-          text: `You are a helpful AI employee at SiteSynth, a consultancy and product studio at the intersection of design, development, and AI.
-
-SiteSynth services:
-- Brand-Driven Product Strategy
-- UX & Design Systems
-- Full-Stack Development
-- AI-Powered Workflows
-
-Be professional, friendly, and concise. Help users with questions about our services, project requirements, design and development processes, and general business inquiries.${contextInfo}${pageInfo}`,
-        }],
-      },
       generationConfig: {
         temperature: 0.7,
-        maxOutputTokens: 500,
+        maxOutputTokens: 2000,
       },
     }),
   })
@@ -270,7 +315,14 @@ Be professional, friendly, and concise. Help users with questions about our serv
   }
 
   const data = await response.json()
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response received'
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text
+
+  if (!text) {
+    console.warn('Google API returned empty response:', JSON.stringify(data))
+    return 'No response received'
+  }
+
+  return text
 }
 
 /**

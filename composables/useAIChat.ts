@@ -14,6 +14,7 @@ export interface ChatContext {
   briefingId?: string
   userId?: string
   context?: string
+  userProjects?: string
 }
 
 // Global singleton state - shared across all instances
@@ -25,11 +26,12 @@ function createAIChatState() {
   const isLoading = ref(false)
   const error = ref<string | null>(null)
   const context = ref<ChatContext>({ page: '/' })
+  const isInitialized = ref(false)
 
   const hasMessages = computed(() => messages.value.length > 0)
 
-  // Auto-detect context from current route
-  const detectContext = () => {
+  // Auto-detect context from current route and load user data
+  const detectContext = async () => {
     const route = useRoute()
     const path = route.path
     context.value.page = path
@@ -42,11 +44,13 @@ function createAIChatState() {
       context.value.briefingId = String(route.query.briefing)
     }
 
-    // Set context message based on page
+    // Set context message based on page and load user data if in cabinet
     if (path.includes('/projects')) {
       context.value.context = `User is viewing the Projects/Briefing Cabinet`
     } else if (path.includes('/cabinet')) {
       context.value.context = `User is viewing their CRM Cabinet with orders and projects`
+      // Load user's projects and orders for cabinet context
+      await loadUserDataForContext()
     } else if (path.includes('/intake')) {
       context.value.context = `User is filling out a service intake form`
     } else if (path.includes('/payment')) {
@@ -56,6 +60,61 @@ function createAIChatState() {
     } else {
       context.value.context = `User is on the main website`
     }
+  }
+
+  // Load user's projects and orders for context
+  const loadUserDataForContext = async () => {
+    try {
+      const authToken = localStorage.getItem('authToken')
+      if (!authToken) return
+
+      // Fetch user's orders
+      const ordersRes = await fetch('/api/user/orders', {
+        headers: { 'Authorization': `Bearer ${authToken}` },
+      })
+      const ordersData = ordersRes.ok ? await ordersRes.json() : { data: [] }
+      const orders = ordersData.data || []
+
+      // Fetch user's projects
+      const projectsRes = await fetch('/api/user/projects', {
+        headers: { 'Authorization': `Bearer ${authToken}` },
+      })
+      const projectsData = projectsRes.ok ? await projectsRes.json() : { data: [] }
+      const projects = projectsData.data || []
+
+      // Format user data for context
+      const userDataSummary = formatUserDataForContext(orders, projects)
+      if (userDataSummary) {
+        context.value.userProjects = userDataSummary
+      }
+    } catch (err) {
+      console.error('Error loading user data for context:', err)
+    }
+  }
+
+  // Format user's orders and projects for AI context
+  const formatUserDataForContext = (orders: any[], projects: any[]) => {
+    const parts: string[] = []
+
+    if (orders.length > 0) {
+      parts.push(`Orders: ${orders.length} active`)
+      orders.slice(0, 3).forEach((order: any, idx: number) => {
+        const status = order.status || 'pending'
+        const amount = order.amount ? `$${order.amount}` : 'TBD'
+        parts.push(`• Order #${order.id?.slice?.(-6) || '...'} - ${status} - ${amount}`)
+      })
+    }
+
+    if (projects.length > 0) {
+      parts.push(`Projects: ${projects.length} total`)
+      projects.slice(0, 3).forEach((project: any, idx: number) => {
+        const status = project.status || 'in_progress'
+        const service = project.service_type || 'Project'
+        parts.push(`• ${project.name || 'Untitled'} - ${service} (${status})`)
+      })
+    }
+
+    return parts.length > 0 ? parts.join('\n') : ''
   }
 
   const toggleChat = () => {
@@ -83,11 +142,74 @@ function createAIChatState() {
     messages.value = []
   }
 
+  // Load chat messages from NocoBase
+  const loadChatMessages = async () => {
+    try {
+      const authToken = localStorage.getItem('authToken')
+      if (!authToken) return
+
+      const response = await fetch('/api/chat-history', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          action: 'load',
+        }),
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        if (result.messages) {
+          messages.value = result.messages.map((msg: any) => ({
+            id: `msg_${Math.random()}`,
+            role: msg.role,
+            content: msg.content,
+            timestamp: new Date(msg.timestamp),
+          }))
+        }
+      }
+    } catch (err) {
+      console.error('Error loading chat history:', err)
+    }
+  }
+
+  // Save chat messages to NocoBase
+  const saveChatMessages = async () => {
+    try {
+      const authToken = localStorage.getItem('authToken')
+      if (!authToken) return
+
+      const response = await fetch('/api/chat-history', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          action: 'save',
+          messages: messages.value.map(m => ({
+            role: m.role,
+            content: m.content,
+            timestamp: m.timestamp.toISOString(),
+          })),
+        }),
+      })
+
+      if (!response.ok) {
+        console.warn('Failed to save chat messages to NocoBase')
+      }
+    } catch (err) {
+      console.error('Error saving chat messages:', err)
+    }
+  }
+
   const sendMessage = async (userMessage: string) => {
     if (!userMessage.trim()) return
 
     // Detect context before sending
-    detectContext()
+    await detectContext()
 
     // Add user message to chat
     addMessage('user', userMessage)
@@ -126,7 +248,66 @@ function createAIChatState() {
       addMessage('assistant', `I encountered an error: ${error.value}. Please try again.`)
     } finally {
       isLoading.value = false
+      // Save messages and context to NocoBase after sending
+      await Promise.all([saveChatMessages(), saveContext()])
     }
+  }
+
+  // Save conversation context to NocoBase
+  const saveContext = async () => {
+    try {
+      const authToken = localStorage.getItem('authToken')
+      if (!authToken) return
+
+      await fetch('/api/chat-history', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          action: 'save-context',
+          context: context.value,
+        }),
+      })
+    } catch (err) {
+      console.error('Error saving context:', err)
+    }
+  }
+
+  // Load conversation context from NocoBase
+  const loadContext = async () => {
+    try {
+      const authToken = localStorage.getItem('authToken')
+      if (!authToken) return
+
+      const response = await fetch('/api/chat-history', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          action: 'load-context',
+        }),
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        if (result.context) {
+          context.value = { ...context.value, ...result.context }
+        }
+      }
+    } catch (err) {
+      console.error('Error loading context:', err)
+    }
+  }
+
+  // Initialize chat by loading previous messages and context
+  const initializeChat = async () => {
+    if (isInitialized.value) return
+    await Promise.all([loadChatMessages(), loadContext()])
+    isInitialized.value = true
   }
 
   return {
@@ -136,6 +317,7 @@ function createAIChatState() {
     error,
     hasMessages,
     context,
+    isInitialized,
     toggleChat,
     openChat,
     closeChat,
@@ -143,6 +325,11 @@ function createAIChatState() {
     clearMessages,
     sendMessage,
     detectContext,
+    loadChatMessages,
+    saveChatMessages,
+    saveContext,
+    loadContext,
+    initializeChat,
   }
 }
 

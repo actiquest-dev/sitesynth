@@ -161,7 +161,7 @@
 import { ref, nextTick, watch } from 'vue'
 import { useAIChat } from '@/composables/useAIChat'
 
-const { isOpen, messages, isLoading, error, sendMessage, closeChat } = useAIChat()
+const { isOpen, messages, isLoading, error, sendMessage, closeChat, initializeChat } = useAIChat()
 
 const inputMessage = ref('')
 const messagesContainer = ref<HTMLElement>()
@@ -174,9 +174,11 @@ watch(messages, async () => {
   }
 }, { deep: true })
 
-// Auto-scroll when chat opens
+// Auto-scroll when chat opens and load chat history
 watch(isOpen, async (newVal) => {
   if (newVal) {
+    // Load previous chat messages on first open
+    await initializeChat()
     await nextTick()
     if (messagesContainer.value) {
       messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
