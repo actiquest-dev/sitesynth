@@ -547,6 +547,16 @@ const submitPayment = async () => {
 
       sessionStorage.setItem('paymentResult', JSON.stringify(sessionData))
 
+      // Create auth token so user can access cabinet
+      const authToken = Buffer.from(`${billingData.value.email}:${Date.now()}`).toString('base64')
+      localStorage.setItem('authToken', authToken)
+      localStorage.setItem('user', JSON.stringify({
+        email: billingData.value.email,
+        name: billingData.value.fullName,
+        provider: 'payment',
+        authenticatedAt: new Date().toISOString(),
+      }))
+
       // Payment successful - redirect to confirmation
       // User will be able to login via Google or email on the login page
       console.log('✅ Payment successful, redirecting to confirmation')

@@ -1,3 +1,5 @@
+import nodemailer from 'nodemailer'
+
 interface EmailOptions {
   to: { email: string; name: string }[]
   subject: string
@@ -5,39 +7,38 @@ interface EmailOptions {
   sender?: { name: string; email: string }
 }
 
-export async function sendBrevoEmail(options: EmailOptions) {
-  const brevoApiKey = process.env.BREVO_API_KEY
-  
-  if (!brevoApiKey) {
-    throw new Error('Brevo API key not configured')
-  }
+const transporter = nodemailer.createTransport({
+  host: 'smtp-relay.brevo.com',
+  port: 587,
+  secure: false,
+  auth: {
+    user: '9443c0001@smtp-brevo.com',
+    pass: process.env.BREVO_SMTP_PASSWORD || '',
+  },
+})
 
+export async function sendBrevoEmail(options: EmailOptions) {
   const defaultSender = {
     name: 'SiteSynth',
     email: 'hello@sitesynth.com',
   }
 
-  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'api-key': brevoApiKey,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      sender: options.sender || defaultSender,
-      to: options.to,
+  const sender = options.sender || defaultSender
+
+  try {
+    const info = await transporter.sendMail({
+      from: `${sender.name} <${sender.email}>`,
+      to: options.to.map((r) => `${r.name} <${r.email}>`).join(', '),
       subject: options.subject,
-      htmlContent: options.htmlContent,
-    }),
-  })
+      html: options.htmlContent,
+    })
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}))
-    throw new Error(errorData.message || 'Failed to send email')
+    console.log('✅ Email sent:', info.messageId)
+    return { message: 'Email sent', messageId: info.messageId }
+  } catch (error: any) {
+    console.error('❌ Failed to send email:', error.message)
+    throw new Error(error.message || 'Failed to send email')
   }
-
-  return await response.json()
 }
 
 // Convenience function for link submissions
@@ -77,3 +78,23 @@ export async function sendContactSubmission(formData: {
     htmlContent,
   })
 }
+
+// Convenience function for Magic Link
+export async function sendMagicLinkCode(email: string, code: string) {
+  const htmlContent = `
+    <h2>Your Verification Code</h2>
+    <p>Use this code to access your SiteSynth project:</p>
+    <div style="margin: 30px 0; padding: 20px; background-color: #f5f5f5; border-radius: 8px; text-align: center;">
+      <p style="font-size: 36px; font-weight: bold; letter-spacing: 5px; margin: 0; color: #0033ff;">${code}</p>
+    </div>
+    <p style="color: #999;">This code expires in 15 minutes.</p>
+    <p style="color: #666; font-size: 14px;">If you didn't request this code, please ignore this email.</p>
+  `
+
+  return await sendBrevoEmail({
+    to: [{ email, name: 'User' }],
+    subject: 'Your SiteSynth Verification Code',
+    htmlContent,
+  })
+}
+

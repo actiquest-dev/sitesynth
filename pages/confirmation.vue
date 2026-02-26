@@ -175,23 +175,57 @@
 
         <!-- Email-based Access -->
         <div class="space-y-4">
-          <div>
-            <label class="block text-white font-semibold mb-2">Magic Link</label>
-            <input
-              v-model="emailInput"
-              type="email"
-              placeholder="your@email.com"
-              class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-lg text-white placeholder-[#555] focus:border-[#0033ff] focus:outline-none transition"
-            />
+          <div v-if="!codeStep">
+            <!-- Step 1: Email Input -->
+            <div>
+              <label class="block text-white font-semibold mb-2">Email Address</label>
+              <input
+                v-model="emailInput"
+                type="email"
+                placeholder="your@email.com"
+                class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-lg text-white placeholder-[#555] focus:border-[#0033ff] focus:outline-none transition"
+              />
+            </div>
+
+            <button
+              @click="handleSendCode"
+              :disabled="isLoading || !emailInput"
+              class="w-full px-6 py-3 bg-[#0033ff] text-white rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {{ isLoading ? 'Sending...' : 'Send Verification Code' }}
+            </button>
           </div>
 
-          <button
-            @click="handleEmailLogin"
-            :disabled="isLoading || !emailInput"
-            class="w-full px-6 py-3 bg-[#0033ff] text-white rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {{ isLoading ? 'Accessing...' : 'Send Magic Link' }}
-          </button>
+          <div v-else>
+            <!-- Step 2: Code Input -->
+            <p class="text-[#999999] text-sm mb-3">Enter the 4-digit code sent to <span class="text-white font-semibold">{{ emailInput }}</span></p>
+            
+            <div>
+              <label class="block text-white font-semibold mb-2">Verification Code</label>
+              <input
+                v-model="codeInput"
+                type="text"
+                placeholder="1234"
+                maxlength="4"
+                class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-lg text-white placeholder-[#555] focus:border-[#0033ff] focus:outline-none transition text-center text-2xl tracking-widest"
+              />
+            </div>
+
+            <button
+              @click="handleVerifyCode"
+              :disabled="isLoading || !codeInput"
+              class="w-full px-6 py-3 bg-[#0033ff] text-white rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {{ isLoading ? 'Verifying...' : 'Access Your Account' }}
+            </button>
+
+            <button
+              @click="handleBackToEmail"
+              class="w-full px-6 py-3 border border-[#333] text-[#999999] rounded-lg font-semibold hover:border-[#0033ff] hover:text-[#0033ff] transition"
+            >
+              ← Use Different Email
+            </button>
+          </div>
         </div>
 
         <!-- Error Message -->
@@ -230,18 +264,18 @@ import GlowGreen from "@/components/effects/GlowGreen.vue";
 import GoogleSignInButton from "@/components/auth/GoogleSignInButton.vue";
 import { useCursorGlow } from "@/composables/useCursorGlow";
 import { useGoogleAuth } from "@/composables/useGoogleAuth";
-import { useNocoBase } from "@/composables/useNocoBase";
 
 // Initialize cursor glow effect
 useCursorGlow();
 
 const { handleGoogleSignIn } = useGoogleAuth();
-const { getList } = useNocoBase();
 
 const paymentData = ref(null);
 const emailInput = ref('');
+const codeInput = ref('');
 const errorMessage = ref('');
 const isLoading = ref(false);
+const codeStep = ref(false);
 
 const config = useRuntimeConfig();
 const googleClientId = computed(() => config.public?.googleClientId || '');
@@ -263,8 +297,8 @@ const handleGoogleResponse = async (response: any) => {
   }
 };
 
-// Handle Email-based Login
-const handleEmailLogin = async () => {
+// Handle sending verification code
+const handleSendCode = async () => {
   if (!emailInput.value) {
     errorMessage.value = 'Please enter your email';
     return;
@@ -274,24 +308,66 @@ const handleEmailLogin = async () => {
   isLoading.value = true;
 
   try {
-    // Check if email exists in NocoBase orders
-    const allOrders = await getList('orders');
-    const userOrders = allOrders.filter((order: any) => {
-      const formData = typeof order.form_data === 'string'
-        ? JSON.parse(order.form_data)
-        : order.form_data;
-      return formData?.email === emailInput.value || order.email === emailInput.value;
+    const response = await fetch('/api/auth/send-magic-link', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email: emailInput.value }),
     });
 
-    if (userOrders.length === 0) {
-      errorMessage.value = 'No orders found for this email. Please complete your intake form first.';
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      errorMessage.value = result.error || 'Failed to send code. Please try again.';
+      console.error('❌ Send code error:', result);
       return;
     }
 
-    // Create simple auth token
-    const authToken = Buffer.from(`${emailInput.value}:${Date.now()}`).toString('base64');
+    // Move to step 2
+    codeStep.value = true;
+    console.log('✅ Code sent to:', emailInput.value);
 
-    // Store in localStorage
+  } catch (error: any) {
+    console.error('Send code error:', error);
+    errorMessage.value = 'An error occurred. Please try again.';
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+// Handle verifying code
+const handleVerifyCode = async () => {
+  if (!codeInput.value) {
+    errorMessage.value = 'Please enter the verification code';
+    return;
+  }
+
+  errorMessage.value = '';
+  isLoading.value = true;
+
+  try {
+    const response = await fetch('/api/auth/verify-code', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ 
+        email: emailInput.value.trim().toLowerCase(),
+        code: codeInput.value.trim() 
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      errorMessage.value = result.error || 'Invalid or expired code. Please try again.';
+      console.error('❌ Verify code error:', result);
+      return;
+    }
+
+    // Store auth data
+    const authToken = btoa(`${emailInput.value}:${Date.now()}`);
     localStorage.setItem('authToken', authToken);
     localStorage.setItem('user', JSON.stringify({
       email: emailInput.value,
@@ -299,16 +375,23 @@ const handleEmailLogin = async () => {
       authenticatedAt: new Date().toISOString(),
     }));
 
-    console.log('✅ Email login successful');
+    console.log('✅ Code verified, redirecting to cabinet');
 
     // Redirect to cabinet
     await navigateTo('/cabinet');
   } catch (error: any) {
-    console.error('Email login error:', error);
+    console.error('Verify code error:', error);
     errorMessage.value = 'An error occurred. Please try again.';
   } finally {
     isLoading.value = false;
   }
+};
+
+// Handle going back to email input
+const handleBackToEmail = () => {
+  codeStep.value = false;
+  codeInput.value = '';
+  errorMessage.value = '';
 };
 
 // Load payment data from sessionStorage
