@@ -394,6 +394,47 @@ const handleBackToEmail = () => {
   errorMessage.value = '';
 };
 
+// Send payment confirmation email
+const sendConfirmationEmail = async (paymentInfo: any) => {
+  try {
+    const orderNum = `SYNTH-2026-${paymentInfo.chargeId.substring(0, 6).toUpperCase()}`;
+    
+    // Calculate project start date
+    const date = new Date();
+    date.setDate(date.getDate() + 5);
+    const startDate = date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    
+    const response = await fetch('/api/email/send-payment-confirmation', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: paymentInfo.email,
+        fullName: paymentInfo.fullName || 'Valued Customer',
+        orderNumber: orderNum,
+        amount: paymentInfo.amount,
+        currency: paymentInfo.currency || 'USD',
+        paymentMethod: paymentInfo.paymentMethod || 'Credit Card',
+        projectStartDate: startDate,
+      }),
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      console.log('✅ Confirmation email sent successfully');
+    } else {
+      console.warn('⚠️ Failed to send confirmation email:', result.error);
+    }
+  } catch (error: any) {
+    console.error('Error sending confirmation email:', error);
+  }
+};
+
 // Load payment data from sessionStorage
 onMounted(() => {
   try {
@@ -401,6 +442,9 @@ onMounted(() => {
     if (result) {
       paymentData.value = JSON.parse(result);
       console.log('✅ Payment data loaded:', paymentData.value);
+      
+      // Send confirmation email
+      sendConfirmationEmail(paymentData.value);
     }
   } catch (error) {
     console.warn('Could not load payment data:', error);

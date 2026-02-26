@@ -98,3 +98,76 @@ export async function sendMagicLinkCode(email: string, code: string) {
   })
 }
 
+// Convenience function for Payment Confirmation
+export async function sendPaymentConfirmation(paymentData: {
+  email: string
+  fullName: string
+  orderNumber: string
+  amount: number
+  currency: string
+  paymentMethod: string
+  projectStartDate: string
+}) {
+  const htmlContent = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <!-- Header -->
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="color: #0033ff; margin: 0;">Payment Confirmation</h1>
+        <p style="color: #666; margin: 10px 0 0 0;">Your order has been successfully processed</p>
+      </div>
+
+      <!-- Success Message -->
+      <div style="background-color: #f0f9ff; border-left: 4px solid #00cc44; padding: 20px; margin-bottom: 30px; border-radius: 4px;">
+        <p style="color: #00cc44; font-weight: bold; margin: 0;">✓ Payment Confirmed</p>
+        <p style="color: #666; margin: 10px 0 0 0;">Thank you for your purchase, ${paymentData.fullName}!</p>
+      </div>
+
+      <!-- Order Details -->
+      <div style="background-color: #f5f5f5; padding: 20px; margin-bottom: 30px; border-radius: 8px;">
+        <h2 style="color: #333; margin-top: 0; font-size: 16px;">Order Details</h2>
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="padding: 10px 0; color: #666; border-bottom: 1px solid #ddd;">Order Number:</td>
+            <td style="padding: 10px 0; color: #333; font-weight: bold; border-bottom: 1px solid #ddd; text-align: right;">${paymentData.orderNumber}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 0; color: #666; border-bottom: 1px solid #ddd;">Amount:</td>
+            <td style="padding: 10px 0; color: #333; font-weight: bold; border-bottom: 1px solid #ddd; text-align: right;">${paymentData.currency} ${(paymentData.amount / 100).toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 0; color: #666; border-bottom: 1px solid #ddd;">Payment Method:</td>
+            <td style="padding: 10px 0; color: #333; font-weight: bold; border-bottom: 1px solid #ddd; text-align: right;">${paymentData.paymentMethod}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 0; color: #666;">Project Start Date:</td>
+            <td style="padding: 10px 0; color: #333; font-weight: bold; text-align: right;">${paymentData.projectStartDate}</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Next Steps -->
+      <div style="background-color: #fff; border: 1px solid #ddd; padding: 20px; margin-bottom: 30px; border-radius: 8px;">
+        <h2 style="color: #333; margin-top: 0; font-size: 16px;">What's Next?</h2>
+        <ol style="color: #666; line-height: 1.8;">
+          <li style="margin-bottom: 10px;">Our team will review your project requirements</li>
+          <li style="margin-bottom: 10px;">We'll send you a project kickoff email on ${paymentData.projectStartDate}</li>
+          <li style="margin-bottom: 10px;">Development will begin immediately</li>
+          <li>You'll receive regular updates on your project progress</li>
+        </ol>
+      </div>
+
+      <!-- Contact Info -->
+      <div style="text-align: center; padding-top: 20px; border-top: 1px solid #ddd;">
+        <p style="color: #666; margin: 0;">Questions? Contact us at <strong>hello@sitesynth.com</strong></p>
+        <p style="color: #999; font-size: 12px; margin: 10px 0 0 0;">© 2026 SiteSynth. All rights reserved.</p>
+      </div>
+    </div>
+  `
+
+  return await sendBrevoEmail({
+    to: [{ email: paymentData.email, name: paymentData.fullName }],
+    subject: `Payment Confirmation - Order ${paymentData.orderNumber}`,
+    htmlContent,
+  })
+}
+

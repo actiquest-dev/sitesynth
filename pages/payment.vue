@@ -540,15 +540,17 @@ const submitPayment = async () => {
       const sessionData = {
         chargeId: result.chargeId,
         amount: orderTotal.value,
+        currency: 'USD',
         email: billingData.value.email,
         fullName: billingData.value.fullName,
+        paymentMethod: 'Credit Card',
         timestamp: new Date().toISOString(),
       }
 
       sessionStorage.setItem('paymentResult', JSON.stringify(sessionData))
 
       // Create auth token so user can access cabinet
-      const authToken = Buffer.from(`${billingData.value.email}:${Date.now()}`).toString('base64')
+      const authToken = btoa(`${billingData.value.email}:${Date.now()}`)
       localStorage.setItem('authToken', authToken)
       localStorage.setItem('user', JSON.stringify({
         email: billingData.value.email,

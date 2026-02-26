@@ -46,6 +46,8 @@
 </template>
 
 <script setup lang="ts">
+import { useAIChat } from '@/composables/useAIChat'
+
 const { isOpen, hasMessages, toggleChat } = useAIChat()
 </script>
 

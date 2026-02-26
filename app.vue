@@ -10,6 +10,8 @@ import { useRoute } from "vue-router";
 import { useHead, useRuntimeConfig } from "#imports";
 import { computed } from "vue";
 import { Analytics } from "@vercel/analytics/nuxt";
+import AIChatButton from "~/components/AIChatButton.vue";
+import AIChatDrawer from "~/components/AIChatDrawer.vue";
 import "~/assets/style.scss";
 
 const route = useRoute();

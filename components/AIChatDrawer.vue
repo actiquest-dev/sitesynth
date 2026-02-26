@@ -159,6 +159,7 @@
 
 <script setup lang="ts">
 import { ref, nextTick, watch } from 'vue'
+import { useAIChat } from '@/composables/useAIChat'
 
 const { isOpen, messages, isLoading, error, sendMessage, closeChat } = useAIChat()
 
