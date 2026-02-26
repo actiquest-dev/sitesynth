@@ -16,8 +16,10 @@ export interface ChatContext {
   context?: string
 }
 
-export const useAIChat = () => {
-  const route = useRoute()
+// Global singleton state - shared across all instances
+let aiChatState: ReturnType<typeof createAIChatState> | null = null
+
+function createAIChatState() {
   const isOpen = ref(false)
   const messages = ref<ChatMessage[]>([])
   const isLoading = ref(false)
@@ -28,6 +30,7 @@ export const useAIChat = () => {
 
   // Auto-detect context from current route
   const detectContext = () => {
+    const route = useRoute()
     const path = route.path
     context.value.page = path
 
@@ -141,4 +144,15 @@ export const useAIChat = () => {
     sendMessage,
     detectContext,
   }
+}
+
+/**
+ * Global AI Chat composable - returns singleton instance
+ * Ensures all components share the same state
+ */
+export const useAIChat = () => {
+  if (!aiChatState) {
+    aiChatState = createAIChatState()
+  }
+  return aiChatState
 }
