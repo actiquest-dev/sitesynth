@@ -12,8 +12,10 @@ const initializeTransporter = () => {
   const password = process.env.BREVO_SMTP_PASSWORD
   
   if (!password) {
-    console.warn('⚠️  WARNING: BREVO_SMTP_PASSWORD is not set!')
-    console.warn('   Email sending will FAIL. Check your .env.local or Vercel env vars.')
+    console.error('❌ FATAL: BREVO_SMTP_PASSWORD is not set!')
+    console.error('   Email sending will FAIL!')
+    console.error('   Set BREVO_SMTP_PASSWORD in .env.local or Vercel Environment Variables')
+    console.error('')
   }
 
   return nodemailer.createTransport({
@@ -22,7 +24,7 @@ const initializeTransporter = () => {
     secure: false,
     auth: {
       user: '9443c0001@smtp-brevo.com',
-      pass: password || 'missing',
+      pass: password || '', // Empty string if not set
     },
   })
 }
