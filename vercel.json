@@ -28,10 +28,5 @@
                 }
             ]
         }
-    ],
-    "functions": {
-        "server/api/ai-chat.ts": {
-            "maxDuration": 60
-        }
-    }
+    ]
 }
