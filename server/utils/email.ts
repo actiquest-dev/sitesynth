@@ -7,17 +7,33 @@ interface EmailOptions {
   sender?: { name: string; email: string }
 }
 
-const transporter = nodemailer.createTransport({
-  host: 'smtp-relay.brevo.com',
-  port: 587,
-  secure: false,
-  auth: {
-    user: '9443c0001@smtp-brevo.com',
-    pass: process.env.BREVO_SMTP_PASSWORD || '',
-  },
-})
+// Initialize transporter with validation
+const initializeTransporter = () => {
+  const password = process.env.BREVO_SMTP_PASSWORD
+  
+  if (!password) {
+    console.warn('⚠️  WARNING: BREVO_SMTP_PASSWORD is not set!')
+    console.warn('   Email sending will FAIL. Check your .env.local or Vercel env vars.')
+  }
+
+  return nodemailer.createTransport({
+    host: 'smtp-relay.brevo.com',
+    port: 587,
+    secure: false,
+    auth: {
+      user: '9443c0001@smtp-brevo.com',
+      pass: password || 'missing',
+    },
+  })
+}
+
+const transporter = initializeTransporter()
 
 export async function sendBrevoEmail(options: EmailOptions) {
+  if (!process.env.BREVO_SMTP_PASSWORD) {
+    throw new Error('BREVO_SMTP_PASSWORD is not configured')
+  }
+
   const defaultSender = {
     name: 'SiteSynth',
     email: 'hello@sitesynth.com',
@@ -26,6 +42,9 @@ export async function sendBrevoEmail(options: EmailOptions) {
   const sender = options.sender || defaultSender
 
   try {
+    console.log(`📧 Sending email to: ${options.to.map(r => r.email).join(', ')}`)
+    console.log(`   Subject: ${options.subject}`)
+    
     const info = await transporter.sendMail({
       from: `${sender.name} <${sender.email}>`,
       to: options.to.map((r) => `${r.name} <${r.email}>`).join(', '),
@@ -33,11 +52,22 @@ export async function sendBrevoEmail(options: EmailOptions) {
       html: options.htmlContent,
     })
 
-    console.log('✅ Email sent:', info.messageId)
+    console.log('✅ Email sent successfully!')
+    console.log(`   Message ID: ${info.messageId}`)
+    console.log(`   Response: ${info.response}`)
     return { message: 'Email sent', messageId: info.messageId }
   } catch (error: any) {
-    console.error('❌ Failed to send email:', error.message)
-    throw new Error(error.message || 'Failed to send email')
+    console.error('❌ Failed to send email')
+    console.error(`   Error: ${error.message}`)
+    console.error(`   Code: ${error.code}`)
+    console.error(`   Command: ${error.command}`)
+    
+    // Log more details for debugging
+    if (error.response) {
+      console.error(`   Response: ${error.response}`)
+    }
+    
+    throw new Error(`Email send failed: ${error.message}`)
   }
 }
 

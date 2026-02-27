@@ -55,6 +55,11 @@ export default defineEventHandler(
 
       // Send payment confirmation email
       try {
+        console.log(`\n📧 Sending payment confirmation email...`)
+        console.log(`   Recipient: ${email}`)
+        console.log(`   Order: ${orderNumber}`)
+        console.log(`   Amount: ${currency} ${amount / 100}`)
+        
         await sendPaymentConfirmation({
           email,
           fullName: fullName || 'Valued Customer',
@@ -72,18 +77,23 @@ export default defineEventHandler(
           ),
         })
 
-        console.log(`✅ Payment confirmation email sent to ${email}`)
+        console.log(`✅ Payment confirmation email sent successfully to ${email}\n`)
         return {
           success: true,
           message: `Payment confirmation sent to ${email}`,
         }
       } catch (emailError: any) {
-        console.error('❌ Failed to send payment confirmation:', emailError.message)
+        console.error(`\n❌ Failed to send payment confirmation email`)
+        console.error(`   Recipient: ${email}`)
+        console.error(`   Error: ${emailError.message}`)
+        console.error(`   Stack: ${emailError.stack}\n`)
+        
         setResponseStatus(event, 500)
         return {
           success: false,
           message: 'Failed to send confirmation email',
           error: emailError.message,
+          details: `Check server logs for more information. Email to: ${email}`,
         }
       }
     } catch (error: any) {
