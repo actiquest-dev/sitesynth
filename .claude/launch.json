@@ -3,7 +3,7 @@
   "configurations": [
     {
       "name": "sitesynth-dev",
-      "runtimeExecutable": "npm",
+      "runtimeExecutable": "/Users/miguelaprossine/.nvm/versions/node/v22.19.0/bin/npm",
       "runtimeArgs": ["run", "dev"],
       "port": 3000
     }

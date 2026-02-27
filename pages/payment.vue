@@ -128,16 +128,7 @@
                 <label class="block text-[#999999] text-xs uppercase tracking-wide mb-2 font-medium">
                   Country *
                 </label>
-                <select
-                  v-model="billingData.country"
-                  required
-                  class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white focus:outline-none focus:border-[#0033ff] focus:ring-1 focus:ring-[#0033ff] transition"
-                >
-                  <option value="">Select country</option>
-                  <option v-for="country in countries" :key="country.code" :value="country.code">
-                    {{ country.name }}
-                  </option>
-                </select>
+                <CountrySelect v-model="billingData.country" />
               </div>
 
               <!-- Company Name -->
@@ -361,20 +352,6 @@ const billingAddressSameAsShipping = ref(false)
 const isProcessing = ref(false)
 const cardError = ref('')
 const paymentError = ref('')
-const countries = ref<Array<{ code: string; name: string }>>([])
-
-// Load countries from API
-const loadCountries = async () => {
-  try {
-    const response = await fetch('/api/countries')
-    const data = await response.json()
-    if (data.success) {
-      countries.value = data.countries
-    }
-  } catch (error) {
-    console.error('Failed to load countries:', error)
-  }
-}
 
 // Initialize Stripe
 onMounted(async () => {
@@ -415,9 +392,6 @@ onMounted(async () => {
     paymentError.value = 'Failed to load configuration'
     return
   }
-
-  // Load countries
-  await loadCountries()
 
   try {
     stripe = await loadStripe(stripePublishableKey)
@@ -547,7 +521,7 @@ const submitPayment = async () => {
         timestamp: new Date().toISOString(),
       }
 
-      sessionStorage.setItem('paymentResult', JSON.stringify(sessionData))
+      localStorage.setItem('paymentResult', JSON.stringify(sessionData))
 
       // Create auth token so user can access cabinet
       const authToken = btoa(`${billingData.value.email}:${Date.now()}`)

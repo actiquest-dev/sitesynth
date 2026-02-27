@@ -81,8 +81,14 @@
       </template>
     </div>
 
-    <!-- CTA Button -->
-    <div class="flex-1 text-right">
+    <!-- Cabinet & CTA Button -->
+    <div class="flex-1 flex items-center justify-end gap-6">
+      <NuxtLink
+        href="/login"
+        class="font-medium transition-colors duration-200 hover:text-[rgb(217,217,217)]"
+      >
+        Cabinet
+      </NuxtLink>
       <NuxtLink
         :href="cta.link"
         :target="cta.target"

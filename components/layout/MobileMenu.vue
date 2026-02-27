@@ -158,7 +158,13 @@
 
       <!-- FIXED FOOTER (CTA + socials never move) -->
       <div class="shrink-0 w-full bg-[#161616] border-t border-[#333] px-6 py-6">
-        <div class="w-full max-w-sm mx-auto space-y-6">
+        <div class="w-full max-w-sm mx-auto space-y-6">          <!-- CABINET LINK -->
+          <NuxtLink
+            to="/login"
+            class="inline-flex items-center justify-center font-medium transition-colors duration-200 w-full h-11 px-6 bg-transparent text-white border border-[#333] hover:bg-[#1E1E1E]"
+          >
+            Cabinet
+          </NuxtLink>
           <!-- CTA BUTTON -->
           <NuxtLink
             :to="cta.link"

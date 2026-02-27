@@ -10,11 +10,14 @@ export interface ChatMessage {
 
 export interface ChatContext {
   page: string
+  mode: 'passive' | 'active' // 'passive' = normal chat, 'active' = cabinet briefing
   projectId?: string
   briefingId?: string
   userId?: string
   context?: string
   userProjects?: string
+  clientEmail?: string
+  clientName?: string
 }
 
 // Global singleton state - shared across all instances
@@ -25,40 +28,53 @@ function createAIChatState() {
   const messages = ref<ChatMessage[]>([])
   const isLoading = ref(false)
   const error = ref<string | null>(null)
-  const context = ref<ChatContext>({ page: '/' })
+  const context = ref<ChatContext>({ page: '/', mode: 'passive' })
   const isInitialized = ref(false)
 
   const hasMessages = computed(() => messages.value.length > 0)
 
   // Auto-detect context from current route and load user data
   const detectContext = async () => {
-    const route = useRoute()
-    const path = route.path
-    context.value.page = path
+    try {
+      const route = useRoute()
+      if (!route) return
 
-    // Extract IDs from route params
-    if (route.params.id) {
-      context.value.projectId = String(route.params.id)
-    }
-    if (route.query.briefing) {
-      context.value.briefingId = String(route.query.briefing)
-    }
+      const path = route.path
+      context.value.page = path
 
-    // Set context message based on page and load user data if in cabinet
-    if (path.includes('/projects')) {
-      context.value.context = `User is viewing the Projects/Briefing Cabinet`
-    } else if (path.includes('/cabinet')) {
-      context.value.context = `User is viewing their CRM Cabinet with orders and projects`
-      // Load user's projects and orders for cabinet context
-      await loadUserDataForContext()
-    } else if (path.includes('/intake')) {
-      context.value.context = `User is filling out a service intake form`
-    } else if (path.includes('/payment')) {
-      context.value.context = `User is at the payment/checkout page`
-    } else if (path.includes('/login')) {
-      context.value.context = `User is at the login page`
-    } else {
-      context.value.context = `User is on the main website`
+      // Extract IDs from route params
+      if (route.params.id) {
+        context.value.projectId = String(route.params.id)
+      }
+      if (route.query.briefing) {
+        context.value.briefingId = String(route.query.briefing)
+      }
+
+      // Set context message based on page and load user data if in cabinet
+      if (path.includes('/cabinet')) {
+        context.value.mode = 'active' // ACTIVE mode in cabinet
+        context.value.context = `User is viewing their CRM Cabinet with orders and projects. In ACTIVE mode, AI proactively guides through brief development.`
+        // Load user's projects and orders for cabinet context
+        await loadUserDataForContext()
+      } else if (path.includes('/projects')) {
+        context.value.mode = 'passive'
+        context.value.context = `User is viewing the Projects/Briefing Cabinet`
+      } else if (path.includes('/intake')) {
+        context.value.mode = 'passive'
+        context.value.context = `User is filling out a service intake form`
+      } else if (path.includes('/payment')) {
+        context.value.mode = 'passive'
+        context.value.context = `User is at the payment/checkout page`
+      } else if (path.includes('/login')) {
+        context.value.mode = 'passive'
+        context.value.context = `User is at the login page`
+      } else {
+        context.value.mode = 'passive'
+        context.value.context = `User is on the main website`
+      }
+    } catch (err) {
+      // Router not available, use default context
+      return
     }
   }
 
@@ -127,6 +143,18 @@ function createAIChatState() {
 
   const closeChat = () => {
     isOpen.value = false
+    // Save messages to localStorage when closing (backup)
+    if (messages.value.length > 0) {
+      try {
+        localStorage.setItem('chatMessages', JSON.stringify(messages.value.map(m => ({
+          role: m.role,
+          content: m.content,
+          timestamp: m.timestamp,
+        }))))
+      } catch (err) {
+        console.error('Error saving to localStorage on close:', err)
+      }
+    }
   }
 
   const addMessage = (role: 'user' | 'assistant', content: string) => {
@@ -146,7 +174,22 @@ function createAIChatState() {
   const loadChatMessages = async () => {
     try {
       const authToken = localStorage.getItem('authToken')
-      if (!authToken) return
+      if (!authToken) {
+        console.log('No auth token, skipping NocoBase load')
+        // Try localStorage fallback even without token
+        const cached = localStorage.getItem('chatMessages')
+        if (cached) {
+          const parsed = JSON.parse(cached)
+          messages.value = parsed.map((msg: any) => ({
+            id: `msg_${Math.random()}`,
+            role: msg.role,
+            content: msg.content,
+            timestamp: new Date(msg.timestamp),
+          }))
+          console.log('Loaded chat from localStorage (no auth token)')
+        }
+        return
+      }
 
       const response = await fetch('/api/chat-history', {
         method: 'POST',
@@ -161,47 +204,85 @@ function createAIChatState() {
 
       if (response.ok) {
         const result = await response.json()
-        if (result.messages) {
+        if (result.messages && result.messages.length > 0) {
           messages.value = result.messages.map((msg: any) => ({
             id: `msg_${Math.random()}`,
             role: msg.role,
             content: msg.content,
             timestamp: new Date(msg.timestamp),
           }))
+          console.log('Loaded chat from NocoBase:', result.messages.length, 'messages')
+          return // Success - loaded from NocoBase
+        } else {
+          console.log('NocoBase returned empty messages')
         }
+      } else {
+        console.log('NocoBase fetch failed:', response.status)
       }
     } catch (err) {
-      console.error('Error loading chat history:', err)
+      console.error('Error loading from NocoBase:', err)
+    }
+
+    // Fallback: load from localStorage if NocoBase failed or is empty
+    try {
+      const cached = localStorage.getItem('chatMessages')
+      if (cached) {
+        const parsed = JSON.parse(cached)
+        messages.value = parsed.map((msg: any) => ({
+          id: `msg_${Math.random()}`,
+          role: msg.role,
+          content: msg.content,
+          timestamp: new Date(msg.timestamp),
+        }))
+        console.log('Loaded chat from localStorage (fallback):', parsed.length, 'messages')
+      } else {
+        console.log('No cached messages in localStorage')
+      }
+    } catch (err) {
+      console.error('Error loading from localStorage:', err)
     }
   }
 
-  // Save chat messages to NocoBase
+  // Save chat messages to NocoBase (primary) + localStorage (fallback)
   const saveChatMessages = async () => {
+    const messagesToSave = messages.value.map(m => ({
+      role: m.role,
+      content: m.content,
+      timestamp: m.timestamp.toISOString(),
+    }))
+
+    // Try to save to NocoBase first
     try {
       const authToken = localStorage.getItem('authToken')
-      if (!authToken) return
+      if (authToken) {
+        const response = await fetch('/api/chat-history', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({
+            action: 'save',
+            messages: messagesToSave,
+          }),
+        })
 
-      const response = await fetch('/api/chat-history', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({
-          action: 'save',
-          messages: messages.value.map(m => ({
-            role: m.role,
-            content: m.content,
-            timestamp: m.timestamp.toISOString(),
-          })),
-        }),
-      })
-
-      if (!response.ok) {
-        console.warn('Failed to save chat messages to NocoBase')
+        if (response.ok) {
+          return // Success - saved to NocoBase
+        } else {
+          console.warn('Failed to save to NocoBase, using localStorage fallback')
+        }
       }
     } catch (err) {
-      console.error('Error saving chat messages:', err)
+      console.warn('NocoBase save error, using localStorage fallback:', err)
+    }
+
+    // Fallback: save to localStorage
+    try {
+      localStorage.setItem('chatMessages', JSON.stringify(messagesToSave))
+      console.log('Saved chat to localStorage (fallback)')
+    } catch (err) {
+      console.error('Error saving to localStorage:', err)
     }
   }
 
@@ -308,6 +389,37 @@ function createAIChatState() {
     if (isInitialized.value) return
     await Promise.all([loadChatMessages(), loadContext()])
     isInitialized.value = true
+
+    // If in active mode and no messages yet, send auto-greeting
+    if (context.value.mode === 'active' && messages.value.length === 0) {
+      await sendAutoGreeting()
+    }
+  }
+
+  // Send automatic greeting when cabinet loads (active mode only)
+  const sendAutoGreeting = async () => {
+    // Get user email from auth
+    const authToken = localStorage.getItem('authToken')
+    let userEmail = ''
+    if (authToken) {
+      try {
+        const decoded = Buffer.from(authToken, 'base64').toString('utf-8')
+        userEmail = decoded.split(':')[0]
+      } catch (e) {
+        // Failed to decode, continue without it
+      }
+    }
+
+    const greetingMessage = `Hi there! 👋 I see you're back in your Cabinet. I'm here to help you develop your next project vision. What would you like to build?`
+
+    isLoading.value = true
+    addMessage('assistant', greetingMessage)
+    isLoading.value = false
+  }
+
+  const openChatInMode = (mode: 'passive' | 'active') => {
+    context.value.mode = mode
+    isOpen.value = true
   }
 
   return {
@@ -321,6 +433,7 @@ function createAIChatState() {
     toggleChat,
     openChat,
     closeChat,
+    openChatInMode,
     addMessage,
     clearMessages,
     sendMessage,
@@ -330,6 +443,7 @@ function createAIChatState() {
     saveContext,
     loadContext,
     initializeChat,
+    sendAutoGreeting,
   }
 }
 

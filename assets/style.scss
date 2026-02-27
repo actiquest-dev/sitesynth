@@ -58,6 +58,22 @@ body {
     color: #4a4a4a !important;
   }
 
+  /* Chat widget — override global p color for entire chat panel */
+  .chat-widget {
+    color: #f9fafb;
+  }
+  .chat-widget p,
+  .chat-widget li {
+    color: inherit !important;
+  }
+  /* Timestamps stay gray — not white */
+  .chat-widget span[style*="color: #d0d0d0"] {
+    color: #d0d0d0 !important;
+  }
+  .chat-widget strong {
+    color: #ffffff !important;
+  }
+
   &::selection {
     background: #A620FF;
     color: white;

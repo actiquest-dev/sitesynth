@@ -2,16 +2,17 @@
   <Transition name="slide-in-right">
     <div
       v-if="isOpen"
-      class="fixed right-0 top-0 h-screen w-full max-w-md bg-[#1a1a1a] border-l border-gray-700 shadow-2xl z-50 flex flex-col"
+      class="chat-widget fixed right-0 top-0 h-screen w-full max-w-md border-l border-gray-700 shadow-2xl z-50 flex flex-col"
+      style="background: linear-gradient(160deg, #2d1050 0%, #1a1a1a 45%)"
     >
       <!-- Header -->
-      <div class="bg-[#0033ff] p-4 flex items-center justify-between">
+      <div class="bg-[#8D35FF] p-4 flex items-center justify-between">
         <div class="flex items-center gap-3">
           <div
             class="w-10 h-10 rounded-full bg-white flex items-center justify-center"
           >
             <svg
-              class="w-6 h-6 text-[#0033ff]"
+              class="w-6 h-6 text-[#8D35FF]"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -22,12 +23,12 @@
           </div>
           <div>
             <h3 class="text-white font-semibold">SiteSynth AI</h3>
-            <p class="text-blue-100 text-xs">Always here to help</p>
+            <p class="text-xs" style="color: #ffffff !important">Always here to help</p>
           </div>
         </div>
         <button
           @click="closeChat"
-          class="text-white hover:bg-blue-700 p-2 rounded transition-colors"
+          class="text-white hover:bg-purple-700 p-2 rounded transition-colors"
           aria-label="Close chat"
         >
           <svg
@@ -49,21 +50,21 @@
       <!-- Messages Area -->
       <div
         ref="messagesContainer"
-        class="flex-1 overflow-y-auto p-4 space-y-4 bg-[#1a1a1a]"
+        class="flex-1 overflow-y-auto p-4 space-y-4"
       >
         <!-- Welcome message if no messages -->
         <div v-if="messages.length === 0" class="text-center py-8">
-          <div class="text-gray-400 text-sm space-y-4">
+          <div class="text-sm space-y-4">
             <div>
-              <p class="text-lg font-semibold text-white mb-2">👋 Welcome!</p>
-              <p>Start a conversation with our AI assistant.</p>
+              <p class="text-lg font-semibold mb-2" style="color: #d0d0d0 !important">👋 Welcome!</p>
+              <p style="color: #d0d0d0 !important">Start a conversation with our AI assistant.</p>
             </div>
-            <div class="text-xs text-gray-500">
-              <p>Ask us about:</p>
-              <p>• Our services & expertise</p>
-              <p>• Project requirements</p>
-              <p>• Pricing & timelines</p>
-              <p>• Design & development</p>
+            <div class="text-xs">
+              <p style="color: #d0d0d0 !important">Ask us about:</p>
+              <p style="color: #d0d0d0 !important">• Our services & expertise</p>
+              <p style="color: #d0d0d0 !important">• Project requirements</p>
+              <p style="color: #d0d0d0 !important">• Pricing & timelines</p>
+              <p style="color: #d0d0d0 !important">• Design & development</p>
             </div>
           </div>
         </div>
@@ -75,9 +76,9 @@
             v-if="message.role === 'user'"
             class="flex justify-end"
           >
-            <div class="max-w-xs bg-[#0033ff] text-white rounded-lg rounded-tr-none p-3">
-              <p class="text-sm">{{ message.content }}</p>
-              <span class="text-xs text-blue-100 mt-1 block">
+            <div class="max-w-xs bg-[#8D35FF] rounded-lg rounded-tr-none p-3">
+              <p class="text-sm" style="color: #f9fafb !important">{{ message.content }}</p>
+              <span class="text-xs mt-1 block" style="color: #d0d0d0">
                 {{ formatTime(message.timestamp) }}
               </span>
             </div>
@@ -85,9 +86,9 @@
 
           <!-- Assistant Message -->
           <div v-else class="flex justify-start">
-            <div class="max-w-xs bg-gray-700 text-gray-100 rounded-lg rounded-tl-none p-3">
-              <p class="text-sm whitespace-pre-wrap">{{ message.content }}</p>
-              <span class="text-xs text-gray-400 mt-1 block">
+            <div class="max-w-xs bg-gray-700 rounded-lg rounded-tl-none p-3">
+              <div class="text-sm prose-chat" style="color: #f9fafb !important" v-html="renderMarkdown(message.content)"></div>
+              <span class="text-xs mt-1 block" style="color: #d0d0d0">
                 {{ formatTime(message.timestamp) }}
               </span>
             </div>
@@ -129,13 +130,13 @@
             v-model="inputMessage"
             type="text"
             placeholder="Type your message..."
-            class="flex-1 bg-gray-700 text-white placeholder-gray-400 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#0033ff] text-sm"
+            class="flex-1 bg-gray-700 text-white placeholder-gray-400 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#8D35FF] text-sm"
             :disabled="isLoading"
           />
           <button
             type="submit"
             :disabled="isLoading || !inputMessage.trim()"
-            class="bg-[#0033ff] text-white rounded-lg px-4 py-2 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            class="bg-[#8D35FF] text-white rounded-lg px-4 py-2 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <svg
               class="w-5 h-5"
@@ -160,6 +161,24 @@
 <script setup lang="ts">
 import { ref, nextTick, watch } from 'vue'
 import { useAIChat } from '@/composables/useAIChat'
+
+const renderMarkdown = (text: string): string => {
+  return text
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/^[-•] (.+)$/gm, '<li>$1</li>')
+    .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>')
+    .replace(/^(.+)$/, '<p>$1</p>')
+}
 
 const { isOpen, messages, isLoading, error, sendMessage, closeChat, initializeChat } = useAIChat()
 
@@ -233,4 +252,18 @@ const formatTime = (date: Date) => {
 ::-webkit-scrollbar-thumb:hover {
   background: #666;
 }
+
+/* Markdown styles inside chat — :deep() needed for v-html content */
+:deep(.prose-chat *) { color: #f9fafb; }
+:deep(.prose-chat p) { margin: 0 0 0.5rem 0; }
+:deep(.prose-chat p:last-child) { margin-bottom: 0; }
+:deep(.prose-chat strong) { font-weight: 600; color: #ffffff; }
+:deep(.prose-chat em) { font-style: italic; }
+:deep(.prose-chat ul) { list-style: disc; padding-left: 1.25rem; margin: 0.25rem 0; }
+:deep(.prose-chat ol) { list-style: decimal; padding-left: 1.25rem; margin: 0.25rem 0; }
+:deep(.prose-chat li) { margin: 0.15rem 0; }
+:deep(.prose-chat code) { background: rgba(0,0,0,0.3); border-radius: 3px; padding: 0.1rem 0.3rem; font-size: 0.8em; font-family: monospace; }
+:deep(.prose-chat pre) { background: rgba(0,0,0,0.4); border-radius: 6px; padding: 0.75rem; margin: 0.5rem 0; overflow-x: auto; }
+:deep(.prose-chat pre code) { background: none; padding: 0; }
+:deep(.prose-chat h1), :deep(.prose-chat h2), :deep(.prose-chat h3) { font-weight: 700; margin: 0.5rem 0 0.25rem; color: #ffffff; }
 </style>

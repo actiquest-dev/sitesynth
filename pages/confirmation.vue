@@ -435,10 +435,10 @@ const sendConfirmationEmail = async (paymentInfo: any) => {
   }
 };
 
-// Load payment data from sessionStorage
+// Load payment data from localStorage (persistent storage)
 onMounted(() => {
   try {
-    const result = sessionStorage.getItem('paymentResult');
+    const result = localStorage.getItem('paymentResult');
     if (result) {
       paymentData.value = JSON.parse(result);
       console.log('✅ Payment data loaded:', paymentData.value);

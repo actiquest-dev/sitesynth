@@ -48,7 +48,7 @@ export const useGoogleAuth = () => {
       }
 
       // Send token to backend for processing
-      const authResponse = await fetch('/api/auth-google', {
+      const authResponse = await fetch('/api/auth/google', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

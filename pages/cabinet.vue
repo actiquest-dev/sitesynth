@@ -67,13 +67,25 @@
         <h2 class="text-2xl font-bold text-white mb-8">Your Orders</h2>
 
         <div v-if="orders.length === 0" class="text-center py-12">
-          <p class="text-[#999999] mb-4">No orders yet</p>
-          <NuxtLink
-            to="/pricing"
-            class="inline-block px-6 py-3 bg-[#0033ff] text-white rounded-lg font-semibold hover:bg-blue-700 transition"
-          >
-            View Pricing Plans
-          </NuxtLink>
+          <div class="mb-6 p-4 bg-[#333]/50 border border-[#555] rounded-lg">
+            <p class="text-[#999999] text-sm mb-2">Searching for orders with email: <span class="text-white font-semibold">{{ userEmail }}</span></p>
+            <p class="text-[#666] text-xs">If you paid with a different email, you may need to use that email to sign in.</p>
+          </div>
+          <p class="text-[#999999] mb-6">No orders found</p>
+          <div class="space-y-3">
+            <NuxtLink
+              to="/pricing"
+              class="block px-6 py-3 bg-[#0033ff] text-white rounded-lg font-semibold hover:bg-blue-700 transition"
+            >
+              View Pricing Plans
+            </NuxtLink>
+            <button
+              @click="handleLogout"
+              class="block w-full px-6 py-3 bg-[#1a1a1a] border border-[#333] text-[#999999] rounded-lg font-semibold hover:border-white hover:text-white transition"
+            >
+              Sign in with Different Email
+            </button>
+          </div>
         </div>
 
         <div v-else class="space-y-4">
@@ -383,16 +395,31 @@ onMounted(async () => {
   // Also check localStorage for stored user
   const storedUser = localStorage.getItem('user')
   const storedToken = localStorage.getItem('authToken')
+  const paymentUser = localStorage.getItem('paymentResult')
 
   if (!user && !storedUser) {
     navigateTo('/login')
     return
   }
 
-  // Use stored user if no active user
+  // Use current user (e.g., from Google Sign-In), fall back to stored user
   const currentUser = user || (storedUser ? JSON.parse(storedUser) : null)
   userEmail.value = currentUser?.email || ''
   const authToken = token || storedToken
+
+  console.log('📋 Cabinet Debug Info:')
+  console.log('  Current User Email:', userEmail.value)
+  if (paymentUser) {
+    const paymentData = JSON.parse(paymentUser)
+    console.log('  Payment Email:', paymentData.email)
+    console.log('  ⚠️ Emails Match:', userEmail.value === paymentData.email)
+  }
+
+  // Open chat with ACTIVE briefing mode when cabinet loads
+  const { openChatInMode, detectContext, initializeChat } = useAIChat()
+  await detectContext()
+  openChatInMode('active')
+  await initializeChat()
 
   try {
     // Fetch user's orders via secure backend endpoint

@@ -1,4 +1,6 @@
 {
+    "buildCommand": "npm run build",
+    "outputDirectory": ".output",
     "headers": [
         {
             "source": "/sitemap.xml",
@@ -26,5 +28,10 @@
                 }
             ]
         }
-    ]
+    ],
+    "functions": {
+        "server/api/ai-chat.ts": {
+            "maxDuration": 60
+        }
+    }
 }

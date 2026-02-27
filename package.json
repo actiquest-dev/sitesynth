@@ -12,6 +12,7 @@
     "sass:build": "sass assets/style.scss assets/style.css"
   },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.33",
     "@nuxt/fonts": "^0.12.1",
     "@nuxt/image": "^1.10.0",
     "@radix-ui/react-slot": "^1.2.4",
@@ -22,15 +23,18 @@
     "@vercel/analytics": "^1.5.0",
     "@vesp/nuxt-fontawesome": "^2.0.0",
     "@vitejs/plugin-react": "^5.1.4",
+    "@voltagent/core": "^2.6.1",
+    "@voltagent/logger": "^2.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dotenv": "^17.3.1",
     "google-auth-library": "^10.6.1",
+    "googleapis": "^171.4.0",
     "lucide-react": "^0.575.0",
+    "marked": "^17.0.3",
     "motion": "^12.34.3",
     "nodemailer": "^8.0.1",
     "nuxt": "3.21.1",
-    "nuxt-swiper": "^2.0.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "stripe": "^20.3.1",
@@ -38,7 +42,8 @@
     "tailwind-merge": "^3.5.0",
     "vue": "^3.5.25",
     "vue-router": "^4.6.3",
-    "vue-tel-input": "^9.5.0"
+    "vue-tel-input": "^9.5.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@fortawesome/free-brands-svg-icons": "^7.1.0",

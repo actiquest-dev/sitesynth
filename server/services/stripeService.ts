@@ -143,8 +143,8 @@ export class StripeService {
       })
 
       if (charge.status === 'succeeded') {
-        // Save to NocoBase after successful payment
-        await this.savePaymentToNocoBase(data, charge.id)
+        // Save to Supabase after successful payment
+        await this.savePaymentToSupabase(data, charge.id)
 
         return {
           success: true,
@@ -170,11 +170,98 @@ export class StripeService {
     }
   }
 
-  // Save payment to NocoBase
+  // Save payment to Supabase
+  static async savePaymentToSupabase(data: PaymentData, chargeId: string): Promise<void> {
+    try {
+      const SUPABASE_URL = process.env.SUPABASE_URL
+      const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+      if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+        console.error('❌ Supabase credentials not configured')
+        return
+      }
+
+      console.log(`💾 Saving payment for ${data.email} to Supabase`)
+
+      // 1. Create client record
+      const clientRes = await fetch(`${SUPABASE_URL}/rest/v1/clients`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation',
+        },
+        body: JSON.stringify({
+          name: data.billingData.fullName,
+          email: data.email,
+          company: data.billingData.company || '',
+          country: data.billingData.country,
+          phone: '',
+          notes: `Created on ${new Date().toISOString()}`,
+        }),
+      })
+
+      let clientId: number | null = null
+      if (clientRes.ok) {
+        const clientData = await clientRes.json()
+        clientId = clientData[0]?.id
+        console.log('✅ Client saved to Supabase:', clientId)
+      } else {
+        const errorText = await clientRes.text()
+        console.warn('⚠️ Failed to save client:', clientRes.status, errorText)
+      }
+
+      // 2. Create order record
+      const orderRes = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation',
+        },
+        body: JSON.stringify({
+          client_id: clientId,
+          email: data.email,
+          title: `Order from ${data.billingData.fullName}`,
+          status: 'paid',
+          amount: data.amount,
+          currency: 'eur',
+          stripe_charge_id: chargeId,
+          payment_date: new Date().toISOString(),
+          form_data: {
+            intakeFormData: (data as any).intakeFormData,
+            billingData: data.billingData,
+            email: data.email,
+            amount: data.amount,
+            timestamp: new Date().toISOString(),
+          },
+        }),
+      })
+
+      if (orderRes.ok) {
+        const orderData = await orderRes.json()
+        console.log('✅ Order saved to Supabase:', orderData[0]?.id)
+      } else {
+        const errorText = await orderRes.text()
+        console.error('❌ Failed to save order to Supabase:', errorText)
+      }
+    } catch (error: any) {
+      console.error('❌ Error saving payment to Supabase:', error.message)
+    }
+  }
+
+  // Save payment to NocoBase (deprecated)
   static async savePaymentToNocoBase(data: PaymentData, chargeId: string): Promise<void> {
     try {
-      const NOCO_URL = 'http://138.2.134.17:20000'
-      const NOCO_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInJvbGVOYW1lIjoiYWRtaW4iLCJpYXQiOjE3NzIwMzU1NzcsImV4cCI6MzMzMjk2MzU1Nzd9.C1TJacEJ-qy4EVlL0r94l7anWSPhWsQwlOYzLsqooNk'
+      const NOCO_URL = process.env.NOCO_BASE_URL || 'http://138.2.134.17:20000'
+      const NOCO_TOKEN = process.env.NOCO_TOKEN
+
+      if (!NOCO_TOKEN) {
+        console.error('❌ NOCO_TOKEN not configured - cannot save payment to NocoBase')
+        return
+      }
+
+      console.log(`💾 Saving payment for ${data.email} to NocoBase at ${NOCO_URL}`)
 
       // 1. Create client record
       const clientPayload = {
@@ -191,7 +278,7 @@ export class StripeService {
         const clientRes = await fetch(`${NOCO_URL}/api/clients:create`, {
           method: 'POST',
           headers: {
-            'xc-auth': NOCO_TOKEN,
+            'Authorization': `Bearer ${NOCO_TOKEN}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(clientPayload),
@@ -201,34 +288,51 @@ export class StripeService {
           const clientData = await clientRes.json()
           clientId = clientData.data?.id
           console.log('✅ Client saved to NocoBase:', clientId)
+        } else {
+          const errorText = await clientRes.text()
+          console.warn('⚠️ Failed to save client to NocoBase:', clientRes.status, errorText)
         }
       } catch (error: any) {
         console.warn('⚠️ Failed to save client to NocoBase:', error.message)
       }
 
-      // 2. Create order record
-      const orderPayload = {
-        client_id: clientId,
-        title: 'Website Design Package',
+      // 2. Create order record (with only fields that NocoBase knows about)
+      // Note: client_id and form_data might not be available yet in NocoBase schema
+      const orderPayload: any = {
+        title: `Order from ${data.billingData.fullName}`,
         status: 'paid',
         amount: data.amount,
         currency: 'eur',
         stripe_charge_id: chargeId,
         payment_date: new Date().toISOString(),
-        form_data: {
-          // ALL form data from BOTH intake (5 steps) + payment billing
-          intakeFormData: (data as any).intakeFormData,
-          billingData: data.billingData,
-          email: data.email,
-          amount: data.amount,
-          timestamp: new Date().toISOString(),
-        },
+      }
+
+      // Try to add the advanced fields if available
+      if (clientId) {
+        orderPayload.client_id = clientId
+      }
+      
+      // Store form_data as JSON string if possible
+      // (might fail if field doesn't exist yet)
+      const formDataJson = {
+        intakeFormData: (data as any).intakeFormData,
+        billingData: data.billingData,
+        email: data.email,
+        amount: data.amount,
+        timestamp: new Date().toISOString(),
+      }
+      
+      try {
+        orderPayload.form_data = formDataJson
+      } catch (e) {
+        // field might not exist, that's ok
+        console.warn('⚠️ form_data field not available')
       }
 
       const orderRes = await fetch(`${NOCO_URL}/api/orders:create`, {
         method: 'POST',
         headers: {
-          'xc-auth': NOCO_TOKEN,
+          'Authorization': `Bearer ${NOCO_TOKEN}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(orderPayload),
@@ -236,9 +340,40 @@ export class StripeService {
 
       if (orderRes.ok) {
         const orderData = await orderRes.json()
-        console.log('✅ Order saved to NocoBase:', orderData.data?.id)
+        const orderId = orderData.data?.id
+        console.log('✅ Order saved to NocoBase:', orderId)
+        
+        // If order was created successfully, try to update it with form_data
+        if (orderId && formDataJson) {
+          try {
+            const updateRes = await fetch(`${NOCO_URL}/api/orders/${orderId}`, {
+              method: 'PATCH',
+              headers: {
+                'Authorization': `Bearer ${NOCO_TOKEN}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ form_data: formDataJson }),
+            })
+            
+            if (updateRes.ok) {
+              console.log('✅ Form data saved to order:', orderId)
+            } else {
+              console.warn('⚠️ Could not save form_data:', await updateRes.text())
+              // As backup, log the form data for manual recovery
+              console.log('💾 Form data backup:', JSON.stringify(formDataJson))
+            }
+          } catch (e: any) {
+            console.warn('⚠️ Could not update order with form_data:', e.message)
+            console.log('💾 Form data backup:', JSON.stringify(formDataJson))
+          }
+        }
       } else {
-        console.warn('⚠️ Failed to save order to NocoBase:', await orderRes.text())
+        const errorText = await orderRes.text()
+        console.error('❌ Failed to save order to NocoBase:')
+        console.error('  Status:', orderRes.status)
+        console.error('  URL:', `${NOCO_URL}/api/orders:create`)
+        console.error('  Response:', errorText)
+        console.error('  Payload was:', JSON.stringify(orderPayload))
       }
     } catch (error: any) {
       console.error('❌ Error saving payment to NocoBase:', error.message)
