@@ -20,7 +20,7 @@
               'py-3 md:py-0',
               openIndex === index
                 ? 'text-white text-2xl font-bold'
-                : 'text-[#636363] text-2xl font-semibold group-hover:text-white',
+                : 'text-[#636363] text-2xl font-bold group-hover:text-white',
             ]"
           >
             {{ section.title }}

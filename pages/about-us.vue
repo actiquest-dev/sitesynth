@@ -43,7 +43,7 @@
 
         <!-- контент поверх градиента -->
         <div class="relative z-10 max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
-          <h3 class="text-lg mb-2">WHY WE EXIST?</h3>
+          <h3 class="text-sm font-semibold tracking-wider mb-2">WHY WE EXIST?</h3>
           <h2 class="text-4xl font-bold mb-4">
             — we’re a strategic bridge between brand, design, and engineering.
           </h2>
@@ -75,16 +75,16 @@
     <template #left>
       <div class="py-24 md:border-r border-[#636363] bg-[#161616]">
         <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
-          <h2 class="text-white text-3xl sm:text-4xl mb-6">About Us</h2>
-          <p class="text-[#999999] text-normal font-light mb-4">
+          <h2 class="text-white text-3xl sm:text-4xl font-bold mb-6">About Us</h2>
+          <p class="text-[#999999] text-base font-normal leading-relaxed mb-4">
             We’re based in Sint-Amands, Belgium, in a small office within a
             beautifully restored historical building by the Schelde river. It’s
             not flashy — but it's meaningful: rooted, quiet, and real.
           </p>
-          <h3 class="text-white text-2xl mt-12 mb-12">
+          <h3 class="text-white text-xl sm:text-2xl font-bold mt-12 mb-12">
             Easy reach of partners, clients, and collaborators across Europe.
           </h3>
-          <p class="text-[#999999] text-normal font-light">
+          <p class="text-[#999999] text-base font-normal leading-relaxed">
             Strategically located between Antwerp, Brussels, and Ghent, we
             remain deeply connected to Europe’s major economic hubs—while
             keeping focus where it matters most. This little town gives us

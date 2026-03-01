@@ -1,7 +1,4 @@
 <style scoped>
-h1 {
-  font-weight: 100;
-}
 
 /* Glow текст — всегда светится слегка */
 h1 :deep(.glow-text) {
@@ -50,7 +47,7 @@ h1 :deep(.glow-text) {
         class="text-4xl sm:text-6xl font-extrabold mb-8 leading-tight"
         v-html="title"
       ></h1>
-      <p class="text-base sm:text-[16px] font-medium mb-8 text-[#d4d4d4]">
+      <p class="text-base sm:text-lg font-normal mb-8 text-[#d4d4d4]">
         {{ subtitle }}
       </p>
     </div>

@@ -109,9 +109,9 @@ const getTextClasses = (tag) => {
     case "h6":
       return "text-white text-base font-semibold mb-2"
     case "p":
-      return "text-gray-300 leading-relaxed"
+      return "text-gray-300 text-base sm:text-lg font-normal leading-relaxed"
     default:
-      return "text-gray-300"
+      return "text-gray-300 text-base font-normal"
   }
 }
 </script>

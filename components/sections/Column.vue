@@ -120,19 +120,19 @@ const getHeaderClasses = (tag) => {
 
   switch (tag) {
     case "h1":
-      return `${baseClasses} text-4xl`;
+      return `${baseClasses} text-4xl sm:text-5xl`;
     case "h2":
-      return `${baseClasses} text-3xl`;
+      return `${baseClasses} text-3xl sm:text-4xl`;
     case "h3":
-      return `${baseClasses} text-2xl`;
+      return `${baseClasses} text-2xl sm:text-3xl`;
     case "h4":
-      return `${baseClasses} text-xl`;
+      return `${props.headerTextColor} font-semibold text-xl sm:text-2xl`;
     case "h5":
-      return `${baseClasses} text-lg`;
+      return `${props.headerTextColor} font-semibold text-lg sm:text-xl`;
     case "h6":
-      return `${baseClasses} text-base`;
+      return `${props.headerTextColor} font-semibold text-base sm:text-lg`;
     default:
-      return `${baseClasses} text-2xl`;
+      return `${baseClasses} text-2xl sm:text-3xl`;
   }
 };
 </script>

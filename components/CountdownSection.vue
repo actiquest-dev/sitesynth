@@ -50,7 +50,7 @@
             padding: 6px 10px;
             border: none;
             border-radius: 999px;
-            font-family: 'Space Grotesk', 'Roc Grotesk', 'Inter', sans-serif;
+            font-family: 'Roc Grotesk', 'Inter', sans-serif;
             font-size: 12px;
             font-weight: 600;
             letter-spacing: 0.08em;
@@ -65,7 +65,7 @@
         <h1
           class="text-white mb-4"
           style="
-            font-family: 'Space Grotesk', 'Roc Grotesk', 'Inter', sans-serif;
+            font-family: 'Roc Grotesk', 'Inter', sans-serif;
             font-size: clamp(28px, 3vw, 43px);
             line-height: 1.37;
             max-width: 557px;
@@ -78,7 +78,7 @@
         <p
           class="mb-4 countdown-subtitle"
           style="
-            font-family: 'Space Grotesk', 'Roc Grotesk', 'Inter', sans-serif;
+            font-family: 'Roc Grotesk', 'Inter', sans-serif;
             font-size: clamp(18px, 1.6vw, 24px);
             line-height: 29px;
             font-weight: 500;

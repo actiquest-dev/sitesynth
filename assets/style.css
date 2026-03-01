@@ -1,6 +1,6 @@
 /* Import your static CSS here or migrate styles from your old style.css */
 body * {
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Roc Grotesk", sans-serif;
   font-optical-sizing: auto;
 }
 body::selection {
@@ -14,7 +14,7 @@ body.glowred::selection {
 }
 
 footer a {
-  font-family: "Inter", sans-serif;
+  font-family: "Roc Grotesk", sans-serif;
 }
 
 .swiper-slide {

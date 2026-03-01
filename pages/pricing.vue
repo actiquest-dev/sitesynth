@@ -9,7 +9,7 @@
 
     <div class="relative max-w-7xl mx-auto px-6 md:px-12 pt-20 md:pt-32">
       <div class="text-center mb-12">
-        <h1 class="text-4xl sm:text-5xl font-extrabold leading-tight mb-8">
+        <h1 class="font-heading text-4xl sm:text-5xl font-extrabold leading-tight mb-8">
           Simple, Transparent<br />
           <span
             class="bg-gradient-to-r from-[#0033ff] via-[#8D35FF] to-[#AA3733] bg-clip-text text-transparent"
@@ -17,7 +17,7 @@
             Pricing
           </span>
         </h1>
-        <p class="text-base sm:text-lg text-[#d4d4d4] max-w-2xl mx-auto leading-relaxed">
+        <p class="font-body text-base sm:text-lg text-[#d4d4d4] max-w-2xl mx-auto leading-relaxed">
           Choose the plan that fits your project. Scale up anytime as your
           needs grow.
         </p>
@@ -35,7 +35,7 @@
           ]"
         >
           <div
-            class="tag-pill-inner rounded-full bg-[#161616] px-6 py-[6px] text-[15px] sm:px-12 sm:py-2 sm:text-lg font-medium text-white/90 transition-all duration-300 group-hover:bg-[#181818]"
+            class="tag-pill-inner rounded-full bg-[#161616] px-6 py-[6px] text-sm sm:px-12 sm:py-2 sm:text-lg font-medium text-white/90 transition-all duration-300 group-hover:bg-[#181818]"
           >
             {{ tag.label }}
           </div>
@@ -44,10 +44,8 @@
     </div>
   </section>
 
-  <BannerSection id="banner-pricing-plans" tag="h2" text="Choose Your Plan" />
-
   <!-- PRICING CARDS SECTION -->
-  <section class="relative bg-[#161616] border-t border-b border-[#636363]">
+  <section class="relative bg-[#161616] border-b border-[#636363]">
     <div class="relative max-w-[1248px] mx-auto px-6">
       <div class="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         <!-- Card Component -->
@@ -76,7 +74,7 @@
                 <span
                   v-if="card.badge"
                   :class="[
-                    'inline-flex items-center rounded-full px-2.5 py-1 text-white text-[11px] leading-none font-semibold whitespace-nowrap',
+                    'inline-flex items-center rounded-full px-2.5 py-1 text-white text-xs leading-none font-semibold whitespace-nowrap',
                     card.badgeClass || 'bg-[#AA3733]',
                   ]"
                 >
@@ -84,7 +82,7 @@
                 </span>
                 <span
                   v-else
-                  class="inline-flex items-center rounded-full px-2.5 py-1 text-[11px] leading-none font-semibold whitespace-nowrap opacity-0 select-none"
+                  class="inline-flex items-center rounded-full px-2.5 py-1 text-xs leading-none font-semibold whitespace-nowrap opacity-0 select-none"
                 >
                   Badge
                 </span>
@@ -142,14 +140,16 @@
     </div>
   </section>
 
-  <BannerSection id="banner-pricing-faq" tag="h2" text="Frequently Asked Questions" />
-
   <!-- FAQ SECTION -->
-  <section class="relative bg-[#161616] py-16 md:py-24 border-t border-b border-[#636363]">
+  <section class="relative bg-[#161616] py-16 md:py-24 border-b border-[#636363]">
     <!-- Glow Effect -->
     <GlowRed />
 
     <div class="relative max-w-4xl mx-auto px-6 md:px-12">
+      <h2 class="text-3xl sm:text-4xl font-bold text-white mb-10 text-center">
+        Frequently Asked Questions
+      </h2>
+
       <div class="space-y-4">
         <div
           v-for="(item, idx) in faqItems"

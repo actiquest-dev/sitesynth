@@ -28,7 +28,7 @@
               class="w-16 h-16 object-contain mb-10 md:mb-4 md:w-auto md:h-auto md:max-w-full"
             />
 
-            <h3 class="text-[22px] md:text-xl font-semibold text-white leading-snug pt-0 pb-0 md:pt-6 md:pb-8">
+            <h3 class="text-xl md:text-xl font-semibold text-white leading-snug pt-0 pb-0 md:pt-6 md:pb-8">
               {{ offer.title }}
             </h3>
 

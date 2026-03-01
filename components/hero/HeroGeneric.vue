@@ -106,7 +106,7 @@ const getElementClasses = (tag, customTextColor) => {
     case "h2":
       return `${textColor} text-3xl sm:text-4xl font-bold`;
     case "h3":
-      return `${textColor} text-2xl sm:text-3xl font-normal`;
+      return `${textColor} text-2xl sm:text-3xl font-bold`;
     case "h4":
       return `${textColor} text-xl sm:text-2xl font-semibold`;
     case "h5":
@@ -114,7 +114,7 @@ const getElementClasses = (tag, customTextColor) => {
     case "h6":
       return `${textColor} text-base sm:text-lg font-semibold`;
     case "p":
-      return `${textColor} text-base sm:text-lg font-medium`;
+      return `${textColor} text-base sm:text-lg font-normal`;
     default:
       return `${textColor} text-base`;
   }

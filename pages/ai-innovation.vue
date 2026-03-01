@@ -32,7 +32,7 @@
         ></div>
 
         <div class="relative z-10 max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
-          <h3 class="text-lg mb-2">WHY AI NOW?</h3>
+          <h3 class="text-sm font-semibold tracking-wider mb-2">WHY AI NOW?</h3>
           <h2 class="text-4xl font-bold mb-4">
             You don’t need an AI lab. You need traction.
           </h2>
@@ -73,14 +73,14 @@
             <span class="text-3xl sm:text-4xl ml-3 align-middle">🪄</span>
           </h2>
 
-          <h2 class="text-4xl mb-2 text-white">of executives</h2>
+          <h2 class="text-4xl font-bold mb-2 text-white">of executives</h2>
 
-          <p class="text-lg font-bold mb-4 text-white">
+          <p class="text-base sm:text-lg font-normal mb-4 text-white leading-relaxed">
             say AI will give them a competitive advantage — but only 19% have
             adopted it at scale.
           </p>
 
-          <p class="text-[#999999]">— McKinsey Global AI Survey</p>
+          <p class="text-sm text-[#999999]">— McKinsey Global AI Survey</p>
         </div>
       </div>
     </template>
@@ -95,14 +95,14 @@
             <span class="text-3xl sm:text-4xl ml-3 align-middle">🚀</span>
           </h2>
 
-          <h2 class="text-4xl mb-2 text-white">faster</h2>
+          <h2 class="text-4xl font-bold mb-2 text-white">faster</h2>
 
-          <p class="text-lg font-bold mb-4 text-white">
+          <p class="text-base sm:text-lg font-normal mb-4 text-white leading-relaxed">
             Companies that adopt AI early grow 50% faster in productivity and
             customer retention.
           </p>
 
-          <p class="text-[#999999]">— BCG AI at Scale Report</p>
+          <p class="text-sm text-[#999999]">— BCG AI at Scale Report</p>
         </div>
       </div>
     </template>

@@ -1,12 +1,11 @@
 /* Import your static CSS here or migrate styles from your old style.css */
 // @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
 /* Roc Grotesk Font Definitions */
 @font-face {
   font-family: "Roc Grotesk";
-  src: url("/assets/new-assets/hfont/rocgrotesk-bold.otf") format("opentype");
+  src: url("/assets/new-assets/hfont/rocgrotesk-medium.otf") format("opentype");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -14,22 +13,110 @@
 
 @font-face {
   font-family: "Roc Grotesk";
-  src: url("/assets/new-assets/hfont/rocgrotesk-medium.otf") format("opentype");
+  src: url("/assets/new-assets/hfont/rocgrotesk-bold.otf") format("opentype");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
+:root {
+  --font-heading: "Roc Grotesk", Inter, sans-serif;
+  --font-body: "Roc Grotesk", Inter, sans-serif;
+  --font-mono: "Share Tech Mono", monospace;
+
+  /* ── Type scale ────────────────────────────────────────────────────────── */
+  /* Display (hero h1): 60px / bold */
+  --text-display: clamp(2.5rem, 5vw, 3.75rem);
+  --weight-display: 700;
+
+  /* Heading 1: 48px / bold */
+  --text-h1: clamp(2rem, 4vw, 3rem);
+  --weight-h1: 700;
+
+  /* Heading 2: 36px / bold */
+  --text-h2: clamp(1.75rem, 3vw, 2.25rem);
+  --weight-h2: 700;
+
+  /* Heading 3: 24px / bold */
+  --text-h3: clamp(1.25rem, 2vw, 1.5rem);
+  --weight-h3: 700;
+
+  /* Heading 4: 20px / semibold */
+  --text-h4: 1.25rem;
+  --weight-h4: 600;
+
+  /* Heading 5: 18px / semibold */
+  --text-h5: 1.125rem;
+  --weight-h5: 600;
+
+  /* Heading 6 / eyebrow: 14px / semibold */
+  --text-h6: 0.875rem;
+  --weight-h6: 600;
+
+  /* Body large: 18px / normal */
+  --text-body-lg: 1.125rem;
+  --weight-body: 400;
+
+  /* Body base: 16px / normal */
+  --text-body: 1rem;
+
+  /* Small: 14px / normal */
+  --text-small: 0.875rem;
+
+  /* Micro: 12px / normal */
+  --text-micro: 0.75rem;
+}
+
+html,
+body {
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-optical-sizing: auto;
+  letter-spacing: -0.01em;
+}
+
+p,
+li,
+ul,
+ol,
+a,
+button,
+input,
+select,
+textarea,
+label {
+  font-family: var(--font-body);
+}
+
+.font-heading {
+  font-family: var(--font-heading) !important;
+}
+
+.font-body {
+  font-family: var(--font-body) !important;
+}
+
 @for $i from 1 through 6 {
   h#{$i} {
-    font-family: "Roc Grotesk", sans-serif;
+    font-family: var(--font-heading);
     font-optical-sizing: auto;
   }
 }
 
 body {
   p,li,ul,ol {
-    font-family: "Inter", sans-serif;
+    font-family: var(--font-body);
   }
 
   p {
@@ -89,7 +176,7 @@ body.glowred {
 
 footer {
   a {
-    font-family: "Inter", sans-serif;
+    font-family: var(--font-body);
   }
 }
 
