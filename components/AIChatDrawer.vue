@@ -156,7 +156,7 @@ const parseMarkdown = (text: string): string => {
   html = html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   
   // Code blocks (```code```)
-  html = html.replace(/```(.*?)```/gs, '<pre><code>$1</code></pre>')
+  html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
   
   // Inline code (`code`)
   html = html.replace(/`([^`]+)`/g, '<code class="bg-[#333] px-1 py-0.5 rounded">$1</code>')
@@ -164,8 +164,13 @@ const parseMarkdown = (text: string): string => {
   // Bold (**text**)
   html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold">$1</strong>')
   
-  // Italic (*text*)
-  html = html.replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
+  // Lists - preserve * at start of line (don't convert to italic)
+  // This must come BEFORE italic parsing
+  html = html.replace(/^\* (.*?)$/gm, '• $1')
+  
+  // Italic (*text*) - but NOT at start of line (that's a list marker)
+  // Only match if surrounded by non-whitespace
+  html = html.replace(/([^\n*])\*([^\s*][^\*]*?[^\s*])\*([^\n*])/g, '$1<em class="italic">$2</em>$3')
   
   // Links [text](url)
   html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" class="text-blue-400 underline" target="_blank">$1</a>')
@@ -175,7 +180,7 @@ const parseMarkdown = (text: string): string => {
   html = html.replace(/^## (.*?)$/gm, '<h2 class="text-xl font-bold mt-3">$1</h2>')
   html = html.replace(/^# (.*?)$/gm, '<h1 class="text-2xl font-bold mt-4">$1</h1>')
   
-  // Line breaks
+  // Line breaks (handle \n properly)
   html = html.replace(/\n/g, '<br>')
   
   return html
