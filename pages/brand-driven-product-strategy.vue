@@ -3,40 +3,12 @@
   <HeroBrand
     id="hero-brand"
     title="Build products that feel as good as they function."
-    description="We begin by distilling your brand’s essence — tone, values, and purpose — into clear, strategic inputs."
+    description="We begin by distilling your brand's essence — tone, values, and purpose — into clear, strategic inputs."
     backgroundImage="/assets/new-assets/test/hero-pattern-animated-once.svg"
     readMore="Read more"
     buttonText="Do you know why?"
     buttonLink="#"
-    :cards="[
-      {
-        icon: '🧭',
-        title: 'Understand the Brand',
-        description:
-          'We begin by distilling your brand’s essence — tone, values, and purpose — into clear, strategic inputs.',
-        link: '#understand-the-brand',
-        image:
-          '/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/cards/card-understand-brand.svg',
-      },
-      {
-        icon: '🎨',
-        title: 'Translate into Product Experience',
-        description:
-          'We map your brand into UX flows — ensuring every screen feels consistent.',
-        link: '#translate-into-product',
-        image:
-          '/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/cards/card-product-brand.svg',
-      },
-      {
-        icon: '🤝',
-        title: 'Align Across Teams',
-        description:
-          'We work across product, design, and marketing — helping your teams speak the same language.',
-        link: '#align-across-teams',
-        image:
-          '/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/cards/card-align-across-teams.svg',
-      },
-    ]"
+    :cards="heroCards"
   />
 
   <BannerSection
@@ -51,7 +23,7 @@
     imagePosition="h-full object-cover"
     bgColor="bg-[#DDDDDD]"
     leftTitle="🧭 The compass of your business"
-    leftDescription="We begin by distilling your brand’s essence — tone, values, and purpose — into clear, strategic inputs. Through focused workshops and stakeholder alignment, we translate abstract brand traits into usable creative and product direction."
+    leftDescription="We begin by distilling your brand's essence — tone, values, and purpose — into clear, strategic inputs. Through focused workshops and stakeholder alignment, we translate abstract brand traits into usable creative and product direction."
     :tags="[
       'Brand Discovery Sessions',
       'Stakeholder Interviews',
@@ -73,7 +45,7 @@
     personName="Mayya Aprosina"
     personTitle="CEO & Business Designer"
     quoteTitle="A clear why shapes everything that follows."
-    quoteText="Understanding why your brand exists — beyond products or features — gives every decision direction. It’s the foundation for building digital experiences that feel aligned, intentional, and real."
+    quoteText="Understanding why your brand exists — beyond products or features — gives every decision direction. It's the foundation for building digital experiences that feel aligned, intentional, and real."
     ctaText="Get in touch"
     ctaLink="/contact-us"
     class="pb-[8rem] pt-[8rem]"
@@ -143,55 +115,18 @@
   />
   <BannerSection text="What You Get" />
   <WhatYouGetSection
-  id="what-you-get"
-  :showTitle="false"
-  sectionClass="bg-[#161616] pb-20 pt-0"
-  :cards="[
-    {
-      iconSrc: '/assets/icons/routing-2.svg',
-      title: 'Strategic Foundation',
-      description:
-        'A clear product direction rooted in your brand’s purpose, promise, and personality.',
-    },
-    {
-      iconSrc: '/assets/icons/messages.svg',
-      title: 'Messaging Frameworks',
-      description:
-        'Positioning, voice, and messaging pillars across product, marketing, and sales.',
-    },
-    {
-      iconSrc: '/assets/icons/people.svg',
-      title: 'Cross-Team Alignment',
-      description:
-        'Collaborative tools and rituals to keep design, product, and business stakeholders aligned .',
-    },
-    {
-      iconSrc: '/assets/icons/judge.svg',
-      title: 'Decision-Making Criteria',
-      description:
-        'Shared principles that help your team move faster.',
-    },
-    {
-      iconSrc: '/assets/icons/box.svg',
-      title: 'Actionable Product Architecture',
-      description:
-        'Feature roadmaps and IA built around real user needs and business priorities.',
-    },
-    {
-      iconSrc: '/assets/icons/task-square.svg',
-      title: 'Delivery Blueprint',
-      description:
-        'A practical handoff package for build — specs, edge cases, acceptance criteria.',
-    },
-  ]"
-/>
+    id="what-you-get"
+    :showTitle="false"
+    sectionClass="bg-[#161616] pb-20 pt-0"
+    :cards="whatYouGetCards"
+  />
 
   <WhiteSection
     id="get-started-today"
     bgImage="/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/below-pattern.svg"
     class="pt-[8rem] pb-[8rem]"
     title="Get Started Today"
-    description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you’re becoming."
+    description="We work with founders, product leads, and marketing teams to shape digital products that reflect who you are — and scale with who you're becoming."
     primaryText="Start a Project"
     primaryLink="/pricing"
     secondaryText="Book a Call"
@@ -202,6 +137,63 @@
 
 <script setup>
 import { seoConfig, structuredData } from "~/config/seo";
+
+const heroCards = [
+  {
+    icon: '🧭',
+    title: 'Understand the Brand',
+    description: "We begin by distilling your brand's essence — tone, values, and purpose — into clear, strategic inputs.",
+    link: '#understand-the-brand',
+    image: '/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/cards/card-understand-brand.svg',
+  },
+  {
+    icon: '🎨',
+    title: 'Translate into Product Experience',
+    description: 'We map your brand into UX flows — ensuring every screen feels consistent.',
+    link: '#translate-into-product',
+    image: '/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/cards/card-product-brand.svg',
+  },
+  {
+    icon: '🤝',
+    title: 'Align Across Teams',
+    description: 'We work across product, design, and marketing — helping your teams speak the same language.',
+    link: '#align-across-teams',
+    image: '/assets/new-assets/solutions-page/solutions/brand-driven-product-strategy/cards/card-align-across-teams.svg',
+  },
+];
+
+const whatYouGetCards = [
+  {
+    iconSrc: '/assets/icons/routing-2.svg',
+    title: 'Strategic Foundation',
+    description: "A clear product direction rooted in your brand's purpose, promise, and personality.",
+  },
+  {
+    iconSrc: '/assets/icons/messages.svg',
+    title: 'Messaging Frameworks',
+    description: 'Positioning, voice, and messaging pillars across product, marketing, and sales.',
+  },
+  {
+    iconSrc: '/assets/icons/people.svg',
+    title: 'Cross-Team Alignment',
+    description: 'Collaborative tools and rituals to keep design, product, and business stakeholders aligned.',
+  },
+  {
+    iconSrc: '/assets/icons/judge.svg',
+    title: 'Decision-Making Criteria',
+    description: 'Shared principles that help your team move faster.',
+  },
+  {
+    iconSrc: '/assets/icons/box.svg',
+    title: 'Actionable Product Architecture',
+    description: 'Feature roadmaps and IA built around real user needs and business priorities.',
+  },
+  {
+    iconSrc: '/assets/icons/task-square.svg',
+    title: 'Delivery Blueprint',
+    description: 'A practical handoff package for build — specs, edge cases, acceptance criteria.',
+  },
+];
 
 // SEO Configuration - using centralized config
 const siteUrl = useRuntimeConfig().public?.siteUrl;

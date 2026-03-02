@@ -3,28 +3,13 @@
 
   <section class="relative bg-[#161616] min-h-screen pt-20 md:pt-32 pb-16 md:pb-24 overflow-hidden">
     <!-- Background Effects -->
-    <GlowRed />
+    <GlowEffect />
     <ParticleEffect />
-
-    <!-- Background Gradients -->
-    <div class="absolute inset-0 pointer-events-none opacity-50">
-      <div
-        class="absolute top-20 right-0 w-96 h-96 bg-red-500/30 rounded-full blur-3xl"
-      ></div>
-      <div
-        class="absolute bottom-20 left-0 w-96 h-96 bg-blue-500/25 rounded-full blur-3xl"
-      ></div>
-      <div
-        class="absolute top-1/2 left-1/2 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl transform -translate-x-1/2"
-      ></div>
-    </div>
 
     <div class="relative max-w-7xl mx-auto px-6 md:px-12">
       <h1 class="text-5xl font-extrabold text-white mb-16">
         Complete Your
-        <span class="bg-gradient-to-r from-[#0033ff] to-[#AA3733] bg-clip-text text-transparent">
-          Order
-        </span>
+        <span class="glow-text">Order</span>
       </h1>
 
       <!-- Error Message -->
@@ -50,7 +35,7 @@
                   type="text"
                   placeholder="John Doe"
                   required
-                  class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#0033ff] focus:ring-1 focus:ring-[#0033ff] transition"
+                  class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#8D35FF] focus:ring-1 focus:ring-[#8D35FF] transition"
                 />
               </div>
 
@@ -64,7 +49,7 @@
                   type="email"
                   placeholder="hello@example.com"
                   required
-                  class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#0033ff] focus:ring-1 focus:ring-[#0033ff] transition"
+                  class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#8D35FF] focus:ring-1 focus:ring-[#8D35FF] transition"
                 />
               </div>
 
@@ -78,7 +63,7 @@
                   type="text"
                   placeholder="123 Main Street"
                   required
-                  class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#0033ff] focus:ring-1 focus:ring-[#0033ff] transition"
+                  class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#8D35FF] focus:ring-1 focus:ring-[#8D35FF] transition"
                 />
               </div>
 
@@ -91,7 +76,7 @@
                   v-model="billingData.apartment"
                   type="text"
                   placeholder="Apt 4B"
-                  class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#0033ff] focus:ring-1 focus:ring-[#0033ff] transition"
+                  class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#8D35FF] focus:ring-1 focus:ring-[#8D35FF] transition"
                 />
               </div>
 
@@ -106,7 +91,7 @@
                     type="text"
                     placeholder="New York"
                     required
-                    class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#0033ff] focus:ring-1 focus:ring-[#0033ff] transition"
+                    class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#8D35FF] focus:ring-1 focus:ring-[#8D35FF] transition"
                   />
                 </div>
                 <div>
@@ -118,7 +103,7 @@
                     type="text"
                     placeholder="10001"
                     required
-                    class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#0033ff] focus:ring-1 focus:ring-[#0033ff] transition"
+                    class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#8D35FF] focus:ring-1 focus:ring-[#8D35FF] transition"
                   />
                 </div>
               </div>
@@ -140,7 +125,7 @@
                   v-model="billingData.company"
                   type="text"
                   placeholder="Your company"
-                  class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#0033ff] focus:ring-1 focus:ring-[#0033ff] transition"
+                  class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#8D35FF] focus:ring-1 focus:ring-[#8D35FF] transition"
                 />
               </div>
             </div>
@@ -175,17 +160,39 @@
                   type="text"
                   placeholder="John Doe"
                   required
-                  class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#0033ff] focus:ring-1 focus:ring-[#0033ff] transition"
+                  class="w-full bg-[#1a1a1a] border border-[#333] px-4 py-3 rounded-lg text-white placeholder:text-[#555] focus:outline-none focus:border-[#8D35FF] focus:ring-1 focus:ring-[#8D35FF] transition"
                 />
               </div>
 
               <!-- Billing Address Same as Shipping -->
-              <label class="flex items-start gap-3">
+              <label class="flex items-start gap-3 cursor-pointer">
                 <input
                   type="checkbox"
                   v-model="billingAddressSameAsShipping"
-                  class="w-5 h-5 rounded accent-[#0033ff] mt-0.5 flex-shrink-0"
+                  class="sr-only"
                 />
+                <span
+                  :class="[
+                    'w-5 h-5 mt-0.5 flex-shrink-0 border bg-[#1a1a1a] flex items-center justify-center transition-all duration-200',
+                    billingAddressSameAsShipping
+                      ? 'border-[#8D35FF] bg-[#8D35FF]/20'
+                      : 'border-[#555]',
+                  ]"
+                >
+                  <svg
+                    v-if="billingAddressSameAsShipping"
+                    class="w-3.5 h-3.5 text-[#8D35FF]"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </span>
                 <span class="text-[#999999] text-sm">
                   Billing address same as shipping
                 </span>
@@ -197,7 +204,7 @@
         <!-- RIGHT COLUMN: Order Summary (40%) -->
         <div class="lg:col-span-2">
           <div
-            class="sticky top-8 border-l-4 border-[#0033ff] bg-[#1a1a1a] p-6 rounded-lg"
+            class="sticky top-8 border-l-4 border-[#8D35FF] bg-[#1a1a1a] p-6 rounded-lg"
           >
             <h3 class="text-xl font-bold text-white mb-6">Order Summary</h3>
 
@@ -221,7 +228,7 @@
               </div>
               <div class="flex justify-between text-sm">
                 <span class="text-[#999999]">SEO Setup</span>
-                <span class="text-[#0033ff]">+€75</span>
+                <span class="text-[#8D35FF]">+€75</span>
               </div>
             </div>
 
@@ -238,7 +245,7 @@
 
             <div class="flex justify-between mb-8">
               <span class="text-white font-semibold">Total</span>
-              <span class="text-2xl font-bold text-[#0033ff]">€1,170</span>
+              <span class="text-2xl font-bold text-white">€1,170</span>
             </div>
 
             <div class="text-[#999999] text-xs text-center mb-8">
@@ -256,7 +263,7 @@
               <button
                 type="submit"
                 :disabled="isProcessing"
-                class="w-full px-6 py-3 bg-[#0033ff] text-white rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                class="w-full px-6 py-3 bg-[#8D35FF] text-white rounded-lg font-semibold hover:bg-[#7B2EF0] disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
                 {{ isProcessing ? "Processing..." : "Place Order" }}
               </button>
@@ -272,7 +279,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import GlowRed from '@/components/effects/GlowRed.vue'
+import GlowEffect from '@/components/effects/GlowEffect.vue'
 import ParticleEffect from '@/components/effects/ParticleEffect.vue'
 import { useCursorGlow } from '@/composables/useCursorGlow'
 
@@ -559,3 +566,28 @@ useSeoMeta({
   ogImage: `${siteUrl}/assets/shareimage.png`,
 })
 </script>
+
+<style scoped>
+.glow-text {
+  display: inline-block;
+  color: #ffffff;
+  text-shadow:
+    0 0 6px rgba(200, 155, 255, 0.45),
+    0 0 18px rgba(128, 0, 255, 0.55);
+  animation: pulse-glow 2.8s ease-in-out infinite;
+  will-change: text-shadow;
+}
+
+@keyframes pulse-glow {
+  30%, 100% {
+    text-shadow:
+      0 0 6px rgba(200, 155, 255, 0.45),
+      0 0 18px rgba(128, 0, 255, 0.55);
+  }
+  50% {
+    text-shadow:
+      0 0 14px rgba(200, 155, 255, 1),
+      0 0 36px rgba(128, 0, 255, 1);
+  }
+}
+</style>

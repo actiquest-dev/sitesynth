@@ -11,11 +11,7 @@
       <div class="text-center mb-12">
         <h1 class="font-heading text-4xl sm:text-5xl font-extrabold leading-tight mb-8">
           Simple, Transparent<br />
-          <span
-            class="bg-gradient-to-r from-[#0033ff] via-[#8D35FF] to-[#AA3733] bg-clip-text text-transparent"
-          >
-            Pricing
-          </span>
+          <span class="glow-text">Pricing</span>
         </h1>
         <p class="font-body text-base sm:text-lg text-[#d4d4d4] max-w-2xl mx-auto leading-relaxed">
           Choose the plan that fits your project. Scale up anytime as your
@@ -24,21 +20,14 @@
       </div>
 
       <!-- Tag Pills -->
-      <div class="mt-10 sm:mt-12 flex flex-wrap justify-center gap-3 sm:gap-4 max-w-3xl mx-auto">
+      <div class="mt-10 sm:mt-12 flex flex-wrap justify-center gap-[10px] max-w-3xl mx-auto">
         <div
           v-for="(tag, index) in pricingTags"
           :key="tag.label"
           :style="{ '--i': index }"
-          :class="[
-            'group tag-pill cursor-default rounded-full border-[2px] p-[3px]',
-            tag.strokeClass,
-          ]"
+          class="pill-wrap"
         >
-          <div
-            class="tag-pill-inner rounded-full bg-[#161616] px-6 py-[6px] text-sm sm:px-12 sm:py-2 sm:text-lg font-medium text-white/90 transition-all duration-300 group-hover:bg-[#181818]"
-          >
-            {{ tag.label }}
-          </div>
+          <div class="pill-body">{{ tag.label }}</div>
         </div>
       </div>
     </div>
@@ -210,10 +199,10 @@ import ParticleEffect from "@/components/effects/ParticleEffect.vue";
 const expandedFAQ = ref(null);
 
 const pricingTags = [
-  { label: "No Setup Fees", strokeClass: "stroke-blue" },
-  { label: "Flexible Scope", strokeClass: "stroke-white" },
-  { label: "Pay Once", strokeClass: "stroke-magenta" },
-  { label: "Quick Turnaround", strokeClass: "stroke-purple" },
+  { label: "No Setup Fees" },
+  { label: "Flexible Scope" },
+  { label: "Pay Once" },
+  { label: "Quick Turnaround" },
 ];
 
 const pricingCards = [
@@ -373,48 +362,61 @@ useSeoMeta({
 </script>
 
 <style scoped>
-.stroke-blue { border-color: #0900ff; border-style: solid; }
-.stroke-purple { border-color: #7b38fc; border-style: solid; }
-.stroke-magenta { border-color: #a620ff; border-style: solid; }
-.stroke-white { border-color: #ffffff; border-style: solid; }
-
-.tag-pill {
-  border-radius: 9999px;
-  transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1);
+.glow-text {
+  display: inline-block;
+  color: #ffffff;
+  text-shadow:
+    0 0 6px rgba(200, 155, 255, 0.45),
+    0 0 18px rgba(128, 0, 255, 0.55);
+  animation: pulse-glow 2.8s ease-in-out infinite;
+  will-change: text-shadow;
 }
 
-.tag-pill-inner {
-  border-radius: 9999px;
+@keyframes pulse-glow {
+  30%, 100% {
+    text-shadow:
+      0 0 6px rgba(200, 155, 255, 0.45),
+      0 0 18px rgba(128, 0, 255, 0.55);
+  }
+  50% {
+    text-shadow:
+      0 0 14px rgba(200, 155, 255, 1),
+      0 0 36px rgba(128, 0, 255, 1);
+  }
+}
+
+.pill-wrap {
   opacity: 0;
-  transform: translateY(10px);
-  transition: background-color 380ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
-  animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards,
-    softPulse 4s ease-in-out infinite;
-  animation-delay: calc(var(--i) * 90ms);
+  animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--i) * 70ms);
 }
 
-.tag-pill:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0 18px rgba(144, 144, 255, 0.32);
+.pill-body {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  border: 1px solid #444444;
+  background: transparent;
+  padding: 5px 14px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  color: #888888;
+  white-space: nowrap;
+  transition: color 0.2s ease, border-color 0.2s ease;
 }
 
-.tag-pill:hover .tag-pill-inner {
-  background-color: #181818;
-  box-shadow: 0 0 18px rgba(144, 144, 255, 0.32);
-  transform: translateY(0);
+.pill-wrap:hover .pill-body {
+  color: #aaaaaa;
+  border-color: #666666;
 }
 
 @keyframes fadeUp {
-  0% { opacity: 0; transform: translateY(12px); }
-  100% { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes softPulse {
-  0% { box-shadow: 0 0 0 rgba(144, 144, 255, 0); }
-  50% { box-shadow: 0 0 14px rgba(144, 144, 255, 0.22); }
-  100% { box-shadow: 0 0 0 rgba(144, 144, 255, 0); }
+@media (prefers-reduced-motion: reduce) {
+  .pill-wrap { animation: none; opacity: 1; }
 }
 </style>

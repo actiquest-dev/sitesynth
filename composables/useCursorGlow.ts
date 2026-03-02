@@ -1,62 +1,160 @@
 import { onMounted, onUnmounted } from 'vue'
 
 export const useCursorGlow = () => {
-  let glowElement: HTMLElement | null = null
+  let raf: number | null = null
+  let container: HTMLElement | null = null
+  let layerOuter: HTMLElement | null = null
+  let layerMid:   HTMLElement | null = null
+  let layerInner: HTMLElement | null = null
+  const cleanupFns: (() => void)[] = []
 
-  const initCursorGlow = () => {
-    // Create glow element
-    glowElement = document.createElement('div')
-    glowElement.id = 'cursor-glow'
-    glowElement.style.cssText = `
-      position: fixed;
-      width: 80px;
-      height: 80px;
-      background: radial-gradient(circle, rgba(0, 51, 255, 0.4) 0%, rgba(0, 51, 255, 0.2) 40%, transparent 70%);
-      border-radius: 50%;
-      pointer-events: none;
-      display: none;
-      z-index: 9999;
-      box-shadow: 0 0 30px rgba(0, 51, 255, 0.5), 0 0 60px rgba(0, 51, 255, 0.3);
-      filter: blur(8px);
-      transition: opacity 0.2s ease;
-    `
-    document.body.appendChild(glowElement)
+  onMounted(() => {
+    if (typeof window === 'undefined') return
+    // Only on real pointer devices — skip touch
+    if (!window.matchMedia('(pointer: fine)').matches) return
 
-    // Track mouse movement
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!glowElement) return
+    // Remove stale instance if any (HMR safety)
+    document.getElementById('cursor-glow-root')?.remove()
 
-      const x = e.clientX
-      const y = e.clientY
+    // ── Build DOM ──────────────────────────────────────────────────────────
+    container = document.createElement('div')
+    container.id = 'cursor-glow-root'
+    Object.assign(container.style, {
+      position:      'fixed',
+      top:           '0',
+      left:          '0',
+      width:         '0',
+      height:        '0',
+      pointerEvents: 'none',
+      zIndex:        '9998',
+      overflow:      'visible',
+    })
 
-      glowElement.style.left = `${x - 40}px`
-      glowElement.style.top = `${y - 40}px`
-      glowElement.style.display = 'block'
+    /**
+     * Each layer is centered at (0,0) via negative margin,
+     * then translated to the mouse position each frame.
+     */
+    const makeLayer = (
+      size: number,
+      blur: number,
+      stops: [string, string],
+    ): HTMLElement => {
+      const half = size / 2
+      const el   = document.createElement('div')
+      Object.assign(el.style, {
+        position:     'absolute',
+        width:        `${size}px`,
+        height:       `${size}px`,
+        marginLeft:   `-${half}px`,
+        marginTop:    `-${half}px`,
+        background:   `radial-gradient(circle, ${stops[0]} 0%, ${stops[1]} 45%, transparent 70%)`,
+        borderRadius: '50%',
+        filter:       `blur(${blur}px)`,
+        willChange:   'transform, opacity',
+        opacity:      '0',
+        transition:   'opacity 0.6s ease',
+      })
+      container!.appendChild(el)
+      return el
     }
 
-    const handleMouseLeave = () => {
-      if (glowElement) {
-        glowElement.style.display = 'none'
+    // Outer halo  — large, very soft, diffuse
+    layerOuter = makeLayer(340, 32, [
+      'rgba(141,53,255,0.10)',
+      'rgba(141,53,255,0.04)',
+    ])
+    // Mid glow  — medium, noticeable
+    layerMid = makeLayer(110, 12, [
+      'rgba(160,80,255,0.28)',
+      'rgba(141,53,255,0.10)',
+    ])
+    // Inner core — small bright point of light
+    layerInner = makeLayer(30, 3, [
+      'rgba(220,180,255,0.85)',
+      'rgba(160,80,255,0.40)',
+    ])
+
+    document.body.appendChild(container)
+
+    // ── Cursor state ───────────────────────────────────────────────────────
+    let mx = window.innerWidth  / 2
+    let my = window.innerHeight / 2
+
+    // Each layer tracks position at a different lerp speed
+    let ox = mx, oy = my   // outer  (slow / dreamy)
+    let px = mx, py = my   // mid    (moderate)
+    let ix = mx, iy = my   // inner  (snappy)
+
+    let visible    = false
+    let clickPulse = 0     // 0–1, decays each frame
+
+    // ── Event handlers ─────────────────────────────────────────────────────
+    const onMove = (e: MouseEvent) => {
+      mx = e.clientX
+      my = e.clientY
+
+      if (!visible) {
+        // Snap all layers to cursor on first appearance so there's no jump
+        ox = mx; oy = my
+        px = mx; py = my
+        ix = mx; iy = my
+        visible = true
+        layerOuter!.style.opacity = '1'
+        layerMid!.style.opacity   = '1'
+        layerInner!.style.opacity = '1'
       }
     }
 
-    document.addEventListener('mousemove', handleMouseMove)
-    document.addEventListener('mouseleave', handleMouseLeave)
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseleave', handleMouseLeave)
+    const onLeave = () => {
+      visible = false
+      layerOuter!.style.opacity = '0'
+      layerMid!.style.opacity   = '0'
+      layerInner!.style.opacity = '0'
     }
-  }
 
-  onMounted(() => {
-    initCursorGlow()
+    const onClick = () => { clickPulse = 1 }
+
+    document.addEventListener('mousemove',  onMove,  { passive: true })
+    document.addEventListener('mouseleave', onLeave, { passive: true })
+    document.addEventListener('click',      onClick, { passive: true })
+
+    cleanupFns.push(
+      () => document.removeEventListener('mousemove',  onMove),
+      () => document.removeEventListener('mouseleave', onLeave),
+      () => document.removeEventListener('click',      onClick),
+    )
+
+    // ── Animation loop ─────────────────────────────────────────────────────
+    const tick = () => {
+      // Lerp: outer drifts lazily, inner reacts quickly
+      ox += (mx - ox) * 0.055
+      oy += (my - oy) * 0.055
+
+      px += (mx - px) * 0.13
+      py += (my - py) * 0.13
+
+      ix += (mx - ix) * 0.26
+      iy += (my - iy) * 0.26
+
+      // Click pulse decays smoothly
+      if (clickPulse > 0) clickPulse = Math.max(0, clickPulse - 0.035)
+      const cp = clickPulse
+
+      layerOuter!.style.transform = `translate3d(${ox}px,${oy}px,0) scale(${1 + cp * 0.35})`
+      layerMid!.style.transform   = `translate3d(${px}px,${py}px,0) scale(${1 + cp * 0.65})`
+      layerInner!.style.transform = `translate3d(${ix}px,${iy}px,0) scale(${1 + cp * 1.20})`
+
+      raf = requestAnimationFrame(tick)
+    }
+
+    tick()
   })
 
   onUnmounted(() => {
-    if (glowElement) {
-      glowElement.remove()
-      glowElement = null
-    }
+    if (raf) cancelAnimationFrame(raf)
+    cleanupFns.forEach(fn => fn())
+    container?.remove()
+    container = null
+    layerOuter = layerMid = layerInner = null
   })
 }

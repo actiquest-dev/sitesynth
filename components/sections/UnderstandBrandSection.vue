@@ -22,7 +22,7 @@
           <!-- Tags -->
           <div
             v-if="tags?.length"
-            class="flex flex-wrap gap-4 py-10"
+            class="flex flex-wrap gap-2 py-8"
             :class="{ 'pills-visible': inView }"
           >
             <div
@@ -30,13 +30,13 @@
               :key="index"
               :style="{ '--i': index }"
               :class="[
-                'tag-pill inline-flex rounded-full p-[3px] border-[2px]',
+                'tag-pill inline-flex rounded-full p-[2px] border',
                 borderColor,
               ]"
             >
               <a
                 href="#"
-                class="tag-pill-inner inline-flex items-center justify-center rounded-full px-6 py-3 font-medium"
+                class="tag-pill-inner inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-medium"
                 :class="[tagBgColor, tagTextColor]"
                 @click.prevent
               >

@@ -84,32 +84,43 @@
         <!-- RIGHT -->
         <div class="py-20 md:pl-16 relative">
           <!-- Tabs -->
-          <div class="relative z-10 flex items-center gap-8 mb-12">
-            <button
-              type="button"
-              class="text-lg font-semibold transition-opacity"
-              :class="
-                activeTab === 'typical'
-                  ? 'text-white opacity-100'
-                  : 'text-white/35 opacity-100 hover:text-white/60'
-              "
-              @click="setTab('typical')"
-            >
-              {{ typicalLabel }}
-            </button>
+          <div class="relative z-10 mb-12">
+            <div class="flex items-center gap-8 mb-3">
+              <button
+                type="button"
+                class="text-lg font-semibold transition-opacity"
+                :class="
+                  activeTab === 'typical'
+                    ? 'text-white opacity-100'
+                    : 'text-white/35 opacity-100 hover:text-white/60'
+                "
+                @click="setTabManual('typical')"
+              >
+                {{ typicalLabel }}
+              </button>
 
-            <button
-              type="button"
-              class="text-lg font-semibold transition-opacity"
-              :class="
-                activeTab === 'sitesynth'
-                  ? 'text-white opacity-100'
-                  : 'text-white/35 opacity-100 hover:text-white/60'
-              "
-              @click="setTab('sitesynth')"
-            >
-              {{ siteSynthLabel }}
-            </button>
+              <button
+                type="button"
+                class="text-lg font-semibold transition-opacity"
+                :class="
+                  activeTab === 'sitesynth'
+                    ? 'text-white opacity-100'
+                    : 'text-white/35 opacity-100 hover:text-white/60'
+                "
+                @click="setTabManual('sitesynth')"
+              >
+                {{ siteSynthLabel }}
+              </button>
+            </div>
+
+            <!-- Auto-play progress bar -->
+            <div class="h-[2px] bg-white/10 rounded-full overflow-hidden max-w-[260px]">
+              <div
+                class="h-full rounded-full"
+                :class="activeTab === 'typical' ? 'bg-[#AA3733]' : 'bg-[#2EBB67]'"
+                :style="{ width: `${progress}%`, transition: 'width 0.1s linear' }"
+              ></div>
+            </div>
           </div>
 
           <!-- Cards -->
@@ -161,6 +172,8 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, nextTick } from "vue";
 
+const AUTO_INTERVAL = 5000; // ms per tab
+
 const props = defineProps({
   id: { type: String, default: "" },
   sectionClass: { type: String, default: "" },
@@ -202,9 +215,13 @@ const props = defineProps({
 const activeTab = ref(props.defaultTab === "sitesynth" ? "sitesynth" : "typical");
 const revealKey = ref(0);
 const isRevealed = ref(false);
+const progress = ref(0);
 
 const sectionRef = ref(null);
 let io = null;
+let autoTimer = null;
+let progressTimer = null;
+const TICK = 50; // ms
 
 const currentCards = computed(() =>
   activeTab.value === "typical" ? props.typicalCards : props.siteSynthCards
@@ -267,10 +284,43 @@ function setTab(tab) {
   });
 }
 
+function setTabManual(tab) {
+  setTab(tab);
+  resetAutoPlay();
+}
+
+function resetAutoPlay() {
+  clearInterval(autoTimer);
+  clearInterval(progressTimer);
+  progress.value = 0;
+  startAutoPlay();
+}
+
+function startAutoPlay() {
+  let elapsed = 0;
+  progressTimer = setInterval(() => {
+    elapsed += TICK;
+    progress.value = Math.min((elapsed / AUTO_INTERVAL) * 100, 100);
+  }, TICK);
+
+  autoTimer = setInterval(() => {
+    const next = activeTab.value === "typical" ? "sitesynth" : "typical";
+    setTab(next);
+    elapsed = 0;
+    progress.value = 0;
+  }, AUTO_INTERVAL);
+}
+
+function stopAutoPlay() {
+  clearInterval(autoTimer);
+  clearInterval(progressTimer);
+}
+
 onMounted(() => {
   // ✅ safety: if IO not available, just reveal
   if (typeof window === "undefined" || !("IntersectionObserver" in window)) {
     isRevealed.value = true;
+    startAutoPlay();
     return;
   }
 
@@ -279,6 +329,9 @@ onMounted(() => {
       const entry = entries?.[0];
       if (entry && entry.isIntersecting) {
         isRevealed.value = true;
+        if (!autoTimer) startAutoPlay();
+      } else {
+        stopAutoPlay();
       }
     },
     { threshold: 0.18 }
@@ -288,6 +341,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+  stopAutoPlay();
   if (io && sectionRef.value) io.unobserve(sectionRef.value);
   if (io) io.disconnect();
 });
