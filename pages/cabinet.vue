@@ -98,10 +98,10 @@
             <div class="flex items-center justify-between">
               <div class="flex-1">
                 <p class="text-white font-semibold mb-1">
-                  {{ order.title || 'Website Design Package' }}
+                  {{ order.order_number || order.title || 'Website Design Package' }}
                 </p>
                 <p class="text-[#999999] text-sm">
-                  {{ formatDate(order.payment_date || order.created_at) }}
+                  {{ formatDate(order.created_at) }}
                 </p>
               </div>
 
@@ -123,11 +123,14 @@
             <!-- Quick preview of form data -->
             <div v-if="order.form_data" class="mt-4 pt-4 border-t border-[#333]">
               <div class="text-xs text-[#999999] space-y-1">
-                <p v-if="typeof order.form_data === 'string' && JSON.parse(order.form_data)?.intakeFormData?.service">
-                  <span class="text-white">Service:</span> {{ JSON.parse(order.form_data).intakeFormData.service }}
+                <p v-if="order.full_name">
+                  <span class="text-white">Client:</span> {{ order.full_name }}
                 </p>
-                <p v-if="typeof order.form_data === 'string' && JSON.parse(order.form_data)?.billingData?.fullName">
-                  <span class="text-white">Client:</span> {{ JSON.parse(order.form_data).billingData.fullName }}
+                <p v-if="order.payment_method">
+                  <span class="text-white">Payment:</span> {{ order.payment_method }}
+                </p>
+                <p v-if="typeof order.form_data === 'object' && order.form_data?.service">
+                  <span class="text-white">Service:</span> {{ order.form_data.service }}
                 </p>
               </div>
             </div>
@@ -161,8 +164,8 @@
                 <h4 class="text-lg font-bold text-white mb-4">Order Information</h4>
                 <div class="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <p class="text-[#999999] mb-1">Order Title</p>
-                    <p class="text-white font-semibold">{{ selectedOrder?.title || 'Website Design Package' }}</p>
+                    <p class="text-[#999999] mb-1">Order Number</p>
+                    <p class="text-white font-semibold">{{ selectedOrder?.order_number || 'N/A' }}</p>
                   </div>
                   <div>
                     <p class="text-[#999999] mb-1">Status</p>
@@ -176,18 +179,26 @@
                     </span>
                   </div>
                   <div>
+                    <p class="text-[#999999] mb-1">Client Name</p>
+                    <p class="text-white font-semibold">{{ selectedOrder?.full_name || 'N/A' }}</p>
+                  </div>
+                  <div>
                     <p class="text-[#999999] mb-1">Amount</p>
-                    <p class="text-white font-semibold">€{{ (selectedOrder?.amount || 0).toLocaleString() }}</p>
+                    <p class="text-white font-semibold">{{ selectedOrder?.currency || 'USD' }} {{ (selectedOrder?.amount || 0).toLocaleString() }}</p>
+                  </div>
+                  <div>
+                    <p class="text-[#999999] mb-1">Payment Method</p>
+                    <p class="text-white font-semibold">{{ selectedOrder?.payment_method || 'N/A' }}</p>
                   </div>
                   <div>
                     <p class="text-[#999999] mb-1">Payment Date</p>
                     <p class="text-white font-semibold">
-                      {{ formatDate(selectedOrder?.payment_date || selectedOrder?.created_at) }}
+                      {{ formatDate(selectedOrder?.created_at) }}
                     </p>
                   </div>
-                  <div v-if="selectedOrder?.stripe_charge_id" class="col-span-2">
-                    <p class="text-[#999999] mb-1">Stripe Charge ID</p>
-                    <p class="text-white font-semibold text-xs break-all">{{ selectedOrder?.stripe_charge_id }}</p>
+                  <div v-if="selectedOrder?.charge_id" class="col-span-2">
+                    <p class="text-[#999999] mb-1">Charge ID</p>
+                    <p class="text-white font-semibold text-xs break-all">{{ selectedOrder?.charge_id }}</p>
                   </div>
                 </div>
               </div>
@@ -432,8 +443,8 @@ onMounted(async () => {
   await initializeChat()
 
   try {
-    // Fetch user's orders via secure backend endpoint
-    const ordersResponse = await fetch('/api/user/orders', {
+    // Fetch user's orders from Supabase via API
+    const ordersResponse = await fetch('/api/orders', {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${authToken}`,
@@ -444,10 +455,11 @@ onMounted(async () => {
     if (ordersResponse.ok) {
       const ordersData = await ordersResponse.json()
       orders.value = (ordersData.data || []).sort((a, b) => {
-        const dateA = new Date(a.payment_date || a.created_at || 0).getTime()
-        const dateB = new Date(b.payment_date || b.created_at || 0).getTime()
+        const dateA = new Date(a.created_at || 0).getTime()
+        const dateB = new Date(b.created_at || 0).getTime()
         return dateB - dateA
       })
+      console.log('✅ Loaded orders from Supabase:', orders.value.length)
     }
 
     // Fetch user's projects via secure backend endpoint
@@ -467,10 +479,7 @@ onMounted(async () => {
     // Calculate stats
     stats.value.totalProjects = projects.value.length
     stats.value.totalSpent = orders.value.reduce((sum, order) => {
-      if (order.status === 'paid') {
-        return sum + (order.amount || 0)
-      }
-      return sum
+      return sum + (order.amount || 0)
     }, 0)
     stats.value.activeWebsites = projects.value.filter((p: any) => p.status === 'in_progress').length
   } catch (error) {

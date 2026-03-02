@@ -435,6 +435,43 @@ const sendConfirmationEmail = async (paymentInfo: any) => {
   }
 };
 
+// Save order to Supabase
+const saveOrderToSupabase = async (paymentInfo: any) => {
+  try {
+    const orderNum = `SYNTH-2026-${paymentInfo.chargeId.substring(0, 6).toUpperCase()}`;
+    
+    // Get form data from localStorage
+    const formDataStr = localStorage.getItem('intakeFormData');
+    const formData = formDataStr ? JSON.parse(formDataStr) : {};
+
+    const response = await fetch('/api/orders/save-order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: paymentInfo.email,
+        fullName: paymentInfo.fullName,
+        orderNumber: orderNum,
+        chargeId: paymentInfo.chargeId,
+        amount: paymentInfo.amount,
+        currency: paymentInfo.currency || 'USD',
+        paymentMethod: paymentInfo.paymentMethod,
+        formData: formData,
+      }),
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      console.log('✅ Order saved to Supabase:', result.order);
+    } else {
+      console.warn('⚠️ Failed to save order:', result.error);
+    }
+  } catch (error: any) {
+    console.error('Error saving order to Supabase:', error);
+  }
+};
+
 // Load payment data from localStorage (persistent storage)
 onMounted(() => {
   try {
@@ -443,8 +480,9 @@ onMounted(() => {
       paymentData.value = JSON.parse(result);
       console.log('✅ Payment data loaded:', paymentData.value);
       
-      // Send confirmation email
+      // Send confirmation email AND save to Supabase
       sendConfirmationEmail(paymentData.value);
+      saveOrderToSupabase(paymentData.value);
     }
   } catch (error) {
     console.warn('Could not load payment data:', error);
