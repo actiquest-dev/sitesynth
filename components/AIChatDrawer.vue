@@ -159,9 +159,37 @@ const initializeConversation = async () => {
   try {
     const email = getUserEmail()
     
-    // Create new conversation
-    const response = await fetch('/api/chat/conversations', {
+    // First, try to get existing conversations
+    const getResponse = await fetch(`/api/chat/conversations?agentType=${props.agentType}`, {
+      method: 'GET',
+      headers: {
+        'x-user-email': email
+      }
+    })
+
+    if (getResponse.ok) {
+      const getResult = await getResponse.json()
+      const conversations = getResult.data || []
+      
+      if (conversations.length > 0) {
+        // Use the most recent conversation
+        const conversation = conversations[0]
+        selectedConversationId.value = conversation.id
+        console.log('Loaded existing conversation:', conversation.id)
+        
+        // Load messages for this conversation
+        await loadConversationMessages(conversation.id)
+        return
+      }
+    }
+    
+    // No existing conversations, create a new one
+    const createResponse = await fetch('/api/chat/conversations', {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-user-email': email
+      },
       body: JSON.stringify({
         title: `${props.agentType === 'briefing' ? 'Briefing' : 'Consultation'} - ${new Date().toLocaleDateString()}`,
         user_email: email,
@@ -169,21 +197,55 @@ const initializeConversation = async () => {
       })
     })
 
-    if (response.ok) {
-      const data = await response.json()
-      selectedConversationId.value = data.conversation.id
+    if (createResponse.ok) {
+      const data = await createResponse.json()
+      selectedConversationId.value = data.data?.id || data.conversation?.id
+      console.log('Created new conversation:', selectedConversationId.value)
+    } else {
+      console.error('Failed to create conversation:', createResponse.status, createResponse.statusText)
+      error.value = `Chat initialization failed: ${createResponse.status}`
     }
   } catch (err) {
-    console.error('Failed to create conversation:', err)
+    console.error('Failed to initialize conversation:', err)
     error.value = 'Failed to initialize chat'
   }
 }
 
+// Load messages for a specific conversation
+const loadConversationMessages = async (conversationId: string) => {
+  try {
+    const email = getUserEmail()
+    const response = await fetch(`/api/chat/messages?conversation_id=${conversationId}`, {
+      method: 'GET',
+      headers: {
+        'x-user-email': email
+      }
+    })
+
+    if (response.ok) {
+      const data = await response.json()
+      messages.value = data.messages || data.data || []
+      console.log('Loaded messages:', messages.value.length)
+    }
+  } catch (err) {
+    console.error('Failed to load messages:', err)
+  }
+}
+
 onMounted(async () => {
-  await initializeConversation()
+  // Initialize when component mounts and drawer is already open
+  if (isOpen.value) {
+    await initializeConversation()
+  }
 })
 
-// Send message
+// Initialize conversation when drawer opens
+watch(isOpen, async (newVal) => {
+  if (newVal && !selectedConversationId.value) {
+    await initializeConversation()
+  }
+})
+
 const sendMessage = async () => {
   if (!messageInput.value.trim() || !selectedConversationId.value) return
 
@@ -195,16 +257,29 @@ const sendMessage = async () => {
   try {
     const email = getUserEmail()
     
+    // Add user message to local state
+    const userMessage: Message = {
+      id: `temp-${Date.now()}`,
+      role: 'user',
+      content: content,
+      created_at: new Date().toISOString()
+    }
+    messages.value.push(userMessage)
+    await scrollToBottom()
+    
+    // Send message with full conversation history
     const response = await fetch('/api/chat/messages', {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-user-email': email
+      },
       body: JSON.stringify({
         conversation_id: selectedConversationId.value,
-        content
-      }),
-      headers: {
-        'x-user-email': email,
-        'Content-Type': 'application/json'
-      }
+        message: content,
+        history: messages.value.filter(m => m.id !== userMessage.id),
+        agent_type: props.agentType
+      })
     })
 
     const data = await response.json()
@@ -214,12 +289,12 @@ const sendMessage = async () => {
       await scrollToBottom()
     } else {
       error.value = data.error || 'Failed to send message'
-      messageInput.value = content
+      // Remove temporary user message on error
+      messages.value = messages.value.filter(m => m.id !== userMessage.id)
     }
   } catch (err) {
     console.error('Error sending message:', err)
     error.value = 'Failed to send message'
-    messageInput.value = content
   } finally {
     loading.value = false
   }

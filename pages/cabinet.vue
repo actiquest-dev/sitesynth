@@ -340,7 +340,6 @@ import AIChatButton from '@/components/AIChatButton.vue'
 import AIChatDrawer from '@/components/AIChatDrawer.vue'
 import { useGoogleAuth } from '@/composables/useGoogleAuth'
 import { useNocoBase } from '@/composables/useNocoBase'
-import { useAIChat } from '@/composables/useAIChat'
 
 const { logout, getCurrentUser, getToken } = useGoogleAuth()
 const { getList } = useNocoBase()
@@ -435,12 +434,6 @@ onMounted(async () => {
     console.log('  Payment Email:', paymentData.email)
     console.log('  ⚠️ Emails Match:', userEmail.value === paymentData.email)
   }
-
-  // Open chat with ACTIVE briefing mode when cabinet loads
-  const { openChatInMode, detectContext, initializeChat } = useAIChat()
-  await detectContext()
-  openChatInMode('active')
-  await initializeChat()
 
   try {
     // Fetch user's orders from Supabase via API
