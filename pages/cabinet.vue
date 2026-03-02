@@ -19,7 +19,8 @@
       ></div>
     </div>
 
-    <div class="relative max-w-6xl w-full mx-auto px-6 md:px-12">
+    <ClientOnly>
+      <div class="relative max-w-6xl w-full mx-auto px-6 md:px-12">
       <!-- Header with Welcome and Logout -->
       <div class="flex items-center justify-between mb-12">
         <div>
@@ -322,11 +323,8 @@
         </div>
       </div>
     </div>
+    </ClientOnly>
   </section>
-
-  <!-- AI Chat Button and Drawer -->
-  <AIChatButton :open="isChatOpen" @update:open="isChatOpen = $event" />
-  <AIChatDrawer :isOpen="isChatOpen" :agentType="'briefing'" :userEmail="userEmail" @update:isOpen="isChatOpen = $event" />
 
   <FooterSection />
 </template>
@@ -336,8 +334,6 @@ import { ref, onMounted } from 'vue'
 import ParticleEffect from '@/components/effects/ParticleEffect.vue'
 import GlowBlue from '@/components/effects/GlowBlue.vue'
 import FormDataDisplay from '@/components/FormDataDisplay.vue'
-import AIChatButton from '@/components/AIChatButton.vue'
-import AIChatDrawer from '@/components/AIChatDrawer.vue'
 import { useGoogleAuth } from '@/composables/useGoogleAuth'
 import { useNocoBase } from '@/composables/useNocoBase'
 
@@ -349,7 +345,6 @@ const orders = ref<any[]>([])
 const projects = ref<any[]>([])
 const selectedOrder = ref<any>(null)
 const showOrderDetails = ref(false)
-const isChatOpen = ref(false)
 
 const stats = ref({
   totalProjects: 0,

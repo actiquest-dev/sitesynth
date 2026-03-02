@@ -1,22 +1,50 @@
 <template>
   <Analytics />
   <NuxtPage />
-  <AIChatButton />
-  <AIChatDrawer />
+  <ClientOnly>
+    <AIChatButton :open="isChatOpen" @update:open="isChatOpen = $event" />
+    <AIChatDrawer
+      :isOpen="isChatOpen"
+      :agentType="agentMode"
+      :userEmail="userEmail"
+      @update:isOpen="isChatOpen = $event"
+    />
+  </ClientOnly>
 </template>
 
 <script setup>
 import { useRoute } from "vue-router";
-import { useHead, useRuntimeConfig } from "#imports";
-import { computed } from "vue";
+import { useHead, useRuntimeConfig, useSeoMeta } from "#imports";
+import { computed, ref, onMounted } from "vue";
 import { Analytics } from "@vercel/analytics/nuxt";
 import AIChatButton from "~/components/AIChatButton.vue";
 import AIChatDrawer from "~/components/AIChatDrawer.vue";
+import { useSupabaseAuth } from "~/composables/useSupabaseAuth";
+import { useCanonicalUrl } from "~/composables/useCanonicalUrl";
 import "~/assets/style.scss";
 
 const route = useRoute();
 const config = useRuntimeConfig();
 const baseUrl = config.public?.siteUrl;
+const { isAuthenticated, user, initAuth } = useSupabaseAuth();
+
+// Chat state
+const isChatOpen = ref(false);
+
+// Determine agent mode based on auth state
+const agentMode = computed(() => {
+  return isAuthenticated.value ? "briefing" : "presale";
+});
+
+// Get user email
+const userEmail = computed(() => {
+  return user?.value?.email || "guest@sitesynth.com";
+});
+
+// Initialize auth on mount
+onMounted(() => {
+  initAuth();
+});
 
 // Use the canonical URL composable for consistency
 const canonicalUrl = useCanonicalUrl();

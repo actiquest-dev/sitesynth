@@ -12,7 +12,6 @@
           </div>
           <div>
             <h3 class="text-white font-semibold">{{ agentLabel }}</h3>
-            <p class="text-xs text-blue-200">Powered by Gemini</p>
           </div>
         </div>
         <button
@@ -127,7 +126,7 @@ const error = ref('')
 const messagesContainer = ref<HTMLElement>()
 const selectedConversationId = ref<string | null>(null)
 
-const agentLabel = computed(() => props.agentType === 'briefing' ? '🤖 Briefing Assistant' : '💬 AI Consultant')
+const agentLabel = computed(() => props.agentType === 'briefing' ? 'Briefing Assistant' : 'AI Consultant')
 
 // Get user email for API calls
 const getUserEmail = () => props.userEmail || localStorage.getItem('user_email') || 'anonymous'
