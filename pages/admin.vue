@@ -22,13 +22,29 @@
   <BannerSection id="banner-agent-config" tag="h2" text="Agent Configuration" />
 
   <!-- Admin Content -->
-  <section class="relative bg-[#161616] border-t border-b border-[#636363]">
-    <div class="relative max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-24">
-      <div class="space-y-8">
+  <section class="relative bg-[#161616] min-h-screen pt-16 md:pt-24 pb-16 md:pb-24 overflow-hidden">
+    <!-- Background Effects -->
+    <GlowBlue />
+    <ParticleEffect />
 
-    <!-- Briefing Agent Card -->
-    <div class="group relative overflow-hidden bg-[#1a1a1a] hover:bg-white/5 transition-colors duration-300 border border-[#636363] rounded-lg p-8">
-      <GlowBlue />
+    <!-- Gradient Background -->
+    <div class="absolute inset-0 pointer-events-none opacity-70">
+      <div
+        class="absolute top-0 left-1/2 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl transform -translate-x-1/2"
+      ></div>
+      <div
+        class="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/30 rounded-full blur-3xl"
+      ></div>
+      <div
+        class="absolute top-1/2 left-1/3 w-80 h-80 bg-indigo-500/20 rounded-full blur-3xl"
+      ></div>
+    </div>
+
+    <div class="relative max-w-7xl mx-auto px-6 md:px-12">
+      <div class="space-y-8">
+        <!-- Briefing Agent Card -->
+        <div class="group relative overflow-hidden bg-[#1a1a1a] hover:bg-white/5 transition-colors duration-300 border border-[#636363] rounded-lg p-8">
+          <GlowBlue />
       
       <div class="relative z-10">
         <h2 class="text-2xl font-bold text-white mb-2">📋 Briefing Specialist</h2>
@@ -150,7 +166,6 @@
           </div>
         </div>
       </div>
-    </div>
 
       <!-- Document Upload -->
       <DocumentUpload />

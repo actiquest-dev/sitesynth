@@ -1,60 +1,98 @@
 <template>
-  <div class="admin-section">
-    <h3>📄 Knowledge Base Management</h3>
-    <p class="section-desc">Upload documents that agents can use as context</p>
+  <div class="group relative overflow-hidden bg-[#1a1a1a] hover:bg-white/5 transition-colors duration-300 border border-[#636363] rounded-lg p-8">
+    <GlowBlue />
+    
+    <div class="relative z-10">
+      <h3 class="text-2xl font-bold text-white mb-2">📄 Knowledge Base Management</h3>
+      <p class="text-[#d4d4d4] mb-6">Upload documents that agents can use as context</p>
 
-    <!-- Agent Type Tabs -->
-    <div class="agent-tabs">
-      <button
-        v-for="type in ['briefing', 'presale']"
-        :key="type"
-        :class="['tab', { active: selectedAgent === type }]"
-        @click="selectedAgent = type as 'briefing' | 'presale'"
-      >
-        {{ type === 'briefing' ? '📋 Briefing' : '💬 Pre-Sale' }}
-      </button>
-    </div>
-
-    <!-- Upload Form -->
-    <div class="upload-form">
-      <div class="form-group">
-        <label>Document Title</label>
-        <input v-model="docTitle" placeholder="e.g., Case Study - Acme Corp" />
+      <!-- Agent Type Tabs -->
+      <div class="flex gap-2 mb-6">
+        <button
+          v-for="type in ['briefing', 'presale']"
+          :key="type"
+          :class="[
+            'px-4 py-2 rounded-lg font-semibold transition',
+            selectedAgent === type
+              ? 'bg-[#0033ff] text-white'
+              : 'bg-[#0f0f0f] border border-[#636363] text-[#d4d4d4] hover:border-[#0033ff]'
+          ]"
+          @click="selectedAgent = type as 'briefing' | 'presale'"
+        >
+          {{ type === 'briefing' ? '📋 Briefing' : '💬 Pre-Sale' }}
+        </button>
       </div>
 
-      <div class="form-group">
-        <label>Document Content</label>
-        <textarea
-          v-model="docContent"
-          placeholder="Paste your document content here..."
-          rows="6"
-        ></textarea>
-      </div>
+      <!-- Upload Form -->
+      <div class="bg-[#0f0f0f] border border-[#636363] rounded-lg p-6 mb-6">
+        <div class="space-y-4 mb-4">
+          <div>
+            <label class="block text-[#cbd5e1] font-semibold mb-2">Document Title</label>
+            <input
+              v-model="docTitle"
+              type="text"
+              placeholder="e.g., Case Study - Acme Corp"
+              class="w-full px-4 py-2 bg-[#161616] border border-[#636363] rounded-lg text-white text-sm focus:outline-none focus:border-[#0033ff] transition"
+            />
+          </div>
 
-      <button @click="uploadDocument" :disabled="isUploading" class="btn-upload">
-        {{ isUploading ? '⏳ Uploading...' : '📤 Upload Document' }}
-      </button>
-
-      <div v-if="uploadMessage" :class="['message', uploadMessageType]">
-        {{ uploadMessage }}
-      </div>
-    </div>
-
-    <!-- Documents List -->
-    <div class="documents-list">
-      <h4>Documents</h4>
-      <div v-if="documents.length === 0" class="empty">
-        No documents yet
-      </div>
-
-      <div v-for="doc in documents" :key="doc.id" class="doc-item">
-        <div class="doc-header">
-          <div class="doc-title">{{ doc.title }}</div>
-          <button @click="deleteDocument(doc.id)" class="btn-delete" title="Delete">🗑️</button>
+          <div>
+            <label class="block text-[#cbd5e1] font-semibold mb-2">Document Content</label>
+            <textarea
+              v-model="docContent"
+              placeholder="Paste your document content here..."
+              rows="4"
+              class="w-full px-4 py-2 bg-[#161616] border border-[#636363] rounded-lg text-white text-sm font-mono focus:outline-none focus:border-[#0033ff] transition resize-none"
+            ></textarea>
+          </div>
         </div>
-        <div class="doc-meta">
-          <span class="date">{{ formatDate(doc.created_at) }}</span>
-          <span class="by">by {{ doc.created_by }}</span>
+
+        <button
+          @click="uploadDocument"
+          :disabled="isUploading"
+          class="w-full px-4 py-2 bg-[#0033ff] text-white rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
+        >
+          {{ isUploading ? '⏳ Uploading...' : '📤 Upload Document' }}
+        </button>
+
+        <div
+          v-if="uploadMessage"
+          :class="[
+            'mt-3 px-4 py-2 rounded-lg text-sm font-semibold',
+            uploadMessageType === 'success'
+              ? 'bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/30'
+              : 'bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/30'
+          ]"
+        >
+          {{ uploadMessage }}
+        </div>
+      </div>
+
+      <!-- Documents List -->
+      <div>
+        <h4 class="text-[#cbd5e1] font-semibold mb-3">Documents</h4>
+        <div v-if="documents.length === 0" class="text-center text-[#64748b] py-4">
+          No documents yet
+        </div>
+
+        <div v-else class="space-y-2">
+          <div
+            v-for="doc in documents"
+            :key="doc.id"
+            class="bg-[#161616] border border-[#636363] rounded-lg p-4 flex items-center justify-between hover:border-[#0033ff]/50 transition"
+          >
+            <div class="flex-1">
+              <p class="text-white font-semibold text-sm">{{ doc.title }}</p>
+              <p class="text-[#64748b] text-xs mt-1">{{ formatDate(doc.created_at) }} • by {{ doc.created_by }}</p>
+            </div>
+            <button
+              @click="deleteDocument(doc.id)"
+              class="ml-4 text-[#ef4444] hover:text-red-500 transition text-lg"
+              title="Delete"
+            >
+              🗑️
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -62,7 +100,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, onMounted, watch } from 'vue'
+import GlowBlue from '~/components/effects/GlowBlue.vue'
 
 interface Document {
   id: string
