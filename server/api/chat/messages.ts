@@ -1,6 +1,6 @@
-import { defineEventHandler, readBody } from 'h3'
+import { defineEventHandler, readBody, getHeader, getRouterParam, createError } from 'h3'
 import { createClient } from '@supabase/supabase-js'
-import { getAgent } from '../../voltagent'
+import { briefingAgent, consultantAgent } from '../../agents'
 
 const supabaseUrl = process.env.SUPABASE_URL
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -80,27 +80,60 @@ export default defineEventHandler(async (event) => {
 
       // 3. Get agent based on type
       const agentType = convData?.agent_type as 'briefing' | 'presale'
-      const agent = getAgent(agentType === 'briefing' ? 'briefingAgent' : 'consultantAgent')
+      const agent = agentType === 'briefing' ? briefingAgent : consultantAgent
 
       // 4. Get documents for context
       const { data: docs } = await supabase
         .from('documents')
-        .select('content')
+        .select('title, content')
         .eq('agent_type', agentType)
-        .limit(3)
+        .limit(5)
 
-      const context = docs?.map((d: any) => d.content).join('\n\n') || ''
+      const documentContext = docs?.length
+        ? `\n\nRelevant documents:\n${docs.map((d: any) => `- ${d.title}: ${d.content.substring(0, 500)}`).join('\n')}`
+        : ''
 
-      // 5. Get recent message history for context
+      // 5. Get recent message history for context (last 5 messages)
       const { data: messages } = await supabase
         .from('messages')
         .select('role, content')
         .eq('conversation_id', body.conversationId)
         .order('created_at', { ascending: true })
-        .limit(10)
+        .limit(5)
 
-      // 6. Generate response (simplified - uses agent instructions)
-      const response = `Agent response for: "${body.message}"`
+      // Build conversation history for agent
+      const conversationHistory = messages?.map((m: any) => ({
+        role: m.role as 'user' | 'assistant',
+        content: m.content,
+      })) || []
+
+      // 6. Call agent with Gemini through VoltAgent
+      let response: string
+      try {
+        // VoltAgent agent.generate() sends to Gemini API
+        const systemPrompt = agent.instructions + documentContext
+        
+        const result = await agent.generate({
+          messages: [
+            ...conversationHistory,
+            {
+              role: 'user',
+              content: body.message,
+            },
+          ],
+          system: systemPrompt,
+          maxTokens: 1024,
+        })
+
+        response = typeof result === 'string' ? result : result.text || result.content || ''
+        
+        if (!response) {
+          throw new Error('Empty response from Gemini')
+        }
+      } catch (agentError: any) {
+        console.error('Gemini API error:', agentError)
+        response = `Sorry, I encountered an issue processing your request: ${agentError.message}. Please try again.`
+      }
 
       // 7. Save assistant response
       const { error: respError } = await supabase
