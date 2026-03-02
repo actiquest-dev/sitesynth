@@ -279,21 +279,7 @@
         </div>
       </div>
 
-      <!-- AI Assistant - Briefing Section -->
-      <div class="bg-[#1a1a1a] border border-[#333] rounded-lg p-8 mb-12">
-        <div class="flex items-center gap-3 mb-8">
-          <h2 class="text-2xl font-bold text-white">🤖 AI Briefing Assistant</h2>
-          <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-500/20 text-green-400">active</span>
-        </div>
 
-        <div class="mb-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-          <p class="text-[#d4d4d4] text-sm">
-            Get professional briefing assistance for your projects. Upload documents, define workflows, and let our AI help fill your briefs.
-          </p>
-        </div>
-
-        <ChatInterface :agentType="'briefing'" :userEmail="userEmail" />
-      </div>
 
       <!-- Account Settings Section -->
       <div class="bg-[#1a1a1a] border border-[#333] rounded-lg p-8">
@@ -327,6 +313,10 @@
     </div>
   </section>
 
+  <!-- AI Chat Button and Drawer -->
+  <AIChatButton v-model:open="isChatOpen" />
+  <AIChatDrawer v-if="isChatOpen" :agentType="'briefing'" :userEmail="userEmail" @update:isOpen="isChatOpen = $event" />
+
   <FooterSection />
 </template>
 
@@ -335,9 +325,11 @@ import { ref, onMounted } from 'vue'
 import ParticleEffect from '@/components/effects/ParticleEffect.vue'
 import GlowBlue from '@/components/effects/GlowBlue.vue'
 import FormDataDisplay from '@/components/FormDataDisplay.vue'
-import ChatInterface from '@/components/ChatInterface.vue'
+import AIChatButton from '@/components/AIChatButton.vue'
+import AIChatDrawer from '@/components/AIChatDrawer.vue'
 import { useGoogleAuth } from '@/composables/useGoogleAuth'
 import { useNocoBase } from '@/composables/useNocoBase'
+import { useAIChat } from '@/composables/useAIChat'
 
 const { logout, getCurrentUser, getToken } = useGoogleAuth()
 const { getList } = useNocoBase()
@@ -347,6 +339,7 @@ const orders = ref<any[]>([])
 const projects = ref<any[]>([])
 const selectedOrder = ref<any>(null)
 const showOrderDetails = ref(false)
+const isChatOpen = ref(false)
 
 const stats = ref({
   totalProjects: 0,

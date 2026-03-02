@@ -1,7 +1,7 @@
 <template>
   <button
-    @click="toggleChat"
-    class="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-[#8D35FF] hover:bg-purple-700 shadow-lg transition-all duration-300 flex items-center justify-center z-40 group"
+    @click="toggleOpen"
+    class="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-[#0033ff] hover:bg-blue-700 shadow-lg transition-all duration-300 flex items-center justify-center z-40 group"
     :class="{ 'scale-110': isOpen }"
     aria-label="Open AI Chat"
   >
@@ -36,19 +36,17 @@
         d="M6 18L18 6M6 6l12 12"
       />
     </svg>
-
-    <!-- Notification badge (optional) -->
-    <span
-      v-if="hasMessages && !isOpen"
-      class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full animate-pulse"
-    ></span>
   </button>
 </template>
 
 <script setup lang="ts">
-import { useAIChat } from '@/composables/useAIChat'
+import { ref, defineModel } from 'vue'
 
-const { isOpen, hasMessages, toggleChat } = useAIChat()
+const isOpen = defineModel<boolean>('open', { default: false })
+
+const toggleOpen = () => {
+  isOpen.value = !isOpen.value
+}
 </script>
 
 <style scoped>
