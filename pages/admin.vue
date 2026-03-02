@@ -45,127 +45,128 @@
         <!-- Briefing Agent Card -->
         <div class="group relative overflow-hidden bg-[#1a1a1a] hover:bg-white/5 transition-colors duration-300 border border-[#636363] rounded-lg p-8">
           <GlowBlue />
-      
-      <div class="relative z-10">
-        <h2 class="text-2xl font-bold text-white mb-2">📋 Briefing Specialist</h2>
-        <p class="text-[#d4d4d4] mb-6">Active mode - Cabinet briefing assistant</p>
+          
+          <div class="relative z-10">
+            <h2 class="text-2xl font-bold text-white mb-2">📋 Briefing Specialist</h2>
+            <p class="text-[#d4d4d4] mb-6">Active mode - Cabinet briefing assistant</p>
 
-        <div class="space-y-6">
-          <div class="form-group">
-            <label class="block text-[#cbd5e1] font-semibold mb-2">System Prompt</label>
-            <textarea
-              v-model="briefingAgent.systemPrompt"
-              placeholder="Enter system prompt..."
-              rows="5"
-              class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#636363] rounded-lg text-white text-sm font-mono focus:outline-none focus:border-[#0033ff] transition"
-            ></textarea>
-          </div>
+            <div class="space-y-6">
+              <div class="form-group">
+                <label class="block text-[#cbd5e1] font-semibold mb-2">System Prompt</label>
+                <textarea
+                  v-model="briefingAgent.systemPrompt"
+                  placeholder="Enter system prompt..."
+                  rows="5"
+                  class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#636363] rounded-lg text-white text-sm font-mono focus:outline-none focus:border-[#0033ff] transition"
+                ></textarea>
+              </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-[#cbd5e1] font-semibold mb-2">Temperature (0-1)</label>
-              <div class="flex items-center gap-4">
-                <input
-                  v-model.number="briefingAgent.temperature"
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.1"
-                  class="flex-1 h-2 bg-[#636363] rounded-lg appearance-none cursor-pointer"
-                />
-                <span class="text-white font-bold w-12">{{ briefingAgent.temperature.toFixed(1) }}</span>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-[#cbd5e1] font-semibold mb-2">Temperature (0-1)</label>
+                  <div class="flex items-center gap-4">
+                    <input
+                      v-model.number="briefingAgent.temperature"
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.1"
+                      class="flex-1 h-2 bg-[#636363] rounded-lg appearance-none cursor-pointer"
+                    />
+                    <span class="text-white font-bold w-12">{{ briefingAgent.temperature.toFixed(1) }}</span>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-[#cbd5e1] font-semibold mb-2">Max Tokens</label>
+                  <input
+                    v-model.number="briefingAgent.maxTokens"
+                    type="number"
+                    min="100"
+                    max="8000"
+                    step="100"
+                    class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#636363] rounded-lg text-white text-sm focus:outline-none focus:border-[#0033ff] transition"
+                  />
+                </div>
+              </div>
+
+              <button 
+                @click="saveBriefingAgent"
+                :disabled="loadingBriefing"
+                class="w-full px-6 py-3 bg-[#0033ff] text-white rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {{ loadingBriefing ? '⏳ Saving...' : '💾 Save Briefing Agent' }}
+              </button>
+
+              <div v-if="messageBriefing" :class="['px-4 py-3 rounded-lg text-sm font-semibold', messageBriefingType === 'success' ? 'bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/30' : 'bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/30']">
+                {{ messageBriefing }}
               </div>
             </div>
-
-            <div>
-              <label class="block text-[#cbd5e1] font-semibold mb-2">Max Tokens</label>
-              <input
-                v-model.number="briefingAgent.maxTokens"
-                type="number"
-                min="100"
-                max="8000"
-                step="100"
-                class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#636363] rounded-lg text-white text-sm focus:outline-none focus:border-[#0033ff] transition"
-              />
-            </div>
-          </div>
-
-          <button 
-            @click="saveBriefingAgent"
-            :disabled="loadingBriefing"
-            class="w-full px-6 py-3 bg-[#0033ff] text-white rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
-          >
-            {{ loadingBriefing ? '⏳ Saving...' : '💾 Save Briefing Agent' }}
-          </button>
-
-          <div v-if="messageBriefing" :class="['px-4 py-3 rounded-lg text-sm font-semibold', messageBriefingType === 'success' ? 'bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/30' : 'bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/30']">
-            {{ messageBriefing }}
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Consultant Agent Card -->
-    <div class="group relative overflow-hidden bg-[#1a1a1a] hover:bg-white/5 transition-colors duration-300 border border-[#636363] rounded-lg p-8">
-      <GlowBlue />
-      
-      <div class="relative z-10">
-        <h2 class="text-2xl font-bold text-white mb-2">💬 General Consultant</h2>
-        <p class="text-[#d4d4d4] mb-6">Passive mode - Website Q&A assistant</p>
+        <!-- Consultant Agent Card -->
+        <div class="group relative overflow-hidden bg-[#1a1a1a] hover:bg-white/5 transition-colors duration-300 border border-[#636363] rounded-lg p-8">
+          <GlowBlue />
+          
+          <div class="relative z-10">
+            <h2 class="text-2xl font-bold text-white mb-2">💬 General Consultant</h2>
+            <p class="text-[#d4d4d4] mb-6">Passive mode - Website Q&A assistant</p>
 
-        <div class="space-y-6">
-          <div class="form-group">
-            <label class="block text-[#cbd5e1] font-semibold mb-2">System Prompt</label>
-            <textarea
-              v-model="consultantAgent.systemPrompt"
-              placeholder="Enter system prompt..."
-              rows="5"
-              class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#636363] rounded-lg text-white text-sm font-mono focus:outline-none focus:border-[#0033ff] transition"
-            ></textarea>
-          </div>
+            <div class="space-y-6">
+              <div class="form-group">
+                <label class="block text-[#cbd5e1] font-semibold mb-2">System Prompt</label>
+                <textarea
+                  v-model="consultantAgent.systemPrompt"
+                  placeholder="Enter system prompt..."
+                  rows="5"
+                  class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#636363] rounded-lg text-white text-sm font-mono focus:outline-none focus:border-[#0033ff] transition"
+                ></textarea>
+              </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-[#cbd5e1] font-semibold mb-2">Temperature (0-1)</label>
-              <div class="flex items-center gap-4">
-                <input
-                  v-model.number="consultantAgent.temperature"
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.1"
-                  class="flex-1 h-2 bg-[#636363] rounded-lg appearance-none cursor-pointer"
-                />
-                <span class="text-white font-bold w-12">{{ consultantAgent.temperature.toFixed(1) }}</span>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-[#cbd5e1] font-semibold mb-2">Temperature (0-1)</label>
+                  <div class="flex items-center gap-4">
+                    <input
+                      v-model.number="consultantAgent.temperature"
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.1"
+                      class="flex-1 h-2 bg-[#636363] rounded-lg appearance-none cursor-pointer"
+                    />
+                    <span class="text-white font-bold w-12">{{ consultantAgent.temperature.toFixed(1) }}</span>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-[#cbd5e1] font-semibold mb-2">Max Tokens</label>
+                  <input
+                    v-model.number="consultantAgent.maxTokens"
+                    type="number"
+                    min="100"
+                    max="8000"
+                    step="100"
+                    class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#636363] rounded-lg text-white text-sm focus:outline-none focus:border-[#0033ff] transition"
+                  />
+                </div>
+              </div>
+
+              <button 
+                @click="saveConsultantAgent"
+                :disabled="loadingConsultant"
+                class="w-full px-6 py-3 bg-[#0033ff] text-white rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {{ loadingConsultant ? '⏳ Saving...' : '💾 Save Consultant Agent' }}
+              </button>
+
+              <div v-if="messageConsultant" :class="['px-4 py-3 rounded-lg text-sm font-semibold', messageConsultantType === 'success' ? 'bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/30' : 'bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/30']">
+                {{ messageConsultant }}
               </div>
             </div>
-
-            <div>
-              <label class="block text-[#cbd5e1] font-semibold mb-2">Max Tokens</label>
-              <input
-                v-model.number="consultantAgent.maxTokens"
-                type="number"
-                min="100"
-                max="8000"
-                step="100"
-                class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#636363] rounded-lg text-white text-sm focus:outline-none focus:border-[#0033ff] transition"
-              />
-            </div>
-          </div>
-
-          <button 
-            @click="saveConsultantAgent"
-            :disabled="loadingConsultant"
-            class="w-full px-6 py-3 bg-[#0033ff] text-white rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
-          >
-            {{ loadingConsultant ? '⏳ Saving...' : '💾 Save Consultant Agent' }}
-          </button>
-
-          <div v-if="messageConsultant" :class="['px-4 py-3 rounded-lg text-sm font-semibold', messageConsultantType === 'success' ? 'bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/30' : 'bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/30']">
-            {{ messageConsultant }}
           </div>
         </div>
-      </div>
 
       <!-- Document Upload -->
       <DocumentUpload />
@@ -174,33 +175,34 @@
       <WorkflowBuilder />
 
       <!-- Info Section -->
-      <div class="group relative overflow-hidden bg-[#1a1a1a] hover:bg-white/5 transition-colors duration-300 border border-[#636363] rounded-lg p-8">
-        <GlowBlue />
-        
-        <div class="relative z-10">
-          <h3 class="text-2xl font-bold text-white mb-6">📌 How it works</h3>
-          <ul class="space-y-3">
-            <li class="text-[#d4d4d4] flex items-start gap-3">
-              <span class="text-[#0033ff] font-bold mt-0.5">▸</span>
-              <span><strong class="text-[#0033ff]">System Prompt:</strong> Core instructions for the agent behavior</span>
-            </li>
-            <li class="text-[#d4d4d4] flex items-start gap-3">
-              <span class="text-[#0033ff] font-bold mt-0.5">▸</span>
-              <span><strong class="text-[#0033ff]">Temperature:</strong> Creativity level (0 = precise, 1 = creative)</span>
-            </li>
-            <li class="text-[#d4d4d4] flex items-start gap-3">
-              <span class="text-[#0033ff] font-bold mt-0.5">▸</span>
-              <span><strong class="text-[#0033ff]">Max Tokens:</strong> Maximum response length</span>
-            </li>
-            <li class="text-[#d4d4d4] flex items-start gap-3">
-              <span class="text-[#0033ff] font-bold mt-0.5">▸</span>
-              <span><strong class="text-[#0033ff]">Documents:</strong> Upload knowledge base files for agents to reference</span>
-            </li>
-            <li class="text-[#d4d4d4] flex items-start gap-3">
-              <span class="text-[#0033ff] font-bold mt-0.5">▸</span>
-              <span><strong class="text-[#0033ff]">Workflows:</strong> Create multi-step processes for agents to follow</span>
-            </li>
-          </ul>
+        <div class="group relative overflow-hidden bg-[#1a1a1a] hover:bg-white/5 transition-colors duration-300 border border-[#636363] rounded-lg p-8">
+          <GlowBlue />
+          
+          <div class="relative z-10">
+            <h3 class="text-2xl font-bold text-white mb-6">📌 How it works</h3>
+            <ul class="space-y-3">
+              <li class="text-[#d4d4d4] flex items-start gap-3">
+                <span class="text-[#0033ff] font-bold mt-0.5">▸</span>
+                <span><strong class="text-[#0033ff]">System Prompt:</strong> Core instructions for the agent behavior</span>
+              </li>
+              <li class="text-[#d4d4d4] flex items-start gap-3">
+                <span class="text-[#0033ff] font-bold mt-0.5">▸</span>
+                <span><strong class="text-[#0033ff]">Temperature:</strong> Creativity level (0 = precise, 1 = creative)</span>
+              </li>
+              <li class="text-[#d4d4d4] flex items-start gap-3">
+                <span class="text-[#0033ff] font-bold mt-0.5">▸</span>
+                <span><strong class="text-[#0033ff]">Max Tokens:</strong> Maximum response length</span>
+              </li>
+              <li class="text-[#d4d4d4] flex items-start gap-3">
+                <span class="text-[#0033ff] font-bold mt-0.5">▸</span>
+                <span><strong class="text-[#0033ff]">Documents:</strong> Upload knowledge base files for agents to reference</span>
+              </li>
+              <li class="text-[#d4d4d4] flex items-start gap-3">
+                <span class="text-[#0033ff] font-bold mt-0.5">▸</span>
+                <span><strong class="text-[#0033ff]">Workflows:</strong> Create multi-step processes for agents to follow</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -211,10 +213,10 @@
 import { ref, onMounted } from 'vue'
 import DocumentUpload from '~/components/DocumentUpload.vue'
 import WorkflowBuilder from '~/components/WorkflowBuilder.vue'
-import HeaderSection from '~/components/HeaderSection.vue'
-import GlowBlue from '~/components/GlowBlue.vue'
-import ParticleEffect from '~/components/ParticleEffect.vue'
-import BannerSection from '~/components/BannerSection.vue'
+import HeaderSection from '~/components/layout/HeaderSection.vue'
+import GlowBlue from '~/components/effects/GlowBlue.vue'
+import ParticleEffect from '~/components/effects/ParticleEffect.vue'
+import BannerSection from '~/components/sections/BannerSection.vue'
 
 const briefingAgent = ref({
   name: 'Viz - Briefing Specialist',
