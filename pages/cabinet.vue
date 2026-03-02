@@ -326,7 +326,7 @@
 
   <!-- AI Chat Button and Drawer -->
   <AIChatButton v-model:open="isChatOpen" />
-  <AIChatDrawer v-if="isChatOpen" :agentType="'briefing'" :userEmail="userEmail" @update:isOpen="isChatOpen = $event" />
+  <AIChatDrawer v-model="isChatOpen" :agentType="'briefing'" :userEmail="userEmail" />
 
   <FooterSection />
 </template>

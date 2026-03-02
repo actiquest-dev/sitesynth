@@ -111,14 +111,11 @@ const props = defineProps({
   userEmail: {
     type: String,
     default: null
-  },
-  isOpen: {
-    type: Boolean,
-    default: false
   }
 })
 
-const emit = defineEmits(['update:isOpen'])
+const emit = defineEmits(['update:modelValue'])
+const isOpen = defineModel<boolean>('modelValue', { default: false })
 
 const messages = ref<Message[]>([])
 const messageInput = ref('')
@@ -144,7 +141,7 @@ const formatTime = (isoString: string): string => {
 
 // Handle close
 const handleClose = () => {
-  emit('update:isOpen', false)
+  isOpen.value = false
 }
 
 // Scroll to bottom
