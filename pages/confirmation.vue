@@ -12,7 +12,7 @@
         class="absolute top-0 left-1/2 w-96 h-96 bg-green-500/30 rounded-full blur-3xl transform -translate-x-1/2"
       ></div>
       <div
-        class="absolute bottom-0 right-0 w-96 h-96 bg-blue-500/25 rounded-full blur-3xl"
+        class="absolute bottom-0 right-0 w-96 h-96 bg-[#8D35FF]/25 rounded-full blur-3xl"
       ></div>
       <div
         class="absolute bottom-1/3 left-1/4 w-80 h-80 bg-emerald-500/20 rounded-full blur-3xl"
@@ -50,7 +50,7 @@
       <!-- Order Number -->
       <div class="bg-[#1a1a1a] border border-[#333] rounded-lg p-8 mb-12">
         <p class="text-[#999999] text-sm mb-2">Order Number:</p>
-        <p class="text-2xl font-mono font-bold text-[#0033ff]">
+        <p class="text-2xl font-mono font-bold text-[#8D35FF]">
           #{{ orderNumber }}
         </p>
       </div>
@@ -68,7 +68,7 @@
         <div class="space-y-6">
           <div class="flex gap-4">
             <span
-              class="flex-shrink-0 w-8 h-8 bg-[#0033ff] text-white rounded-full flex items-center justify-center font-bold"
+              class="flex-shrink-0 w-8 h-8 bg-[#8D35FF] text-white rounded-full flex items-center justify-center font-bold"
             >
               1
             </span>
@@ -84,7 +84,7 @@
 
           <div class="flex gap-4">
             <span
-              class="flex-shrink-0 w-8 h-8 bg-[#0033ff] text-white rounded-full flex items-center justify-center font-bold"
+              class="flex-shrink-0 w-8 h-8 bg-[#8D35FF] text-white rounded-full flex items-center justify-center font-bold"
             >
               2
             </span>
@@ -100,7 +100,7 @@
 
           <div class="flex gap-4">
             <span
-              class="flex-shrink-0 w-8 h-8 bg-[#0033ff] text-white rounded-full flex items-center justify-center font-bold"
+              class="flex-shrink-0 w-8 h-8 bg-[#8D35FF] text-white rounded-full flex items-center justify-center font-bold"
             >
               3
             </span>
@@ -127,7 +127,7 @@
               <p class="text-white font-semibold">Email us:</p>
               <a
                 href="mailto:hello@sitesynth.com"
-                class="text-[#0033ff] hover:text-blue-400 transition"
+                class="text-[#8D35FF] hover:text-[#B78CFF] transition"
               >
                 hello@sitesynth.com
               </a>
@@ -142,7 +142,7 @@
                 href="https://calendly.com/hello-sitesynth"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-[#0033ff] hover:text-blue-400 transition text-sm"
+                class="text-[#8D35FF] hover:text-[#B78CFF] transition text-sm"
               >
                 Book a 30-minute consultation with our team
               </a>
@@ -152,7 +152,7 @@
       </div>
 
       <!-- Authorization Section -->
-      <div class="bg-[#0033ff]/10 border border-[#0033ff] rounded-lg p-8 mb-8">
+      <div class="bg-[#8D35FF]/10 border border-[#8D35FF] rounded-lg p-8 mb-8">
         <h3 class="text-xl font-bold text-white mb-2">Access Your Project</h3>
         <p class="text-[#999999] mb-6 text-sm">
           Sign in to view your project details, communicate with our team, and track progress
@@ -183,14 +183,14 @@
                 v-model="emailInput"
                 type="email"
                 placeholder="your@email.com"
-                class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-lg text-white placeholder-[#555] focus:border-[#0033ff] focus:outline-none transition"
+                class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-lg text-white placeholder-[#555] focus:border-[#8D35FF] focus:outline-none transition"
               />
             </div>
 
             <button
               @click="handleSendCode"
               :disabled="isLoading || !emailInput"
-              class="w-full px-6 py-3 bg-[#0033ff] text-white rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              class="w-full px-6 py-3 bg-[#8D35FF] text-white rounded-lg font-semibold hover:bg-[#7B2EF0] transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {{ isLoading ? 'Sending...' : 'Send Verification Code' }}
             </button>
@@ -207,21 +207,21 @@
                 type="text"
                 placeholder="1234"
                 maxlength="4"
-                class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-lg text-white placeholder-[#555] focus:border-[#0033ff] focus:outline-none transition text-center text-2xl tracking-widest"
+                class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-lg text-white placeholder-[#555] focus:border-[#8D35FF] focus:outline-none transition text-center text-2xl tracking-widest"
               />
             </div>
 
             <button
               @click="handleVerifyCode"
               :disabled="isLoading || !codeInput"
-              class="w-full px-6 py-3 bg-[#0033ff] text-white rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              class="w-full px-6 py-3 bg-[#8D35FF] text-white rounded-lg font-semibold hover:bg-[#7B2EF0] transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {{ isLoading ? 'Verifying...' : 'Access Your Account' }}
             </button>
 
             <button
               @click="handleBackToEmail"
-              class="w-full px-6 py-3 border border-[#333] text-[#999999] rounded-lg font-semibold hover:border-[#0033ff] hover:text-[#0033ff] transition"
+              class="w-full px-6 py-3 border border-[#333] text-[#999999] rounded-lg font-semibold hover:border-[#8D35FF] hover:text-[#8D35FF] transition"
             >
               ← Use Different Email
             </button>

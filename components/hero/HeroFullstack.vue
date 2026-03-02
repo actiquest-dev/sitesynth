@@ -46,7 +46,7 @@
                   <span v-if="card.icon" class="mr-2">{{ card.icon }}</span>{{ card.title }}
                 </h3>
 
-                <p class="text-left text-[#999999] mt-5 leading-relaxed">
+                <p class="text-left mt-5 leading-relaxed" style="color: #bbbbbb !important;">
                   {{ card.description }}
                 </p>
               </div>

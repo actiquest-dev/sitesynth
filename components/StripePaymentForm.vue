@@ -7,7 +7,7 @@
       </label>
       <div
         id="card-element"
-        class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 text-white focus:outline-none focus:border-b-[#0033ff] transition"
+        class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 text-white focus:outline-none focus:border-b-[#8D35FF] transition"
       ></div>
       <div v-if="cardError" class="text-[#AA3733] text-sm mt-2">
         {{ cardError }}
@@ -23,7 +23,7 @@
         v-model="cardholderName"
         type="text"
         placeholder="John Doe"
-        class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 text-white placeholder:text-[#555] focus:outline-none focus:border-b-[#0033ff] transition"
+        class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 text-white placeholder:text-[#555] focus:outline-none focus:border-b-[#8D35FF] transition"
       />
     </div>
 
@@ -37,7 +37,7 @@
           v-model="email"
           type="email"
           placeholder="john@example.com"
-          class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 text-white placeholder:text-[#555] focus:outline-none focus:border-b-[#0033ff] transition"
+          class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 text-white placeholder:text-[#555] focus:outline-none focus:border-b-[#8D35FF] transition"
         />
       </div>
       <div>
@@ -46,7 +46,7 @@
         </label>
         <select
           v-model="country"
-          class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 text-white focus:outline-none focus:border-b-[#0033ff] transition"
+          class="w-full bg-[#1a1a1a] border-b border-[#333] px-0 py-3 text-white focus:outline-none focus:border-b-[#8D35FF] transition"
         >
           <option value="">Select Country</option>
           <option value="US">United States</option>
@@ -65,7 +65,7 @@
     <button
       @click="handlePayment"
       :disabled="isProcessing"
-      class="w-full px-6 py-3 bg-gradient-to-r from-[#0033ff] to-[#8D35FF] text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-[#0033ff]/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+      class="w-full px-6 py-3 bg-gradient-to-r from-[#8D35FF] to-[#B06BFF] text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-[#8D35FF]/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
     >
       <span v-if="!isProcessing">Pay €{{ amount }}</span>
       <span v-else class="flex items-center justify-center gap-2">

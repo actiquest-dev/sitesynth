@@ -7,13 +7,13 @@
       <div
         class="grid grid-cols-1 md:grid-cols-2 gap-8 relative border border-[#636363] group overflow-hidden"
       >
-        <GlowEffect />
+        <component :is="selectedGlowEffect" />
 
         <!-- Gradient Background -->
         <div
           class="absolute inset-0 pointer-events-none opacity-100"
           :style="{
-            backgroundImage: 'url(/assets/gradients/gradient-for-banner-section.svg)',
+            backgroundImage: `url(${gradientImage})`,
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
@@ -50,7 +50,12 @@
           <a
             :href="leftContent.link.href"
             :target="leftContent.link.target"
-            class="text-[#8CB0FF] mt-6 w-auto max-w-max py-2 font-semibold inline-flex items-center gap-2 group/link relative"
+            class="two-col-link mt-6 w-auto max-w-max py-2 font-semibold inline-flex items-center gap-2 group/link relative"
+            :style="{
+              '--link-color': linkColor,
+              '--link-hover-color': linkHoverColor,
+              '--link-underline-color': linkUnderlineColor,
+            }"
           >
             <span>{{ leftContent.link.text }}</span>
 
@@ -61,7 +66,8 @@
             />
 
             <div
-              class="absolute bottom-0 left-0 h-[2px] bg-[#8CB0FF] w-0 group-hover/link:w-full transition-all duration-300"
+              class="absolute bottom-0 left-0 h-[2px] w-0 group-hover/link:w-full transition-all duration-300"
+              :style="{ backgroundColor: linkUnderlineColor }"
             ></div>
           </a>
         </div>
@@ -82,7 +88,9 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed, defineAsyncComponent } from "vue"
+
+const props = defineProps({
   id: { type: String, default: "" },
 
   sectionClass: { type: String, default: "pb-40" },
@@ -92,7 +100,19 @@ defineProps({
 
   leftPadding: { type: String, default: "" },
   rightPadding: { type: String, default: "" },
+  gradientImage: {
+    type: String,
+    default: "/assets/gradients/gradient-for-banner-section.svg",
+  },
+  glowEffect: { type: String, default: "GlowEffect" },
+  linkColor: { type: String, default: "#8CB0FF" },
+  linkHoverColor: { type: String, default: "#8CB0FF" },
+  linkUnderlineColor: { type: String, default: "#8CB0FF" },
 })
+
+const selectedGlowEffect = computed(() =>
+  defineAsyncComponent(() => import(`@/components/effects/${props.glowEffect}.vue`))
+)
 
 const getTextClasses = (tag) => {
   switch (tag) {
@@ -117,6 +137,15 @@ const getTextClasses = (tag) => {
 </script>
 
 <style scoped>
+.two-col-link {
+  color: var(--link-color);
+  transition: color 300ms ease;
+}
+
+.two-col-link:hover {
+  color: var(--link-hover-color);
+}
+
 /* Only mobile: add breathing room so text isn't glued to top/right edge */
 @media (max-width: 767px) {
   .left-col {

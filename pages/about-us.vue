@@ -54,7 +54,7 @@
     <template #right>
       <div class="py-24 bg-[#161616]">
         <div class="max-w-[600px] mr-auto px-6 md:px-0 md:pl-16">
-          <p class="text-white font-bold mb-4">
+          <p class="mb-4" style="color: #bbbbbb !important; font-weight: 400;">
             Rooted in effectiveness, openness, and craftsmanship. We're a small
             but dedicated team — designers, strategists, and full-stack
             developers — working in sync to deliver integrated solutions that
@@ -76,7 +76,7 @@
       <div class="py-24 md:border-r border-[#636363] bg-[#161616]">
         <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
           <h2 class="text-white text-3xl sm:text-4xl font-bold mb-6">About Us</h2>
-          <p class="text-[#999999] text-base font-normal leading-relaxed mb-4">
+          <p class="text-[#BBBBBB] text-base font-normal leading-relaxed mb-4">
             We’re based in Sint-Amands, Belgium, in a small office within a
             beautifully restored historical building by the Schelde river. It’s
             not flashy — but it's meaningful: rooted, quiet, and real.
@@ -84,7 +84,7 @@
           <h3 class="text-white text-xl sm:text-2xl font-bold mt-12 mb-12">
             Easy reach of partners, clients, and collaborators across Europe.
           </h3>
-          <p class="text-[#999999] text-base font-normal leading-relaxed">
+          <p class="text-[#BBBBBB] text-base font-normal leading-relaxed">
             Strategically located between Antwerp, Brussels, and Ghent, we
             remain deeply connected to Europe’s major economic hubs—while
             keeping focus where it matters most. This little town gives us

@@ -90,9 +90,9 @@
         <p
           class="mb-8 countdown-paragraph"
           style="
-            font-family: 'Inter', sans-serif;
+            font-family: 'Roc Grotesk', 'Inter', sans-serif;
             font-size: 16px;
-            font-weight: 500;
+            font-weight: 400;
             max-width: 475px;
             line-height: 1.5;
           "

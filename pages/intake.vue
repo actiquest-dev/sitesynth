@@ -1,23 +1,13 @@
 <template>
   <HeaderSection />
 
-  <section class="relative bg-[#161616] min-h-screen pt-36 md:pt-32 pb-16 md:pb-24 overflow-hidden">
+  <section
+    class="relative bg-[#161616] min-h-screen pt-36 md:pt-32 pb-16 md:pb-24 overflow-hidden bg-cover bg-center bg-no-repeat"
+    style="background-image: url('/assets/new-assets/test/sitesynth-animated-gradient-v2.svg');"
+  >
     <!-- Background Effects -->
-    <GlowBlue />
+    <GlowEffect />
     <ParticleEffect />
-
-    <!-- Background Gradients -->
-    <div class="absolute inset-0 pointer-events-none opacity-60">
-      <div
-        class="absolute top-20 right-0 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl"
-      ></div>
-      <div
-        class="absolute bottom-20 left-0 w-96 h-96 bg-purple-500/30 rounded-full blur-3xl"
-      ></div>
-      <div
-        class="absolute top-1/3 right-1/3 w-80 h-80 bg-cyan-500/20 rounded-full blur-3xl"
-      ></div>
-    </div>
 
     <div class="relative max-w-2xl mx-auto px-6 md:px-12">
       <!-- Progress Indicator -->
@@ -30,7 +20,7 @@
             <p class="text-[#999999] text-sm mt-1">Project Setup</p>
           </div>
           <span class="text-right">
-            <span class="text-3xl font-bold text-[#8D35FF]">
+            <span class="text-3xl font-bold text-white">
               {{ Math.round((currentStep / totalSteps) * 100) }}%
             </span>
             <p class="text-[#999999] text-xs">Complete</p>
@@ -41,7 +31,7 @@
         <div class="w-full bg-[#333] rounded-full h-2 overflow-hidden">
           <div
             :style="{ width: (currentStep / totalSteps) * 100 + '%' }"
-            class="h-full bg-gradient-to-r from-[#0033ff] to-[#8D35FF] transition-all duration-300 rounded-full"
+            class="h-full bg-gradient-to-r from-[#8D35FF] to-[#B06BFF] transition-all duration-300 rounded-full"
           ></div>
         </div>
       </div>
@@ -109,7 +99,7 @@
               <div class="relative group">
                 <select
                   v-model="formData.complexity"
-                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 pr-10 text-sm text-white appearance-none focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444] cursor-pointer"
+                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 pr-10 text-sm text-white appearance-none focus:outline-none focus:ring-1 focus:ring-[#8D35FF] focus:border-[#8D35FF] transition duration-200 hover:border-[#444] cursor-pointer"
                   required
                 >
                   <option value="">Select complexity</option>
@@ -139,7 +129,7 @@
               <div class="relative group">
                 <select
                   v-model="formData.packageLevel"
-                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 pr-10 text-sm text-white appearance-none focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444] cursor-pointer"
+                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 pr-10 text-sm text-white appearance-none focus:outline-none focus:ring-1 focus:ring-[#8D35FF] focus:border-[#8D35FF] transition duration-200 hover:border-[#444] cursor-pointer"
                   required
                 >
                   <option value="">Select package</option>
@@ -247,7 +237,7 @@
               <div class="relative group">
                 <select
                   v-model="formData.budget"
-                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 pr-10 text-sm text-white appearance-none focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444] cursor-pointer"
+                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 pr-10 text-sm text-white appearance-none focus:outline-none focus:ring-1 focus:ring-[#8D35FF] focus:border-[#8D35FF] transition duration-200 hover:border-[#444] cursor-pointer"
                   required
                 >
                   <option value="">Select budget</option>
@@ -277,7 +267,7 @@
               <div class="relative group">
                 <select
                   v-model="formData.timeline"
-                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 pr-10 text-sm text-white appearance-none focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition duration-200 hover:border-[#444] cursor-pointer"
+                  class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 pr-10 text-sm text-white appearance-none focus:outline-none focus:ring-1 focus:ring-[#8D35FF] focus:border-[#8D35FF] transition duration-200 hover:border-[#444] cursor-pointer"
                   required
                 >
                   <option value="">Select timeline</option>
@@ -334,9 +324,9 @@
           </div>
 
           <!-- Price Summary -->
-          <div class="border border-[#0033ff] bg-[#1a1a1a] p-6 rounded-none">
+          <div class="border border-[#8D35FF] bg-[#1a1a1a] p-6 rounded-none">
             <p class="text-[#999999] text-sm mb-2">Total Budget:</p>
-            <p class="text-4xl font-bold text-[#0033ff]">
+            <p class="text-4xl font-bold text-[#8D35FF]">
               €{{ formData.budget === 'starter' ? 500 : formData.budget === 'growth' ? 900 : 'Custom' }}
             </p>
           </div>
@@ -364,7 +354,7 @@
                 type="text"
                 placeholder="John Doe"
                 required
-                class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition"
+                class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8D35FF] focus:border-[#8D35FF] transition"
               />
             </div>
 
@@ -378,7 +368,7 @@
                 type="email"
                 placeholder="hello@example.com"
                 required
-                class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition"
+                class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8D35FF] focus:border-[#8D35FF] transition"
               />
             </div>
 
@@ -391,7 +381,7 @@
                 v-model="formData.phone"
                 type="tel"
                 placeholder="+32 (0)4 23 456 789"
-                class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition"
+                class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8D35FF] focus:border-[#8D35FF] transition"
               />
             </div>
 
@@ -404,7 +394,7 @@
                 v-model="formData.companyName"
                 type="text"
                 placeholder="Your company"
-                class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition"
+                class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8D35FF] focus:border-[#8D35FF] transition"
               />
             </div>
 
@@ -419,7 +409,7 @@
                 rows="5"
                 required
                 minlength="10"
-                class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8CB0FF] focus:border-[#8CB0FF] transition resize-none"
+                class="w-full bg-[#1a1a1a] border border-[#333] rounded-none px-4 py-3 text-white placeholder:text-[#555] focus:outline-none focus:ring-1 focus:ring-[#8D35FF] focus:border-[#8D35FF] transition resize-none"
               ></textarea>
             </div>
 
@@ -565,7 +555,7 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import GlowBlue from "@/components/effects/GlowBlue.vue";
+import GlowEffect from "@/components/effects/GlowEffect.vue";
 import ParticleEffect from "@/components/effects/ParticleEffect.vue";
 
 const currentStep = ref(1);

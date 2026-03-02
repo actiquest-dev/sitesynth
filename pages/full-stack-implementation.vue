@@ -83,7 +83,7 @@
     imagePosition="object-cover"
     imageSrc="/assets/new-assets/solutions-page/solutions/full-stack-implementation-support/back-end-engineering-two.svg"
     imageAlt="Github code"
-    bgColor="bg-[#DDDDDD]"
+    bgColor="bg-[#161616]"
     textColor="text-white"
     contentBgColor="bg-[#161616]"
     mainTitle="🧩 Back-End Infrastructure You Can Trust"

@@ -1,6 +1,4 @@
 import { defineEventHandler, readBody } from 'h3'
-import { getAgentForMode, getInitialGreeting } from '@/server/agents'
-import { getVoltAgentInstance, logAgentExecution, logAgentError } from '@/server/voltagent'
 
 interface ChatMessage {
   role: 'user' | 'assistant'
@@ -38,6 +36,13 @@ export default defineEventHandler(async (event) => {
   const startTime = Date.now()
 
   try {
+    const { getAgentForMode } = await import('@/server/agents')
+    const {
+      getVoltAgentInstance,
+      logAgentExecution,
+      logAgentError,
+    } = await import('@/server/voltagent')
+
     const body = (await readBody(event)) as ChatRequest
 
     if (!body.message || typeof body.message !== 'string') {
@@ -72,6 +77,7 @@ export default defineEventHandler(async (event) => {
       executionTime,
     }
   } catch (error: any) {
+    const { getVoltAgentInstance, logAgentError } = await import('@/server/voltagent')
     const executionTime = Date.now() - startTime
     const voltAgent = getVoltAgentInstance()
 

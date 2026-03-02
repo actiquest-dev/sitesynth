@@ -1,23 +1,13 @@
 <template>
   <HeaderSection />
 
-  <section class="relative bg-[#161616] min-h-screen flex items-center justify-center pt-20 md:pt-32 pb-16 md:pb-24 overflow-hidden">
+  <section
+    class="relative bg-[#161616] min-h-screen flex items-center justify-center pt-20 md:pt-32 pb-16 md:pb-24 overflow-hidden bg-cover bg-center bg-no-repeat"
+    style="background-image: url('/assets/new-assets/test/sitesynth-animated-gradient-v2.svg');"
+  >
     <!-- Background Effects -->
-    <GlowBlue />
+    <GlowEffect />
     <ParticleEffect />
-
-    <!-- Success Gradient Background -->
-    <div class="absolute inset-0 pointer-events-none opacity-70">
-      <div
-        class="absolute top-0 left-1/2 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl transform -translate-x-1/2"
-      ></div>
-      <div
-        class="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/30 rounded-full blur-3xl"
-      ></div>
-      <div
-        class="absolute top-1/2 left-0 w-80 h-80 bg-cyan-500/20 rounded-full blur-3xl"
-      ></div>
-    </div>
 
     <div class="relative max-w-2xl w-full mx-auto px-6 md:px-12">
       <!-- Title Section -->
@@ -32,11 +22,11 @@
         <!-- Trust Badge -->
         <div class="flex justify-center items-center gap-6 text-[#999999] text-sm flex-wrap">
           <div class="flex items-center gap-2">
-            <span>🔒</span>
+            <img src="/assets/icons/key-square.svg" alt="Security" class="w-4 h-4" />
             <span>SSL Encrypted</span>
           </div>
           <div class="flex items-center gap-2">
-            <span>✓</span>
+            <img src="/assets/icons/shield-tick.svg" alt="Verified" class="w-4 h-4" />
             <span>Secure Login</span>
           </div>
         </div>
@@ -72,14 +62,14 @@
               v-model="emailInput"
               type="email"
               placeholder="your@email.com"
-              class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-lg text-white placeholder-[#555] focus:border-[#0033ff] focus:outline-none transition"
+              class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-lg text-white placeholder-[#555] focus:border-[#8D35FF] focus:outline-none transition"
             />
           </div>
 
           <button
             @click="handleEmailLogin"
             :disabled="isLoading || !emailInput"
-            class="w-full px-6 py-3 bg-[#0033ff] text-white rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            class="w-full px-6 py-3 bg-[#8D35FF] text-white rounded-lg font-semibold hover:bg-[#7B2EF0] transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {{ isLoading ? 'Accessing...' : 'Access Your Account' }}
           </button>
@@ -89,7 +79,7 @@
       <!-- Help Section -->
       <div class="mt-8 text-center text-[#999999] text-sm">
         <p class="mb-2">❓ Questions or issues?</p>
-        <a href="mailto:hello@sitesynth.com" class="text-[#0033ff] hover:text-blue-400 transition font-semibold">
+        <a href="mailto:hello@sitesynth.com" class="text-[#8D35FF] hover:text-[#B78CFF] transition font-semibold">
           Contact Support →
         </a>
       </div>
@@ -103,7 +93,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import ParticleEffect from '@/components/effects/ParticleEffect.vue'
-import GlowBlue from '@/components/effects/GlowBlue.vue'
+import GlowEffect from '@/components/effects/GlowEffect.vue'
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton.vue'
 import { useGoogleAuth } from '@/composables/useGoogleAuth'
 import { useNocoBase } from '@/composables/useNocoBase'

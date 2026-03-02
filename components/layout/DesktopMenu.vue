@@ -56,7 +56,11 @@
                   <h3 class="text-white text-base font-semibold mb-1">
                     {{ subItem.label }}
                   </h3>
-                  <p v-if="subItem.description" class="text-[#999999] text-sm">
+                  <p
+                    v-if="subItem.description"
+                    class="text-sm"
+                    style="color: #999999 !important"
+                  >
                     {{ subItem.description }}
                   </p>
                 </div>

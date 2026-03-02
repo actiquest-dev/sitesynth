@@ -159,8 +159,10 @@
   <TwoColumnSection
     id="two-column-score-synth"
     class="pb-20"
+    glowEffect="GlowRed"
     leftPadding="pl-[4rem] pt-[2rem] md:pt-[0rem]"
     rightPadding=""
+    gradientImage="/assets/gradients/gradient-for-banner-section-red.svg"
     :leftContent="{
       image: { src: '/assets/ScoreSynth.svg', alt: 'Innovation Icon' },
       imageText: { tag: 'h3', content: 'ScoreSynth' },

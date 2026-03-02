@@ -43,7 +43,7 @@
     <template #right>
       <div class="py-24 bg-[#161616]">
         <div class="max-w-[600px] mr-auto px-6 md:px-0 md:pl-16">
-          <p class="text-white font-bold mb-4">
+          <p class="mb-4" style="color: #bbbbbb !important; font-weight: 400;">
             AI is transforming how teams design, build, and operate — but most
             companies don’t know where to start. We help you find the right use
             cases, test fast, and integrate AI meaningfully into your product or
