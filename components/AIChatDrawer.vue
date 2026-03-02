@@ -106,16 +106,19 @@ interface Message {
 const props = defineProps({
   agentType: {
     type: String,
-    default: 'presale' // 'briefing' or 'presale'
+    default: 'presale'
   },
   userEmail: {
     type: String,
     default: null
+  },
+  isOpen: {
+    type: Boolean,
+    default: false
   }
 })
 
-const emit = defineEmits(['update:modelValue'])
-const isOpen = defineModel<boolean>('modelValue', { default: false })
+const emit = defineEmits(['update:isOpen'])
 
 const messages = ref<Message[]>([])
 const messageInput = ref('')
@@ -141,7 +144,7 @@ const formatTime = (isoString: string): string => {
 
 // Handle close
 const handleClose = () => {
-  isOpen.value = false
+  emit('update:isOpen', false)
 }
 
 // Scroll to bottom
@@ -234,13 +237,13 @@ const loadConversationMessages = async (conversationId: string) => {
 
 onMounted(async () => {
   // Initialize when component mounts and drawer is already open
-  if (isOpen.value) {
+  if (props.isOpen) {
     await initializeConversation()
   }
 })
 
 // Initialize conversation when drawer opens
-watch(isOpen, async (newVal) => {
+watch(() => props.isOpen, async (newVal) => {
   if (newVal && !selectedConversationId.value) {
     await initializeConversation()
   }

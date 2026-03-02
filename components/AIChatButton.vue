@@ -40,9 +40,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineModel } from 'vue'
+import { computed } from 'vue'
 
-const isOpen = defineModel<boolean>('open', { default: false })
+interface Props {
+  open?: boolean
+}
+
+interface Emits {
+  (e: 'update:open', value: boolean): void
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  open: false
+})
+
+const emit = defineEmits<Emits>()
+
+const isOpen = computed({
+  get: () => props.open,
+  set: (value: boolean) => emit('update:open', value)
+})
 
 const toggleOpen = () => {
   isOpen.value = !isOpen.value

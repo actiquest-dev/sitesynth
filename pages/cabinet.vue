@@ -325,8 +325,8 @@
   </section>
 
   <!-- AI Chat Button and Drawer -->
-  <AIChatButton v-model:open="isChatOpen" />
-  <AIChatDrawer v-model="isChatOpen" :agentType="'briefing'" :userEmail="userEmail" />
+  <AIChatButton :open="isChatOpen" @update:open="isChatOpen = $event" />
+  <AIChatDrawer :isOpen="isChatOpen" :agentType="'briefing'" :userEmail="userEmail" @update:isOpen="isChatOpen = $event" />
 
   <FooterSection />
 </template>
