@@ -5,10 +5,12 @@
       class="chat-widget fixed right-0 top-0 h-screen w-full max-w-md border-l border-gray-700 shadow-2xl z-50 flex flex-col bg-[#1a1a1a]"
     >
       <!-- Header -->
-      <div class="bg-[#0033ff] p-4 flex items-center justify-between">
+      <div class="bg-[#8b5cf6] p-4 flex items-center justify-between">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-lg">
-            🤖
+            <svg class="w-6 h-6 text-[#8b5cf6]" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+            </svg>
           </div>
           <div>
             <h3 class="text-white font-semibold">{{ agentLabel }}</h3>
@@ -29,35 +31,50 @@
       <div ref="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-4">
         <div v-if="messages.length === 0" class="text-center py-8">
           <div class="text-sm space-y-4">
-            <p class="text-lg font-semibold text-[#d4d4d4]">👋 Welcome!</p>
+            <div class="flex justify-center">
+              <div class="w-12 h-12 rounded-full bg-[#8b5cf6] flex items-center justify-center">
+                <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                </svg>
+              </div>
+            </div>
+            <p class="text-lg font-semibold text-[#d4d4d4]">Welcome!</p>
             <p class="text-[#999999]">Start a conversation with our AI.</p>
           </div>
         </div>
 
         <!-- Messages -->
         <div v-for="msg in messages" :key="msg.id" :class="['flex gap-3', msg.role === 'user' ? 'justify-end' : 'justify-start']">
-          <div v-if="msg.role !== 'user'" class="w-8 h-8 rounded-full bg-[#0033ff] flex items-center justify-center flex-shrink-0 text-sm">
-            🤖
+          <div v-if="msg.role !== 'user'" class="w-8 h-8 rounded-full bg-[#8b5cf6] flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+            </svg>
           </div>
 
-          <div :class="['px-4 py-2 rounded-lg max-w-xs break-words', msg.role === 'user' ? 'bg-[#0033ff] text-white' : 'bg-[#2a2a2a] text-[#d4d4d4] border border-[#636363]']">
+          <div :class="['px-4 py-2 rounded-lg max-w-xs break-words', msg.role === 'user' ? 'bg-[#8b5cf6] text-white' : 'bg-[#2a2a2a] text-[#d4d4d4] border border-[#636363]']">      
             <p class="text-sm">{{ msg.content }}</p>
             <span class="text-xs text-opacity-70 opacity-70 mt-1 block">{{ formatTime(msg.created_at) }}</span>
           </div>
 
-          <div v-if="msg.role === 'user'" class="w-8 h-8 rounded-full bg-[#636363] flex items-center justify-center flex-shrink-0 text-sm">
-            👤
+          <div v-if="msg.role === 'user'" class="w-8 h-8 rounded-full bg-[#636363] flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
           </div>
         </div>
 
         <!-- Loading Indicator -->
         <div v-if="loading" class="flex gap-3">
-          <div class="w-8 h-8 rounded-full bg-[#0033ff] flex items-center justify-center text-sm">🤖</div>
+          <div class="w-8 h-8 rounded-full bg-[#8b5cf6] flex items-center justify-center">
+            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+            </svg>
+          </div>
           <div class="bg-[#2a2a2a] px-4 py-2 rounded-lg border border-[#636363]">
             <div class="flex gap-1">
-              <div class="w-2 h-2 bg-[#0033ff] rounded-full animate-bounce"></div>
-              <div class="w-2 h-2 bg-[#0033ff] rounded-full animate-bounce delay-100"></div>
-              <div class="w-2 h-2 bg-[#0033ff] rounded-full animate-bounce delay-200"></div>
+              <div class="w-2 h-2 bg-[#8b5cf6] rounded-full animate-bounce"></div>
+              <div class="w-2 h-2 bg-[#8b5cf6] rounded-full animate-bounce delay-100"></div>
+              <div class="w-2 h-2 bg-[#8b5cf6] rounded-full animate-bounce delay-200"></div>
             </div>
           </div>
         </div>
@@ -76,13 +93,13 @@
             @keyup.enter="sendMessage"
             type="text"
             placeholder="Type your message..."
-            class="flex-1 px-4 py-2 bg-[#2a2a2a] text-white rounded-lg border border-[#636363] focus:outline-none focus:border-[#0033ff] placeholder-[#888] text-sm"
+            class="flex-1 px-4 py-2 bg-[#2a2a2a] text-white rounded-lg border border-[#636363] focus:outline-none focus:border-[#8b5cf6] placeholder-[#888] text-sm"
             :disabled="loading"
           />
           <button
             @click="sendMessage"
             :disabled="loading || !messageInput.trim()"
-            class="px-6 py-2 bg-[#0033ff] text-white rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            class="px-6 py-2 bg-[#8b5cf6] text-white rounded-lg font-semibold hover:bg-violet-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
           >
             Send
           </button>
@@ -194,8 +211,7 @@ const initializeConversation = async () => {
       },
       body: JSON.stringify({
         title: `${props.agentType === 'briefing' ? 'Briefing' : 'Consultation'} - ${new Date().toLocaleDateString()}`,
-        user_email: email,
-        agent_type: props.agentType
+        agentType: props.agentType
       })
     })
 

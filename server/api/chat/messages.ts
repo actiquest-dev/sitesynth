@@ -1,5 +1,6 @@
 import { defineEventHandler, readBody, getHeader, getRouterParam, getQuery, createError } from 'h3'
 import { createClient } from '@supabase/supabase-js'
+import { generateText } from 'ai'
 import { briefingAgent, consultantAgent } from '../../agents'
 
 const supabaseUrl = process.env.SUPABASE_URL
@@ -127,22 +128,57 @@ Use natural conversation while being clear about what we offer. Gently guide the
       ]
 
       // 5. Call agent with Gemini through VoltAgent
+      // 5. Call Gemini directly with conversation history
       let response: string
       try {
-        const result = await agent.generate({
-          messages: conversationHistory,
+        const startTime = Date.now()
+        
+        // Use the model directly from the agent or create one
+        const { google } = await import('@ai-sdk/google')
+        const model = google('gemini-2.5-pro')
+        
+        // Use generateText from ai package for direct API call
+        const { generateText } = await import('ai')
+        
+        const result = await generateText({
+          model,
           system: systemPrompt,
+          messages: conversationHistory,
+          temperature: 0.7,
           maxTokens: 1024,
         })
 
-        response = typeof result === 'string' ? result : result.text || result.content || ''
+        response = result.text || ''
         
         if (!response) {
           throw new Error('Empty response from Gemini')
         }
+        
+        const duration = Date.now() - startTime
+        console.log(`✅ Gemini response received in ${duration}ms (${response.length} chars)`)
       } catch (agentError: any) {
-        console.error('Gemini API error:', agentError)
-        response = `I apologize, but I encountered a temporary issue. Could you please rephrase your question?`
+        console.error('❌ Gemini API error:', {
+          message: agentError?.message,
+          code: agentError?.code,
+          status: agentError?.status,
+        })
+        
+        // Check error type and return appropriate user message
+        const errorMessage = (agentError?.message || String(agentError)).toLowerCase()
+        
+        if (errorMessage.includes('unauthenticated') || errorMessage.includes('api key') || errorMessage.includes('permission denied')) {
+          response = `We're currently experiencing issues connecting to our AI provider (authentication error). Please contact us for support:\n📞 WhatsApp/Call for assistance`
+        } else if (errorMessage.includes('unavailable') || errorMessage.includes('timeout') || errorMessage.includes('deadline')) {
+          response = `Our AI service is temporarily unavailable. Please try again in a moment, or contact us:\n📞 WhatsApp/Call for support`
+        } else if (errorMessage.includes('quota') || errorMessage.includes('resource_exhausted') || errorMessage.includes('limit')) {
+          response = `We've reached our AI processing limit for now. Please contact us for support:\n📞 WhatsApp/Call for immediate assistance`
+        } else if (errorMessage.includes('ssl') || errorMessage.includes('network') || errorMessage.includes('econnrefused')) {
+          response = `Network connectivity issue with our AI provider. Please contact us:\n📞 WhatsApp/Call our support team`
+        } else {
+          response = `I encountered an error processing your request. For immediate assistance, please:\n📞 Contact us on WhatsApp or call our team`
+        }
+        
+        console.error(`🔴 Error handled - showing user: "${response.substring(0, 60)}..."`)
       }
 
       // 6. Save assistant response

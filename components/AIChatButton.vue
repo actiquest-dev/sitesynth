@@ -1,7 +1,7 @@
 <template>
   <button
     @click="toggleOpen"
-    class="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-[#0033ff] hover:bg-blue-700 shadow-lg transition-all duration-300 flex items-center justify-center z-40 group"
+    class="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-[#8b5cf6] hover:bg-violet-600 shadow-lg transition-all duration-300 flex items-center justify-center z-40 group"
     :class="{ 'scale-110': isOpen }"
     aria-label="Open AI Chat"
   >
@@ -68,10 +68,10 @@ const toggleOpen = () => {
 
 <style scoped>
 button {
-  box-shadow: 0 4px 12px rgba(141, 53, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
 }
 
 button:hover {
-  box-shadow: 0 6px 16px rgba(141, 53, 255, 0.4);
+  box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
 }
 </style>
