@@ -52,7 +52,7 @@
           </div>
 
           <div :class="['px-4 py-2 rounded-lg max-w-xs break-words', msg.role === 'user' ? 'bg-[#8b5cf6] text-white' : 'bg-[#2a2a2a] text-[#d4d4d4] border border-[#636363]']">      
-            <p class="text-sm">{{ msg.content }}</p>
+            <div class="text-sm prose prose-sm dark:prose-invert max-w-none" v-html="parseMarkdown(msg.content)"></div>
             <span class="text-xs text-opacity-70 opacity-70 mt-1 block">{{ formatTime(msg.created_at) }}</span>
           </div>
 
@@ -147,6 +147,39 @@ const agentLabel = computed(() => props.agentType === 'briefing' ? 'Briefing Ass
 
 // Get user email for API calls
 const getUserEmail = () => props.userEmail || localStorage.getItem('user_email') || 'anonymous'
+
+// Parse markdown to HTML (simple version without external deps)
+const parseMarkdown = (text: string): string => {
+  let html = text
+  
+  // Escape HTML
+  html = html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  
+  // Code blocks (```code```)
+  html = html.replace(/```(.*?)```/gs, '<pre><code>$1</code></pre>')
+  
+  // Inline code (`code`)
+  html = html.replace(/`([^`]+)`/g, '<code class="bg-[#333] px-1 py-0.5 rounded">$1</code>')
+  
+  // Bold (**text**)
+  html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold">$1</strong>')
+  
+  // Italic (*text*)
+  html = html.replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
+  
+  // Links [text](url)
+  html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" class="text-blue-400 underline" target="_blank">$1</a>')
+  
+  // Headers
+  html = html.replace(/^### (.*?)$/gm, '<h3 class="text-lg font-bold mt-2">$1</h3>')
+  html = html.replace(/^## (.*?)$/gm, '<h2 class="text-xl font-bold mt-3">$1</h2>')
+  html = html.replace(/^# (.*?)$/gm, '<h1 class="text-2xl font-bold mt-4">$1</h1>')
+  
+  // Line breaks
+  html = html.replace(/\n/g, '<br>')
+  
+  return html
+}
 
 // Format time
 const formatTime = (isoString: string): string => {
