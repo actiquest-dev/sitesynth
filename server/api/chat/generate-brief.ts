@@ -59,7 +59,7 @@ export default defineEventHandler(async (event) => {
 
       // 3. Generate brief using skill/prompt
       console.log('[Brief API] Generating brief using AI...')
-      const brief = await generateBriefFromData(briefData, agentType as 'briefing' | 'presale')
+      const brief = await generateBriefFromData(briefData, agentType as 'briefing' | 'presale', userEmail)
 
       // 4. Save brief to database
       const { data: savedBrief, error: saveError } = await supabase

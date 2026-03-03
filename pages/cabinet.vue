@@ -293,6 +293,76 @@
 
 
 
+      <!-- Files Section -->
+      <div class="bg-[#1a1a1a] border border-[#333] rounded-lg p-8 mb-12">
+        <h2 class="text-2xl font-bold text-white mb-8">Project Files</h2>
+        <p class="text-[#999999] text-sm mb-6">Upload reference files, brand guidelines, design assets, or documents. These will be analyzed by the AI agent when preparing your project brief.</p>
+
+        <!-- Upload Area -->
+        <div
+          @dragover.prevent="dragActive = true"
+          @dragleave="dragActive = false"
+          @drop.prevent="handleFileDrop"
+          :class="{
+            'border-[#0033ff] bg-[#0033ff]/5': dragActive,
+            'border-[#333]': !dragActive,
+          }"
+          class="border-2 border-dashed rounded-lg p-8 mb-8 transition cursor-pointer"
+        >
+          <input
+            ref="fileInput"
+            type="file"
+            multiple
+            @change="handleFileSelect"
+            class="hidden"
+            accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.zip"
+          />
+          <div @click="fileInput?.click()" class="text-center">
+            <p class="text-[#999999] mb-2">📤 Drop files here or click to browse</p>
+            <p class="text-[#666] text-sm">Supported: PDF, DOC, DOCX, TXT, JPG, PNG, ZIP</p>
+          </div>
+        </div>
+
+        <!-- Upload Progress -->
+        <div v-if="uploading" class="mb-8 p-4 bg-[#0f0f0f] border border-[#333] rounded-lg">
+          <div class="flex items-center justify-between mb-2">
+            <p class="text-white text-sm">Uploading files...</p>
+            <p class="text-[#999999] text-sm">{{ uploadProgress }}%</p>
+          </div>
+          <div class="w-full bg-[#1a1a1a] rounded-full h-2">
+            <div class="bg-[#0033ff] h-2 rounded-full" :style="{ width: `${uploadProgress}%` }"></div>
+          </div>
+        </div>
+
+        <!-- Files List -->
+        <div v-if="userFiles.length === 0 && !uploading" class="text-center py-8">
+          <p class="text-[#999999]">No files uploaded yet</p>
+        </div>
+
+        <div v-else class="space-y-3">
+          <div
+            v-for="file in userFiles"
+            :key="file.id"
+            class="bg-[#0f0f0f] border border-[#333] rounded-lg p-4 flex items-center justify-between hover:border-[#0033ff] transition"
+          >
+            <div class="flex items-center gap-4 flex-1 min-w-0">
+              <div class="text-2xl">{{ getFileIcon(file.name) }}</div>
+              <div class="flex-1 min-w-0">
+                <p class="text-white font-semibold truncate">{{ file.name }}</p>
+                <p class="text-[#999999] text-sm">{{ formatFileSize(file.size) }} • {{ formatDate(file.uploadedAt) }}</p>
+              </div>
+            </div>
+            <button
+              @click.stop="deleteFile(file.id)"
+              class="p-2 text-[#999999] hover:text-red-400 hover:bg-red-500/10 rounded-lg transition ml-4"
+              title="Delete file"
+            >
+              🗑️
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Account Settings Section -->
       <div class="bg-[#1a1a1a] border border-[#333] rounded-lg p-8">
         <h2 class="text-2xl font-bold text-white mb-8">Account Settings</h2>
@@ -345,6 +415,13 @@ const orders = ref<any[]>([])
 const projects = ref<any[]>([])
 const selectedOrder = ref<any>(null)
 const showOrderDetails = ref(false)
+
+// File upload state
+const fileInput = ref<HTMLInputElement | null>(null)
+const userFiles = ref<any[]>([])
+const dragActive = ref(false)
+const uploading = ref(false)
+const uploadProgress = ref(0)
 
 const stats = ref({
   totalProjects: 0,
@@ -470,11 +547,120 @@ onMounted(async () => {
       return sum + (order.amount || 0)
     }, 0)
     stats.value.activeWebsites = projects.value.filter((p: any) => p.status === 'in_progress').length
+
+    // Load user files
+    await loadUserFiles()
   } catch (error) {
     console.error('Error fetching data:', error)
     // Silently fail - show empty state
   }
 })
+
+// File upload functions
+const loadUserFiles = async () => {
+  try {
+    const response = await fetch('/api/files', {
+      headers: { 'x-user-email': userEmail.value },
+    })
+    if (response.ok) {
+      const data = await response.json()
+      userFiles.value = data.data || []
+    }
+  } catch (error) {
+    console.error('Error loading files:', error)
+  }
+}
+
+const handleFileSelect = async (event: Event) => {
+  const input = event.target as HTMLInputElement
+  if (input.files) {
+    await uploadFiles(Array.from(input.files))
+    input.value = ''
+  }
+}
+
+const handleFileDrop = async (event: DragEvent) => {
+  dragActive.value = false
+  if (event.dataTransfer?.files) {
+    await uploadFiles(Array.from(event.dataTransfer.files))
+  }
+}
+
+const uploadFiles = async (files: File[]) => {
+  if (files.length === 0) return
+
+  uploading.value = true
+  uploadProgress.value = 0
+
+  try {
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i]
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch('/api/files/upload', {
+        method: 'POST',
+        headers: { 'x-user-email': userEmail.value },
+        body: formData,
+      })
+
+      if (!response.ok) {
+        throw new Error(`Upload failed for ${file.name}`)
+      }
+
+      uploadProgress.value = Math.round(((i + 1) / files.length) * 100)
+    }
+
+    // Reload files after upload
+    await loadUserFiles()
+  } catch (error) {
+    console.error('Upload error:', error)
+  } finally {
+    uploading.value = false
+    uploadProgress.value = 0
+  }
+}
+
+const deleteFile = async (fileId: string) => {
+  if (!confirm('Delete this file?')) return
+
+  try {
+    const response = await fetch('/api/files', {
+      method: 'DELETE',
+      headers: { 'x-user-email': userEmail.value },
+      body: JSON.stringify({ fileId }),
+    })
+
+    if (response.ok) {
+      await loadUserFiles()
+    }
+  } catch (error) {
+    console.error('Error deleting file:', error)
+  }
+}
+
+const getFileIcon = (fileName: string): string => {
+  const ext = fileName.split('.').pop()?.toLowerCase()
+  const icons: Record<string, string> = {
+    pdf: '📄',
+    doc: '📝',
+    docx: '📝',
+    txt: '📋',
+    jpg: '🖼️',
+    jpeg: '🖼️',
+    png: '🖼️',
+    zip: '📦',
+  }
+  return icons[ext || ''] || '📎'
+}
+
+const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return '0 B'
+  const k = 1024
+  const sizes = ['B', 'KB', 'MB']
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i]
+}
 
 // SEO
 const siteUrl = useRuntimeConfig().public?.siteUrl

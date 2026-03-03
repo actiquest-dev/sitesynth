@@ -59,10 +59,48 @@ Return only valid JSON object.`,
  */
 export async function generateBriefFromData(
   briefData: BriefData,
-  agentType: 'briefing' | 'presale' = 'briefing'
+  agentType: 'briefing' | 'presale' = 'briefing',
+  userEmail?: string
 ): Promise<GeneratedBrief> {
   try {
     console.log('[Brief] Generating brief using 8-section Notion format...')
+
+    // Fetch uploaded files if user email provided
+    let fileContext = ''
+    if (userEmail) {
+      try {
+        const supabaseUrl = process.env.SUPABASE_URL
+        const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+        if (supabaseUrl && supabaseKey) {
+          const { createClient } = require('@supabase/supabase-js')
+          const supabase = createClient(supabaseUrl, supabaseKey)
+          
+          const { data: files } = await supabase.storage
+            .from('brief-files')
+            .list(userEmail, { limit: 10 })
+
+          if (files && files.length > 0) {
+            fileContext = '\n\nUploaded Reference Files:\n'
+            for (const file of files.slice(0, 5)) {
+              try {
+                const { data: content } = await supabase.storage
+                  .from('brief-files')
+                  .download(`${userEmail}/${file.name}`)
+                
+                if (content) {
+                  const text = await content.text()
+                  fileContext += `\n--- ${file.name} ---\n${text.substring(0, 2000)}\n`
+                }
+              } catch (err) {
+                console.warn(`Could not read ${file.name}`)
+              }
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('[Brief] Could not load files:', err)
+      }
+    }
 
     const dataContext = `
 Client Data:
@@ -83,6 +121,7 @@ Client Data:
 
 Conversation:
 ${briefData.conversationSummary || 'No conversation data'}
+${fileContext}
 `
 
     const { text } = await generateText({
