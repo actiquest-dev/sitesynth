@@ -2,6 +2,8 @@ import { defineEventHandler, readBody, getHeader, getRouterParam, getQuery, crea
 import { createClient } from '@supabase/supabase-js'
 import { generateText } from 'ai'
 import { briefingAgent, consultantAgent } from '../../agents'
+import { getAgentConfig } from '~~/server/utils/agent-config'
+import { getActiveWorkflow, getCurrentStepPrompt, buildWorkflowSystemPrompt } from '~~/server/utils/workflow-helper'
 
 const supabaseUrl = process.env.SUPABASE_URL
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -82,35 +84,19 @@ export default defineEventHandler(async (event) => {
 
       // 2. Get agent based on type
       const agent = agentType === 'briefing' ? briefingAgent : consultantAgent
+      
+      // 3. Get system prompt from admin config
+      const agentConfigType = agentType === 'briefing' ? 'briefingAgent' : 'consultantAgent'
+      const agentConfig = getAgentConfig(agentConfigType as 'briefingAgent' | 'consultantAgent')
+      let systemPrompt = agentConfig.systemPrompt
+      
+      // 4. Load workflow for this agent type and enhance system prompt
+      const workflowAgent = agentType === 'briefing' ? 'briefing' : 'presale'
+      const workflow = await getActiveWorkflow(workflowAgent as 'briefing' | 'presale')
+      const currentStepPrompt = getCurrentStepPrompt(workflow, history.length)
+      systemPrompt = buildWorkflowSystemPrompt(systemPrompt, workflow, currentStepPrompt)
 
-      // 3. System prompts for each mode
-      const systemPrompts = {
-        briefing: `You are a professional briefing specialist helping clients achieve their goals through strategic recommendations. 
-        
-Your role is to:
-- Understand the client's current situation and objectives
-- Provide expert insights and strategic guidance
-- Ask clarifying questions to understand their needs better
-- Make specific, actionable recommendations tailored to their business
-- Document key decisions and next steps
-
-Maintain a professional, consultative tone. Be inquisitive but focused on driving toward concrete deliverables.`,
-        
-        presale: `You are a friendly and knowledgeable sales consultant helping prospects understand how our solutions can solve their problems.
-
-Your role is to:
-- Listen to the prospect's pain points and goals
-- Explain how our solutions directly address their needs
-- Answer questions about features, pricing, and implementation
-- Guide them towards scheduling a consultation
-- Be helpful, patient, and genuinely interested in their success
-
-Use natural conversation while being clear about what we offer. Gently guide the conversation towards a consultation when appropriate.`
-      }
-
-      const systemPrompt = systemPrompts[agentType as keyof typeof systemPrompts] || systemPrompts.presale
-
-      // 4. Build conversation history - use provided history + current message
+      // 5. Build conversation history - use provided history + current message
       type ConversationMessage = {
         role: 'user' | 'assistant'
         content: string
@@ -127,8 +113,7 @@ Use natural conversation while being clear about what we offer. Gently guide the
         },
       ]
 
-      // 5. Call agent with Gemini through VoltAgent
-      // 5. Call Gemini directly with conversation history
+      // 6. Call Gemini directly with conversation history
       let response: string
       try {
         const startTime = Date.now()

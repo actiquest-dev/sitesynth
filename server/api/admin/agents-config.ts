@@ -1,24 +1,6 @@
-import { defineEventHandler, readBody } from 'h3'
+import { defineEventHandler, readBody, createError } from 'h3'
+import { agentConfigs, updateAgentConfig } from '~~/server/utils/agent-config'
 
-// Current agent configurations in memory
-let agentConfigs = {
-  briefingAgent: {
-    name: 'Viz - Briefing Specialist',
-    model: 'google("gemini-2.5-pro")',
-    temperature: 0.7,
-    maxTokens: 4096,
-    systemPrompt: 'You are Viz, a Briefing Specialist for the Cabinet active mode. Your role is to help develop comprehensive briefings and strategic overviews.'
-  },
-  consultantAgent: {
-    name: 'Viz - General Consultant',
-    model: 'google("gemini-2.5-pro")',
-    temperature: 0.7,
-    maxTokens: 4096,
-    systemPrompt: 'You are Viz, a General Consultant for the website passive mode. Your role is to provide guidance, answer questions, and offer consultation.'
-  }
-}
-
-// GET: Retrieve current agent configurations
 export default defineEventHandler(async (event) => {
   if (event.node.req.method === 'GET') {
     return {
@@ -61,15 +43,12 @@ export default defineEventHandler(async (event) => {
     }
 
     // Update configuration
-    agentConfigs[body.agentType as keyof typeof agentConfigs] = {
-      ...agentConfigs[body.agentType as keyof typeof agentConfigs],
-      ...updatePayload
-    }
+    const updated = updateAgentConfig(body.agentType as 'briefingAgent' | 'consultantAgent', updatePayload)
 
     return {
       status: 'success',
       message: `${body.agentType} updated successfully`,
-      data: agentConfigs[body.agentType as keyof typeof agentConfigs]
+      data: updated
     }
   }
 
