@@ -319,7 +319,7 @@
         @click="closeBriefWizard"
       >
         <div
-          class="bg-[#1a1a1a] border border-[#333] rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+          class="bg-[#1a1a1a] border border-[#333] rounded-none max-w-2xl w-full max-h-[90vh] overflow-y-auto"
           @click.stop
         >
           <!-- Modal Header -->
@@ -338,9 +338,9 @@
 
           <!-- Progress Bar -->
           <div class="px-6 pt-6">
-            <div class="w-full bg-[#0f0f0f] rounded-full h-2">
+            <div class="w-full bg-[#0f0f0f] rounded-none h-2">
               <div
-                class="bg-[#8D35FF] h-2 rounded-full transition-all duration-300"
+                class="bg-[#8D35FF] h-2 rounded-none transition-all duration-300"
                 :style="{ width: `${(wizardStage / 5) * 100}%` }"
               ></div>
             </div>
@@ -366,7 +366,7 @@
                   'border-[#8D35FF] bg-[#8D35FF]/5': dragActive,
                   'border-[#333]': !dragActive,
                 }"
-                class="border-2 border-dashed rounded-lg p-8 transition cursor-pointer"
+                class="border-2 border-dashed rounded-none p-8 transition cursor-pointer"
               >
                 <input
                   ref="wizardFileInput"
@@ -385,7 +385,7 @@
               <!-- Files Added -->
               <div v-if="wizardFiles.length > 0" class="space-y-3">
                 <p class="text-white text-sm font-semibold">{{ wizardFiles.length }} file(s) selected:</p>
-                <div v-for="(file, idx) in wizardFiles" :key="idx" class="bg-[#0f0f0f] border border-[#333] rounded-lg p-3 flex items-center justify-between">
+                <div v-for="(file, idx) in wizardFiles" :key="idx" class="bg-[#0f0f0f] border border-[#333] rounded-none p-3 flex items-center justify-between">
                   <div class="flex items-center gap-3">
                     <span class="text-lg">{{ getFileIcon(file.name) }}</span>
                     <span class="text-white text-sm">{{ file.name }}</span>
@@ -405,13 +405,13 @@
               <div class="flex gap-3">
                 <button
                   @click="closeBriefWizard"
-                  class="flex-1 px-4 py-3 border border-[#333] text-[#999999] rounded-lg font-semibold hover:border-white hover:text-white transition"
+                  class="flex-1 px-4 py-3 border border-[#333] text-[#999999] rounded-none font-semibold hover:border-white hover:text-white transition"
                 >
                   Cancel
                 </button>
                 <button
                   @click="nextWizardStage"
-                  class="flex-1 px-4 py-3 bg-[#8D35FF] text-white rounded-lg font-semibold hover:bg-purple-700 transition flex items-center justify-center gap-2"
+                  class="flex-1 px-4 py-3 bg-[#8D35FF] text-white rounded-none font-semibold hover:bg-purple-700 transition flex items-center justify-center gap-2"
                 >
                   Continue <Icon name="arrow-right" size="20" />
                 </button>
@@ -425,15 +425,15 @@
                 <p class="text-[#999999] text-sm mb-6">
                   Answer a few key questions about your project. The AI will extract important details to build your brief.
                 </p>
-                <div class="bg-[#0f0f0f] border border-[#333] rounded-lg p-3 mb-6">
+                <div class="bg-[#0f0f0f] border border-[#333] rounded-none p-3 mb-6">
                   <p class="text-white text-xs font-semibold">Question {{ currentQuestionIndex + 1 }} of {{ questionTree.length }}</p>
                 </div>
               </div>
 
               <!-- Chat Messages -->
-              <div class="bg-[#0f0f0f] border border-[#333] rounded-lg p-6 max-h-80 overflow-y-auto space-y-4">
+              <div class="bg-[#0f0f0f] border border-[#333] rounded-none p-6 max-h-80 overflow-y-auto space-y-4">
                 <div v-for="(msg, idx) in chatHistory" :key="idx" :class="[
-                  'p-4 rounded-lg',
+                  'p-4 rounded-none',
                   msg.role === 'assistant' ? 'bg-[#1a1a1a] border border-[#333]' : 'bg-[#8D35FF]/20 border border-[#8D35FF]/50'
                 ]">
                   <p :class="msg.role === 'assistant' ? 'text-white' : 'text-[#8D35FF]'" class="text-sm flex items-center gap-2">
@@ -445,7 +445,7 @@
               </div>
 
               <!-- Current Question -->
-              <div v-if="getCurrentQuestion()" class="bg-[#0f0f0f] border border-[#333] rounded-lg p-6 space-y-4">
+              <div v-if="getCurrentQuestion()" class="bg-[#0f0f0f] border border-[#333] rounded-none p-6 space-y-4">
                 <p class="text-white font-semibold">{{ getCurrentQuestion().text }}</p>
                 
                 <!-- Text Input -->
@@ -455,11 +455,11 @@
                     @keyup.enter="sendMessage"
                     type="text"
                     :placeholder="getCurrentQuestion().hint || 'Your answer...'"
-                    class="flex-1 px-4 py-3 bg-[#1a1a1a] border border-[#333] rounded-lg text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none transition"
+                    class="flex-1 px-4 py-3 bg-[#1a1a1a] border border-[#333] rounded-none text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none transition"
                   />
                   <button
                     @click="sendMessage"
-                    class="px-6 py-3 bg-[#8D35FF] text-white rounded-lg font-semibold hover:bg-purple-700 transition"
+                    class="px-6 py-3 bg-[#8D35FF] text-white rounded-none font-semibold hover:bg-purple-700 transition"
                   >
                     Next
                   </button>
@@ -471,11 +471,11 @@
                     v-model="userMessage"
                     @keyup.ctrl.enter="sendMessage"
                     :placeholder="getCurrentQuestion().hint || 'Your answer...'"
-                    class="w-full px-4 py-3 bg-[#1a1a1a] border border-[#333] rounded-lg text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none transition h-24 resize-none"
+                    class="w-full px-4 py-3 bg-[#1a1a1a] border border-[#333] rounded-none text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none transition h-24 resize-none"
                   ></textarea>
                   <button
                     @click="sendMessage"
-                    class="w-full px-6 py-3 bg-[#8D35FF] text-white rounded-lg font-semibold hover:bg-purple-700 transition"
+                    class="w-full px-6 py-3 bg-[#8D35FF] text-white rounded-none font-semibold hover:bg-purple-700 transition"
                   >
                     Next (Ctrl+Enter)
                   </button>
@@ -492,7 +492,7 @@
                         'bg-[#8D35FF] border-[#8D35FF] text-white': userMessage === option.label,
                         'bg-[#1a1a1a] border-[#333] text-[#999999] hover:border-[#8D35FF] hover:text-white': userMessage !== option.label
                       }"
-                      class="px-4 py-3 border rounded-lg font-semibold transition"
+                      class="px-4 py-3 border rounded-none font-semibold transition"
                     >
                       {{ option.label }}
                     </button>
@@ -514,8 +514,8 @@
                 <!-- Loading -->
                 <div class="flex justify-center py-8">
                   <div class="relative w-16 h-16">
-                    <div class="absolute inset-0 border-2 border-[#333] rounded-full"></div>
-                    <div class="absolute inset-0 border-2 border-transparent border-t-[#8D35FF] rounded-full animate-spin"></div>
+                    <div class="absolute inset-0 border-2 border-[#333] rounded-none"></div>
+                    <div class="absolute inset-0 border-2 border-transparent border-t-[#8D35FF] rounded-none animate-spin"></div>
                   </div>
                 </div>
                 <p class="text-center text-[#999999]">Analyzing your files and generating your brief...</p>
@@ -523,14 +523,14 @@
 
               <div v-else-if="generatedBrief" class="space-y-4">
                 <!-- Brief Preview -->
-                <div class="bg-[#0f0f0f] border border-[#333] rounded-lg p-6 max-h-96 overflow-y-auto">
+                <div class="bg-[#0f0f0f] border border-[#333] rounded-none p-6 max-h-96 overflow-y-auto">
                   <div class="prose prose-invert max-w-none text-sm">
                     <div v-html="markdownToHtml(generatedBrief)" class="text-[#999999]"></div>
                   </div>
                 </div>
 
                 <!-- Refinement -->
-                <div class="bg-[#0f0f0f] border border-[#333] rounded-lg p-6">
+                <div class="bg-[#0f0f0f] border border-[#333] rounded-none p-6">
                   <p class="text-white font-semibold mb-3">Refine Your Brief</p>
                   <div class="flex gap-3 mb-3">
                     <input
@@ -538,12 +538,12 @@
                       @keyup.enter="askBriefQuestion"
                       type="text"
                       placeholder="Ask for changes (e.g., 'Make the goals section more detailed')"
-                      class="flex-1 px-4 py-3 bg-[#1a1a1a] border border-[#333] rounded-lg text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none transition"
+                      class="flex-1 px-4 py-3 bg-[#1a1a1a] border border-[#333] rounded-none text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none transition"
                     />
                     <button
                       @click="askBriefQuestion"
                       :disabled="isGenerating"
-                      class="px-6 py-3 bg-[#8D35FF] text-white rounded-lg font-semibold hover:bg-purple-700 disabled:opacity-50 transition"
+                      class="px-6 py-3 bg-[#8D35FF] text-white rounded-none font-semibold hover:bg-purple-700 disabled:opacity-50 transition"
                     >
                       Refine
                     </button>
@@ -551,9 +551,9 @@
                 </div>
 
                 <!-- Chat history with AI -->
-                <div v-if="briefChatHistory.length > 0" class="bg-[#0f0f0f] border border-[#333] rounded-lg p-6 max-h-64 overflow-y-auto space-y-3">
+                <div v-if="briefChatHistory.length > 0" class="bg-[#0f0f0f] border border-[#333] rounded-none p-6 max-h-64 overflow-y-auto space-y-3">
                   <div v-for="(msg, idx) in briefChatHistory" :key="idx" :class="[
-                    'p-3 rounded-lg text-sm',
+                    'p-3 rounded-none text-sm',
                     msg.role === 'assistant' ? 'bg-[#1a1a1a] border border-[#333] text-[#999999]' : 'bg-[#8D35FF]/20 text-[#8D35FF]'
                   ]">
                     {{ msg.content }}
@@ -571,7 +571,7 @@
                 </p>
               </div>
 
-              <div class="bg-[#0f0f0f] border border-[#333] rounded-lg p-6 max-h-[60vh] overflow-y-auto space-y-6">
+              <div class="bg-[#0f0f0f] border border-[#333] rounded-none p-6 max-h-[60vh] overflow-y-auto space-y-6">
                 <!-- Project Overview -->
                 <div class="border-b border-[#333] pb-4">
                   <h4 class="text-white font-bold mb-3 text-lg">📋 Project Overview</h4>
@@ -616,13 +616,13 @@
               <div class="flex gap-3">
                 <button
                   @click="wizardStage = 3"
-                  class="flex-1 px-4 py-3 border border-[#333] text-[#999999] rounded-lg font-semibold hover:border-white hover:text-white transition flex items-center justify-center gap-2"
+                  class="flex-1 px-4 py-3 border border-[#333] text-[#999999] rounded-none font-semibold hover:border-white hover:text-white transition flex items-center justify-center gap-2"
                 >
                   <Icon name="arrow-left" size="20" />Edit
                 </button>
                 <button
                   @click="nextWizardStage"
-                  class="flex-1 px-4 py-3 bg-[#8D35FF] text-white rounded-lg font-semibold hover:bg-purple-700 transition flex items-center justify-center gap-2"
+                  class="flex-1 px-4 py-3 bg-[#8D35FF] text-white rounded-none font-semibold hover:bg-purple-700 transition flex items-center justify-center gap-2"
                 >
                   Save Brief <Icon name="arrow-right" size="20" />
                 </button>
@@ -639,19 +639,19 @@
               </div>
 
               <div class="space-y-4">
-                <div class="bg-[#0f0f0f] border border-[#333] rounded-lg p-6">
+                <div class="bg-[#0f0f0f] border border-[#333] rounded-none p-6">
                   <label class="text-[#999999] text-sm mb-2 block">Brief Name</label>
                   <input
                     v-model="briefName"
                     type="text"
                     placeholder="e.g., 'E-Commerce Redesign'"
-                    class="w-full px-4 py-3 bg-[#1a1a1a] border border-[#333] rounded-lg text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none transition"
+                    class="w-full px-4 py-3 bg-[#1a1a1a] border border-[#333] rounded-none text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none transition"
                   />
                 </div>
 
                 <button
                   @click="saveBrief"
-                  class="w-full px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition flex items-center justify-center gap-2"
+                  class="w-full px-6 py-3 bg-green-600 text-white rounded-none font-semibold hover:bg-green-700 transition flex items-center justify-center gap-2"
                 >
                   <Icon name="check" size="20" />Save to Dashboard
                 </button>
@@ -664,7 +664,7 @@
             <button
               v-if="wizardStage > 1"
               @click="wizardStage--"
-              class="px-6 py-3 border border-[#333] text-[#999999] rounded-lg font-semibold hover:border-white hover:text-white transition flex items-center gap-2"
+              class="px-6 py-3 border border-[#333] text-[#999999] rounded-none font-semibold hover:border-white hover:text-white transition flex items-center gap-2"
             >
               <Icon name="arrow-left" size="20" /> Back
             </button>
@@ -673,21 +673,21 @@
             <div class="flex items-center gap-3">
               <button
                 @click="closeBriefWizard"
-                class="px-6 py-3 border border-[#333] text-[#999999] rounded-lg font-semibold hover:border-white hover:text-white transition"
+                class="px-6 py-3 border border-[#333] text-[#999999] rounded-none font-semibold hover:border-white hover:text-white transition"
               >
                 Cancel
               </button>
               <button
                 v-if="wizardStage < 5"
                 @click="nextWizardStage"
-                class="px-6 py-3 bg-[#8D35FF] text-white rounded-lg font-semibold hover:bg-purple-700 transition flex items-center gap-2"
+                class="px-6 py-3 bg-[#8D35FF] text-white rounded-none font-semibold hover:bg-purple-700 transition flex items-center gap-2"
               >
                 Next <Icon name="arrow-right" size="20" />
               </button>
               <button
                 v-else
                 @click="saveBrief"
-                class="px-8 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition flex items-center gap-2"
+                class="px-8 py-3 bg-green-600 text-white rounded-none font-semibold hover:bg-green-700 transition flex items-center gap-2"
               >
                 <Icon name="check" size="20" /> Save Brief
               </button>
