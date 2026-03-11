@@ -40,7 +40,7 @@
             :class="[
               'px-6 py-3 rounded-lg font-semibold transition whitespace-nowrap',
               activeTab === tab.id
-                ? 'bg-[#0033ff] text-white'
+                ? 'bg-[#8D35FF] text-white'
                 : 'text-[#999999] hover:text-white border border-transparent hover:border-[#333]'
             ]"
           >
@@ -52,36 +52,36 @@
         <div v-if="activeTab === 'dashboard'" class="space-y-8">
           <!-- Quick Stats -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-[#1a1a1a] border border-[#333] rounded-lg p-8 hover:border-[#0033ff] transition">
+            <div class="bg-[#1a1a1a] border border-[#333] rounded-lg p-8 hover:border-[#8D35FF] transition">
               <p class="text-[#999999] text-sm mb-2">Total Briefs</p>
               <p class="text-4xl font-bold text-white">{{ totalBriefs }}</p>
               <p class="text-[#999999] text-xs mt-2">{{ activeBriefs }} in progress</p>
             </div>
 
-            <div class="bg-[#1a1a1a] border border-[#333] rounded-lg p-8 hover:border-[#0033ff] transition">
+            <div class="bg-[#1a1a1a] border border-[#333] rounded-lg p-8 hover:border-[#8D35FF] transition">
               <p class="text-[#999999] text-sm mb-2">Files Uploaded</p>
               <p class="text-4xl font-bold text-white">{{ userFiles.length }}</p>
               <p class="text-[#999999] text-xs mt-2">{{ totalFileSize }}</p>
             </div>
 
-            <div class="bg-[#1a1a1a] border border-[#333] rounded-lg p-8 hover:border-[#0033ff] transition">
+            <div class="bg-[#1a1a1a] border border-[#333] rounded-lg p-8 hover:border-[#8D35FF] transition">
               <p class="text-[#999999] text-sm mb-2">Active Projects</p>
-              <p class="text-4xl font-bold text-[#0033ff]">{{ stats.activeWebsites }}</p>
+              <p class="text-4xl font-bold text-[#8D35FF]">{{ stats.activeWebsites }}</p>
               <p class="text-[#999999] text-xs mt-2">{{ stats.totalProjects }} total</p>
             </div>
           </div>
 
           <!-- Primary Action: Create New Brief -->
-          <div class="bg-gradient-to-r from-[#0033ff]/20 to-[#8D35FF]/20 border border-[#333] rounded-lg p-12 text-center">
-            <h2 class="text-3xl font-bold text-white mb-4">✨ Ready to Create a Brief?</h2>
+          <div class="bg-gradient-to-r from-[#8D35FF]/20 to-[#8D35FF]/20 border border-[#333] rounded-lg p-12 text-center">
+            <h2 class="text-3xl font-bold text-white mb-4"><i class="fas fa-sparkles mr-2"></i>Ready to Create a Brief?</h2>
             <p class="text-[#999999] mb-8 max-w-xl mx-auto">
               Start a guided conversation with our AI to generate a professional 8-section project brief
             </p>
             <button
               @click="openBriefWizard"
-              class="px-8 py-4 bg-[#0033ff] text-white rounded-lg font-semibold hover:bg-blue-700 transition transform hover:scale-105"
+              class="px-8 py-4 bg-[#8D35FF] text-white rounded-lg font-semibold hover:bg-purple-700 transition transform hover:scale-105"
             >
-              Create New Brief →
+              Create New Brief <i class="fas fa-arrow-right ml-2"></i>
             </button>
           </div>
 
@@ -92,7 +92,7 @@
               <div
                 v-for="brief in recentBriefs.slice(0, 4)"
                 :key="brief.id"
-                class="bg-[#1a1a1a] border border-[#333] rounded-lg p-6 hover:border-[#0033ff] transition cursor-pointer"
+                class="bg-[#1a1a1a] border border-[#333] rounded-lg p-6 hover:border-[#8D35FF] transition cursor-pointer"
                 @click="() => { activeTab = 'briefs'; selectedBriefId = brief.id }"
               >
                 <div class="flex items-start justify-between mb-3">
@@ -119,7 +119,7 @@
           <div class="flex items-center gap-4">
             <select
               v-model="filterAgent"
-              class="px-4 py-2 bg-[#1a1a1a] border border-[#333] rounded-lg text-white hover:border-[#0033ff] transition"
+              class="px-4 py-2 bg-[#1a1a1a] border border-[#333] rounded-lg text-white hover:border-[#8D35FF] transition"
             >
               <option value="">All Agent Types</option>
               <option value="briefing">Briefing</option>
@@ -128,21 +128,21 @@
 
             <button
               @click="openBriefWizard"
-              class="ml-auto px-6 py-2 bg-[#0033ff] text-white rounded-lg font-semibold hover:bg-blue-700 transition flex items-center gap-2"
+              class="ml-auto px-6 py-2 bg-[#8D35FF] text-white rounded-lg font-semibold hover:bg-purple-700 transition flex items-center gap-2"
             >
-              <span>+</span> New Brief
+              <i class="fas fa-plus"></i> New Brief
             </button>
           </div>
 
           <!-- Briefs List -->
           <div v-if="filteredBriefs.length === 0" class="bg-[#1a1a1a] border border-[#333] rounded-lg p-12 text-center">
             <p class="text-[#999999] mb-6">No briefs yet</p>
-            <button
-              @click="openBriefWizard"
-              class="px-6 py-3 bg-[#0033ff] text-white rounded-lg font-semibold hover:bg-blue-700 transition"
-            >
+              <Button size="md" variant="secondary" @click="openBriefWizard">
+              <template #icon>
+                <i class="fas fa-plus"></i>
+              </template>
               Create Your First Brief
-            </button>
+            </Button>
           </div>
 
           <div v-else class="space-y-4">
@@ -171,14 +171,14 @@
                     class="p-2 bg-[#333] hover:bg-[#444] rounded-lg transition"
                     title="Download as PDF"
                   >
-                    📥
+                    <i class="fas fa-download"></i>
                   </button>
                   <button
                     @click.stop="deleteBrief(brief)"
                     class="p-2 bg-red-900/30 hover:bg-red-900/50 rounded-lg transition"
                     title="Delete"
                   >
-                    🗑️
+                    <i class="fas fa-trash"></i>
                   </button>
                 </div>
               </div>
@@ -206,7 +206,7 @@
             @dragleave="dragActive = false"
             @drop.prevent="handleFileDrop"
             :class="{
-              'border-[#0033ff] bg-[#0033ff]/5': dragActive,
+              'border-[#8D35FF] bg-[#8D35FF]/5': dragActive,
               'border-[#333]': !dragActive,
             }"
             class="border-2 border-dashed rounded-lg p-8 mb-8 transition cursor-pointer hover:border-[#0033ff]/50"
@@ -220,7 +220,7 @@
               accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.zip"
             />
             <div @click="fileInput?.click()" class="text-center">
-              <p class="text-[#999999] mb-2">📤 Drop files here or click to browse</p>
+              <p class="text-[#999999] mb-2"><i class="fas fa-arrow-up-from-bracket mr-2"></i>Drop files here or click to browse</p>
               <p class="text-[#666] text-sm">Supported: PDF, DOC, DOCX, TXT, JPG, PNG, ZIP</p>
             </div>
           </div>
@@ -232,13 +232,14 @@
               <p class="text-[#999999] text-sm">{{ uploadProgress }}%</p>
             </div>
             <div class="w-full bg-[#1a1a1a] rounded-full h-2">
-              <div class="bg-[#0033ff] h-2 rounded-full transition-all" :style="{ width: `${uploadProgress}%` }"></div>
+                <div class="bg-[#8D35FF] h-2 rounded-full transition-all" :style="{ width: `${uploadProgress}%` }"></div>
             </div>
           </div>
 
           <!-- Files List -->
           <div v-if="userFiles.length === 0 && !uploading" class="text-center py-12">
-            <p class="text-[#999999] mb-4">📂 No files uploaded yet</p>
+            <p class="text-[#999999] mb-4"><i class="fas fa-folder text-2xl"></i></p>
+              <p class="text-[#999999] mb-4"><i class="fas fa-folder text-2xl"></i></p>
             <p class="text-[#666] text-sm">Start by uploading some reference files</p>
           </div>
 
@@ -246,10 +247,10 @@
             <div
               v-for="file in userFiles"
               :key="file.id"
-              class="bg-[#0f0f0f] border border-[#333] rounded-lg p-4 flex items-center justify-between hover:border-[#0033ff] transition"
+              class="bg-[#0f0f0f] border border-[#333] rounded-lg p-4 flex items-center justify-between hover:border-[#8D35FF] transition"
             >
               <div class="flex items-center gap-4 flex-1 min-w-0">
-                <div class="text-2xl">{{ getFileIcon(file.name) }}</div>
+                <i :class="getFileIconClass(file.name)" class="text-xl"></i>
                 <div class="flex-1 min-w-0">
                   <p class="text-white font-semibold truncate">{{ file.name }}</p>
                   <p class="text-[#999999] text-sm">{{ formatFileSize(file.size) }} • {{ formatDate(file.uploadedAt) }}</p>
@@ -260,7 +261,7 @@
                 class="p-2 text-[#999999] hover:text-red-400 hover:bg-red-500/10 rounded-lg transition ml-4"
                 title="Delete file"
               >
-                🗑️
+                <i class="fas fa-trash"></i>
               </button>
             </div>
           </div>
@@ -279,11 +280,12 @@
 
               <div class="pb-6 border-b border-[#333]">
                 <p class="text-white font-semibold mb-4">Password</p>
-                <button
-                  class="px-6 py-3 border border-[#999999] text-[#999999] rounded-lg font-semibold hover:border-white hover:text-white transition"
-                >
+                <Button size="md" variant="ghost">
+                  <template #icon>
+                    <i class="fas fa-key"></i>
+                  </template>
                   Change Password
-                </button>
+                </Button>
               </div>
 
               <div>
@@ -366,7 +368,7 @@
                   accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.zip"
                 />
                 <div @click="wizardFileInput?.click()" class="text-center">
-                  <p class="text-[#999999] mb-2">📤 Drop files here or click to browse</p>
+                  <p class="text-[#999999] mb-2"><i class="fas fa-arrow-up-from-bracket mr-2"></i>Drop files here or click to browse</p>
                   <p class="text-[#666] text-sm">Supported: PDF, DOC, DOCX, TXT, JPG, PNG, ZIP</p>
                 </div>
               </div>
@@ -383,18 +385,18 @@
                     @click="wizardFiles.splice(idx, 1)"
                     class="text-[#999999] hover:text-red-400 transition"
                   >
-                    ✕
+                    <i class="fas fa-times"></i>
                   </button>
                 </div>
               </div>
 
-              <p class="text-[#999999] text-xs">💡 You can also skip this step and add files later</p>
+              <p class="text-[#999999] text-xs"><i class="fas fa-lightbulb mr-2"></i>You can also skip this step and add files later</p>
             </div>
 
             <!-- STAGE 2: GUIDED CONVERSATION -->
             <div v-if="wizardStage === 2" class="space-y-6">
               <div>
-                <h3 class="text-xl font-bold text-white mb-2">💬 Guided Conversation</h3>
+                <h3 class="text-xl font-bold text-white mb-2"><i class="fas fa-comments mr-2"></i>Guided Conversation</h3>
                 <p class="text-[#999999] text-sm mb-6">
                   Answer a few key questions about your project. The AI will extract important details to build your brief.
                 </p>
@@ -404,9 +406,9 @@
               <div class="bg-[#0f0f0f] border border-[#333] rounded-lg p-6 max-h-96 overflow-y-auto space-y-4">
                 <div v-for="(msg, idx) in chatHistory" :key="idx" :class="[
                   'p-4 rounded-lg',
-                  msg.role === 'assistant' ? 'bg-[#1a1a1a] border border-[#333]' : 'bg-[#0033ff]/20 border border-[#0033ff]/50'
+                  msg.role === 'assistant' ? 'bg-[#1a1a1a] border border-[#333]' : 'bg-[#8D35FF]/20 border border-[#8D35FF]/50'
                 ]">
-                  <p :class="msg.role === 'assistant' ? 'text-white' : 'text-[#0033ff]'" class="text-sm">
+                  <p :class="msg.role === 'assistant' ? 'text-white' : 'text-[#8D35FF]'" class="text-sm">
                     {{ msg.role === 'assistant' ? '🤖 AI:' : '👤 You:' }}
                   </p>
                   <p class="text-[#999999] text-sm mt-1">{{ msg.content }}</p>
@@ -420,11 +422,11 @@
                   @keyup.enter="sendMessage"
                   type="text"
                   placeholder="Your answer..."
-                  class="flex-1 px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-lg text-white placeholder-[#666] focus:border-[#0033ff] focus:outline-none transition"
+                  class="flex-1 px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-lg text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none transition"
                 />
                 <button
                   @click="sendMessage"
-                  class="px-6 py-3 bg-[#0033ff] text-white rounded-lg font-semibold hover:bg-blue-700 transition"
+                  class="px-6 py-3 bg-[#8D35FF] text-white rounded-lg font-semibold hover:bg-purple-700 transition"
                 >
                   Send
                 </button>
@@ -434,7 +436,7 @@
             <!-- STAGE 3: GENERATE -->
             <div v-if="wizardStage === 3" class="space-y-6">
               <div>
-                <h3 class="text-xl font-bold text-white mb-2">✨ Generate Your Brief</h3>
+                <h3 class="text-xl font-bold text-white mb-2"><i class="fas fa-wand-magic-sparkles mr-2"></i>Generate Your Brief</h3>
                 <p class="text-[#999999] text-sm mb-6">
                   The AI is now synthesizing your 8-section professional brief using the information provided.
                 </p>
@@ -445,7 +447,7 @@
                 <div class="flex justify-center">
                   <div class="relative w-16 h-16">
                     <div class="absolute inset-0 border-2 border-[#333] rounded-full"></div>
-                    <div class="absolute inset-0 border-2 border-transparent border-t-[#0033ff] rounded-full animate-spin"></div>
+                    <div class="absolute inset-0 border-2 border-transparent border-t-[#8D35FF] rounded-full animate-spin"></div>
                   </div>
                 </div>
                 <p class="text-center text-[#999999]">Generating your brief... This may take a moment</p>
@@ -460,7 +462,7 @@
             <!-- STAGE 4: REVIEW & EDIT -->
             <div v-if="wizardStage === 4" class="space-y-6">
               <div>
-                <h3 class="text-xl font-bold text-white mb-2">👀 Review Your Brief</h3>
+                <h3 class="text-xl font-bold text-white mb-2"><i class="fas fa-eye mr-2"></i>Review Your Brief</h3>
                 <p class="text-[#999999] text-sm mb-6">
                   Review the generated brief. You can edit sections or regenerate if needed.
                 </p>
@@ -476,13 +478,13 @@
                   @click="isGenerating = false; wizardStage = 2"
                   class="flex-1 px-4 py-3 border border-[#333] text-[#999999] rounded-lg font-semibold hover:border-white hover:text-white transition"
                 >
-                  ← Edit Answers
+                  <i class="fas fa-arrow-left mr-2"></i>Edit Answers
                 </button>
                 <button
                   @click="wizardStage = 5"
-                  class="flex-1 px-4 py-3 bg-[#0033ff] text-white rounded-lg font-semibold hover:bg-blue-700 transition"
+                  class="flex-1 px-4 py-3 bg-[#8D35FF] text-white rounded-lg font-semibold hover:bg-purple-700 transition"
                 >
-                  Save Brief →
+                  Save Brief <i class="fas fa-arrow-right ml-2"></i>
                 </button>
               </div>
             </div>
@@ -490,7 +492,7 @@
             <!-- STAGE 5: SAVE & EXPORT -->
             <div v-if="wizardStage === 5" class="space-y-6">
               <div>
-                <h3 class="text-xl font-bold text-white mb-2">💾 Save Your Brief</h3>
+                <h3 class="text-xl font-bold text-white mb-2"><i class="fas fa-save mr-2"></i>Save Your Brief</h3>
                 <p class="text-[#999999] text-sm mb-6">
                   Save your brief to your dashboard or export it immediately.
                 </p>
@@ -510,12 +512,12 @@
                   <button
                     class="px-4 py-3 border border-[#333] text-[#999999] rounded-lg font-semibold hover:border-white hover:text-white transition"
                   >
-                    📄 Export MD
+                    <i class="fas fa-file-markdown mr-2"></i>Export MD
                   </button>
                   <button
-                    class="px-4 py-3 border border-[#333] text-[#999999] rounded-lg font-semibold hover:border-white hover:text-white transition"
+                    class="flex-1 px-4 py-3 border border-[#333] text-[#999999] rounded-lg font-semibold hover:border-white hover:text-white transition"
                   >
-                    📥 Export PDF
+                    <i class="fas fa-file-pdf mr-2"></i>Export PDF
                   </button>
                 </div>
               </div>
