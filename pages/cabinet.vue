@@ -477,15 +477,15 @@
                   <div class="grid grid-cols-2 gap-2">
                     <button
                       v-for="option in getCurrentQuestion().options"
-                      :key="option"
-                      @click="userMessage = option; sendMessage()"
+                      :key="option.id"
+                      @click="userMessage = option.label; sendMessage()"
                       :class="{
-                        'bg-[#8D35FF] border-[#8D35FF] text-white': userMessage === option,
-                        'bg-[#1a1a1a] border-[#333] text-[#999999] hover:border-[#8D35FF] hover:text-white': userMessage !== option
+                        'bg-[#8D35FF] border-[#8D35FF] text-white': userMessage === option.label,
+                        'bg-[#1a1a1a] border-[#333] text-[#999999] hover:border-[#8D35FF] hover:text-white': userMessage !== option.label
                       }"
-                      class="px-4 py-3 border border-[#333] rounded-lg font-semibold transition"
+                      class="px-4 py-3 border rounded-lg font-semibold transition"
                     >
-                      {{ option }}
+                      {{ option.label }}
                     </button>
                   </div>
                 </div>
