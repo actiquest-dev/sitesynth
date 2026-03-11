@@ -1,5 +1,5 @@
 <template>
-  <div class="border border-[#636363] bg-[#161616]/70 p-8">
+  <div class="border border-[#333] bg-[#161616]/70 p-8">
     <div class="flex items-start gap-4">
       <div class="mt-1 shrink-0">
         <slot name="icon" />

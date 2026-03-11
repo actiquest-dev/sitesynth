@@ -9,6 +9,13 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
+const props = defineProps({
+  variant: {
+    type: String,
+    default: 'violet',
+  },
+})
+
 const canvasRef = ref(null)
 
 let ctx      = null
@@ -32,18 +39,30 @@ const MOUSE_R      = 140        // mouse repulsion radius
 const COMET_EVERY  = 3800       // avg ms between comets
 
 // Brand colour palette (weighted)
-const PALETTE = [
+const VIOLET_PALETTE = [
   { r: 255, g: 255, b: 255, glow: false, w: 5 }, // white
   { r: 215, g: 200, b: 255, glow: false, w: 2 }, // soft lavender
   { r: 170, g: 110, b: 255, glow: true,  w: 2 }, // purple
   { r: 141, g:  53, b: 255, glow: true,  w: 1 }, // brand purple
 ]
 
+const RED_PALETTE = [
+  { r: 255, g: 255, b: 255, glow: false, w: 5 },
+  { r: 255, g: 220, b: 212, glow: false, w: 2 },
+  { r: 226, g: 104, b: 92,  glow: true,  w: 2 },
+  { r: 170, g:  55, b: 51,  glow: true,  w: 1 },
+]
+
+function getPalette() {
+  return props.variant === 'red' ? RED_PALETTE : VIOLET_PALETTE
+}
+
 function pickColor() {
-  const total = PALETTE.reduce((s, c) => s + c.w, 0)
+  const palette = getPalette()
+  const total = palette.reduce((s, c) => s + c.w, 0)
   let roll = Math.random() * total
-  for (const c of PALETTE) { roll -= c.w; if (roll <= 0) return c }
-  return PALETTE[0]
+  for (const c of palette) { roll -= c.w; if (roll <= 0) return c }
+  return palette[0]
 }
 
 // ─── Factories ─────────────────────────────────────────────────────────────
@@ -70,16 +89,17 @@ function makeComet() {
   const baseA = fromLeft ? 0 : Math.PI
   const angle = baseA + (Math.random() - 0.5) * 0.5
   const speed = 2.8 + Math.random() * 3.2
-  const purple = Math.random() < 0.4
+  const accent = Math.random() < 0.4
+  const isRed = props.variant === 'red'
   return {
     x, y: Math.random() * H * 0.7,
     vx:   Math.cos(angle) * speed,
     vy:   Math.sin(angle) * speed + 0.25 + Math.random() * 0.45,
     trail: 70 + Math.random() * 110,
     sz:   0.7 + Math.random() * 1.2,
-    r:    purple ? 170 : 255,
-    g:    purple ? 120 : 255,
-    b:    purple ? 255 : 255,
+    r:    accent ? (isRed ? 210 : 170) : 255,
+    g:    accent ? (isRed ? 78  : 120) : 255,
+    b:    accent ? (isRed ? 70  : 255) : 255,
     a:    0.55 + Math.random() * 0.35,
     life: 1,
     decay:0.014 + Math.random() * 0.012,

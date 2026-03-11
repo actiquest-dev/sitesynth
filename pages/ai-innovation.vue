@@ -20,7 +20,7 @@
     textColorRight="text-white"
   >
     <template #left>
-      <div class="py-24 md:border-r border-[#636363] bg-[#DDDDDD] relative">
+      <div class="py-24 md:border-r border-[#333] bg-[#DDDDDD] relative">
         <div
           class="absolute inset-0 pointer-events-none opacity-100 z-0"
           style="
@@ -64,7 +64,7 @@
     textColorRight="text-white"
   >
     <template #left>
-      <div class="py-24 md:border-r border-[#636363] bg-[#161616]">
+      <div class="py-24 md:border-r border-[#333] bg-[#161616]">
         <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
           <h2 class="mb-2 text-white leading-none">
             <span class="text-6xl sm:text-7xl font-extrabold">

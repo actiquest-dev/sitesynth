@@ -4,8 +4,6 @@
     class="relative bg-[#161616] text-white group overflow-hidden"
     :style="backgroundImageStyle"
   >
-    <GlowEffect class="absolute inset-0 z-0 pointer-events-none" />
-
     <div
       class="relative z-10 max-w-[1248px] mx-auto px-6 pt-[16rem] pb-[12rem]"
     >
@@ -28,8 +26,13 @@
           v-for="(card, index) in cards"
           :key="index"
           :href="card.link"
-          class="group/card relative border border-[#636363] bg-[#ffffff14] backdrop-blur overflow-hidden transition-colors duration-300 hover:bg-[#ffffff1a] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+          class="group/card relative border border-[#333] bg-[#ffffff14] backdrop-blur overflow-hidden transition-colors duration-300 hover:bg-[#ffffff1a] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
         >
+          <GlowEffect
+            hoverClass="group-hover/card:opacity-100"
+            class="absolute inset-0 z-0 pointer-events-none"
+          />
+
           <!-- MAIN LAYOUT (same principle) -->
           <div class="relative z-10 flex flex-col min-h-[420px]">
             <!-- header: padding + fixed text box width -->

@@ -1,7 +1,7 @@
 <template>
   <div class="flex h-full bg-[#161616] text-white">
     <!-- Sidebar -->
-    <div class="w-64 border-r border-[#636363] flex flex-col bg-[#1a1a1a]">
+    <div class="w-64 border-r border-[#333] flex flex-col bg-[#1a1a1a]">
       <!-- New Chat Button -->
       <button
         @click="startNewChat"
@@ -63,7 +63,7 @@
               'px-4 py-2 rounded-lg max-w-md break-words',
               msg.role === 'user'
                 ? 'bg-[#0033ff] text-white'
-                : 'bg-[#2a2a2a] text-[#d4d4d4] border border-[#636363]'
+                : 'bg-[#2a2a2a] text-[#d4d4d4] border border-[#333]'
             ]"
           >
             <p>{{ msg.content }}</p>
@@ -86,7 +86,7 @@
           <div class="w-8 h-8 rounded-full bg-[#0033ff] flex items-center justify-center text-sm">
             🤖
           </div>
-          <div class="bg-[#2a2a2a] px-4 py-2 rounded-lg border border-[#636363]">
+          <div class="bg-[#2a2a2a] px-4 py-2 rounded-lg border border-[#333]">
             <div class="flex gap-1">
               <div class="w-2 h-2 bg-[#0033ff] rounded-full animate-bounce"></div>
               <div class="w-2 h-2 bg-[#0033ff] rounded-full animate-bounce delay-100"></div>
@@ -102,14 +102,14 @@
       </div>
 
       <!-- Input Area -->
-      <div class="border-t border-[#636363] p-4 bg-[#1a1a1a]">
+      <div class="border-t border-[#333] p-4 bg-[#1a1a1a]">
         <div class="flex gap-2">
           <input
             v-model="messageInput"
             @keyup.enter="sendMessage"
             type="text"
             placeholder="Type your message..."
-            class="flex-1 px-4 py-2 bg-[#2a2a2a] text-white rounded-lg border border-[#636363] focus:outline-none focus:border-[#0033ff] placeholder-[#888]"
+            class="flex-1 px-4 py-2 bg-[#2a2a2a] text-white rounded-lg border border-[#333] focus:outline-none focus:border-[#0033ff] placeholder-[#888]"
           />
           <button
             @click="sendMessage"

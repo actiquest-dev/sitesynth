@@ -18,7 +18,7 @@
     textColorRight="text-white"
   >
     <template #left>
-      <div class="py-24 md:border-r border-[#636363] bg-[#161616] relative">
+      <div class="py-24 md:border-r border-[#333] bg-[#161616] relative">
         <!-- градиент в нижнем левом углу -->
         <div
           class="absolute inset-0 pointer-events-none opacity-100 z-0"

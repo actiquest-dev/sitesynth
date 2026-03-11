@@ -5,6 +5,7 @@
   />
   <HeroGeneric
     glowEffect="GlowRed"
+    particleVariant="red"
     backgroundImage=""
     backgroundPosition="bg-right-bottom"
     :logo="{
@@ -122,7 +123,7 @@
     rightColumnBgColor="bg-[#161616]"
   >
     <template #left>
-      <div class="py-24 md:border-r border-[#636363] bg-[#161616]">
+      <div class="py-24 md:border-r border-[#333] bg-[#161616]">
         <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
           <h2 class="text-white text-3xl sm:text-4xl mb-6">
             From Musician to Builder

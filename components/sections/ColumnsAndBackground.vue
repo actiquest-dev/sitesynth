@@ -95,7 +95,7 @@ const props = defineProps({
   overlayOpacity: { type: Number, default: 0.35 },
 
   // card visuals
-  borderColor: { type: String, default: "#636363" },
+  borderColor: { type: String, default: "#333" },
   cardBackground: { type: String, default: "rgba(22, 22, 22, 0.70)" },
   blur: { type: Boolean, default: true },
   blurPx: { type: Number, default: 5.7 },

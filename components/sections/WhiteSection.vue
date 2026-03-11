@@ -8,7 +8,7 @@
       <div
         :class="[
           bgInside,
-          'border border-[#636363] py-14 px-6 sm:px-10 md:py-20 md:px-20 relative overflow-hidden',
+          'border border-[#333] py-14 px-6 sm:px-10 md:py-20 md:px-20 relative overflow-hidden',
         ]"
       >
         <component :is="selectedGlowEffect" />

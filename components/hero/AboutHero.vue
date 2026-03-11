@@ -1,9 +1,9 @@
 <template>
-  <section class="relative bg-[#161616] text-white overflow-hidden">
-    <component :is="selectedGlowEffect" />
+  <section class="relative bg-[#161616] text-white overflow-hidden group">
+    <component :is="selectedGlowEffect" class="absolute inset-0 z-0 pointer-events-none" />
     <ParticleEffect />
 
-    <div class="relative max-w-[1248px] mx-auto px-6 pt-48 pb-24">
+    <div class="relative z-10 max-w-[1248px] mx-auto px-6 pt-48 pb-24">
       <div class="text-center max-w-4xl mx-auto">
         <div
           v-for="(item, index) in content"
@@ -38,7 +38,7 @@ import ParticleEffect from "@/components/effects/ParticleEffect.vue"
 
 const props = defineProps({
   content: { type: Array, required: true },
-  glowEffect: { type: String, default: "GlowBlue" },
+  glowEffect: { type: String, default: "GlowEffect" },
 })
 
 const selectedGlowEffect = computed(() =>
@@ -76,11 +76,15 @@ const getClasses = (tag) => {
 .pill-body {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-height: 30px;
   border-radius: 9999px;
   border: 1px solid #444444;
   background: transparent;
-  padding: 5px 14px;
+  padding: 0 16px;
   font-size: 0.75rem;
+  line-height: 1;
+  text-align: center;
   font-weight: 500;
   letter-spacing: 0.025em;
   color: #888888;

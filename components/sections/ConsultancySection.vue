@@ -2,7 +2,7 @@
   <section
     :id="id || undefined"
     :class="[
-      'relative overflow-hidden border-t border-b border-[#636363] bg-[#161616]',
+      'relative overflow-hidden border-t border-b border-[#333] bg-[#161616]',
       sectionClass,
     ]"
     ref="sectionRef"
@@ -20,7 +20,7 @@
     <div class="relative z-10 max-w-[1248px] mx-auto px-6">
       <div class="grid grid-cols-1 md:grid-cols-2">
         <!-- LEFT -->
-        <div class="py-20 md:pr-16 md:border-r border-[#636363]">
+        <div class="py-20 md:pr-16 md:border-r border-[#333]">
           <h2 v-if="title" class="text-white text-3xl font-bold leading-tight">
             {{ title }}
           </h2>
@@ -128,7 +128,7 @@
             <div
               v-for="(card, idx) in currentCards"
               :key="`${activeTab}-${revealKey}-${idx}`"
-              class="relative border border-[#636363] bg-[#161616]/85 backdrop-blur-[2px] overflow-hidden"
+              class="relative border border-[#333] bg-[#161616]/85 backdrop-blur-[2px] overflow-hidden"
               :class="[
                 'p-8 md:p-10',
                 isRevealed ? 'card-in' : 'card-out',

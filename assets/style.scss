@@ -22,6 +22,7 @@
 :root {
   --font-heading: "Roc Grotesk", Inter, sans-serif;
   --font-body: "Roc Grotesk", Inter, sans-serif;
+  --font-button: Inter, sans-serif;
   --font-mono: "Share Tech Mono", monospace;
 
   /* ── Type scale ────────────────────────────────────────────────────────── */
@@ -97,6 +98,22 @@ select,
 textarea,
 label {
   font-family: var(--font-body);
+}
+
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+.button,
+.button-white,
+[class*="btn-"],
+[class*="button-"],
+[class~="button"],
+[role="button"],
+.cta-hover,
+a[class*="px-"][class*="py-"],
+a[class*="px-"][class*="h-"] {
+  font-family: var(--font-button) !important;
 }
 
 .font-heading {

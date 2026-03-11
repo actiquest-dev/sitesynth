@@ -32,7 +32,7 @@
           v-for="(card, index) in cards"
           :key="index"
           :href="card.link"
-          class="group/card relative border border-[#636363] bg-[#161616] overflow-hidden
+          class="group/card relative border border-[#333] bg-[#161616] overflow-hidden
                  transition-colors duration-300 hover:bg-[#1a1a1a]
                  focus:outline-none focus-visible:ring-2 focus-visible:ring-[#161616]/30"
         >

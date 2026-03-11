@@ -5,7 +5,7 @@
         <div
           v-for="(job, index) in jobs"
           :key="index"
-          class="border border-[#636363] overflow-hidden"
+          class="border border-[#2B2B2B] overflow-hidden"
           :class="isCta(job) ? 'bg-[#DDDDDD]' : 'bg-[#161616]'"
         >
           <!-- ========================= -->

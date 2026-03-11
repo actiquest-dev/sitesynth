@@ -2,7 +2,7 @@
   <HeaderSection />
 
   <!-- HERO -->
-  <ContactHero glowEffect="GlowBlue" :content="heroContent" />
+  <ContactHero glowEffect="GlowEffect" :content="heroContent" />
 
   <!-- TWO COLUMNS -->
   <TwoColumnsDesign
@@ -13,7 +13,7 @@
     <!-- LEFT -->
     <template #left>
       <div
-        class="relative overflow-hidden py-24 md:border-r border-[#636363] bg-[#161616]"
+        class="relative overflow-hidden py-24 md:border-r border-[#333] bg-[#161616]"
       >
         <!-- gradient только в нижнем правом углу левой колонки -->
         <div

@@ -2,14 +2,14 @@
   <section
     ref="sectionRef"
     :id="id || undefined"
-    :class="`group relative overflow-hidden border-t border-b border-[#636363] ${contentBgColor}`"
+    :class="`group relative overflow-hidden border-t border-b border-[#333] ${contentBgColor}`"
   >
     <GlowEffect />
 
     <!-- как в твоём примере: grid на всю ширину -->
     <div class="mx-auto grid grid-cols-1 md:grid-cols-2 relative z-10">
       <!-- Left Column -->
-      <div class="py-12 md:border-r border-[#636363]">
+      <div class="py-12 md:border-r border-[#333]">
         <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-12">
           <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
             {{ leftTitle }}
@@ -60,7 +60,7 @@
 
       <!-- Right Column (Image) -->
       <!-- без padding: картинка в край и на мобилке и на десктопе -->
-      <div class="relative border-t border-[#636363] md:border-t-0">
+      <div class="relative border-t border-[#333] md:border-t-0">
         <img
           :src="imageSrc"
           alt="Section image"

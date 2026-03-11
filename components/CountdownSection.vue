@@ -28,7 +28,7 @@
       class="relative flex w-full flex-col md:flex-row"
       style="
         min-height: 580px;
-        border: 1px solid #636363;
+        border: 1px solid #333;
         overflow: hidden;
         z-index: 1;
         background: #161616;

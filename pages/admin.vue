@@ -2,7 +2,7 @@
   <HeaderSection />
 
   <!-- HERO SECTION WITH EFFECTS -->
-  <section class="relative bg-[#161616] text-white overflow-hidden pb-16 md:pb-24 border-b border-[#636363]">
+  <section class="relative bg-[#161616] text-white overflow-hidden pb-16 md:pb-24 border-b border-[#333]">
     <!-- Glow Effects -->
     <GlowBlue />
     <ParticleEffect />
@@ -43,7 +43,7 @@
     <div class="relative max-w-7xl mx-auto px-6 md:px-12">
       <div class="space-y-8">
         <!-- Briefing Agent Card -->
-        <div class="group relative overflow-hidden bg-[#1a1a1a] hover:bg-white/5 transition-colors duration-300 border border-[#636363] rounded-lg p-8">
+        <div class="group relative overflow-hidden bg-[#1a1a1a] hover:bg-white/5 transition-colors duration-300 border border-[#333] rounded-lg p-8">
           <GlowBlue />
           
           <div class="relative z-10">
@@ -57,7 +57,7 @@
                   v-model="briefingAgent.systemPrompt"
                   placeholder="Enter system prompt..."
                   rows="5"
-                  class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#636363] rounded-lg text-white text-sm font-mono focus:outline-none focus:border-[#0033ff] transition"
+                  class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-lg text-white text-sm font-mono focus:outline-none focus:border-[#0033ff] transition"
                 ></textarea>
               </div>
 
@@ -85,7 +85,7 @@
                     min="100"
                     max="8000"
                     step="100"
-                    class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#636363] rounded-lg text-white text-sm focus:outline-none focus:border-[#0033ff] transition"
+                    class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-lg text-white text-sm focus:outline-none focus:border-[#0033ff] transition"
                   />
                 </div>
               </div>
@@ -106,7 +106,7 @@
         </div>
 
         <!-- Consultant Agent Card -->
-        <div class="group relative overflow-hidden bg-[#1a1a1a] hover:bg-white/5 transition-colors duration-300 border border-[#636363] rounded-lg p-8">
+        <div class="group relative overflow-hidden bg-[#1a1a1a] hover:bg-white/5 transition-colors duration-300 border border-[#333] rounded-lg p-8">
           <GlowBlue />
           
           <div class="relative z-10">
@@ -120,7 +120,7 @@
                   v-model="consultantAgent.systemPrompt"
                   placeholder="Enter system prompt..."
                   rows="5"
-                  class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#636363] rounded-lg text-white text-sm font-mono focus:outline-none focus:border-[#0033ff] transition"
+                  class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-lg text-white text-sm font-mono focus:outline-none focus:border-[#0033ff] transition"
                 ></textarea>
               </div>
 
@@ -148,7 +148,7 @@
                     min="100"
                     max="8000"
                     step="100"
-                    class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#636363] rounded-lg text-white text-sm focus:outline-none focus:border-[#0033ff] transition"
+                    class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-lg text-white text-sm focus:outline-none focus:border-[#0033ff] transition"
                   />
                 </div>
               </div>
@@ -175,7 +175,7 @@
       <WorkflowBuilder />
 
       <!-- Info Section -->
-        <div class="group relative overflow-hidden bg-[#1a1a1a] hover:bg-white/5 transition-colors duration-300 border border-[#636363] rounded-lg p-8">
+        <div class="group relative overflow-hidden bg-[#1a1a1a] hover:bg-white/5 transition-colors duration-300 border border-[#333] rounded-lg p-8">
           <GlowBlue />
           
           <div class="relative z-10">

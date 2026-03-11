@@ -1,7 +1,7 @@
 <template>
   <section
     :id="id || undefined"
-    class="bg-[#161616] border-t border-b border-[#636363] py-20"
+    class="bg-[#161616] border-t border-b border-[#333] py-20"
   >
     <div class="max-w-[1248px] mx-auto px-6">
       <!-- Заголовок секции -->

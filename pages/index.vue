@@ -256,7 +256,7 @@
   />
 
   <!-- AI Chat Section -->
-  <section class="relative bg-[#161616] border-t border-[#636363] py-16 md:py-24">
+  <section class="relative bg-[#161616] border-t border-[#333] py-16 md:py-24">
     <div class="relative max-w-7xl mx-auto px-6 md:px-12">
       <!-- Section Header -->
       <div class="text-center mb-12">
@@ -269,7 +269,7 @@
       </div>
 
       <!-- Chat Component -->
-      <div class="bg-[#1a1a1a] border border-[#636363] rounded-lg p-8 overflow-hidden">
+      <div class="bg-[#1a1a1a] border border-[#333] rounded-lg p-8 overflow-hidden">
         <div class="absolute inset-0 pointer-events-none opacity-30">
           <div class="absolute top-0 left-1/2 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2"></div>
         </div>

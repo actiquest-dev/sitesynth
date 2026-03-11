@@ -3,7 +3,7 @@
     <div class="max-w-[1248px] mx-auto px-6 grid grid-cols-1 md:grid-cols-2">
       <!-- Left Column: Successful Stories -->
       <div
-        class="mb-4 md:mb-0 md:pr-4 pl-4 text-left md:text-right md:border-r border-[#636363]"
+        class="mb-4 md:mb-0 md:pr-4 pl-4 text-left md:text-right md:border-r border-[#333]"
       >
         <a
           :href="storiesLink"

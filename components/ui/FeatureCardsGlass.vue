@@ -10,7 +10,7 @@
           :href="card.link || undefined"
           :target="card.target || undefined"
           :rel="card.target === '_blank' ? 'noopener noreferrer' : undefined"
-          class="group/card relative border border-[#636363] overflow-hidden transition-colors duration-300
+          class="group/card relative border border-[#333] overflow-hidden transition-colors duration-300
                  focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
           :class="[
             cardBgClass,

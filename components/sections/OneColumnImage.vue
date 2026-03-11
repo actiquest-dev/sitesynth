@@ -1,7 +1,7 @@
 <template>
   <section
     :id="id || undefined"
-    class="group relative overflow-hidden border-t border-[#636363] bg-[#161616] services"
+    class="group relative overflow-hidden border-t border-[#333] bg-[#161616] services"
   >
     <component :is="selectedGlowEffect" />
 

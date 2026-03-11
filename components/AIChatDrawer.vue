@@ -51,7 +51,7 @@
             </svg>
           </div>
 
-          <div :class="['px-4 py-2 rounded-lg max-w-xs break-words', msg.role === 'user' ? 'bg-[#8b5cf6] text-white' : 'bg-[#2a2a2a] text-[#d4d4d4] border border-[#636363]']">      
+          <div :class="['px-4 py-2 rounded-lg max-w-xs break-words', msg.role === 'user' ? 'bg-[#8b5cf6] text-white' : 'bg-[#2a2a2a] text-[#d4d4d4] border border-[#333]']">      
             <div class="text-sm prose prose-sm dark:prose-invert max-w-none" v-html="parseMarkdown(msg.content)"></div>
             <span class="text-xs text-opacity-70 opacity-70 mt-1 block">{{ formatTime(msg.created_at) }}</span>
           </div>
@@ -70,7 +70,7 @@
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
             </svg>
           </div>
-          <div class="bg-[#2a2a2a] px-4 py-2 rounded-lg border border-[#636363]">
+          <div class="bg-[#2a2a2a] px-4 py-2 rounded-lg border border-[#333]">
             <div class="flex gap-1">
               <div class="w-2 h-2 bg-[#8b5cf6] rounded-full animate-bounce"></div>
               <div class="w-2 h-2 bg-[#8b5cf6] rounded-full animate-bounce delay-100"></div>
@@ -86,14 +86,14 @@
       </div>
 
       <!-- Input Area -->
-      <div class="border-t border-[#636363] p-4 bg-[#0f0f0f]">
+      <div class="border-t border-[#333] p-4 bg-[#0f0f0f]">
         <div class="flex gap-2">
           <input
             v-model="messageInput"
             @keyup.enter="sendMessage"
             type="text"
             placeholder="Type your message..."
-            class="flex-1 px-4 py-2 bg-[#2a2a2a] text-white rounded-lg border border-[#636363] focus:outline-none focus:border-[#8b5cf6] placeholder-[#888] text-sm"
+            class="flex-1 px-4 py-2 bg-[#2a2a2a] text-white rounded-lg border border-[#333] focus:outline-none focus:border-[#8b5cf6] placeholder-[#888] text-sm"
             :disabled="loading"
           />
           <button

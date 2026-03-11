@@ -1,5 +1,5 @@
 <template>
-  <div class="group relative overflow-hidden bg-[#1a1a1a] hover:bg-white/5 transition-colors duration-300 border border-[#636363] rounded-lg p-8">
+  <div class="group relative overflow-hidden bg-[#1a1a1a] hover:bg-white/5 transition-colors duration-300 border border-[#333] rounded-lg p-8">
     <GlowBlue />
     
     <div class="relative z-10">
@@ -15,7 +15,7 @@
             'px-4 py-2 rounded-lg font-semibold transition',
             selectedAgent === type
               ? 'bg-[#0033ff] text-white'
-              : 'bg-[#0f0f0f] border border-[#636363] text-[#d4d4d4] hover:border-[#0033ff]'
+              : 'bg-[#0f0f0f] border border-[#333] text-[#d4d4d4] hover:border-[#0033ff]'
           ]"
           @click="selectedAgent = type as 'briefing' | 'presale'"
         >
@@ -24,7 +24,7 @@
       </div>
 
       <!-- Upload Form -->
-      <div class="bg-[#0f0f0f] border border-[#636363] rounded-lg p-6 mb-6">
+      <div class="bg-[#0f0f0f] border border-[#333] rounded-lg p-6 mb-6">
         <div class="space-y-4 mb-4">
           <div>
             <label class="block text-[#cbd5e1] font-semibold mb-2">Document Title</label>
@@ -32,7 +32,7 @@
               v-model="docTitle"
               type="text"
               placeholder="e.g., Case Study - Acme Corp"
-              class="w-full px-4 py-2 bg-[#161616] border border-[#636363] rounded-lg text-white text-sm focus:outline-none focus:border-[#0033ff] transition"
+              class="w-full px-4 py-2 bg-[#161616] border border-[#333] rounded-lg text-white text-sm focus:outline-none focus:border-[#0033ff] transition"
             />
           </div>
 
@@ -42,7 +42,7 @@
               v-model="docContent"
               placeholder="Paste your document content here..."
               rows="4"
-              class="w-full px-4 py-2 bg-[#161616] border border-[#636363] rounded-lg text-white text-sm font-mono focus:outline-none focus:border-[#0033ff] transition resize-none"
+              class="w-full px-4 py-2 bg-[#161616] border border-[#333] rounded-lg text-white text-sm font-mono focus:outline-none focus:border-[#0033ff] transition resize-none"
             ></textarea>
           </div>
         </div>
@@ -79,7 +79,7 @@
           <div
             v-for="doc in documents"
             :key="doc.id"
-            class="bg-[#161616] border border-[#636363] rounded-lg p-4 flex items-center justify-between hover:border-[#0033ff]/50 transition"
+            class="bg-[#161616] border border-[#333] rounded-lg p-4 flex items-center justify-between hover:border-[#0033ff]/50 transition"
           >
             <div class="flex-1">
               <p class="text-white font-semibold text-sm">{{ doc.title }}</p>

@@ -1,7 +1,7 @@
 <template>
   <section
     :id="id || undefined"
-    :class="`group relative overflow-hidden border-t border-b border-[#636363] ${sectionBgColor}`"
+    :class="`group relative overflow-hidden border-t border-b border-[#333] ${sectionBgColor}`"
   >
     <component :is="selectedGlowEffect" />
     <img

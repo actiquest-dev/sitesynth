@@ -2,12 +2,12 @@
   <HeaderSection />
 
   <!-- HERO SECTION WITH EFFECTS -->
-  <section class="relative bg-[#161616] text-white overflow-hidden pb-16 md:pb-24 border-b border-[#636363]">
+  <section class="relative bg-[#161616] text-white overflow-hidden pb-16 md:pb-24 border-b border-[#333]">
     <!-- Glow Effects -->
     <GlowBlue />
     <ParticleEffect />
 
-    <div class="relative max-w-7xl mx-auto px-6 md:px-12 pt-20 md:pt-32">
+    <div class="relative max-w-7xl mx-auto px-6 md:px-12 pt-32 md:pt-40">
       <div class="text-center mb-12">
         <h1 class="font-heading text-4xl sm:text-5xl font-extrabold leading-tight mb-8">
           Simple, Transparent<br />
@@ -34,7 +34,7 @@
   </section>
 
   <!-- PRICING CARDS SECTION -->
-  <section class="relative bg-[#161616] border-b border-[#636363]">
+  <section class="relative bg-[#161616] border-b border-[#333]">
     <div class="relative max-w-[1248px] mx-auto px-6">
       <div class="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         <!-- Card Component -->
@@ -42,9 +42,9 @@
           v-for="(card, index) in pricingCards"
           :key="card.id"
           class="group relative overflow-hidden z-0 bg-[#161616] hover:bg-white/5 transition-colors duration-300
-                 border-l border-r border-[#636363]
+                 border-l border-r border-[#333]
                  px-8 py-8 md:px-6 md:py-9
-                 border-b border-[#636363] first:border-t
+                 border-b border-[#333] first:border-t
                  md:border-b-0 md:first:border-t-0"
         >
           <GlowBlue />
@@ -130,7 +130,7 @@
   </section>
 
   <!-- FAQ SECTION -->
-  <section class="relative bg-[#161616] py-16 md:py-24 border-b border-[#636363]">
+  <section class="relative bg-[#161616] py-16 md:py-24 border-b border-[#333]">
     <!-- Glow Effect -->
     <GlowRed />
 
@@ -394,11 +394,15 @@ useSeoMeta({
 .pill-body {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-height: 30px;
   border-radius: 9999px;
   border: 1px solid #444444;
   background: transparent;
-  padding: 5px 14px;
+  padding: 0 16px;
   font-size: 0.75rem;
+  line-height: 1;
+  text-align: center;
   font-weight: 500;
   letter-spacing: 0.025em;
   color: #888888;

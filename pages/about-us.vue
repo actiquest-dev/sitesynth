@@ -2,7 +2,7 @@
   <HeaderSection />
 
   <AboutHero
-    glowEffect="GlowBlue"
+    glowEffect="GlowEffect"
     :content="[
       {
         tag: 'h1',
@@ -20,7 +20,7 @@
 
   <!-- WHY WE EXIST -->
   <TwoColumnsDesign
-    glowEffect="GlowBlue"
+    glowEffect="GlowEffect"
     id="about-us"
     sectionBgColor="bg-[#DDDDDD]"
     leftColumnBgColor="bg-[#DDDDDD]"
@@ -29,7 +29,7 @@
     textColorRight="text-white"
   >
     <template #left>
-      <div class="py-24 md:border-r border-[#636363] bg-[#DDDDDD] relative">
+      <div class="py-24 md:border-r border-[#333] bg-[#DDDDDD] relative">
         <!-- градиент в нижнем левом углу -->
         <div
           class="absolute inset-0 pointer-events-none opacity-100 z-0"
@@ -67,13 +67,13 @@
 
   <!-- Блок About Us + фото офиса -->
   <TwoColumnsDesign
-    glowEffect="GlowBlue"
+    glowEffect="GlowEffect"
     sectionBgColor="bg-[#161616]"
     leftColumnBgColor="bg-[#161616]"
     rightColumnBgColor="bg-[#161616]"
   >
     <template #left>
-      <div class="py-24 md:border-r border-[#636363] bg-[#161616]">
+      <div class="py-24 md:border-r border-[#333] bg-[#161616]">
         <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
           <h2 class="text-white text-3xl sm:text-4xl font-bold mb-6">About Us</h2>
           <p class="text-[#BBBBBB] text-base font-normal leading-relaxed mb-4">
@@ -114,7 +114,7 @@
   <!-- Call to action -->
   <WhiteSection
     hover="#8D35FF"
-    glowEffect="GlowBlue"
+    glowEffect="GlowEffect"
     id="get-started-today"
     class="pt-32 pb-32"
     title="Get Started Today"

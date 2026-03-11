@@ -9,43 +9,46 @@
   </filter>
 </defs>
 <style><![CDATA[
-:root{--base:#303030;--baseOp:0.85;--hiOp:0.24;}
+:root{--base:#2f2f2f;--baseOp:0.68;--hiOp:0.24;}
 svg{shape-rendering:geometricPrecision;}
-.base path{stroke:var(--base);stroke-opacity:var(--baseOp);stroke-width:1.15;stroke-linecap:round;stroke-linejoin:round;}
+.base path{stroke:var(--base);stroke-opacity:var(--baseOp);stroke-width:0.82;stroke-linecap:round;stroke-linejoin:round;}
 
 /* no drift in "play once" mode */
 .drift{transform-origin:center;transform-box:fill-box;animation:none;}
 
 /* highlight: draw once + gentle opacity pulse, then stay */
 .highlight path{
-  stroke:rgba(255,255,255,var(--hiOp));
-  stroke-width:1.6;
+  stroke:rgba(230,230,230,var(--hiOp));
+  stroke-width:1.05;
   stroke-linecap:round;
   stroke-linejoin:round;
   filter:url(#softGlow);
 
   /* normalize for draw animation */
-  stroke-dasharray:100;
+  stroke-dasharray:0 100;
   stroke-dashoffset:100;
   opacity:0;
 
   animation:
-    draw 1.8s cubic-bezier(0.22,1,0.36,1) forwards,
-    pulse 2.6s ease-in-out forwards;
+    trimLoop 5.2s cubic-bezier(0.22,1,0.36,1) infinite,
+    pulseLoop 5.2s ease-in-out infinite;
 
   animation-delay:
     calc(var(--i) * 90ms),
     calc(var(--i) * 90ms);
 }
 
-@keyframes draw{
-  to{stroke-dashoffset:0;}
+@keyframes trimLoop{
+  0%{stroke-dasharray:0 100;stroke-dashoffset:100;}
+  22%{stroke-dasharray:28 72;stroke-dashoffset:74;}
+  62%{stroke-dasharray:28 72;stroke-dashoffset:22;}
+  100%{stroke-dasharray:0 100;stroke-dashoffset:0;}
 }
 
-@keyframes pulse{
-  0%{opacity:0.06;}
-  45%{opacity:0.42;}
-  100%{opacity:0.20;}
+@keyframes pulseLoop{
+  0%{opacity:0.05;}
+  42%{opacity:0.24;}
+  100%{opacity:0.05;}
 }
 
 /* Respect reduced motion */
@@ -53,7 +56,7 @@ svg{shape-rendering:geometricPrecision;}
   .highlight path{
     animation:none !important;
     stroke-dashoffset:0;
-    opacity:0.18;
+    opacity:0.16;
   }
 }
 ]]></style>

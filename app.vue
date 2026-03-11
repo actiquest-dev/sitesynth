@@ -1,7 +1,7 @@
 <template>
   <Analytics />
   <NuxtPage />
-  <ClientOnly>
+  <ClientOnly v-if="!isCabinetRoute">
     <AIChatButton :open="isChatOpen" @update:open="isChatOpen = $event" />
     <AIChatDrawer
       :isOpen="isChatOpen"
@@ -15,7 +15,7 @@
 <script setup>
 import { useRoute } from "vue-router";
 import { useHead, useRuntimeConfig, useSeoMeta } from "#imports";
-import { computed, ref, onMounted } from "vue";
+import { computed, ref, onMounted, onBeforeUnmount, watch } from "vue";
 import { Analytics } from "@vercel/analytics/nuxt";
 import AIChatButton from "~/components/AIChatButton.vue";
 import AIChatDrawer from "~/components/AIChatDrawer.vue";
@@ -41,9 +41,24 @@ const userEmail = computed(() => {
   return user?.value?.email || "guest@sitesynth.com";
 });
 
+const isCabinetRoute = computed(() => route.path.startsWith("/cabinet"));
+
+const syncCabinetUiMode = () => {
+  if (typeof document === "undefined") return;
+  document.body.classList.toggle("cabinet-route", isCabinetRoute.value);
+};
+
 // Initialize auth on mount
 onMounted(() => {
   initAuth();
+  syncCabinetUiMode();
+});
+
+watch(() => route.path, syncCabinetUiMode);
+
+onBeforeUnmount(() => {
+  if (typeof document === "undefined") return;
+  document.body.classList.remove("cabinet-route");
 });
 
 // Use the canonical URL composable for consistency
@@ -155,3 +170,14 @@ useHead({
   ],
 });
 </script>
+
+<style>
+body.cabinet-route #cookiescript_injected,
+body.cabinet-route #cookiescript_badge,
+body.cabinet-route .cookiescript_badge,
+body.cabinet-route #CookiebotWidget,
+body.cabinet-route #CybotCookiebotDialog,
+body.cabinet-route .cookie-script-container {
+  display: none !important;
+}
+</style>

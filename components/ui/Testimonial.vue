@@ -3,7 +3,7 @@
     <div class="max-w-[1248px] mx-auto px-6">
       <div
         ref="card"
-        class="grid grid-cols-1 md:grid-cols-3 gap-8 relative border border-[#636363] py-14 group overflow-hidden"
+        class="grid grid-cols-1 md:grid-cols-3 gap-8 relative border border-[#333] py-14 group overflow-hidden"
       >
         <component
           :is="selectedGlowEffect"

@@ -1,5 +1,5 @@
 <template>
-  <section :id="id || undefined" class="what-we-offer-section border-t border-[#636363] bg-[#161616]">
+  <section :id="id || undefined" class="what-we-offer-section border-t border-[#333] bg-[#161616]">
     <div class="max-w-[1248px] mx-auto px-6">
       <div class="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         <NuxtLink
@@ -7,9 +7,9 @@
           :key="index"
           :to="offer.link"
           class="column-box group relative overflow-hidden z-0 cursor-pointer bg-[#161616] hover:bg-white/10 transition-colors duration-300 block no-underline
-                 border-l border-r border-[#636363]
+                 border-l border-r border-[#333]
                  px-8 py-10 md:p-6 md:py-12
-                 border-b border-[#636363] first:border-t
+                 border-b border-[#333] first:border-t
                  md:border-b-0 md:first:border-t-0"
         >
           <GlowBlue />

@@ -2,7 +2,7 @@
   <!-- Carousel Section -->
   <section
     :id="id || undefined"
-    class="relative bg-[#161616] pt-16 pb-16 border-t border-b border-[#636363]"
+    class="relative bg-[#161616] pt-16 pb-16 border-t border-b border-[#333]"
   >
     <!-- Left Transparent Overlay -->
     <div

@@ -59,7 +59,7 @@ const props = defineProps({
   },
 
   // visuals
-  borderColor: { type: String, default: "#636363" },
+  borderColor: { type: String, default: "#333" },
   cardBgOpacity: { type: Number, default: 7 }, // 7%
   blur: { type: Boolean, default: false }, // backdrop blur
 

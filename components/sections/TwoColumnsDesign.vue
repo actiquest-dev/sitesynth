@@ -1,7 +1,7 @@
 <template>
   <section
     :id="id || undefined"
-    :class="`group relative overflow-hidden border-t border-b border-[#636363] ${sectionBgColor}`"
+    :class="`group relative overflow-hidden border-t border-b border-[#333] ${sectionBgColor}`"
   >
     <!-- Content -->
     <div class="mx-auto grid grid-cols-1 md:grid-cols-2 relative z-10">
@@ -11,7 +11,7 @@
       <slot name="left"></slot>
 
       <!-- Mobile divider line -->
-      <div class="md:hidden border-t border-[#636363]"></div>
+      <div class="md:hidden border-t border-[#333]"></div>
 
       <!-- Right Column -->
       <slot name="right"></slot>

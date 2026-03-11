@@ -1,17 +1,17 @@
 <template>
   <section
     :id="id || undefined"
-    class="border-b border-t border-[#636363] bg-[#161616]"
+    class="border-b border-t border-[#333] bg-[#161616]"
   >
     <!-- grid full width -->
     <div class="grid grid-cols-1 md:grid-cols-2">
       <!-- LEFT COLUMN -->
-      <div class="py-12 md:border-r border-[#636363]">
+      <div class="py-12 md:border-r border-[#333]">
         <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-12">
           <div
             v-for="(section, index) in sections"
             :key="index"
-            class="toggle-section group border-t border-[#636363] pt-5 mt-4
+            class="toggle-section group border-t border-[#333] pt-5 mt-4
                    -mx-6 px-6 md:mx-0 md:px-0"
             :class="index === 0 ? 'border-t-0' : ''"
           >
@@ -59,7 +59,7 @@
       <!-- RIGHT COLUMN -->
       <div
         v-if="getCurrentImageSrc"
-        class="relative border-t border-[#636363] md:border-t-0"
+        class="relative border-t border-[#333] md:border-t-0"
       >
         <div class="relative w-full h-[420px] md:h-[520px] overflow-hidden">
           <transition name="image-swap">
@@ -77,7 +77,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue"
+import { ref, computed, nextTick, onMounted, onBeforeUnmount, watch } from "vue"
 
 const props = defineProps({
   id: { type: String, default: "" },
@@ -93,14 +93,39 @@ const openIndex = ref(0)
 
 // heights
 const contentHeights = ref([])
+const contentRefs = ref([])
 
 function setContentRef(el, idx) {
+  contentRefs.value[idx] = el
   if (el) contentHeights.value[idx] = el.scrollHeight
 }
 
-function toggle(idx) {
-  openIndex.value = openIndex.value === idx ? -1 : idx
+function updateHeights() {
+  contentRefs.value.forEach((el, idx) => {
+    if (el) contentHeights.value[idx] = el.scrollHeight
+  })
 }
+
+function toggle(idx) {
+  openIndex.value = idx
+}
+
+onMounted(() => {
+  nextTick(updateHeights)
+  window.addEventListener("resize", updateHeights, { passive: true })
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", updateHeights)
+})
+
+watch(
+  () => props.sections,
+  () => nextTick(updateHeights),
+  { deep: true, immediate: true },
+)
+
+watch(openIndex, () => nextTick(updateHeights))
 
 const getCurrentImageSrc = computed(() => {
   if (props.images && props.images.length > 0) {

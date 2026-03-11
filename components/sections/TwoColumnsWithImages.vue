@@ -1,7 +1,7 @@
 <template>
   <section
     :id="id || undefined"
-    class="group relative overflow-hidden border-t border-b border-[#636363] bg-[#161616] services"
+    class="group relative overflow-hidden border-t border-b border-[#333] bg-[#161616] services"
   >
     <!-- Content -->
     <div
@@ -9,7 +9,7 @@
     >
       <!-- Left Column -->
       <div
-        class="py-12 md:pr-6 md:border-r border-[#636363] flex flex-col items-start"
+        class="py-12 md:pr-6 md:border-r border-[#333] flex flex-col items-start"
       >
         <div class="flex items-center mb-[2rem]">
           <img

@@ -1,68 +1,63 @@
 <svg width="1457" height="941" viewBox="0 0 1457 941" fill="none" xmlns="http://www.w3.org/2000/svg">
 <style>
-  /* База: появиться и остаться */
   .base-line{
     fill: none;
-    stroke: #FFFFFF;
+    stroke: #f3f3f3;
+    stroke-width: 0.82;
     stroke-linecap: round;
     stroke-linejoin: round;
-    opacity: 0;
-    animation:
-      baseReveal 12s cubic-bezier(0.22, 1, 0.36, 1) forwards,
-      baseBreathe 6s ease-in-out infinite;
-    animation-delay: 0s, 12s; /* пульс начинается после завершения trim */
-  }
-
-  @keyframes baseReveal{
-    0%   { opacity: 0; }
-    8%   { opacity: 0; }
-    18%  { opacity: 0.22; }  /* к концу 1-го прохода уже видно */
-    100% { opacity: 0.22; }  /* остаётся навсегда */
+    opacity: 0.20;
+    animation: baseBreathe 6.5s ease-in-out infinite;
   }
 
   @keyframes baseBreathe{
-    0%   { opacity: 0.20; }
-    50%  { opacity: 0.26; }
-    100% { opacity: 0.20; }
+    0%   { opacity: 0.18; }
+    50%  { opacity: 0.24; }
+    100% { opacity: 0.18; }
   }
 
-  /* Трим: 2 прохода и стоп (оверлей) */
   .trim-line{
     fill: none;
-    stroke: #FFFFFF;
+    stroke: #ffffff;
+    stroke-width: 1.05;
     stroke-linecap: round;
     stroke-linejoin: round;
 
-    stroke-dasharray: 1000;
-    stroke-dashoffset: 1000;
-
+    stroke-dasharray: 0 100;
+    stroke-dashoffset: 100;
     opacity: 0;
-    animation: trim2x 12s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    animation-delay: calc(var(--i) * 120ms);
+
+    animation:
+      trimLoop 5.8s cubic-bezier(0.22, 1, 0.36, 1) infinite,
+      pulseLoop 5.8s ease-in-out infinite;
+    animation-delay:
+      calc(var(--i) * 110ms),
+      calc(var(--i) * 110ms);
   }
 
-  @keyframes trim2x{
-    /* pass 1: draw */
-    0%   { stroke-dashoffset: 1000; opacity: 0; }
-    6%   { opacity: 0.9; }
-    16%  { stroke-dashoffset: 0;    opacity: 1; }
-    24%  { stroke-dashoffset: 0;    opacity: 0; }  /* уходим, но база уже видна */
+  @keyframes trimLoop{
+    0%   { stroke-dasharray: 0 100;  stroke-dashoffset: 100; }
+    22%  { stroke-dasharray: 30 70; stroke-dashoffset: 74; }
+    62%  { stroke-dasharray: 30 70; stroke-dashoffset: 22; }
+    100% { stroke-dasharray: 0 100;  stroke-dashoffset: 0; }
+  }
 
-    /* reset (невидимо) */
-    30%  { stroke-dashoffset: 1000; opacity: 0; }
-
-    /* pass 2: draw */
-    36%  { opacity: 0.9; }
-    48%  { stroke-dashoffset: 0;    opacity: 1; }
-    56%  { stroke-dashoffset: 0;    opacity: 0; }
-
-    /* пауза + конец */
-    100% { stroke-dashoffset: 0;    opacity: 0; }
+  @keyframes pulseLoop{
+    0%   { opacity: 0.05; }
+    42%  { opacity: 0.24; }
+    100% { opacity: 0.05; }
   }
 
   @media (prefers-reduced-motion: reduce){
-    .trim-line{ animation: none !important; opacity: 0 !important; stroke-dasharray: none; stroke-dashoffset: 0; }
-    .base-line{ animation: none !important; opacity: 0.22; }
+    .trim-line{
+      animation: none !important;
+      stroke-dashoffset: 0;
+      opacity: 0.16;
+    }
+    .base-line{
+      animation: none !important;
+      opacity: 0.20;
+    }
   }
 </style>
 

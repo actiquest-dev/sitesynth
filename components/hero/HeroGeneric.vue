@@ -6,7 +6,7 @@
     :style="backgroundImageStyle"
   >
     <component :is="selectedGlowEffect" />
-    <ParticleEffect />
+    <ParticleEffect :variant="particleVariant" />
 
     <div
       class="relative max-w-[1248px] mx-auto px-6"
@@ -80,6 +80,10 @@ const props = defineProps({
   paddingClasses: {
     type: String,
     default: "",
+  },
+  particleVariant: {
+    type: String,
+    default: "violet",
   },
 });
 

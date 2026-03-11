@@ -6,11 +6,11 @@
   >
     <GlowEffect />
 
-    <div :class="`border-t border-b border-[#636363] ${contentBgColor}`">
+    <div :class="`border-t border-b border-[#333] ${contentBgColor}`">
       <!-- FULL WIDTH GRID -->
       <div class="mx-auto grid grid-cols-1 md:grid-cols-2 relative z-10">
         <!-- Left Column (Image) -->
-        <div class="md:border-r border-[#636363]">
+        <div class="md:border-r border-[#333]">
           <img
             :src="imageSrc"
             :alt="imageAlt"
