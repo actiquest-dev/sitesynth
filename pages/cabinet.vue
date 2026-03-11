@@ -596,7 +596,7 @@
               <div>
                 <h3 class="text-xl font-bold text-white mb-2"><Icon name="eye" class="mr-2 inline" />Review Your Brief</h3>
                 <p class="text-[#999999] text-sm mb-6">
-                  Вот ваш сгенерированный brief. Проверьте все данные перед сохранением.
+                  Here's your generated brief. Please review all details before saving.
                 </p>
               </div>
 
@@ -717,7 +717,7 @@
               <div>
                 <h3 class="text-xl font-bold text-white mb-2"><Icon name="save" class="mr-2 inline" />Save Your Brief</h3>
                 <p class="text-[#999999] text-sm mb-6">
-                  Сохраните brief на вашу панель управления или экспортируйте его в различных форматах.
+                  Save your brief to your dashboard or export it in various formats.
                 </p>
               </div>
 
@@ -861,7 +861,7 @@ const questionTree = [
   {
     id: 'Q2.1',
     stage: 2,
-    text: 'Как называется ваш проект?',
+    text: 'What is your project called?',
     type: 'text_input',
     saveKey: 'projectName',
     hint: 'e.g., E-Commerce Redesign, FinTech App',
@@ -869,61 +869,61 @@ const questionTree = [
   {
     id: 'Q2.2',
     stage: 2,
-    text: 'В одном предложении, что вы создаете?',
+    text: 'In one sentence, what are you building?',
     type: 'textarea',
     saveKey: 'projectDescription',
-    hint: 'Краткое описание проекта',
+    hint: 'Brief description of your project',
   },
   {
     id: 'Q2.3',
     stage: 2,
-    text: 'Какой тип проекта?',
+    text: 'What type of project is this?',
     type: 'single_select',
     options: [
       { id: 'website', label: 'Website / Landing page' },
-      { id: 'mobile_app', label: 'Мобильное приложение' },
-      { id: 'web_app', label: 'Веб-приложение / SaaS' },
+      { id: 'mobile_app', label: 'Mobile Application' },
+      { id: 'web_app', label: 'Web Application / SaaS' },
       { id: 'branding', label: 'Branding / Brand Identity' },
-      { id: 'ecommerce', label: 'E-commerce платформа' },
+      { id: 'ecommerce', label: 'E-commerce Platform' },
     ],
     saveKey: 'projectCategory',
   },
   {
     id: 'Q2.4',
     stage: 2,
-    text: 'Главная цель проекта?',
+    text: 'What is the primary goal of this project?',
     type: 'text_input',
     saveKey: 'primaryGoal',
-    hint: 'e.g., 增加 конверсию, улучшить UX, запустить продукт',
+    hint: 'e.g., Increase conversion, improve UX, launch product',
   },
   {
     id: 'Q2.5',
     stage: 2,
-    text: 'Кто ваша целевая аудитория?',
+    text: 'Who is your target audience?',
     type: 'text_input',
     saveKey: 'targetAudience',
-    hint: 'e.g., Собственники малого бизнеса 25-45 лет',
+    hint: 'e.g., Small business owners aged 25-45',
   },
   {
     id: 'Q2.6',
     stage: 2,
-    text: 'Какие проблемы нужно решить? (перечислите)',
+    text: 'What problems need to be solved? (list them)',
     type: 'textarea',
     saveKey: 'painPoints',
-    hint: 'Перечислите 2-3 основные проблемы',
+    hint: 'List 2-3 main problems',
   },
   {
     id: 'Q2.7',
     stage: 2,
-    text: 'Сроки? (когда нужен результат)',
+    text: 'What is your timeline? (when do you need results)',
     type: 'text_input',
     saveKey: 'timeline',
-    hint: 'e.g., 2 недели, К 15 апреля',
+    hint: 'e.g., 2 weeks, by April 15',
   },
   {
     id: 'Q2.8',
     stage: 2,
-    text: 'Бюджет?',
+    text: 'What is your budget?',
     type: 'single_select',
     options: [
       { id: 'low', label: '$500-2000' },
@@ -936,7 +936,7 @@ const questionTree = [
   {
     id: 'Q3.1',
     stage: 3,
-    text: 'Какая основная отрасль / индустрия?',
+    text: 'What is the primary industry / sector?',
     type: 'text_input',
     saveKey: 'industry',
     hint: 'e.g., FinTech, SaaS, E-commerce, Healthcare',
@@ -944,7 +944,7 @@ const questionTree = [
   {
     id: 'Q3.2',
     stage: 3,
-    text: 'Какие цвета в брендовой палитре? (основные)',
+    text: 'What are the main colors in your brand palette?',
     type: 'textarea',
     saveKey: 'colorPalette',
     hint: 'e.g., Primary: #8D35FF, Secondary: #FF6B35',
@@ -952,7 +952,7 @@ const questionTree = [
   {
     id: 'Q4.1',
     stage: 4,
-    text: 'Какие основные deliverables нужны?',
+    text: 'What are the main deliverables needed?',
     type: 'textarea',
     saveKey: 'deliverables',
     hint: 'e.g., UI Design, Wireframes, Prototype, Code',
@@ -960,7 +960,7 @@ const questionTree = [
   {
     id: 'Q5.1',
     stage: 5,
-    text: 'Какие технические требования?',
+    text: 'What are the technical requirements?',
     type: 'textarea',
     saveKey: 'technicalRequirements',
     hint: 'e.g., Responsive, SEO-optimized, WCAG 2.1 AA',
@@ -1089,17 +1089,17 @@ const sendMessage = () => {
   // Show agent confirmation
   setTimeout(() => {
     const agentResponses = {
-      projectName: `✓ Спасибо! Проект называется "${briefData.value.projectName}".`,
-      projectDescription: `Понял! Значит мы работаем над: "${briefData.value.projectDescription.substring(0, 50)}..."`,
-      projectCategory: `Отлично! ${briefData.value.projectCategory}.`,
-      primaryGoal: `Вижу, главная цель — ${briefData.value.primaryGoal}.`,
-      targetAudience: `Спасибо! Целевая аудитория — ${briefData.value.targetAudience}.`,
-      painPoints: `Записал проблемы. Переходим дальше!`,
-      timeline: `Дедлайн: ${briefData.value.timeline}. Понял!`,
-      budget: `Бюджет: ${briefData.value.budget}. Хорошо!`,
+      projectName: `✓ Got it! The project is called "${briefData.value.projectName}".`,
+      projectDescription: `Understood! So we're working on: "${briefData.value.projectDescription.substring(0, 50)}..."`,
+      projectCategory: `Perfect! ${briefData.value.projectCategory}.`,
+      primaryGoal: `I see, the main goal is — ${briefData.value.primaryGoal}.`,
+      targetAudience: `Thanks! Target audience — ${briefData.value.targetAudience}.`,
+      painPoints: `Got the problems. Moving forward!`,
+      timeline: `Timeline: ${briefData.value.timeline}. Understood!`,
+      budget: `Budget: ${briefData.value.budget}. Great!`,
     }
     
-    const response = agentResponses[saveKey] || 'Спасибо за информацию!'
+    const response = agentResponses[saveKey] || 'Thanks for the information!'
     chatHistory.value.push({ role: 'assistant', content: response })
     
     // Move to next question or finish
