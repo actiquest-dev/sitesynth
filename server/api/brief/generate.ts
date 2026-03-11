@@ -5,7 +5,7 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY ||
 export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event)
-    const { briefData, uploadedFiles, userMessage } = body
+    const { briefData, uploadedFiles, userMessage, currentBrief } = body
 
     // System prompt for brief generation
     const systemPrompt = `You are a professional Design Brief expert. Your role is to create comprehensive, high-quality design briefs based on client information.
@@ -41,6 +41,11 @@ BRIEF DATA:
 - Technical Requirements: ${briefData?.technicalRequirements?.join(', ') || 'Not provided'}
 `
 
+    // Note about uploaded files
+    const filesContext = uploadedFiles && uploadedFiles.length > 0
+      ? `\n\nIMPORTANT: The user has uploaded ${uploadedFiles.length} reference file(s) to inform this brief. Consider their content and context in your analysis.`
+      : ''
+
     const model = genAI.getGenerativeModel({
       model: 'gemini-2.0-flash',
       systemInstruction: systemPrompt,
@@ -50,10 +55,10 @@ BRIEF DATA:
     let prompt = ''
     if (userMessage) {
       // User is asking a question about the brief
-      prompt = `${briefContext}\n\nUser Question: ${userMessage}\n\nPlease respond to this question about the brief, staying in context.`
+      prompt = `${briefContext}${filesContext}\n\nCurrent Brief:\n${currentBrief || 'No brief yet'}\n\nUser Question: ${userMessage}\n\nPlease respond to this question about the brief, staying in context.`
     } else {
       // Generate complete brief
-      prompt = `${briefContext}\n\nBased on the above information, generate a comprehensive 8-section design brief. Format it clearly with headers for each section.`
+      prompt = `${briefContext}${filesContext}\n\nBased on the above information, generate a comprehensive 8-section design brief. Format it clearly with headers for each section.`
     }
 
     const result = await model.generateContent({

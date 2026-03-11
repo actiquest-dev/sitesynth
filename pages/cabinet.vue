@@ -1121,11 +1121,17 @@ const generateBriefWithGemini = async () => {
     isGenerating.value = true
     briefChatHistory.value = []
     
+    // Upload files if they haven't been uploaded yet
+    if (wizardFiles.value.length > 0 && brevityData.value.uploadedFileIds.length === 0) {
+      await uploadWizardFiles()
+    }
+    
     const response = await fetch('/api/brief/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         briefData: briefData.value,
+        uploadedFiles: brevityData.value.uploadedFileIds,
         userMessage: null, // First call generates the brief
       }),
     })
@@ -1173,6 +1179,7 @@ const askBriefQuestion = async () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         briefData: briefData.value,
+        uploadedFiles: brevityData.value.uploadedFileIds,
         userMessage: userMsg,
         currentBrief: generatedBrief.value,
       }),
@@ -1262,13 +1269,18 @@ const markdownToHtml = (markdown: string): string => {
 
 const nextWizardStage = async () => {
   if (wizardStage.value === 1) {
-    // Move to Stage 2 - questions
+    // Upload files first, then move to Stage 2
+    if (wizardFiles.value.length > 0) {
+      await uploadWizardFiles()
+    }
     wizardStage.value = 2
     currentQuestionIndex.value = 0
-    chatHistory.value = []
+    // Don't clear chat history - it has the file upload confirmation
+  }
   } else if (wizardStage.value === 2) {
     // This is handled in sendMessage when all questions are answered
-  } else if (wizardStage.value === 3) {
+  }
+  else if (wizardStage.value === 3) {
     // Move to Stage 4 - review
     wizardStage.value = 4
   } else if (wizardStage.value === 4) {
@@ -1290,8 +1302,43 @@ const handleWizardFileSelect = (event: Event) => {
 }
 
 const uploadWizardFiles = async () => {
-  // Implementation for uploading wizard files
-  console.log('Uploading wizard files:', wizardFiles.value)
+  if (wizardFiles.value.length === 0) return
+
+  try {
+    isGenerating.value = true
+    const formData = new FormData()
+    
+    wizardFiles.value.forEach(file => {
+      formData.append('files', file)
+    })
+    
+    const response = await fetch('/api/brief/upload-files', {
+      method: 'POST',
+      body: formData,
+    })
+    
+    if (!response.ok) throw new Error('Failed to upload files')
+    
+    const data = await response.json()
+    if (data.success) {
+      brevityData.value.uploadedFileIds = data.files?.map((f: any) => f.id) || []
+      if (data.folderId) brevityData.value.uploadedFolderIds.push(data.folderId)
+      
+      // Show success message in chat
+      chatHistory.value.push({
+        role: 'assistant',
+        content: `✓ Files uploaded! I'll analyze these ${data.files?.length || 0} file(s) as I generate your brief.`,
+      })
+    }
+  } catch (error) {
+    console.error('Error uploading files:', error)
+    chatHistory.value.push({
+      role: 'assistant',
+      content: `Error uploading files: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    })
+  } finally {
+    isGenerating.value = false
+  }
 }
 
 const viewBrief = (brief: any) => {
