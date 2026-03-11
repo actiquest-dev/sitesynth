@@ -33,9 +33,9 @@
       </div>
 
       <!-- Login Card -->
-      <div class="bg-[#1a1a1a] border border-[#333] rounded-lg p-8 md:p-12 mb-8">
+      <div class="bg-[#1a1a1a] border border-[#333] rounded-none p-8 md:p-12 mb-8">
         <!-- Error Message -->
-        <div v-if="errorMessage" class="mb-6 p-4 bg-[#AA3733]/20 border border-[#AA3733] rounded-lg">
+        <div v-if="errorMessage" class="mb-6 p-4 bg-[#AA3733]/20 border border-[#AA3733] rounded-none">
           <p class="text-[#AA3733] text-sm">{{ errorMessage }}</p>
         </div>
 
@@ -62,14 +62,14 @@
               v-model="emailInput"
               type="email"
               placeholder="your@email.com"
-              class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-lg text-white placeholder-[#555] focus:border-[#8D35FF] focus:outline-none transition"
+              class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-none text-white placeholder-[#555] focus:border-[#8D35FF] focus:outline-none transition"
             />
           </div>
 
           <button
             @click="handleEmailLogin"
             :disabled="isLoading || !emailInput"
-            class="w-full px-6 py-3 bg-[#8D35FF] text-white rounded-lg font-semibold hover:bg-[#7B2EF0] transition disabled:opacity-50 disabled:cursor-not-allowed"
+            class="w-full px-6 py-3 bg-[#8D35FF] text-white rounded-none font-semibold hover:bg-[#7B2EF0] transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {{ isLoading ? 'Accessing...' : 'Access Your Account' }}
           </button>
