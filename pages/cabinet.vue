@@ -885,7 +885,6 @@ const userFiles = ref<any[]>([])
 const uploading = ref(false)
 const uploadProgress = ref(0)
 const selectedBriefId = ref<string | null>(null)
-const additionalFileInput = ref<HTMLInputElement | null>(null)
 const filterAgent = ref('')
 
 // ── Computed ──
