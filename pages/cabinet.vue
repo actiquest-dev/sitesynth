@@ -154,62 +154,120 @@
           </div>
 
           <!-- BRIEFS TAB -->
-          <div v-if="activeTab === 'briefs'" class="mx-auto w-full max-w-[1240px] px-6 py-8">
-            <div class="flex items-center justify-between mb-6">
-              <div>
-                <h2 class="text-xl font-semibold text-white mb-1">Briefs</h2>
-                <p class="text-sm text-[#666]">{{ briefs.length }} brief{{ briefs.length !== 1 ? 's' : '' }}</p>
-              </div>
-              <button
-                @click="openBriefWizard"
-                class="inline-flex h-10 items-center gap-2 px-4 bg-[#8D35FF] text-white rounded-none text-sm font-medium hover:bg-[#7B2AE8] transition-colors"
-              >
-                <Icon name="plus" size="16" />
-                Create New Brief
-              </button>
-            </div>
-
-            <!-- Briefs Grid -->
-            <div v-if="briefs.length === 0" class="border border-[#333] rounded-none bg-[#1a1a1a]">
-              <div class="py-16 text-center px-6">
-                <Icon name="briefcase" size="32" class="mx-auto mb-4 text-[#444]" />
-                <p class="text-sm text-white font-medium mb-1">No briefs yet</p>
-                <p class="text-xs text-[#666] mb-5">Create your first brief to get started</p>
+          <div v-if="activeTab === 'briefs'" class="mx-auto w-full h-full px-6 py-8 flex flex-col">
+            <!-- Briefs List View -->
+            <div v-if="!selectedBrief" class="flex-1 overflow-y-auto">
+              <div class="flex items-center justify-between mb-6">
+                <div>
+                  <h2 class="text-xl font-semibold text-white mb-1">Briefs</h2>
+                  <p class="text-sm text-[#666]">{{ briefs.length }} brief{{ briefs.length !== 1 ? 's' : '' }}</p>
+                </div>
                 <button
                   @click="openBriefWizard"
-                  class="inline-flex h-10 items-center gap-2 px-4 bg-white text-[#161616] rounded-none text-sm font-medium hover:bg-[#E7E7E7] transition-colors"
+                  class="inline-flex h-10 items-center gap-2 px-4 bg-[#8D35FF] text-white rounded-none text-sm font-medium hover:bg-[#7B2AE8] transition-colors"
                 >
                   <Icon name="plus" size="16" />
-                  Create Brief
+                  Create New Brief
                 </button>
+              </div>
+
+              <!-- Briefs Grid -->
+              <div v-if="briefs.length === 0" class="border border-[#333] rounded-none bg-[#1a1a1a]">
+                <div class="py-16 text-center px-6">
+                  <Icon name="briefcase" size="32" class="mx-auto mb-4 text-[#444]" />
+                  <p class="text-sm text-white font-medium mb-1">No briefs yet</p>
+                  <p class="text-xs text-[#666] mb-5">Create your first brief to get started</p>
+                  <button
+                    @click="openBriefWizard"
+                    class="inline-flex h-10 items-center gap-2 px-4 bg-white text-[#161616] rounded-none text-sm font-medium hover:bg-[#E7E7E7] transition-colors"
+                  >
+                    <Icon name="plus" size="16" />
+                    Create Brief
+                  </button>
+                </div>
+              </div>
+
+              <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div
+                  v-for="brief in briefs"
+                  :key="brief.id"
+                  @click="selectedBrief = brief"
+                  class="border border-[#333] rounded-none p-5 bg-[#1a1a1a] hover:border-[#8D35FF] transition-colors cursor-pointer"
+                >
+                  <div class="flex items-start justify-between mb-3">
+                    <h3 class="text-sm font-medium text-white flex-1">{{ brief.brief_data?.projectName || 'Untitled' }}</h3>
+                    <span :class="['inline-block px-2 py-0.5 rounded-none text-xs font-medium ml-2 flex-shrink-0',
+                      brief.status === 'approved' ? 'bg-green-500/10 text-green-400' : 'bg-yellow-500/10 text-yellow-400'
+                    ]">{{ brief.status || 'draft' }}</span>
+                  </div>
+                  <p class="text-xs text-[#666]">{{ formatDate(brief.createdAt || new Date().toISOString()) }}</p>
+                </div>
               </div>
             </div>
 
-            <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div
-                v-for="brief in briefs"
-                :key="brief.id"
-                class="border border-[#333] rounded-none p-5 bg-[#1a1a1a] hover:border-[#555] transition-colors"
-              >
-                <div class="flex items-start justify-between mb-3">
-                  <h3 class="text-sm font-medium text-white flex-1">{{ brief.brief_data?.projectName || 'Untitled' }}</h3>
-                  <span :class="['inline-block px-2 py-0.5 rounded-none text-xs font-medium ml-2 flex-shrink-0',
-                    brief.status === 'approved' ? 'bg-green-500/10 text-green-400' : 'bg-yellow-500/10 text-yellow-400'
-                  ]">{{ brief.status || 'draft' }}</span>
-                </div>
-                <p class="text-xs text-[#666] mb-4">{{ formatDate(brief.createdAt || new Date().toISOString()) }}</p>
-                <div class="flex gap-2">
+            <!-- Brief View with Chat -->
+            <div v-else class="flex-1 flex gap-6 overflow-hidden">
+              <!-- Left: Brief Content -->
+              <div class="flex-1 flex flex-col border border-[#333] rounded-none bg-[#0f0f0f] overflow-hidden">
+                <div class="px-6 py-4 border-b border-[#333] flex items-center justify-between flex-shrink-0">
+                  <div>
+                    <h3 class="text-lg font-semibold text-white">{{ selectedBrief.brief_data?.projectName || 'Untitled' }}</h3>
+                    <p class="text-xs text-[#666] mt-1">{{ formatDate(selectedBrief.createdAt) }}</p>
+                  </div>
                   <button
-                    @click="viewBrief(brief)"
-                    class="flex-1 px-3 py-2 border border-[#333] text-[#888] hover:text-white rounded-none text-xs transition-colors"
+                    @click="selectedBrief = null; briefChatHistory = []"
+                    class="p-1.5 text-[#888] hover:text-white rounded-none transition-colors"
                   >
-                    View
+                    <Icon name="arrow-left" size="20" />
                   </button>
+                </div>
+                <div class="flex-1 overflow-y-auto px-6 py-6 bg-[#161616]">
+                  <div class="prose prose-invert max-w-none text-sm text-[#ccc] leading-relaxed">
+                    <div v-html="markdownToHtml(selectedBrief.content || '')" class="space-y-4"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right: Chat Editor -->
+              <div class="w-80 flex flex-col border border-[#333] rounded-none bg-[#0f0f0f] overflow-hidden flex-shrink-0">
+                <div class="px-4 py-3 border-b border-[#333] flex-shrink-0 bg-gradient-to-r from-[#8D35FF]/20 to-transparent">
+                  <p class="text-sm font-semibold text-white">✨ AI Editor</p>
+                  <p class="text-xs text-[#999] mt-1">Describe changes to your brief</p>
+                </div>
+                
+                <!-- Chat History -->
+                <div class="flex-1 overflow-y-auto px-4 py-4 space-y-3">
+                  <!-- Welcome Message if empty -->
+                  <div v-if="briefChatHistory.length === 0" class="p-4 bg-[#8D35FF]/10 border border-[#8D35FF]/30 rounded-none text-sm text-[#8D35FF]">
+                    <p class="font-medium mb-2">Welcome! 👋</p>
+                    <p class="text-xs text-[#999]">Ask me to refine, expand, or modify any part of your brief. I'll help you make it perfect!</p>
+                  </div>
+                  
+                  <div v-for="(msg, idx) in briefChatHistory" :key="idx" :class="[
+                    'p-3 rounded-none text-sm',
+                    msg.role === 'assistant' ? 'bg-[#1a1a1a] border border-[#333] text-[#999]' : 'bg-[#8D35FF]/20 text-[#8D35FF]'
+                  ]">
+                    {{ msg.content }}
+                  </div>
+                  <div v-if="isGenerating" class="flex items-center justify-center py-3">
+                    <div class="w-2 h-2 bg-[#8D35FF] rounded-full animate-pulse"></div>
+                  </div>
+                </div>
+
+                <!-- Input -->
+                <div class="px-4 py-3 border-t border-[#333] flex-shrink-0 space-y-2">
+                  <textarea
+                    v-model="briefQuestion"
+                    @keyup.ctrl.enter="askBriefQuestion"
+                    placeholder="Ask for changes..."
+                    class="w-full px-3 py-2 bg-[#1a1a1a] border border-[#333] rounded-none text-white placeholder-[#555] text-xs focus:border-[#8D35FF] focus:outline-none transition h-16 resize-none"
+                  ></textarea>
                   <button
-                    @click="deleteBrief(brief)"
-                    class="flex-1 px-3 py-2 border border-[#333] text-[#888] hover:text-red-400 rounded-none text-xs transition-colors"
+                    @click="askBriefQuestion"
+                    :disabled="isGenerating || !briefQuestion.trim()"
+                    class="w-full px-3 py-2 bg-[#8D35FF] text-white rounded-none text-xs font-medium hover:bg-[#7B2AE8] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
-                    Delete
+                    Send (Ctrl+Enter)
                   </button>
                 </div>
               </div>
@@ -884,7 +942,7 @@ const fileInput = ref<HTMLInputElement | null>(null)
 const userFiles = ref<any[]>([])
 const uploading = ref(false)
 const uploadProgress = ref(0)
-const selectedBriefId = ref<string | null>(null)
+const selectedBrief = ref<any>(null)
 const filterAgent = ref('')
 
 // ── Computed ──
@@ -948,13 +1006,15 @@ const getFileIcon = (fileName: string): string => {
 
 const markdownToHtml = (markdown: string): string => {
   let html = markdown
-    .replace(/^### (.*?)$/gm, '<h3 class="text-lg font-bold mt-4 mb-2">$1</h3>')
-    .replace(/^## (.*?)$/gm, '<h2 class="text-xl font-bold mt-6 mb-3">$1</h2>')
-    .replace(/^# (.*?)$/gm, '<h1 class="text-2xl font-bold mt-8 mb-4">$1</h1>')
-    .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold">$1</strong>')
-    .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
-    .replace(/^- (.*?)$/gm, '<li class="ml-4">$1</li>')
-    .replace(/\n\n/g, '</p><p>')
+    .replace(/^# (.*?)$/gm, '<h1 class="text-2xl font-bold text-white mt-8 mb-4 pb-2 border-b border-[#333]">$1</h1>')
+    .replace(/^## (.*?)$/gm, '<h2 class="text-xl font-bold text-[#8D35FF] mt-6 mb-3">$1</h2>')
+    .replace(/^### (.*?)$/gm, '<h3 class="text-lg font-semibold text-white mt-4 mb-2">$1</h3>')
+    .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-white">$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em class="italic text-[#bbb]">$1</em>')
+    .replace(/^- (.*?)$/gm, '<li class="ml-6 my-1">$1</li>')
+    .replace(/(<li>.*<\/li>)/s, '<ul class="my-3 space-y-1">$1</ul>')
+    .replace(/\n\n+/g, '<br class="my-4">')
+    .replace(/\n/g, '<br>')
   return html
 }
 
@@ -1208,13 +1268,12 @@ const saveBrief = () => {
   alert(`✓ Brief "${briefName.value}" saved successfully!`)
 }
 
-const viewBrief = (brief: any) => {
-  selectedBriefId.value = brief.id
-}
-
 const deleteBrief = async (brief: any) => {
   if (confirm('Delete this brief?')) {
     briefs.value = briefs.value.filter(b => b.id !== brief.id)
+    if (selectedBrief.value?.id === brief.id) {
+      selectedBrief.value = null
+    }
   }
 }
 
