@@ -5,7 +5,14 @@
     :class="backgroundPosition"
     :style="backgroundImageStyle"
   >
-    <component :is="selectedGlowEffect" />
+    <component
+      :is="selectedGlowEffect"
+      :class="[
+        subtlePointerGlow ? 'hero-pointer-glow' : '',
+        subtlePointerGlow && glowEffect === 'GlowRed' ? 'hero-pointer-glow-red' : '',
+        subtlePointerGlow && glowEffect !== 'GlowRed' ? 'hero-pointer-glow-violet' : '',
+      ]"
+    />
     <ParticleEffect :variant="particleVariant" />
 
     <div
@@ -85,6 +92,10 @@ const props = defineProps({
     type: String,
     default: "violet",
   },
+  subtlePointerGlow: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // Background image style
@@ -136,3 +147,29 @@ const getElementMargin = (customMargin) => {
   return customMargin || "mb-8";
 };
 </script>
+
+<style scoped>
+:deep(.hero-pointer-glow.hero-pointer-glow-violet.glow) {
+  background: radial-gradient(
+    320px 320px at var(--pos, 50% 50%),
+    rgba(141, 53, 255, 0.11) 0%,
+    rgba(141, 53, 255, 0.08) 34%,
+    rgba(141, 53, 255, 0.04) 60%,
+    rgba(141, 53, 255, 0.015) 78%,
+    transparent 100%
+  ) !important;
+  filter: blur(20px) !important;
+}
+
+:deep(.hero-pointer-glow.hero-pointer-glow-red.glow) {
+  background: radial-gradient(
+    300px 300px at var(--pos, 50% 50%),
+    rgba(170, 55, 51, 0.14) 0%,
+    rgba(170, 55, 51, 0.1) 34%,
+    rgba(170, 55, 51, 0.05) 60%,
+    rgba(170, 55, 51, 0.02) 78%,
+    transparent 100%
+  ) !important;
+  filter: blur(18px) !important;
+}
+</style>

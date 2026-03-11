@@ -79,5 +79,55 @@ export default defineEventHandler(async (event) => {
     }
   }
 
+  // DELETE /api/chat/conversations - Delete conversation
+  if (method === 'DELETE') {
+    const userEmail = getHeader(event, 'x-user-email')
+    const body = await readBody(event)
+    const conversationId = body?.conversationId || body?.conversation_id
+
+    if (!userEmail) {
+      return createError({ statusCode: 401, statusMessage: 'User email required' })
+    }
+
+    if (!conversationId) {
+      return createError({ statusCode: 400, statusMessage: 'Conversation ID required' })
+    }
+
+    const { data: existing, error: checkError } = await supabase
+      .from('conversations')
+      .select('id')
+      .eq('id', conversationId)
+      .eq('user_email', userEmail)
+      .single()
+
+    if (checkError || !existing) {
+      return createError({ statusCode: 404, statusMessage: 'Conversation not found' })
+    }
+
+    const { error: deleteMessagesError } = await supabase
+      .from('messages')
+      .delete()
+      .eq('conversation_id', conversationId)
+
+    if (deleteMessagesError) {
+      return createError({ statusCode: 500, statusMessage: deleteMessagesError.message })
+    }
+
+    const { error: deleteConversationError } = await supabase
+      .from('conversations')
+      .delete()
+      .eq('id', conversationId)
+      .eq('user_email', userEmail)
+
+    if (deleteConversationError) {
+      return createError({ statusCode: 500, statusMessage: deleteConversationError.message })
+    }
+
+    return {
+      status: 'success',
+      message: 'Conversation deleted',
+    }
+  }
+
   return createError({ statusCode: 405, statusMessage: 'Method not allowed' })
 })

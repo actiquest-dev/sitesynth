@@ -5,6 +5,7 @@
   />
   <HeroGeneric
     glowEffect="GlowRed"
+    :subtlePointerGlow="true"
     particleVariant="red"
     backgroundImage=""
     backgroundPosition="bg-right-bottom"

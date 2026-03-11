@@ -1,5 +1,17 @@
 <style scoped>
 
+:deep(.hero-pointer-glow-violet.glow) {
+  background: radial-gradient(
+    320px 320px at var(--pos, 50% 50%),
+    rgba(141, 53, 255, 0.11) 0%,
+    rgba(141, 53, 255, 0.08) 34%,
+    rgba(141, 53, 255, 0.04) 60%,
+    rgba(141, 53, 255, 0.015) 78%,
+    transparent 100%
+  ) !important;
+  filter: blur(20px) !important;
+}
+
 /* Glow текст — всегда светится слегка */
 h1 :deep(.glow-text) {
   display: inline-block;
@@ -38,7 +50,7 @@ h1 :deep(.glow-text) {
     :style="backgroundStyle"
   >
     <!-- Glow / Particles -->
-    <GlowEffect />
+    <GlowEffect class="hero-pointer-glow-violet" />
     <ParticleEffect />
 
     <!-- Content -->
@@ -88,4 +100,3 @@ const backgroundStyle = computed(() => {
   };
 });
 </script>
-

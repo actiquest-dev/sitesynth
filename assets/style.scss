@@ -91,13 +91,16 @@ p,
 li,
 ul,
 ol,
-a,
 button,
 input,
 select,
 textarea,
 label {
   font-family: var(--font-body);
+}
+
+a {
+  font-family: Inter, sans-serif;
 }
 
 button,

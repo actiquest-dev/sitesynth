@@ -36,7 +36,7 @@
       <!-- User -->
       <div class="px-3 py-4 border-t border-[#333]">
         <div class="flex items-center gap-3 px-3 py-2 mb-1">
-          <div class="w-7 h-7 rounded-none bg-[#8D35FF]/20 flex items-center justify-center text-xs font-medium text-[#8D35FF] flex-shrink-0">
+          <div class="w-7 h-7 rounded-full bg-[#8D35FF]/20 flex items-center justify-center text-xs font-medium text-[#8D35FF] flex-shrink-0">
             {{ userInitial }}
           </div>
           <div class="min-w-0 flex-1">
@@ -66,7 +66,7 @@
         </div>
         <div class="flex items-center gap-2.5">
           <span class="text-xs text-[#555] hidden sm:block">{{ userEmail }}</span>
-          <div class="w-7 h-7 rounded-none bg-[#8D35FF]/20 flex items-center justify-center text-xs font-medium text-[#8D35FF]">
+          <div class="w-7 h-7 rounded-full bg-[#8D35FF]/20 flex items-center justify-center text-xs font-medium text-[#8D35FF]">
             {{ userInitial }}
           </div>
         </div>
@@ -386,20 +386,32 @@
                 <div v-if="conversationLoading" class="px-4 py-6 text-sm text-[#666]">Loading chats...</div>
                 <div v-else-if="conversations.length === 0" class="px-4 py-6 text-sm text-[#666]">No chats yet</div>
                 <div v-else class="max-h-[620px] overflow-y-auto">
-                  <button
+                  <div
                     v-for="conversation in conversations"
                     :key="conversation.id"
-                    @click="selectConversation(conversation.id)"
                     :class="[
-                      'w-full text-left px-4 py-3 border-b border-[#333] transition-colors',
+                      'group flex items-start gap-2 px-2 py-2 border-b border-[#333] transition-colors',
                       selectedConversationId === conversation.id
                         ? 'bg-white/5'
                         : 'hover:bg-white/5'
                     ]"
                   >
-                    <p class="text-sm text-white truncate">{{ conversation.title || 'Untitled Chat' }}</p>
-                    <p class="text-xs text-[#666] mt-1">{{ chatTime(conversation.updated_at || conversation.created_at) }}</p>
-                  </button>
+                    <button
+                      @click="selectConversation(conversation.id)"
+                      class="flex-1 text-left px-2 py-1"
+                    >
+                      <p class="text-sm text-white truncate">{{ conversation.title || 'Untitled Chat' }}</p>
+                      <p class="text-xs text-[#666] mt-1">{{ chatTime(conversation.updated_at || conversation.created_at) }}</p>
+                    </button>
+                    <button
+                      @click="deleteConversation(conversation.id)"
+                      class="self-center flex-shrink-0 p-1.5 text-[#666] hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
+                      title="Delete chat"
+                      aria-label="Delete chat"
+                    >
+                      <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path :d="iconPaths.trash" /></svg>
+                    </button>
+                  </div>
                 </div>
               </aside>
 
@@ -422,7 +434,7 @@
                       :class="[
                         'max-w-[78%] px-3 py-2 text-sm whitespace-pre-wrap break-words',
                         message.role === 'user'
-                          ? 'bg-[#8D35FF] text-white'
+                          ? 'bg-white/5 text-[#D4D4D8] border border-[#333]'
                           : 'bg-[#151515] text-[#D4D4D8] border border-[#333]'
                       ]"
                     >
@@ -472,7 +484,7 @@
                 </div>
                 <div class="px-5 py-4 flex items-center justify-between">
                   <p class="text-sm text-[#888]">{{ userEmail }}</p>
-                  <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-none bg-green-500/10 text-green-400 text-xs">
+                  <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-green-500/10 text-green-400 text-xs">
                     <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span>
                     Verified
                   </span>
@@ -892,6 +904,49 @@ const createNewConversation = async () => {
     }
   } catch (error: any) {
     chatError.value = error.message || 'Failed to create chat'
+  } finally {
+    conversationLoading.value = false
+  }
+}
+
+const deleteConversation = async (conversationId: string) => {
+  if (!conversationId) return
+  const confirmed = confirm('Delete this chat? This action cannot be undone.')
+  if (!confirmed) return
+
+  conversationLoading.value = true
+  chatError.value = ''
+  try {
+    const response = await fetch('/api/chat/conversations', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-user-email': getChatUserEmail(),
+      },
+      body: JSON.stringify({ conversationId }),
+    })
+
+    const result = await response.json().catch(() => ({}))
+    if (!response.ok) {
+      throw new Error(result?.statusMessage || result?.error || 'Failed to delete chat')
+    }
+
+    const previousSelectedId = selectedConversationId.value
+    conversations.value = conversations.value.filter((c) => c.id !== conversationId)
+
+    if (conversations.value.length === 0) {
+      selectedConversationId.value = null
+      chatMessages.value = []
+      await createNewConversation()
+      return
+    }
+
+    if (previousSelectedId === conversationId) {
+      selectedConversationId.value = conversations.value[0].id
+      await loadConversationMessages(conversations.value[0].id)
+    }
+  } catch (error: any) {
+    chatError.value = error.message || 'Failed to delete chat'
   } finally {
     conversationLoading.value = false
   }

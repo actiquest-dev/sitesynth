@@ -47,15 +47,16 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .glow {
-  background: radial-gradient(circle at var(--pos, 50% 50%),
-      var(--glow-c1, rgba(168, 102, 255, 0.22)) 0%,
-      var(--glow-c2, rgba(168, 102, 255, 0.16)) 12%,
-      var(--glow-c3, rgba(141, 53, 255, 0.14)) 30%,
-      var(--glow-c4, rgba(141, 53, 255, 0.08)) 45%,
-      transparent 65%);
-  mask-image: radial-gradient(circle at var(--pos, 50% 50%), rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.45) 26%, transparent 58%);
-  -webkit-mask-image: radial-gradient(circle at var(--pos, 50% 50%), rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.45) 26%, transparent 58%);
-  filter: blur(44px);
+  background: radial-gradient(
+    360px 360px at var(--pos, 50% 50%),
+    rgba(141, 53, 255, 0.13) 0%,
+    rgba(141, 53, 255, 0.09) 34%,
+    rgba(141, 53, 255, 0.045) 58%,
+    rgba(141, 53, 255, 0.018) 76%,
+    transparent 100%
+  );
+  filter: blur(22px);
+  will-change: transform, opacity;
   transition: opacity 0.4s ease;
 }
 
