@@ -348,7 +348,7 @@ const navItems = [
   { label: "Careers", link: "/careers" },
 ]
 
-const cta = { text: "Get started", link: "/contact-us" }
+const cta = { text: "Get started", link: "/pricing" }
 
 const socials = [
   {
