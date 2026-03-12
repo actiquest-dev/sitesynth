@@ -1,7 +1,7 @@
 <template>
   <Analytics />
   <NuxtPage />
-  <ClientOnly v-if="!isCabinetRoute">
+  <ClientOnly>
     <AIChatButton :open="isChatOpen" @update:open="isChatOpen = $event" />
     <AIChatDrawer
       :isOpen="isChatOpen"

@@ -361,114 +361,6 @@
             </div>
           </div>
 
-          <!-- ── CHAT ── -->
-          <div v-if="activeTab === 'chat'" class="mx-auto w-full max-w-[1240px] px-6 py-8">
-            <div class="flex items-center justify-between mb-6">
-              <div>
-                <h2 class="text-xl font-semibold text-white mb-1">AI Chat</h2>
-                <p class="text-sm text-[#666]">Continue previous conversations or start a new one</p>
-              </div>
-              <button
-                @click="createNewConversation"
-                :disabled="conversationLoading"
-                class="inline-flex h-10 items-center gap-2 px-4 bg-[#8D35FF] text-white rounded-none text-sm font-medium hover:bg-[#7B2AE8] disabled:opacity-50 transition-colors"
-              >
-                <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path :d="iconPaths.plus" /></svg>
-                New Chat
-              </button>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-4">
-              <aside class="border border-[#333] bg-[#1a1a1a]">
-                <div class="px-4 py-3 border-b border-[#333] text-xs uppercase tracking-wider text-[#666]">
-                  Conversations
-                </div>
-                <div v-if="conversationLoading" class="px-4 py-6 text-sm text-[#666]">Loading chats...</div>
-                <div v-else-if="conversations.length === 0" class="px-4 py-6 text-sm text-[#666]">No chats yet</div>
-                <div v-else class="max-h-[620px] overflow-y-auto">
-                  <div
-                    v-for="conversation in conversations"
-                    :key="conversation.id"
-                    :class="[
-                      'group flex items-start gap-2 px-2 py-2 border-b border-[#333] transition-colors',
-                      selectedConversationId === conversation.id
-                        ? 'bg-white/5'
-                        : 'hover:bg-white/5'
-                    ]"
-                  >
-                    <button
-                      @click="selectConversation(conversation.id)"
-                      class="flex-1 text-left px-2 py-1"
-                    >
-                      <p class="text-sm text-white truncate">{{ conversation.title || 'Untitled Chat' }}</p>
-                      <p class="text-xs text-[#666] mt-1">{{ chatTime(conversation.updated_at || conversation.created_at) }}</p>
-                    </button>
-                    <button
-                      @click="deleteConversation(conversation.id)"
-                      class="self-center flex-shrink-0 p-1.5 text-[#666] hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
-                      title="Delete chat"
-                      aria-label="Delete chat"
-                    >
-                      <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path :d="iconPaths.trash" /></svg>
-                    </button>
-                  </div>
-                </div>
-              </aside>
-
-              <section class="border border-[#333] bg-[#1a1a1a] flex flex-col min-h-[620px]">
-                <div class="px-4 py-3 border-b border-[#333]">
-                  <p class="text-sm text-white font-medium truncate">{{ selectedConversation?.title || 'Conversation' }}</p>
-                </div>
-
-                <div ref="chatMessagesContainer" class="flex-1 overflow-y-auto p-4 space-y-3">
-                  <div v-if="chatMessages.length === 0 && !chatLoading" class="h-full min-h-[260px] flex items-center justify-center text-sm text-[#666]">
-                    Start a new message to begin this conversation
-                  </div>
-
-                  <div
-                    v-for="message in chatMessages"
-                    :key="message.id"
-                    :class="['flex', message.role === 'user' ? 'justify-end' : 'justify-start']"
-                  >
-                    <div
-                      :class="[
-                        'max-w-[78%] px-3 py-2 text-sm whitespace-pre-wrap break-words',
-                        message.role === 'user'
-                          ? 'bg-white/5 text-[#D4D4D8] border border-[#333]'
-                          : 'bg-[#151515] text-[#D4D4D8] border border-[#333]'
-                      ]"
-                    >
-                      <p>{{ message.content }}</p>
-                      <p class="mt-1 text-[11px] opacity-70">{{ chatTime(message.created_at) }}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div v-if="chatError" class="px-4 pb-2 text-xs text-red-400">{{ chatError }}</div>
-
-                <div class="p-4 border-t border-[#333]">
-                  <div class="flex gap-2">
-                    <input
-                      v-model="chatInput"
-                      @keyup.enter="sendChatMessage"
-                      type="text"
-                      placeholder="Type your message..."
-                      class="flex-1 h-10 px-3 bg-[#121212] border border-[#333] text-white text-sm focus:outline-none focus:border-[#8D35FF]"
-                      :disabled="chatLoading || !selectedConversationId"
-                    />
-                    <button
-                      @click="sendChatMessage"
-                      :disabled="chatLoading || !chatInput.trim() || !selectedConversationId"
-                      class="h-10 px-4 bg-[#8D35FF] text-white text-sm font-medium hover:bg-[#7B2AE8] disabled:opacity-50 transition-colors"
-                    >
-                      Send
-                    </button>
-                  </div>
-                </div>
-              </section>
-            </div>
-          </div>
-
           <!-- ── SETTINGS ── -->
           <div v-if="activeTab === 'settings'" class="mx-auto w-full max-w-[920px] px-6 py-8">
             <div class="mb-6">
@@ -647,7 +539,6 @@ const statusBadgeInfo = (status: string) => ({
 // ── Tabs ──
 const tabs = [
   { id: 'overview',  label: 'Overview',  icon: 'home' },
-  { id: 'chat',      label: 'Chat',      icon: 'chat' },
   { id: 'orders',    label: 'Orders',    icon: 'package' },
   { id: 'projects',  label: 'Projects',  icon: 'folder' },
   { id: 'files',     label: 'Files',     icon: 'file' },
@@ -769,7 +660,7 @@ onMounted(async () => {
   }
 
   const authToken = token || storedToken
-  if (!authToken) { await Promise.all([loadUserFiles(), loadConversations()]); return }
+  if (!authToken) { await loadUserFiles(); return }
 
   try {
     const ordersRes = await fetch('/api/orders', { headers: { 'Authorization': `Bearer ${authToken}`, 'Content-Type': 'application/json' } })
@@ -782,7 +673,7 @@ onMounted(async () => {
     stats.value.totalProjects = projects.value.length
     stats.value.totalSpent = orders.value.reduce((s: number, o: any) => s + (o.amount || 0), 0)
     stats.value.activeWebsites = projects.value.filter((p: any) => p.status === 'in_progress').length
-    await Promise.all([loadUserFiles(), loadConversations()])
+    await loadUserFiles()
   } catch (e) { console.error(e) }
 })
 
