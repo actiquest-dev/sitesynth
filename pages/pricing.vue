@@ -224,7 +224,7 @@ const pricingCards = [
     ],
     cta: {
       text: "Get Started",
-      href: "/intake",
+      href: "/intake/starter",
       className:
         "bg-[#8D35FF] text-white hover:bg-[#7B2EF0] group-hover:shadow-lg group-hover:shadow-[#8D35FF]/50",
     },
@@ -244,7 +244,7 @@ const pricingCards = [
     ],
     cta: {
       text: "Get Started",
-      href: "/intake",
+      href: "/intake/growth",
       className:
         "bg-[#8D35FF] text-white hover:bg-[#7B2EF0] group-hover:shadow-lg group-hover:shadow-[#8D35FF]/50",
     },
@@ -265,7 +265,7 @@ const pricingCards = [
     ],
     cta: {
       text: "Schedule a Call",
-      href: "/contact-us",
+      href: "/intake/enterprise",
       className:
         "bg-[#AA3733] text-white hover:bg-red-700 group-hover:shadow-lg group-hover:shadow-red-500/50",
     },
@@ -285,7 +285,7 @@ const pricingCards = [
     ],
     cta: {
       text: "Add to Plan",
-      href: "/intake",
+      href: "/addons",
       className:
         "border border-[#8D35FF] text-[#8D35FF] hover:bg-[#8D35FF] hover:text-white group-hover:shadow-lg group-hover:shadow-[#8D35FF]/50",
     },
