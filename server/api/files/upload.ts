@@ -54,10 +54,10 @@ export default defineEventHandler(async (event) => {
       })
 
     if (error) {
-      console.error('Supabase upload error:', error)
+      console.error('Supabase upload error:', JSON.stringify(error))
       throw createError({
         statusCode: 500,
-        statusMessage: 'File upload failed',
+        statusMessage: `File upload failed: ${error.message || 'Unknown error'}`,
       })
     }
 
@@ -76,8 +76,14 @@ export default defineEventHandler(async (event) => {
         uploadedAt: new Date().toISOString(),
       },
     }
-  } catch (error) {
-    console.error('Upload error:', error)
+  } catch (error: any) {
+    console.error('Upload error:', error?.message || String(error))
+    if (!error?.statusCode) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: error?.message || 'File upload failed',
+      })
+    }
     throw error
   }
 })
