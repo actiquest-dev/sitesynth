@@ -728,6 +728,8 @@ const brevityData = ref({ uploadedFileIds: [] as string[] })
 const currentQuestionIndex = ref(0)
 const chatDrawerOpen = ref(false)
 const chatConversationId = ref<string | null>(null)
+const wizardConversationId = ref<string | null>(null)
+const agentSuggestions = ref<Record<string, string>>({})
 
 // ── Brief Data ──
 const briefData = ref({
@@ -748,17 +750,29 @@ const briefData = ref({
 
 // ── Question Tree ──
 const questionTree = [
-  { id: 'Q2.1', stage: 2, text: 'What is your project called?', type: 'text_input', saveKey: 'projectName', hint: 'e.g., E-Commerce Redesign' },
-  { id: 'Q2.2', stage: 2, text: 'In one sentence, what are you building?', type: 'textarea', saveKey: 'projectDescription', hint: 'Brief description' },
+  { id: 'Q2.1', stage: 2, text: 'What is your project called?', type: 'text_input', saveKey: 'projectName', hint: 'e.g., E-Commerce Redesign, FinTech App' },
+  { id: 'Q2.2', stage: 2, text: 'In one sentence, what are you building?', type: 'textarea', saveKey: 'projectDescription', hint: 'Brief description of your project' },
   { id: 'Q2.3', stage: 2, text: 'What type of project is this?', type: 'single_select', options: [
-    { id: 'website', label: 'Website / Landing page' }, { id: 'mobile_app', label: 'Mobile Application' },
-    { id: 'web_app', label: 'Web Application / SaaS' }, { id: 'branding', label: 'Branding' }, { id: 'ecommerce', label: 'E-commerce' }
+    { id: 'website', label: 'Website / Landing page' },
+    { id: 'mobile_app', label: 'Mobile Application' },
+    { id: 'web_app', label: 'Web Application / SaaS' },
+    { id: 'branding', label: 'Branding / Brand Identity' },
+    { id: 'ecommerce', label: 'E-commerce Platform' }
   ], saveKey: 'projectCategory' },
-  { id: 'Q2.4', stage: 2, text: 'What is the primary goal?', type: 'text_input', saveKey: 'primaryGoal', hint: 'e.g., Increase conversion' },
-  { id: 'Q2.5', stage: 2, text: 'Who is your target audience?', type: 'text_input', saveKey: 'targetAudience', hint: 'e.g., Small business owners' },
-  { id: 'Q2.6', stage: 2, text: 'What problems need to be solved?', type: 'textarea', saveKey: 'painPoints', hint: 'List 2-3 main problems' },
-  { id: 'Q2.7', stage: 2, text: 'What is your timeline?', type: 'text_input', saveKey: 'timeline', hint: 'e.g., 3 months' },
-  { id: 'Q2.8', stage: 2, text: 'What is your budget?', type: 'text_input', saveKey: 'budget', hint: 'e.g., $5000-10000' },
+  { id: 'Q2.4', stage: 2, text: 'What is the primary goal of this project?', type: 'text_input', saveKey: 'primaryGoal', hint: 'e.g., Increase conversion, improve UX, launch product' },
+  { id: 'Q2.5', stage: 2, text: 'Who is your target audience?', type: 'text_input', saveKey: 'targetAudience', hint: 'e.g., Small business owners aged 25-45' },
+  { id: 'Q2.6', stage: 2, text: 'What problems need to be solved? (list them)', type: 'textarea', saveKey: 'painPoints', hint: 'List 2-3 main problems' },
+  { id: 'Q2.7', stage: 2, text: 'What is your timeline? (when do you need results)', type: 'text_input', saveKey: 'timeline', hint: 'e.g., 2 weeks, by April 15' },
+  { id: 'Q2.8', stage: 2, text: 'What is your budget?', type: 'single_select', options: [
+    { id: 'low', label: '$500-2000' },
+    { id: 'medium', label: '$2000-5000' },
+    { id: 'high', label: '$5000-15000' },
+    { id: 'premium', label: '$15000+' }
+  ], saveKey: 'budget' },
+  { id: 'Q3.1', stage: 3, text: 'What is the primary industry / sector?', type: 'text_input', saveKey: 'industry', hint: 'e.g., FinTech, SaaS, E-commerce, Healthcare' },
+  { id: 'Q3.2', stage: 3, text: 'What are the main colors in your brand palette?', type: 'textarea', saveKey: 'colorPalette', hint: 'e.g., Primary: #8D35FF, Secondary: #FF6B35' },
+  { id: 'Q4.1', stage: 3, text: 'What are the main deliverables needed?', type: 'textarea', saveKey: 'deliverables', hint: 'e.g., UI Design, Wireframes, Prototype, Code' },
+  { id: 'Q5.1', stage: 3, text: 'What are the technical requirements?', type: 'textarea', saveKey: 'technicalRequirements', hint: 'e.g., Responsive, SEO-optimized, WCAG 2.1 AA' },
 ]
 
 // ── Helpers ──
@@ -1096,7 +1110,7 @@ const sendChatMessage = async () => {
 }
 
 // ── Brief Wizard Functions ──
-const openBriefWizard = () => {
+const openBriefWizard = async () => {
   showBriefWizard.value = true
   wizardStage.value = 1
   wizardFiles.value = []
@@ -1107,6 +1121,31 @@ const openBriefWizard = () => {
   }
   brevityData.value.uploadedFileIds = []
   currentQuestionIndex.value = 0
+  agentSuggestions.value = {}
+
+  // Create conversation for Brief Discovery agent
+  try {
+    const convResponse = await fetch('/api/chat/conversations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-user-email': userEmail.value,
+      },
+      body: JSON.stringify({
+        agentType: 'briefing',
+        title: 'Brief Discovery',
+        stage: 'brief-discovery',
+      }),
+    })
+
+    if (convResponse.ok) {
+      const convData = await convResponse.json()
+      wizardConversationId.value = convData.data?.id
+      console.log('[Wizard] Created conversation:', wizardConversationId.value)
+    }
+  } catch (error) {
+    console.error('[Wizard] Error creating conversation:', error)
+  }
 }
 
 const handleWizardFileSelect = (event: Event) => {
@@ -1129,6 +1168,36 @@ const uploadWizardFiles = async () => {
     console.log('[Brief] Files uploaded:', brevityData.value.uploadedFileIds)
   } catch (error) {
     console.error('Error uploading files:', error)
+  }
+}
+
+const sendAnswerToAgent = async (questionId: string, answer: string) => {
+  if (!wizardConversationId.value) return
+
+  try {
+    const response = await fetch('/api/chat/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-user-email': userEmail.value,
+      },
+      body: JSON.stringify({
+        conversation_id: wizardConversationId.value,
+        message: `Question: ${questionId}\nAnswer: ${answer}\n\nPlease provide brief feedback or suggestion for this answer.`,
+        agent_type: 'briefing',
+        stage: 'brief-discovery',
+      }),
+    })
+
+    if (response.ok) {
+      const data = await response.json()
+      // Store agent suggestion for this question
+      if (data.data?.response) {
+        agentSuggestions.value[questionId] = data.data.response
+      }
+    }
+  } catch (error) {
+    console.error('[Wizard] Error sending answer to agent:', error)
   }
 }
 
