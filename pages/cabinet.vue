@@ -1151,12 +1151,19 @@ const generateBriefWithGemini = async () => {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ briefData: briefData.value, uploadedFiles: brevityData.value.uploadedFileIds })
     })
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`)
+    }
     const data = await response.json()
+    if (!data.success) {
+      throw new Error(data.error || 'Failed to generate brief')
+    }
     generatedBrief.value = data.content || ''
     wizardStage.value = 4
     chatDrawerOpen.value = true
   } catch (error) {
     console.error('Error generating brief:', error)
+    generatedBrief.value = `Error: ${error instanceof Error ? error.message : 'Unknown error'}`
   } finally {
     isGenerating.value = false
   }
