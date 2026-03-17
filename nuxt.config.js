@@ -93,34 +93,28 @@ export default defineNuxtConfig({
         { name: "theme-color", content: "#161616" },
       ],
       link: [
-        {
-          rel: "icon",
-          type: "image/png",
-          sizes: "96x96",
-          href: "https://www.sitesynth.com/favicon.png",
-        },
-        // Fallback (Google still checks this)
-        {
-          rel: "shortcut icon",
-          type: "image/x-icon",
-          href: "https://www.sitesynth.com/favicon.ico",
-        },
-        // Modern browsers - SVG favicon (scalable, preferred)
+        // Google/search icon
         {
           rel: "icon",
           type: "image/svg+xml",
-          href: "https://www.sitesynth.com/assets/favicon/favicon-new.svg",
+          href: "/favicongoogle.svg?v=20260317c",
         },
-        // Apple devices
+        // Main favicon (non-purple)
         {
-          rel: "apple-touch-icon",
-          sizes: "180x180",
-          href: "https://www.sitesynth.com/assets/favicon/apple-touch-icon.png",
+          rel: "icon",
+          type: "image/svg+xml",
+          href: "/favicon.svg?v=20260317c",
+        },
+        // Fallback
+        {
+          rel: "shortcut icon",
+          type: "image/svg+xml",
+          href: "/favicon.svg?v=20260317c",
         },
         // Web app manifest (contains PWA icons)
         {
           rel: "manifest",
-          href: "https://www.sitesynth.com/site.webmanifest",
+          href: "/site.webmanifest?v=20260317",
         },
       ],
     },
