@@ -1,6 +1,54 @@
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/generative-ai'
+import { google } from 'googleapis'
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || '')
+
+// Helper function to read file content from Google Drive
+async function readGoogleDriveFileContent(fileId: string): Promise<string> {
+  try {
+    const auth = new google.auth.GoogleAuth({
+      credentials: {
+        type: 'service_account',
+        project_id: 'sitesynth-llm',
+        private_key_id: 'key',
+        private_key: process.env.GOOGLE_DRIVE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+        client_email: process.env.GOOGLE_DRIVE_SERVICE_ACCOUNT_EMAIL,
+        client_id: '1234567890',
+        auth_uri: 'https://accounts.google.com/o/oauth2/auth',
+        token_uri: 'https://oauth2.googleapis.com/token',
+      },
+      scopes: ['https://www.googleapis.com/auth/drive.file'],
+    })
+
+    const driveClient = google.drive({
+      version: 'v3',
+      auth,
+    })
+
+    // Get file metadata
+    const metadata = await driveClient.files.get({
+      fileId,
+      fields: 'name, mimeType, size',
+    })
+
+    // Download file content
+    const file = await driveClient.files.get(
+      {
+        fileId,
+        alt: 'media',
+      },
+      { responseType: 'arraybuffer' }
+    )
+
+    const buffer = Buffer.from(file.data as ArrayBuffer)
+    const text = buffer.toString('utf-8').substring(0, 5000) // First 5KB
+
+    return `### File: ${metadata.data.name}\n\`\`\`\n${text}\n\`\`\``
+  } catch (error) {
+    console.error(`[Brief] Could not read file ${fileId}:`, error)
+    return `### File: [Unable to read]\n(File content could not be extracted)`
+  }
+}
 
 export default defineEventHandler(async (event) => {
   try {
@@ -41,10 +89,16 @@ BRIEF DATA:
 - Technical Requirements: ${briefData?.technicalRequirements?.join(', ') || 'Not provided'}
 `
 
-    // Note about uploaded files
-    const filesContext = uploadedFiles && uploadedFiles.length > 0
-      ? `\n\nIMPORTANT: The user has uploaded ${uploadedFiles.length} reference file(s) to inform this brief. Consider their content and context in your analysis.`
-      : ''
+    // Read file contents if provided
+    let filesContext = ''
+    if (uploadedFiles && uploadedFiles.length > 0) {
+      console.log(`[Brief] Reading ${uploadedFiles.length} file(s) from Google Drive...`)
+      const fileContents = await Promise.all(
+        uploadedFiles.map(fileId => readGoogleDriveFileContent(fileId))
+      )
+      filesContext = `\n\n## REFERENCE FILES\n${fileContents.join('\n\n')}`
+      console.log(`[Brief] Files read successfully`)
+    }
 
     const model = genAI.getGenerativeModel({
       model: 'gemini-2.0-flash',
