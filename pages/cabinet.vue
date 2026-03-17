@@ -829,7 +829,7 @@ onMounted(async () => {
       const d = await ordersRes.json()
       orders.value = (d.data || []).sort((a: any, b: any) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())
     }
-    const projRes = await fetch('/api/user/projects', { headers: { 'Authorization': `Bearer ${authToken}`, 'Content-Type': 'application/json' } })
+    const projRes = await fetch('/api/user/projects', { headers: { 'x-user-email': userEmail.value, 'Content-Type': 'application/json' } })
     if (projRes.ok) { const d = await projRes.json(); projects.value = d.data || [] }
     stats.value.totalProjects = projects.value.length
     stats.value.totalSpent = orders.value.reduce((s: number, o: any) => s + (o.amount || 0), 0)
