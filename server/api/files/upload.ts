@@ -46,6 +46,15 @@ export default defineEventHandler(async (event) => {
 
     const supabase = createClient(supabaseUrl, supabaseKey)
 
+    // Ensure bucket exists
+    try {
+      await supabase.storage.createBucket('brief-files', {
+        public: true,
+      })
+    } catch (e) {
+      // Bucket might already exist, ignore
+    }
+
     // Upload file to storage
     const { data, error } = await supabase.storage
       .from('brief-files')
