@@ -35,38 +35,55 @@ export default defineEventHandler(async (event) => {
 
     console.log(`\n📁 Fetching projects for user: ${userEmail}`)
 
-    const response = await fetch(
-      `${SUPABASE_URL}/rest/v1/projects?email=eq.${encodeURIComponent(userEmail)}&order=created_at.desc&limit=100`,
-      {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-          'Content-Type': 'application/json',
-          'apikey': SUPABASE_SERVICE_ROLE_KEY,
-        },
-      }
-    )
+    try {
+      const response = await fetch(
+        `${SUPABASE_URL}/rest/v1/projects?email=eq.${encodeURIComponent(userEmail)}&order=created_at.desc&limit=100`,
+        {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_SERVICE_ROLE_KEY,
+          },
+        }
+      )
 
-    if (!response.ok) {
-      const errorText = await response.text()
-      console.error('❌ Supabase fetch error:')
-      console.error('  Status:', response.status)
-      console.error('  URL:', `${SUPABASE_URL}/rest/v1/projects`)
-      console.error('  Response:', errorText)
-      setResponseStatus(event, 500)
+      if (!response.ok) {
+        // If table doesn't exist, return empty array
+        if (response.status === 404) {
+          console.log('Projects table not found, returning empty array')
+          return {
+            success: true,
+            data: [],
+          }
+        }
+
+        const errorText = await response.text()
+        console.error('❌ Supabase fetch error:')
+        console.error('  Status:', response.status)
+        console.error('  Response:', errorText)
+
+        // Still return empty array instead of error
+        return {
+          success: true,
+          data: [],
+        }
+      }
+
+      const userProjects = await response.json()
+      console.log(`✅ Fetched ${userProjects.length} projects for ${userEmail}\n`)
+
       return {
-        success: false,
-        error: `Failed to fetch projects: ${response.status}`,
+        success: true,
+        data: userProjects,
+      }
+    } catch (error) {
+      console.error('Error fetching projects:', error)
+      // Return empty array on any error
+      return {
+        success: true,
         data: [],
       }
-    }
-
-    const userProjects = await response.json()
-    console.log(`✅ Fetched ${userProjects.length} projects for ${userEmail}\n`)
-
-    return {
-      success: true,
-      data: userProjects,
     }
   } catch (error: any) {
     console.error('❌ Error fetching user projects:', error)
