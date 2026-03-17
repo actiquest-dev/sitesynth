@@ -81,12 +81,12 @@ BRIEF DATA:
 - Industry: ${briefData?.industry || 'Not provided'}
 - Primary Goal: ${briefData?.primaryGoal || 'Not provided'}
 - Target Audience: ${briefData?.targetAudience || 'Not provided'}
-- Pain Points: ${briefData?.painPoints?.join(', ') || 'Not provided'}
+- Pain Points: ${Array.isArray(briefData?.painPoints) ? briefData.painPoints.join(', ') : (briefData?.painPoints || 'Not provided')}
 - Color Palette: ${briefData?.colorPalette || 'Not provided'}
 - Timeline: ${briefData?.timeline || 'Not provided'}
 - Budget: ${briefData?.budget || 'Not provided'}
-- Deliverables: ${briefData?.deliverables?.join(', ') || 'Not provided'}
-- Technical Requirements: ${briefData?.technicalRequirements?.join(', ') || 'Not provided'}
+- Deliverables: ${Array.isArray(briefData?.deliverables) ? briefData.deliverables.join(', ') : (briefData?.deliverables || 'Not provided')}
+- Technical Requirements: ${Array.isArray(briefData?.technicalRequirements) ? briefData.technicalRequirements.join(', ') : (briefData?.technicalRequirements || 'Not provided')}
 `
 
     // Read file contents if provided

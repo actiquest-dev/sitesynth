@@ -540,34 +540,84 @@
 
             <!-- Stage 2: Questions -->
             <div v-if="wizardStage === 2" class="space-y-6">
-              <div v-if="currentQuestionIndex < questionTree.length">
-                <p class="text-white text-xs font-semibold mb-4">Question {{ currentQuestionIndex + 1 }} of {{ questionTree.length }}</p>
-                <h3 class="text-white font-semibold mb-4">{{ questionTree[currentQuestionIndex].text }}</h3>
+              <div>
+                <h3 class="text-xl font-bold text-white mb-2"><Icon name="comments" class="mr-2 inline" />Guided Conversation</h3>
+                <p class="text-[#999999] text-sm mb-6">
+                  Answer a few key questions about your project. The AI will extract important details to build your brief.
+                </p>
+                <div class="bg-[#0f0f0f] border border-[#333] rounded-lg p-3 mb-6">
+                  <p class="text-white text-xs font-semibold">Question {{ currentQuestionIndex + 1 }} of {{ questionTree.length }}</p>
+                </div>
+              </div>
+
+              <!-- Chat Messages -->
+              <div class="bg-[#0f0f0f] border border-[#333] rounded-lg p-6 max-h-80 overflow-y-auto space-y-4">
+                <div v-for="(msg, idx) in chatHistory" :key="idx" :class="[
+                  'p-4 rounded-lg',
+                  msg.role === 'assistant' ? 'bg-[#1a1a1a] border border-[#333]' : 'bg-[#8D35FF]/20 border border-[#8D35FF]/50'
+                ]">
+                  <p :class="msg.role === 'assistant' ? 'text-white' : 'text-[#8D35FF]'" class="text-sm flex items-center gap-2">
+                    <Icon :name="msg.role === 'assistant' ? 'wand-magic' : 'user'" size="16" />
+                    {{ msg.role === 'assistant' ? 'AI:' : 'You:' }}
+                  </p>
+                  <p class="text-[#999999] text-sm mt-1">{{ msg.content }}</p>
+                </div>
+              </div>
+
+              <!-- Current Question -->
+              <div v-if="questionTree[currentQuestionIndex]" class="bg-[#0f0f0f] border border-[#333] rounded-lg p-6 space-y-4">
+                <p class="text-white font-semibold">{{ questionTree[currentQuestionIndex].text }}</p>
 
                 <!-- Text Input -->
-                <input v-if="questionTree[currentQuestionIndex].type === 'text_input'"
-                  v-model="(briefData as any)[questionTree[currentQuestionIndex].saveKey]"
-                  :placeholder="questionTree[currentQuestionIndex].hint"
-                  @keyup.enter="currentQuestionIndex < questionTree.length - 1 ? currentQuestionIndex++ : null"
-                  class="w-full bg-[#0f0f0f] border border-[#333] rounded-none px-4 py-2 text-white placeholder-[#666] focus:outline-none focus:border-[#8D35FF]"
-                />
+                <div v-if="questionTree[currentQuestionIndex].type === 'text_input'" class="flex gap-3">
+                  <input
+                    v-model="userMessage"
+                    @keyup.enter="sendMessage"
+                    type="text"
+                    :placeholder="questionTree[currentQuestionIndex].hint || 'Your answer...'"
+                    class="flex-1 px-4 py-3 bg-[#1a1a1a] border border-[#333] rounded-lg text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none transition"
+                  />
+                  <button
+                    @click="sendMessage"
+                    class="px-6 py-3 bg-[#8D35FF] text-white rounded-lg font-semibold hover:bg-purple-700 transition"
+                  >
+                    Next
+                  </button>
+                </div>
+
                 <!-- Textarea -->
-                <textarea v-else-if="questionTree[currentQuestionIndex].type === 'textarea'"
-                  v-model="(briefData as any)[questionTree[currentQuestionIndex].saveKey]"
-                  :placeholder="questionTree[currentQuestionIndex].hint"
-                  rows="4"
-                  class="w-full bg-[#0f0f0f] border border-[#333] rounded-none px-4 py-2 text-white placeholder-[#666] focus:outline-none focus:border-[#8D35FF] resize-none"
-                />
-                <!-- Select -->
-                <select v-else-if="questionTree[currentQuestionIndex].type === 'single_select'"
-                  v-model="(briefData as any)[questionTree[currentQuestionIndex].saveKey]"
-                  class="w-full bg-[#0f0f0f] border border-[#333] rounded-none px-4 py-2 text-white focus:outline-none focus:border-[#8D35FF]"
-                >
-                  <option value="">Choose an option...</option>
-                  <option v-for="opt in questionTree[currentQuestionIndex].options" :key="opt.id" :value="opt.id">
-                    {{ opt.label }}
-                  </option>
-                </select>
+                <div v-else-if="questionTree[currentQuestionIndex].type === 'textarea'" class="flex flex-col gap-3">
+                  <textarea
+                    v-model="userMessage"
+                    @keyup.ctrl.enter="sendMessage"
+                    :placeholder="questionTree[currentQuestionIndex].hint || 'Your answer...'"
+                    class="w-full px-4 py-3 bg-[#1a1a1a] border border-[#333] rounded-lg text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none transition h-24 resize-none"
+                  ></textarea>
+                  <button
+                    @click="sendMessage"
+                    class="w-full px-6 py-3 bg-[#8D35FF] text-white rounded-lg font-semibold hover:bg-purple-700 transition"
+                  >
+                    Next (Ctrl+Enter)
+                  </button>
+                </div>
+
+                <!-- Single Select -->
+                <div v-else-if="questionTree[currentQuestionIndex].type === 'single_select'" class="flex flex-col gap-3">
+                  <div class="grid grid-cols-2 gap-2">
+                    <button
+                      v-for="option in questionTree[currentQuestionIndex].options"
+                      :key="option.id"
+                      @click="userMessage = option.label; sendMessage()"
+                      :class="{
+                        'bg-[#8D35FF] border-[#8D35FF] text-white': userMessage === option.label,
+                        'bg-[#1a1a1a] border-[#333] text-[#999999] hover:border-[#8D35FF] hover:text-white': userMessage !== option.label
+                      }"
+                      class="px-4 py-3 border rounded-lg font-semibold transition"
+                    >
+                      {{ option.label }}
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 
