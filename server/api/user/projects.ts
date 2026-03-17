@@ -7,39 +7,14 @@ import { defineEventHandler, setResponseStatus, getHeader } from 'h3'
  */
 export default defineEventHandler(async (event) => {
   try {
-    // Get auth token from Authorization header
-    const authHeader = getHeader(event, 'authorization')
-    const authToken = authHeader?.replace('Bearer ', '')
-
-    if (!authToken) {
-      setResponseStatus(event, 401)
-      return {
-        success: false,
-        error: 'Authentication required',
-        data: [],
-      }
-    }
-
-    // Decode the auth token to get user email
-    // Token format: base64(email:timestamp)
-    let userEmail: string
-    try {
-      const decoded = Buffer.from(authToken, 'base64').toString('utf-8')
-      userEmail = decoded.split(':')[0]
-    } catch (e) {
-      setResponseStatus(event, 401)
-      return {
-        success: false,
-        error: 'Invalid auth token',
-        data: [],
-      }
-    }
+    // Get user email from header (client-side auth)
+    let userEmail = getHeader(event, 'x-user-email') as string
 
     if (!userEmail) {
       setResponseStatus(event, 401)
       return {
         success: false,
-        error: 'Invalid token format',
+        error: 'Authentication required',
         data: [],
       }
     }
