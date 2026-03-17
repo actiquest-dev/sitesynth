@@ -863,12 +863,18 @@ const uploadFiles = async (files: File[]) => {
     for (let i = 0; i < files.length; i++) {
       const fd = new FormData()
       fd.append('file', files[i])
+      console.log('[Files] Uploading:', files[i].name, 'Email:', userEmail.value)
       const r = await fetch('/api/files/upload', { method: 'POST', headers: { 'x-user-email': userEmail.value }, body: fd })
-      if (!r.ok) throw new Error(`Upload failed: ${files[i].name}`)
+      const data = await r.json()
+      if (!r.ok) {
+        console.error('[Files] Upload error:', r.status, data)
+        throw new Error(`Upload failed: ${files[i].name} - ${data?.statusMessage || r.statusText}`)
+      }
+      console.log('[Files] Uploaded:', files[i].name)
       uploadProgress.value = Math.round(((i + 1) / files.length) * 100)
     }
     await loadUserFiles()
-  } catch (e) { console.error(e) }
+  } catch (e) { console.error('[Files] Error:', e) }
   finally { uploading.value = false; uploadProgress.value = 0 }
 }
 
