@@ -730,6 +730,8 @@ const chatDrawerOpen = ref(false)
 const chatConversationId = ref<string | null>(null)
 const wizardConversationId = ref<string | null>(null)
 const agentSuggestions = ref<Record<string, string>>({})
+const chatHistory = ref<Array<{ role: string; content: string }>>([])
+const userMessage = ref('')
 
 // ── Brief Data ──
 const briefData = ref({
@@ -1171,33 +1173,77 @@ const uploadWizardFiles = async () => {
   }
 }
 
-const sendAnswerToAgent = async (questionId: string, answer: string) => {
-  if (!wizardConversationId.value) return
+const getCurrentQuestion = () => {
+  return questionTree.find((q: any) => q.stage === wizardStage.value && q.id.split('.')[1] === String(currentQuestionIndex.value + 1))
+}
 
-  try {
-    const response = await fetch('/api/chat/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-user-email': userEmail.value,
-      },
-      body: JSON.stringify({
-        conversation_id: wizardConversationId.value,
-        message: `Question: ${questionId}\nAnswer: ${answer}\n\nPlease provide brief feedback or suggestion for this answer.`,
-        agent_type: 'briefing',
-        stage: 'brief-discovery',
-      }),
-    })
+const sendMessage = async () => {
+  if (!userMessage.value.trim()) return
 
-    if (response.ok) {
-      const data = await response.json()
-      // Store agent suggestion for this question
-      if (data.data?.response) {
-        agentSuggestions.value[questionId] = data.data.response
-      }
+  const currentQuestion = getCurrentQuestion()
+  if (!currentQuestion) return
+
+  // Add user message to chat history
+  chatHistory.value.push({ role: 'user', content: userMessage.value })
+
+  // Save answer to briefData
+  const saveKey = currentQuestion.saveKey
+  if (currentQuestion.type === 'single_select') {
+    (briefData.value as any)[saveKey] = userMessage.value
+  } else if (currentQuestion.type === 'textarea') {
+    // For textareas, split by newlines for array fields
+    if (saveKey === 'painPoints' || saveKey === 'deliverables' || saveKey === 'technicalRequirements') {
+      (briefData.value as any)[saveKey] = userMessage.value.split('\n').filter((s: string) => s.trim())
+    } else if (saveKey === 'colorPalette') {
+      (briefData.value as any)[saveKey] = userMessage.value.split('\n').filter((s: string) => s.trim())
+    } else {
+      (briefData.value as any)[saveKey] = userMessage.value
     }
-  } catch (error) {
-    console.error('[Wizard] Error sending answer to agent:', error)
+  } else {
+    (briefData.value as any)[saveKey] = userMessage.value
+  }
+
+  // Send to agent for feedback
+  if (wizardConversationId.value) {
+    try {
+      const response = await fetch('/api/chat/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-email': userEmail.value,
+        },
+        body: JSON.stringify({
+          conversation_id: wizardConversationId.value,
+          message: `Question: "${currentQuestion.text}"\nAnswer: "${userMessage.value}"\n\nProvide brief feedback on this answer.`,
+          agent_type: 'briefing',
+          stage: 'brief-discovery',
+        }),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        // Add agent response to chat history
+        if (data.data?.response) {
+          chatHistory.value.push({ role: 'assistant', content: data.data.response })
+          agentSuggestions.value[currentQuestion.id] = data.data.response
+        }
+      }
+    } catch (error) {
+      console.error('[Wizard] Error sending answer to agent:', error)
+    }
+  }
+
+  // Move to next question
+  userMessage.value = ''
+  if (currentQuestionIndex.value < questionTree.filter((q: any) => q.stage === wizardStage.value).length - 1) {
+    currentQuestionIndex.value++
+  } else {
+    // Move to next stage
+    if (wizardStage.value < 3) {
+      wizardStage.value++
+      currentQuestionIndex.value = 0
+      chatHistory.value = []
+    }
   }
 }
 
