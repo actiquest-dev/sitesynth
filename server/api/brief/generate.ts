@@ -55,7 +55,7 @@ async function readGoogleDriveFileContent(fileId: string): Promise<string> {
 export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event)
-    const { briefData, uploadedFiles, userMessage, currentBrief } = body
+    const { briefData, uploadedFiles, storageFileIds, userMessage, currentBrief } = body
 
     // System prompt for brief generation
     const systemPrompt = `You are a professional Design Brief expert. Create a comprehensive, well-structured design brief.
@@ -115,11 +115,14 @@ BRIEF DATA:
 
     // Read file contents if provided
     let filesContext = ''
-    if (uploadedFiles && uploadedFiles.length > 0) {
-      console.log(`[Brief] 📁 Reading ${uploadedFiles.length} file(s) from Google Drive: [${uploadedFiles.join(', ')}]`)
+    const allFileIds = [...(uploadedFiles || []), ...(storageFileIds || [])]
+    const totalFiles = allFileIds.length
+
+    if (totalFiles > 0) {
+      console.log(`[Brief] 📁 Reading ${totalFiles} file(s) from Google Drive: ${uploadedFiles?.length || 0} uploaded + ${storageFileIds?.length || 0} from storage`)
       try {
         const fileContents = await Promise.all(
-          uploadedFiles.map(fileId => readGoogleDriveFileContent(fileId))
+          allFileIds.map(fileId => readGoogleDriveFileContent(fileId))
         )
         filesContext = `\n\n## REFERENCE FILES\n${fileContents.join('\n\n')}`
         console.log(`[Brief] ✓ All files read successfully (${fileContents.length} files processed)`)
@@ -146,7 +149,7 @@ BRIEF DATA:
       // Generate complete brief
       prompt = `${briefContext}${filesContext}\n\nBased on the above information, generate a comprehensive 8-section design brief. Format it clearly with headers for each section.`
       console.log(`[Brief] 🚀 Generating comprehensive brief...`)
-      console.log(`[Brief] 📋 Prompt length: ${prompt.length} characters, Files included: ${uploadedFiles?.length || 0}, Data fields: ${Object.keys(briefData || {}).length}`)
+      console.log(`[Brief] 📋 Prompt length: ${prompt.length} characters, Files included: ${totalFiles}, Data fields: ${Object.keys(briefData || {}).length}`)
     }
 
     const result = await model.generateContent({
