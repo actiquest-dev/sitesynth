@@ -2,12 +2,19 @@ import { google } from 'googleapis'
 
 // Helper to get authenticated Drive client
 async function getDriveClient() {
+  if (!process.env.GOOGLE_DRIVE_PRIVATE_KEY) {
+    throw new Error('GOOGLE_DRIVE_PRIVATE_KEY environment variable is not set')
+  }
+  if (!process.env.GOOGLE_DRIVE_SERVICE_ACCOUNT_EMAIL) {
+    throw new Error('GOOGLE_DRIVE_SERVICE_ACCOUNT_EMAIL environment variable is not set')
+  }
+
   const auth = new google.auth.GoogleAuth({
     credentials: {
       type: 'service_account',
       project_id: 'sitesynth-llm',
       private_key_id: 'key',
-      private_key: process.env.GOOGLE_DRIVE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+      private_key: process.env.GOOGLE_DRIVE_PRIVATE_KEY.replace(/\\n/g, '\n'),
       client_email: process.env.GOOGLE_DRIVE_SERVICE_ACCOUNT_EMAIL,
       client_id: '1234567890',
       auth_uri: 'https://accounts.google.com/o/oauth2/auth',
