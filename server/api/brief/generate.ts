@@ -43,9 +43,11 @@ async function readGoogleDriveFileContent(fileId: string): Promise<string> {
     const buffer = Buffer.from(file.data as ArrayBuffer)
     const text = buffer.toString('utf-8').substring(0, 5000) // First 5KB
 
+    console.log(`[Brief] ✓ File read successfully: ${metadata.data.name} (${metadata.data.size} bytes, type: ${metadata.data.mimeType})`)
+
     return `### File: ${metadata.data.name}\n\`\`\`\n${text}\n\`\`\``
   } catch (error) {
-    console.error(`[Brief] Could not read file ${fileId}:`, error)
+    console.error(`[Brief] ✗ Could not read file ${fileId}:`, error instanceof Error ? error.message : String(error))
     return `### File: [Unable to read]\n(File content could not be extracted)`
   }
 }
@@ -114,12 +116,19 @@ BRIEF DATA:
     // Read file contents if provided
     let filesContext = ''
     if (uploadedFiles && uploadedFiles.length > 0) {
-      console.log(`[Brief] Reading ${uploadedFiles.length} file(s) from Google Drive...`)
-      const fileContents = await Promise.all(
-        uploadedFiles.map(fileId => readGoogleDriveFileContent(fileId))
-      )
-      filesContext = `\n\n## REFERENCE FILES\n${fileContents.join('\n\n')}`
-      console.log(`[Brief] Files read successfully`)
+      console.log(`[Brief] 📁 Reading ${uploadedFiles.length} file(s) from Google Drive: [${uploadedFiles.join(', ')}]`)
+      try {
+        const fileContents = await Promise.all(
+          uploadedFiles.map(fileId => readGoogleDriveFileContent(fileId))
+        )
+        filesContext = `\n\n## REFERENCE FILES\n${fileContents.join('\n\n')}`
+        console.log(`[Brief] ✓ All files read successfully (${fileContents.length} files processed)`)
+      } catch (error) {
+        console.error(`[Brief] ✗ Error reading files:`, error instanceof Error ? error.message : String(error))
+        filesContext = '\n\n## REFERENCE FILES\n[Files could not be processed]'
+      }
+    } else {
+      console.log(`[Brief] ℹ No files provided for this brief`)
     }
 
     const model = genAI.getGenerativeModel({
@@ -132,9 +141,12 @@ BRIEF DATA:
     if (userMessage) {
       // User is asking a question about the brief
       prompt = `${briefContext}${filesContext}\n\nCurrent Brief:\n${currentBrief || 'No brief yet'}\n\nUser Question: ${userMessage}\n\nPlease respond to this question about the brief, staying in context.`
+      console.log(`[Brief] 💬 Generating response to user question...`)
     } else {
       // Generate complete brief
       prompt = `${briefContext}${filesContext}\n\nBased on the above information, generate a comprehensive 8-section design brief. Format it clearly with headers for each section.`
+      console.log(`[Brief] 🚀 Generating comprehensive brief...`)
+      console.log(`[Brief] 📋 Prompt length: ${prompt.length} characters, Files included: ${uploadedFiles?.length || 0}, Data fields: ${Object.keys(briefData || {}).length}`)
     }
 
     const result = await model.generateContent({
@@ -161,6 +173,7 @@ BRIEF DATA:
     })
 
     const responseText = result.response.text()
+    console.log(`[Brief] ✓ Brief generated successfully (${responseText.length} characters)`)
 
     return {
       success: true,
@@ -168,7 +181,7 @@ BRIEF DATA:
       timestamp: new Date().toISOString(),
     }
   } catch (error) {
-    console.error('Error generating brief:', error)
+    console.error('[Brief] ✗ Error generating brief:', error instanceof Error ? error.message : String(error))
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',

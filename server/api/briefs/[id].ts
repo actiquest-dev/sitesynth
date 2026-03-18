@@ -1,89 +1,74 @@
-import { defineEventHandler, readBody, getHeader, createError } from 'h3'
-import { createClient } from '@supabase/supabase-js'
-
-const supabaseUrl = process.env.SUPABASE_URL
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-
-if (!supabaseUrl || !supabaseServiceKey) {
-  throw new Error('Missing Supabase credentials')
-}
-
-const supabase = createClient(supabaseUrl, supabaseServiceKey)
-
 export default defineEventHandler(async (event) => {
-  const method = event.node.req.method
+  const id = getRouterParam(event, 'id')
   const userEmail = getHeader(event, 'x-user-email')
-  const briefId = event.context.params?.id
 
-  if (!userEmail) {
-    return createError({ statusCode: 401, statusMessage: 'User email required' })
+  if (!id || !userEmail) {
+    return { success: false, error: 'Missing id or user email' }
   }
 
-  if (!briefId) {
-    return createError({ statusCode: 400, statusMessage: 'Brief ID required' })
+  if (event.method === 'GET') {
+    // Get brief by ID
+    try {
+      const { data, error } = await useDatabaseClient()
+        .from('briefs')
+        .select('*')
+        .eq('id', id)
+        .eq('user_email', userEmail)
+        .single()
+
+      if (error) throw error
+      return { success: true, data }
+    } catch (error) {
+      console.error('[Briefs] Error fetching brief:', error)
+      return { success: false, error: 'Failed to fetch brief' }
+    }
   }
 
-  // PATCH /api/briefs/:id - update brief
-  if (method === 'PATCH') {
+  if (event.method === 'PUT') {
+    // Update brief
     try {
       const body = await readBody(event)
+      const { content, name, description } = body
 
-      const { data, error } = await supabase
+      const { data, error } = await useDatabaseClient()
         .from('briefs')
         .update({
-          brief_data: body.brief_data,
-          updated_at: new Date().toISOString()
+          content: content || undefined,
+          name: name || undefined,
+          description: description || undefined,
+          updated_at: new Date().toISOString(),
         })
-        .eq('id', briefId)
+        .eq('id', id)
         .eq('user_email', userEmail)
         .select()
+        .single()
 
-      if (error) {
-        throw new Error(error.message)
-      }
-
-      if (!data || data.length === 0) {
-        return createError({ statusCode: 404, statusMessage: 'Brief not found' })
-      }
-
-      return {
-        status: 'success',
-        data: data[0]
-      }
-    } catch (error: any) {
-      console.error('[Briefs API] Error updating brief:', error)
-      return createError({
-        statusCode: 500,
-        statusMessage: error.message
-      })
+      if (error) throw error
+      console.log(`[Briefs] Brief updated: ${id}`)
+      return { success: true, data }
+    } catch (error) {
+      console.error('[Briefs] Error updating brief:', error)
+      return { success: false, error: 'Failed to update brief' }
     }
   }
 
-  // DELETE /api/briefs/:id - delete brief
-  if (method === 'DELETE') {
+  if (event.method === 'DELETE') {
+    // Delete brief
     try {
-      const { error } = await supabase
+      const { error } = await useDatabaseClient()
         .from('briefs')
         .delete()
-        .eq('id', briefId)
+        .eq('id', id)
         .eq('user_email', userEmail)
 
-      if (error) {
-        throw new Error(error.message)
-      }
-
-      return {
-        status: 'success',
-        message: 'Brief deleted'
-      }
-    } catch (error: any) {
-      console.error('[Briefs API] Error deleting brief:', error)
-      return createError({
-        statusCode: 500,
-        statusMessage: error.message
-      })
+      if (error) throw error
+      console.log(`[Briefs] Brief deleted: ${id}`)
+      return { success: true }
+    } catch (error) {
+      console.error('[Briefs] Error deleting brief:', error)
+      return { success: false, error: 'Failed to delete brief' }
     }
   }
 
-  return createError({ statusCode: 405, statusMessage: 'Method not allowed' })
+  return { success: false, error: 'Method not allowed' }
 })

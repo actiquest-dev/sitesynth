@@ -219,73 +219,135 @@
             </div>
           </div>
 
-          <!-- ── PROJECTS ── -->
+          <!-- ── PROJECTS (briefs = projects) ── -->
           <div v-if="activeTab === 'projects'" class="mx-auto w-full max-w-[1240px] px-6 py-8">
-            <div class="flex items-center justify-between mb-6">
-              <div>
-                <h2 class="text-xl font-semibold text-white mb-1">Projects</h2>
-                <p class="text-sm text-[#666]">{{ projects.length }} project{{ projects.length !== 1 ? 's' : '' }}</p>
+
+            <!-- Brief Editor (inline, no modal) -->
+            <div v-if="selectedBrief" class="mb-8">
+              <div class="flex items-center justify-between mb-4">
+                <button @click="selectedBrief = null" class="text-[#999] hover:text-white text-sm flex items-center gap-1 transition">
+                  ← Back to projects
+                </button>
+                <div class="flex gap-2">
+                  <button
+                    @click="briefEditMode = !briefEditMode"
+                    class="px-4 py-2 border border-[#8D35FF] text-[#8D35FF] rounded-none text-sm hover:bg-[#8D35FF]/10 transition"
+                  >
+                    {{ briefEditMode ? 'Preview' : '✎ Edit' }}
+                  </button>
+                  <button
+                    @click="deleteBrief(selectedBrief)"
+                    class="px-4 py-2 border border-[#333] text-[#999] rounded-none text-sm hover:text-red-400 hover:border-red-500/30 transition"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-              <button
-                @click="openBriefWizard"
-                class="inline-flex h-10 items-center gap-2 px-4 bg-[#8D35FF] text-white rounded-none text-sm font-medium hover:bg-[#7B2AE8] transition-colors"
-              >
-                <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path :d="iconPaths.plus" /></svg>
-                New Project
-              </button>
+
+              <h2 class="text-xl font-semibold text-white mb-1">{{ selectedBrief.name || 'Untitled Brief' }}</h2>
+              <p class="text-xs text-[#666] mb-6">Created {{ formatDate(selectedBrief.created_at) }}{{ selectedBrief.updated_at ? ' · Updated ' + formatDate(selectedBrief.updated_at) : '' }}</p>
+
+              <!-- Edit mode -->
+              <div v-if="briefEditMode" class="space-y-4">
+                <input
+                  v-model="briefEditName"
+                  placeholder="Brief name"
+                  class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-none text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none"
+                />
+                <textarea
+                  v-model="briefEditContent"
+                  rows="20"
+                  class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-none text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none resize-none font-mono text-sm leading-relaxed"
+                ></textarea>
+                <div class="flex gap-3">
+                  <button
+                    @click="saveBriefEdit"
+                    :disabled="isSavingBrief"
+                    class="px-6 py-3 bg-green-600 text-white rounded-none hover:bg-green-700 transition disabled:opacity-50 text-sm"
+                  >
+                    {{ isSavingBrief ? 'Saving...' : 'Save Changes' }}
+                  </button>
+                  <button
+                    @click="briefEditMode = false"
+                    class="px-6 py-3 border border-[#333] text-[#999] rounded-none hover:text-white transition text-sm"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+
+              <!-- View mode -->
+              <div v-else class="bg-[#0f0f0f] border border-[#333] rounded-none p-6">
+                <div class="text-white text-sm whitespace-pre-wrap leading-relaxed" v-html="formatBriefHtml(selectedBrief.content || '')"></div>
+              </div>
             </div>
 
-            <div v-if="projects.length === 0" class="border border-[#333] rounded-none bg-[#1a1a1a]">
-              <div class="py-16 text-center px-6">
-                <div class="w-10 h-10 rounded-none border border-[#333] flex items-center justify-center mx-auto mb-4 text-[#444]">
-                  <svg viewBox="0 0 16 16" fill="currentColor" class="w-5 h-5"><path :d="iconPaths.folder" /></svg>
+            <!-- Brief list (when no brief is selected) -->
+            <div v-else>
+              <div class="flex items-center justify-between mb-6">
+                <div>
+                  <h2 class="text-xl font-semibold text-white mb-1">Projects</h2>
+                  <p class="text-sm text-[#666]">{{ briefs.length }} brief{{ briefs.length !== 1 ? 's' : '' }}</p>
                 </div>
-                <p class="text-sm text-white font-medium mb-1">No projects yet</p>
-                <p class="text-xs text-[#666] mb-5">Get started by ordering your first website</p>
-                <NuxtLink to="/pricing" class="inline-flex h-10 items-center gap-2 px-4 bg-white text-[#161616] border border-white rounded-none text-sm font-medium hover:bg-[#E7E7E7] hover:border-[#D6D6D6] hover:text-black transition-colors">
-                  View Plans
-                </NuxtLink>
-              </div>
-            </div>
-
-            <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div
-                v-for="project in projects"
-                :key="project.id"
-                class="border border-[#333] rounded-none p-5 bg-[#1a1a1a] hover:border-[#555] transition-colors"
-              >
-                <div class="flex items-start justify-between mb-3">
-                  <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-none bg-[#1a1a1a] flex items-center justify-center text-[#666]">
-                      <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path :d="iconPaths.globe" /></svg>
-                    </div>
-                    <h3 class="text-sm font-medium text-white">{{ project.name }}</h3>
-                  </div>
-                  <span :class="['inline-flex items-center gap-1.5 px-2 py-0.5 rounded-none text-xs font-medium',
-                    project.status === 'active' ? 'bg-green-500/10 text-green-400' : 'bg-yellow-500/10 text-yellow-400'
-                  ]">
-                    <span :class="['w-1.5 h-1.5 rounded-full', project.status === 'active' ? 'bg-green-400' : 'bg-yellow-400']"></span>
-                    {{ project.status }}
-                  </span>
-                </div>
-                <p class="text-xs text-[#666] mb-4 leading-relaxed">{{ project.description }}</p>
-                <div class="mb-4">
-                  <div class="flex items-center justify-between mb-1.5">
-                    <span class="text-xs text-[#666]">Progress</span>
-                    <span class="text-xs text-[#666] tabular-nums">{{ project.progress }}%</span>
-                  </div>
-                  <div class="w-full bg-[#1a1a1a] rounded-none h-1">
-                    <div class="bg-[#8D35FF] h-1 rounded-none transition-all" :style="{ width: `${project.progress}%` }"></div>
-                  </div>
-                </div>
-                <a
-                  :href="project.url"
-                  target="_blank"
-                  class="inline-flex items-center gap-1.5 text-xs text-[#666] hover:text-white transition-colors"
+                <button
+                  @click="openBriefWizard"
+                  class="inline-flex h-10 items-center gap-2 px-4 bg-[#8D35FF] text-white rounded-none text-sm font-medium hover:bg-[#7B2AE8] transition-colors"
                 >
-                  <svg viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5"><path :d="iconPaths.external" /></svg>
-                  View Website
-                </a>
+                  <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path :d="iconPaths.plus" /></svg>
+                  New Project
+                </button>
+              </div>
+
+              <div v-if="briefs.length === 0" class="border border-[#333] rounded-none bg-[#1a1a1a]">
+                <div class="py-16 text-center px-6">
+                  <div class="w-10 h-10 rounded-none border border-[#333] flex items-center justify-center mx-auto mb-4 text-[#444]">
+                    <svg viewBox="0 0 16 16" fill="currentColor" class="w-5 h-5"><path :d="iconPaths.folder" /></svg>
+                  </div>
+                  <p class="text-sm text-white font-medium mb-1">No projects yet</p>
+                  <p class="text-xs text-[#666] mb-5">Create your first brief to start a project</p>
+                  <button @click="openBriefWizard" class="inline-flex h-10 items-center gap-2 px-4 bg-[#8D35FF] text-white rounded-none text-sm font-medium hover:bg-[#7B2AE8] transition-colors">
+                    Create Brief
+                  </button>
+                </div>
+              </div>
+
+              <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div
+                  v-for="brief in briefs"
+                  :key="brief.id"
+                  @click="openBriefEditor(brief)"
+                  class="border border-[#333] rounded-none p-5 bg-[#1a1a1a] hover:border-[#8D35FF]/50 transition-colors cursor-pointer group"
+                >
+                  <div class="flex items-start justify-between mb-3">
+                    <div class="flex items-center gap-2.5">
+                      <div class="w-8 h-8 rounded-none bg-[#8D35FF]/10 flex items-center justify-center text-[#8D35FF]">
+                        <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path :d="iconPaths.file" /></svg>
+                      </div>
+                      <h3 class="text-sm font-medium text-white">{{ brief.name || 'Untitled Brief' }}</h3>
+                    </div>
+                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-none text-xs font-medium bg-[#8D35FF]/10 text-[#8D35FF]">
+                      Brief
+                    </span>
+                  </div>
+                  <p class="text-xs text-[#666] mb-4 leading-relaxed line-clamp-2">{{ brief.description || (brief.content || '').substring(0, 120) + '...' }}</p>
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs text-[#555]">{{ formatDate(brief.created_at) }}</span>
+                    <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition">
+                      <button
+                        @click.stop="openBriefEditor(brief)"
+                        class="px-3 py-1 text-xs text-[#8D35FF] border border-[#8D35FF]/30 rounded-none hover:bg-[#8D35FF]/10 transition"
+                      >
+                        Open
+                      </button>
+                      <button
+                        @click.stop="deleteBrief(brief)"
+                        class="px-3 py-1 text-xs text-[#999] border border-[#333] rounded-none hover:text-red-400 hover:border-red-500/30 transition"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -852,6 +914,12 @@ const dragActive = ref(false)
 const uploading = ref(false)
 const uploadProgress = ref(0)
 const stats = ref({ totalProjects: 0, totalSpent: 0, activeWebsites: 0 })
+const briefs = ref<any[]>([])
+const selectedBrief = ref<any>(null)
+const briefEditMode = ref(false)
+const briefEditContent = ref('')
+const briefEditName = ref('')
+const isSavingBrief = ref(false)
 
 // ── Brief Wizard ──
 const showBriefWizard = ref(false)
@@ -1003,8 +1071,9 @@ onMounted(async () => {
   stats.value.totalSpent = orders.value.reduce((s: number, o: any) => s + (o.amount || 0), 0)
   stats.value.activeWebsites = projects.value.filter((p: any) => p.status === 'in_progress').length
 
-  // Load files
+  // Load files and briefs
   await loadUserFiles()
+  await loadBriefs()
 })
 
 const loadUserFiles = async () => {
@@ -1255,6 +1324,52 @@ const sendChatMessage = async () => {
   }
 }
 
+// ── Brief Management ──
+const loadBriefs = async () => {
+  try {
+    const r = await fetch('/api/briefs', { headers: { 'x-user-email': userEmail.value } })
+    if (r.ok) { const d = await r.json(); briefs.value = d.data || [] }
+  } catch {}
+}
+
+const openBriefEditor = (brief: any) => {
+  selectedBrief.value = brief
+  briefEditMode.value = false
+  briefEditContent.value = brief.content || ''
+  briefEditName.value = brief.name || ''
+}
+
+const deleteBrief = async (brief: any) => {
+  if (!confirm(`Delete "${brief.name || 'Untitled'}"?`)) return
+  try {
+    await fetch(`/api/briefs/${brief.id}`, {
+      method: 'DELETE',
+      headers: { 'x-user-email': userEmail.value },
+    })
+    if (selectedBrief.value?.id === brief.id) selectedBrief.value = null
+    await loadBriefs()
+  } catch (e) { console.error('Error deleting brief:', e) }
+}
+
+const saveBriefEdit = async () => {
+  if (!selectedBrief.value?.id) return
+  isSavingBrief.value = true
+  try {
+    const r = await fetch(`/api/briefs/${selectedBrief.value.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'x-user-email': userEmail.value },
+      body: JSON.stringify({ content: briefEditContent.value, name: briefEditName.value }),
+    })
+    if (r.ok) {
+      const d = await r.json()
+      selectedBrief.value = d.data || { ...selectedBrief.value, content: briefEditContent.value, name: briefEditName.value }
+      briefEditMode.value = false
+      await loadBriefs()
+    }
+  } catch (e) { console.error('Error saving brief:', e) }
+  finally { isSavingBrief.value = false }
+}
+
 // ── Brief Wizard Functions ──
 const openBriefWizard = async () => {
   showBriefWizard.value = true
@@ -1502,6 +1617,7 @@ const saveBrief = async () => {
       }),
     })
     wizardPhase.value = 'saved'
+    await loadBriefs()
   } catch (error) {
     console.error('Error saving brief:', error)
   }
