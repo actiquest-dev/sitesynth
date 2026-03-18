@@ -105,34 +105,70 @@ Output valid JSON ONLY.`
           role: 'user',
           parts: [
             {
-              text: `Generate a questionnaire for this product:\n\n${productDescription}`,
+              text: `${systemPrompt}\n\nGenerate a questionnaire for this product:\n\n${productDescription}`,
             },
           ],
         },
       ],
-      systemInstruction: { parts: [{ text: systemPrompt }] },
       generationConfig: {
-        temperature: 0.2,
+        temperature: 0.1,
         maxOutputTokens: 4000,
-        responseMimeType: 'application/json',
       },
     })
 
     const responseText = result.response.text()
+    console.log('[Questionnaire] Raw response (first 300 chars):', responseText.substring(0, 300))
 
-    // Parse JSON — with responseMimeType: 'application/json', Gemini returns clean JSON
+    // Parse JSON with multiple strategies
     let questionsData
+
+    // Strategy 1: Direct parse
     try {
       questionsData = JSON.parse(responseText)
-    } catch (parseError) {
-      // Fallback: try to extract from markdown code blocks
-      const jsonMatch = responseText.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/)
-      if (jsonMatch && jsonMatch[1]) {
-        questionsData = JSON.parse(jsonMatch[1].trim())
-      } else {
-        console.error('[Questionnaire] Failed to parse. Raw (first 500 chars):', responseText.substring(0, 500))
-        throw new Error('Response was not valid JSON format')
+      console.log('[Questionnaire] Successfully parsed as direct JSON')
+    } catch {
+      // Strategy 2: Extract from ```json...```
+      let match = responseText.match(/```json\s*([\s\S]*?)\s*```/)
+      if (match) {
+        try {
+          questionsData = JSON.parse(match[1].trim())
+          console.log('[Questionnaire] Successfully parsed from ```json block')
+        } catch {
+          console.error('[Questionnaire] Failed to parse extracted json block')
+        }
       }
+    }
+
+    // Strategy 3: Extract from ```...```
+    if (!questionsData) {
+      const match = responseText.match(/```\s*([\s\S]*?)\s*```/)
+      if (match) {
+        try {
+          questionsData = JSON.parse(match[1].trim())
+          console.log('[Questionnaire] Successfully parsed from ``` block')
+        } catch {
+          console.error('[Questionnaire] Failed to parse extracted ``` block')
+        }
+      }
+    }
+
+    // Strategy 4: Find JSON object by braces
+    if (!questionsData) {
+      const jsonStart = responseText.indexOf('{')
+      const jsonEnd = responseText.lastIndexOf('}')
+      if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
+        try {
+          questionsData = JSON.parse(responseText.substring(jsonStart, jsonEnd + 1))
+          console.log('[Questionnaire] Successfully parsed from brace extraction')
+        } catch {
+          console.error('[Questionnaire] Failed to parse brace-extracted JSON')
+        }
+      }
+    }
+
+    if (!questionsData) {
+      console.error('[Questionnaire] All parsing strategies failed. Raw response:', responseText.substring(0, 500))
+      throw new Error('Response was not valid JSON format')
     }
 
     // Validate the response has expected structure
