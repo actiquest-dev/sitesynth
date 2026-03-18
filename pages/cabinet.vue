@@ -870,7 +870,7 @@
           </div>
 
           <!-- Footer Navigation -->
-          <div class="bg-[#161616] border-t border-[#333] p-4 flex gap-3">
+          <div class="bg-[#161616] border-t border-[#333] p-4 flex gap-3 items-center justify-between">
             <button
               v-if="wizardPhase !== 'saved'"
               @click="resetWizard"
@@ -879,6 +879,16 @@
               Reset
             </button>
             <div class="flex-1"></div>
+            <!-- Check by AI button on the right -->
+            <button
+              v-if="wizardPhase === 'questions' && currentQ && (currentQ.type === 'textarea' || currentQ.type === 'text_input') && userMessage.trim().length > 10"
+              @click="enhanceWithAI"
+              :disabled="isEnhancing"
+              class="px-4 py-3 border border-[#8D35FF]/50 text-[#8D35FF] rounded-none hover:bg-[#8D35FF]/10 transition text-sm flex items-center gap-2 disabled:opacity-50"
+            >
+              <span v-if="isEnhancing">Enhancing...</span>
+              <span v-else>🪄 Check by AI</span>
+            </button>
             <button
               v-if="wizardPhase === 'upload'"
               @click="startDescription"
