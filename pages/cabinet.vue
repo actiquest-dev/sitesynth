@@ -582,7 +582,8 @@
               <p class="text-[#999] text-sm">{{ wizardProgressLabel }}</p>
               <!-- Attached Files Badge -->
               <div v-if="wizardFiles.length > 0" class="flex items-center gap-2 px-3 py-1 bg-[#8D35FF]/10 border border-[#8D35FF]/30 rounded-none">
-                <span class="text-[#8D35FF] text-xs font-semibold">📎 {{ wizardFiles.length }} file{{ wizardFiles.length !== 1 ? 's' : '' }} attached</span>
+                <svg viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5 text-[#8D35FF] flex-shrink-0"><path :d="iconPaths.file" /></svg>
+                <span class="text-[#8D35FF] text-xs font-semibold">{{ wizardFiles.length }} file{{ wizardFiles.length !== 1 ? 's' : '' }} attached</span>
               </div>
             </div>
           </div>
