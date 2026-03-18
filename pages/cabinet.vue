@@ -1445,6 +1445,7 @@ const openBriefWizard = async () => {
   showBriefWizard.value = true
   resetWizard()
   await loadUserFiles() // Load available files from storage
+  selectedStorageFileIds.value = userFiles.value.map((f: any) => f.id)
 }
 
 const resetWizard = () => {
