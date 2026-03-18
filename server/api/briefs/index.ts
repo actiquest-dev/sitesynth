@@ -26,15 +26,36 @@ export default defineEventHandler(async (event) => {
     // Create new brief
     try {
       const body = await readBody(event)
-      const { name, description, content } = body
+      const { name, briefData, content } = body
+      
+      const db = useDatabaseClient()
 
-      const { data, error } = await useDatabaseClient()
+      // 1. Create a new conversation for this brief first (since conversation_id is required)
+      const { data: convData, error: convError } = await db
+        .from('conversations')
+        .insert([{
+          user_email: userEmail,
+          agent_type: 'briefing',
+          title: name || 'Untitled Brief',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        }])
+        .select()
+
+      if (convError || !convData?.[0]) {
+        console.error('[Briefs] Error creating conversation for brief:', convError)
+        throw new Error('Failed to create conversation')
+      }
+
+      // 2. Insert the brief using the correct schema fields
+      const { data, error } = await db
         .from('briefs')
         .insert([{
           user_email: userEmail,
-          name: name || 'Untitled Brief',
-          description: description || '',
-          content: content || '',
+          conversation_id: convData[0].id,
+          agent_type: 'briefing',
+          brief_data: briefData || {},
+          markdown_content: content || '',
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         }])

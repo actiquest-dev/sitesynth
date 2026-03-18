@@ -1874,7 +1874,7 @@ const saveBrief = async () => {
       headers: { 'Content-Type': 'application/json', 'x-user-email': userEmail.value },
       body: JSON.stringify({
         name: briefData.value.projectName || 'Untitled Brief',
-        description: briefData.value.projectDescription,
+        briefData: briefData.value,
         content: generatedBrief.value,
       }),
     })
