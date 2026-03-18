@@ -803,18 +803,18 @@
                   <p class="text-[#666] text-xs">Select all that apply, then click Next</p>
                 </div>
 
-                <!-- AI Enhancement area -->
-                <div v-if="enhancedText" class="bg-[#8D35FF]/5 border border-[#8D35FF]/30 rounded-none p-4 space-y-3">
-                  <p class="text-[#8D35FF] text-xs font-semibold flex items-center gap-1">✨ AI Enhanced Version</p>
-                  <p class="text-white text-sm">{{ enhancedText }}</p>
-                  <div class="flex gap-2">
-                    <button @click="acceptEnhanced" class="px-4 py-2 bg-[#8D35FF] text-white rounded-none text-sm hover:bg-[#7B2AE8] transition">Accept</button>
-                    <button @click="enhancedText = ''" class="px-4 py-2 border border-[#333] text-[#999] rounded-none text-sm hover:text-white transition">Keep Original</button>
-                  </div>
-                </div>
-
                 <!-- Action buttons for text fields -->
                 <div v-if="currentQ.type === 'text_input' || currentQ.type === 'textarea'" class="flex gap-3">
+                  <button
+                    v-if="currentQ.type === 'textarea' && userMessage.trim()"
+                    @click="enhanceWithAI"
+                    :disabled="isEnhancing"
+                    class="flex-1 px-4 py-3 border border-[#8D35FF]/50 text-[#8D35FF] rounded-none hover:bg-[#8D35FF]/10 transition text-sm flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    <svg v-if="!isEnhancing" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path d="M8 1l2 4h4l-3 3 1 4-4-2-4 2 1-4-3-3h4l2-4z" /></svg>
+                    <span v-if="isEnhancing">Enhancing...</span>
+                    <span v-else>Enhance</span>
+                  </button>
                   <button
                     @click="submitAnswer"
                     :disabled="!userMessage.trim()"
@@ -869,18 +869,37 @@
             >
               Reset
             </button>
-            <div class="flex-1"></div>
-            <!-- Improve button on the right -->
             <button
-              v-if="wizardPhase === 'questions' && currentQ && (currentQ.type === 'textarea' || currentQ.type === 'text_input') && userMessage.trim()"
-              @click="enhanceWithAI"
-              :disabled="isEnhancing"
-              class="px-4 py-2 border border-[#8D35FF]/50 text-[#8D35FF] rounded-none hover:bg-[#8D35FF]/10 transition text-xs flex items-center gap-1.5 disabled:opacity-50"
+              v-if="wizardPhase === 'questions' && currentQ && (currentQ.type === 'textarea' || currentQ.type === 'text_input') && canUndo"
+              @click="undoEnhance"
+              class="px-6 py-3 border border-[#333] text-[#999] rounded-none hover:bg-[#1a1a1a] hover:text-white transition text-sm flex items-center gap-2"
+              title="Undo"
             >
-              <svg v-if="!isEnhancing" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5"><path d="M8 1l2 4h4l-3 3 1 4-4-2-4 2 1-4-3-3h4l2-4z" /></svg>
-              <span v-if="isEnhancing">Improving...</span>
-              <span v-else>Improve</span>
+              <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path d="M3.854 4.854a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L1.707 8l2.147-2.146zm8.292-.708a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L14.293 8l-2.147-2.146z" /></svg>
+              Undo
             </button>
+            <button
+              v-if="wizardPhase === 'questions' && currentQ && (currentQ.type === 'textarea' || currentQ.type === 'text_input') && canRedo"
+              @click="redoEnhance"
+              class="px-6 py-3 border border-[#333] text-[#999] rounded-none hover:bg-[#1a1a1a] hover:text-white transition text-sm flex items-center gap-2"
+              title="Redo"
+            >
+              Redo
+              <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path d="M12.146 4.854a.5.5 0 0 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L14.293 8l-2.147-2.146zM3.854 4.146a.5.5 0 0 0-.708 0l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L1.707 8l2.147 2.146z" /></svg>
+            </button>
+            <div class="flex-1"></div>
+            <div v-if="wizardPhase === 'questions' && currentQ && (currentQ.type === 'textarea' || currentQ.type === 'text_input')" class="flex gap-2">
+              <button
+                v-if="userMessage.trim()"
+                @click="enhanceWithAI"
+                :disabled="isEnhancing"
+                class="px-6 py-3 border border-[#8D35FF]/50 text-[#8D35FF] rounded-none hover:bg-[#8D35FF]/10 transition text-sm flex items-center gap-2 disabled:opacity-50"
+              >
+                <svg v-if="!isEnhancing" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path d="M8 1l2 4h4l-3 3 1 4-4-2-4 2 1-4-3-3h4l2-4z" /></svg>
+                <span v-if="isEnhancing">Enhancing...</span>
+                <span v-else>Enhance</span>
+              </button>
+            </div>
             <button
               v-if="wizardPhase === 'upload'"
               @click="startDescription"
@@ -1055,7 +1074,9 @@ const chatConversationId = ref<string | null>(null)
 const wizardConversationId = ref<string | null>(null)
 const toast = ref<{ message: string; type: 'success' | 'error' } | null>(null)
 const userMessage = ref('')
-const enhancedText = ref('')
+const lastOriginalMessage = ref('')
+const enhanceHistory = ref<string[]>([])
+const enhanceHistoryIndex = ref(-1)
 const multiSelectValues = ref<string[]>([])
 const answeredQuestions = ref<Array<{ id: string; questionText: string; saveKey: string; value: string; enhanced: boolean }>>([])
 const productDescription = ref('')
@@ -1537,13 +1558,16 @@ const resetWizard = () => {
   selectedStorageFileIds.value = [] // Clear selected files
   currentQuestionIndex.value = 0
   userMessage.value = ''
-  enhancedText.value = ''
+  lastOriginalMessage.value = ''
   multiSelectValues.value = []
   answeredQuestions.value = []
   generatedBrief.value = ''
   productDescription.value = ''
   dynamicQuestions.value = []
   brevityData.value.uploadedFileIds = []
+  lastOriginalMessage.value = ''
+  enhanceHistory.value = []
+  enhanceHistoryIndex.value = -1
   Object.keys(briefData.value).forEach(key => { briefData.value[key] = '' })
 }
 
@@ -1695,10 +1719,12 @@ const submitAnswer = () => {
     questionText: currentQ.value.text,
     saveKey: currentQ.value.saveKey,
     value: userMessage.value,
-    enhanced: !!enhancedText.value,
+    enhanced: false,
   })
   userMessage.value = ''
-  enhancedText.value = ''
+  lastOriginalMessage.value = ''
+  enhanceHistory.value = []
+  enhanceHistoryIndex.value = -1
   advanceQuestion()
 }
 
@@ -1719,7 +1745,9 @@ const editAnswer = (idx: number) => {
   const answer = answeredQuestions.value[idx]
   userMessage.value = answer.value
   currentQuestionIndex.value = briefQuestions.findIndex(q => q.id === answer.id)
-  // Remove this and all following answers
+  lastOriginalMessage.value = ''
+  enhanceHistory.value = []
+  enhanceHistoryIndex.value = -1
   const removed = answeredQuestions.value.splice(idx)
   removed.forEach(a => { briefData.value[a.saveKey] = '' })
 }
@@ -1734,6 +1762,9 @@ const deleteAnswer = (idx: number) => {
 
 const enhanceWithAI = async () => {
   if (!userMessage.value.trim() || !currentQ.value || isEnhancing.value) return
+  if (!lastOriginalMessage.value) {
+    lastOriginalMessage.value = userMessage.value
+  }
   isEnhancing.value = true
   try {
     const response = await fetch('/api/brief/enhance', {
@@ -1746,7 +1777,9 @@ const enhanceWithAI = async () => {
     })
     const data = await response.json()
     if (data.success && data.enhanced) {
-      enhancedText.value = data.enhanced
+      enhanceHistory.value.push(userMessage.value)
+      enhanceHistoryIndex.value = enhanceHistory.value.length - 1
+      userMessage.value = data.enhanced
     }
   } catch (error) {
     console.error('[Enhance] Error:', error)
@@ -1755,12 +1788,31 @@ const enhanceWithAI = async () => {
   }
 }
 
-const acceptEnhanced = () => {
-  if (enhancedText.value) {
-    userMessage.value = enhancedText.value
-    enhancedText.value = ''
+const undoEnhance = () => {
+  if (enhanceHistoryIndex.value >= 0) {
+    const current = userMessage.value
+    userMessage.value = enhanceHistory.value[enhanceHistoryIndex.value]
+    enhanceHistory.value[enhanceHistoryIndex.value] = current
+    enhanceHistoryIndex.value--
+  } else if (lastOriginalMessage.value) {
+    enhanceHistory.value.push(userMessage.value)
+    enhanceHistoryIndex.value = 0
+    userMessage.value = lastOriginalMessage.value
+    lastOriginalMessage.value = ''
   }
 }
+
+const redoEnhance = () => {
+  if (enhanceHistoryIndex.value < enhanceHistory.value.length - 1) {
+    enhanceHistoryIndex.value++
+    const current = userMessage.value
+    userMessage.value = enhanceHistory.value[enhanceHistoryIndex.value]
+    enhanceHistory.value[enhanceHistoryIndex.value] = current
+  }
+}
+
+const canUndo = computed(() => enhanceHistoryIndex.value >= 0 || !!lastOriginalMessage.value)
+const canRedo = computed(() => enhanceHistoryIndex.value < enhanceHistory.value.length - 1)
 
 const formatBriefHtml = (text: string): string => {
   if (!text) return ''
