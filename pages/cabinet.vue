@@ -599,16 +599,24 @@
               </div>
               <span class="text-[#666]" :class="expandFilesPanel ? 'transform rotate-180' : ''">▼</span>
             </button>
-            <div v-if="expandFilesPanel" class="border-t border-[#333] p-4 space-y-2">
-              <div v-for="(f, i) in wizardFiles" :key="i" class="flex items-center justify-between bg-[#161616] p-3 border border-[#333] rounded-none">
-                <div class="flex items-center gap-2 flex-1">
-                  <div class="w-6 h-6 rounded-none bg-[#222] flex items-center justify-center flex-shrink-0 text-[#555]">
-                    <svg viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5"><path :d="iconPaths.file" /></svg>
+            <div v-if="expandFilesPanel" class="border-t border-[#333] space-y-0">
+              <div v-for="(f, i) in wizardFiles" :key="i" class="flex items-center justify-between px-5 py-3.5 border-b border-[#333] last:border-0 group hover:bg-white/5 transition-colors">
+                <div class="flex items-center gap-3 min-w-0">
+                  <div class="w-8 h-8 rounded-none bg-[#1a1a1a] flex items-center justify-center flex-shrink-0 text-[#555]">
+                    <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path :d="iconPaths.file" /></svg>
                   </div>
-                  <span class="text-white text-sm truncate">{{ f.name }}</span>
-                  <span class="text-[#666] text-xs">({{ (f.size / 1024).toFixed(1) }}KB)</span>
+                  <div class="min-w-0">
+                    <p class="text-sm text-white truncate">{{ f.name }}</p>
+                    <p class="text-xs text-[#555] mt-0.5">{{ (f.size / 1024).toFixed(1) }}KB</p>
+                  </div>
                 </div>
-                <button @click="wizardFiles.splice(i, 1)" class="text-[#666] hover:text-red-400 transition text-xs">Remove</button>
+                <button
+                  @click="wizardFiles.splice(i, 1)"
+                  class="p-1.5 text-[#666] hover:text-red-400 rounded-none transition-colors ml-4 flex-shrink-0"
+                  title="Remove file"
+                >
+                  <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path :d="iconPaths.trash" /></svg>
+                </button>
               </div>
             </div>
           </div>
@@ -637,21 +645,27 @@
               </div>
 
               <!-- Available files from storage -->
-              <div v-if="userFiles.length > 0" class="bg-[#1a1a1a] border border-[#333] rounded-none p-4 space-y-3">
-                <p class="text-white text-sm font-semibold">Available Project Files</p>
-                <p class="text-[#666] text-xs">These files will be included in your brief automatically</p>
-                <div class="space-y-2">
-                  <div v-for="file in userFiles" :key="file.id" class="flex items-center gap-3 p-3 border border-[#333] rounded-none hover:bg-[#0f0f0f] transition">
-                    <div class="w-8 h-8 rounded-none bg-[#222] flex items-center justify-center flex-shrink-0 text-[#555]">
-                      <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path :d="iconPaths.file" /></svg>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <p class="text-white text-sm truncate">{{ file.name }}</p>
-                      <p class="text-[#666] text-xs">{{ formatFileSize(file.size) }}</p>
+              <div v-if="userFiles.length > 0" class="bg-[#1a1a1a] border border-[#333] rounded-none">
+                <div class="px-5 py-4 border-b border-[#333]">
+                  <p class="text-white text-sm font-semibold">Available Project Files</p>
+                  <p class="text-[#666] text-xs mt-0.5">These files will be included in your brief automatically</p>
+                </div>
+                <div>
+                  <div v-for="file in userFiles" :key="file.id" class="flex items-center justify-between px-5 py-3.5 border-b border-[#333] last:border-0 hover:bg-white/5 transition-colors">
+                    <div class="flex items-center gap-3 min-w-0">
+                      <div class="w-8 h-8 rounded-none bg-[#1a1a1a] flex items-center justify-center flex-shrink-0 text-[#555]">
+                        <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path :d="iconPaths.file" /></svg>
+                      </div>
+                      <div class="min-w-0">
+                        <p class="text-sm text-white truncate">{{ file.name }}</p>
+                        <p class="text-xs text-[#555] mt-0.5">{{ formatFileSize(file.size) }}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <p class="text-[#8D35FF] text-xs">{{ userFiles.length }} file(s) will be included</p>
+                <div class="px-5 py-3 border-t border-[#333]">
+                  <p class="text-[#8D35FF] text-xs">{{ userFiles.length }} file(s) will be included</p>
+                </div>
               </div>
 
               <!-- Files list (newly uploaded) -->
@@ -660,17 +674,23 @@
                   <span>Newly Uploaded Files</span>
                   <span class="text-[#8D35FF] text-xs px-2 py-1 bg-[#8D35FF]/20 rounded-none">{{ wizardFiles.length }}</span>
                 </p>
-                <div v-for="(f, i) in wizardFiles" :key="i" class="flex items-center justify-between bg-[#161616] p-3 border border-[#333] rounded-none">
-                  <div class="flex items-center gap-3 flex-1">
-                    <div class="w-8 h-8 rounded-none bg-[#222] flex items-center justify-center flex-shrink-0 text-[#555]">
-                      <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path :d="iconPaths.upload" /></svg>
+                <div v-for="(f, i) in wizardFiles" :key="i" class="flex items-center justify-between bg-[#161616] px-5 py-3.5 border border-[#333] rounded-none group hover:bg-white/5 transition-colors">
+                  <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-8 h-8 rounded-none bg-[#1a1a1a] flex items-center justify-center flex-shrink-0 text-[#555]">
+                      <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path :d="iconPaths.file" /></svg>
                     </div>
-                    <div class="flex-1">
-                      <p class="text-white text-sm truncate">{{ f.name }}</p>
-                      <p class="text-[#666] text-xs">{{ (f.size / 1024).toFixed(1) }}KB</p>
+                    <div class="min-w-0">
+                      <p class="text-sm text-white truncate">{{ f.name }}</p>
+                      <p class="text-xs text-[#555] mt-0.5">{{ (f.size / 1024).toFixed(1) }}KB</p>
                     </div>
                   </div>
-                  <button @click="wizardFiles.splice(i, 1)" class="text-[#666] hover:text-red-400 transition text-sm">✕</button>
+                  <button
+                    @click="wizardFiles.splice(i, 1)"
+                    class="p-1.5 text-[#666] hover:text-red-400 rounded-none transition-colors ml-4 flex-shrink-0"
+                    title="Remove file"
+                  >
+                    <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path :d="iconPaths.trash" /></svg>
+                  </button>
                 </div>
               </div>
             </div>
