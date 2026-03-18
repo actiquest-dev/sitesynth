@@ -636,24 +636,20 @@
 
               <!-- Available files from storage -->
               <div v-if="userFiles.length > 0" class="bg-[#1a1a1a] border border-[#333] rounded-none p-4 space-y-3">
-                <p class="text-white text-sm font-semibold">📚 Available Project Files</p>
-                <p class="text-[#666] text-xs">Select files from your project to include in this brief (no re-upload needed)</p>
+                <p class="text-white text-sm font-semibold">Available Project Files</p>
+                <p class="text-[#666] text-xs">These files will be included in your brief automatically</p>
                 <div class="space-y-2">
-                  <div v-for="file in userFiles" :key="file.id" class="flex items-center gap-3 p-3 border border-[#333] rounded-none hover:bg-[#0f0f0f] transition cursor-pointer" @click="toggleStorageFile(file.id)">
-                    <input
-                      type="checkbox"
-                      :checked="selectedStorageFileIds.includes(file.id)"
-                      class="w-4 h-4 accent-[#8D35FF]"
-                      @click.stop
-                    />
-                    <span class="text-[#999] text-sm">📄</span>
+                  <div v-for="file in userFiles" :key="file.id" class="flex items-center gap-3 p-3 border border-[#333] rounded-none hover:bg-[#0f0f0f] transition">
+                    <div class="w-8 h-8 rounded-none bg-[#222] flex items-center justify-center flex-shrink-0 text-[#555]">
+                      <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path :d="iconPaths.file" /></svg>
+                    </div>
                     <div class="flex-1 min-w-0">
                       <p class="text-white text-sm truncate">{{ file.name }}</p>
                       <p class="text-[#666] text-xs">{{ formatFileSize(file.size) }}</p>
                     </div>
                   </div>
                 </div>
-                <p v-if="selectedStorageFileIds.length > 0" class="text-[#8D35FF] text-xs">✓ {{ selectedStorageFileIds.length }} file(s) selected</p>
+                <p class="text-[#8D35FF] text-xs">{{ userFiles.length }} file(s) will be included</p>
               </div>
 
               <!-- Files list (newly uploaded) -->
