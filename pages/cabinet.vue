@@ -1502,6 +1502,28 @@ const sendChatMessage = async () => {
 
     chatMessages.value = data.messages || []
     await loadConversations()
+
+    // If we have a brief open that is tied to this conversation, fetch the latest brief content
+    // because the AI might have updated it via tool call during this request!
+    if (selectedBrief.value && selectedBrief.value.conversation_id === selectedConversationId.value) {
+      try {
+        const briefRes = await fetch(`/api/briefs/${selectedBrief.value.id}`, { headers: { 'x-user-email': userEmail.value } })
+        if (briefRes.ok) {
+          const briefData = await briefRes.json()
+          if (briefData.data && briefData.data.markdown_content) {
+            // Update the live editor window with the newly updated markdown content!
+            selectedBrief.value.content = briefData.data.markdown_content
+            selectedBrief.value.markdown_content = briefData.data.markdown_content
+            if (!briefEditMode.value) {
+              briefEditContent.value = briefData.data.markdown_content
+            }
+          }
+        }
+        await loadBriefs() // Keep side list updated too
+      } catch (e) {
+        console.error('Failed to sync brief updates from chat:', e)
+      }
+    }
   } catch (error: any) {
     chatMessages.value = chatMessages.value.filter((m) => m.id !== temporaryMessage.id)
     chatError.value = error.message || 'Failed to send message'

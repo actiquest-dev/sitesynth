@@ -123,14 +123,71 @@ export default defineEventHandler(async (event) => {
         const model = google('gemini-2.5-pro')
         
         // Use generateText from ai package for direct API call
-        const { generateText } = await import('ai')
+        const { generateText, tool } = await import('ai')
+        const { z } = await import('zod')
+        
+        // Define tool for updating brief content
+        const tools = agentType === 'briefing' ? {
+          update_brief_content: tool({
+            description: 'Update the project brief content in the database. Use this when the user asks you to modify, rewrite, or add something to the current brief.',
+            parameters: z.object({
+              new_markdown_content: z.string().describe('The complete, updated markdown content for the brief. Must include all sections, incorporating the user\'s requested changes.'),
+              brief_id: z.string().describe('The ID of the brief to update (you must ask the user for this if not provided in context, though the system usually provides it implicitly by association with the conversation).'),
+            }),
+            execute: async ({ new_markdown_content }) => {
+              console.log(`[Tools] Updating brief content for conversation: ${conversationId}`)
+              
+              // Find the brief associated with this conversation
+              const { data: brief, error: findError } = await supabase
+                .from('briefs')
+                .select('id')
+                .eq('conversation_id', conversationId)
+                .single()
+                
+              if (findError || !brief) {
+                return 'Error: Could not find a brief associated with this conversation to update.'
+              }
+              
+              // Update the brief
+              const { error: updateError } = await supabase
+                .from('briefs')
+                .update({ markdown_content: new_markdown_content, updated_at: new Date().toISOString() })
+                .eq('id', brief.id)
+                
+              if (updateError) {
+                return `Error updating brief: ${updateError.message}`
+              }
+              
+              return 'Success: Brief content updated successfully. The user can now see the changes live on their screen.'
+            }
+          })
+        } : undefined
+        
+        // Add current brief content to system prompt if this is a briefing agent
+        if (agentType === 'briefing') {
+          try {
+            const { data: brief } = await supabase
+              .from('briefs')
+              .select('markdown_content')
+              .eq('conversation_id', conversationId)
+              .single()
+              
+            if (brief && brief.markdown_content) {
+              systemPrompt += `\n\nCURRENT BRIEF CONTENT:\n${brief.markdown_content}\n\nWhen the user asks you to change the brief, use the update_brief_content tool and provide the FULL updated markdown text. Never just say you will update it without actually calling the tool.`
+            }
+          } catch (e) {
+            console.error('Failed to attach current brief to prompt:', e)
+          }
+        }
         
         const result = await generateText({
           model,
           system: systemPrompt,
           messages: conversationHistory,
           temperature: 0.7,
-          maxTokens: 1024,
+          maxTokens: 4096, // Increased to allow full brief generation
+          tools,
+          maxSteps: 5, // Allow the model to call the tool and then respond
         })
 
         response = result.text || ''
