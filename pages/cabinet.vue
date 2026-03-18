@@ -877,7 +877,7 @@
               @click="startDescription"
               class="px-8 py-3 bg-[#8D35FF] text-white rounded-none hover:bg-[#7B2AE8] transition text-sm"
             >
-              {{ wizardFiles.length > 0 ? 'Upload & Continue' : 'Skip & Continue' }}
+              Continue
             </button>
             <button
               v-if="wizardPhase === 'description'"
