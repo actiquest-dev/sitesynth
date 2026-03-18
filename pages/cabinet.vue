@@ -806,7 +806,7 @@
                 <!-- Action buttons for text fields -->
                 <div v-if="currentQ.type === 'text_input' || currentQ.type === 'textarea'" class="flex gap-3">
                   <button
-                    v-if="currentQ.type === 'textarea' && userMessage.trim()"
+                    v-if="userMessage.trim()"
                     @click="enhanceWithAI"
                     :disabled="isEnhancing"
                     class="flex-1 px-4 py-3 border border-[#8D35FF]/50 text-[#8D35FF] rounded-none hover:bg-[#8D35FF]/10 transition text-sm flex items-center justify-center gap-2 disabled:opacity-50"
@@ -879,7 +879,7 @@
           </div>
 
           <!-- Footer Navigation -->
-          <div class="bg-[#161616] border-t border-[#333] p-4 flex gap-3 items-center justify-between">
+          <div class="bg-[#161616] border-t border-[#333] p-4 flex gap-3 items-center">
             <button
               v-if="wizardPhase !== 'saved'"
               @click="resetWizard"
@@ -887,35 +887,25 @@
             >
               Reset
             </button>
-            <button
-              v-if="wizardPhase === 'questions' && currentQ && (currentQ.type === 'textarea' || currentQ.type === 'text_input') && canUndo"
-              @click="undoEnhance"
-              class="px-6 py-3 border border-[#333] text-[#999] rounded-none hover:bg-[#1a1a1a] hover:text-white transition text-sm flex items-center gap-2"
-              title="Undo"
-            >
-              <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path d="M3.854 4.854a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L1.707 8l2.147-2.146zm8.292-.708a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L14.293 8l-2.147-2.146z" /></svg>
-              Undo
-            </button>
-            <button
-              v-if="wizardPhase === 'questions' && currentQ && (currentQ.type === 'textarea' || currentQ.type === 'text_input') && canRedo"
-              @click="redoEnhance"
-              class="px-6 py-3 border border-[#333] text-[#999] rounded-none hover:bg-[#1a1a1a] hover:text-white transition text-sm flex items-center gap-2"
-              title="Redo"
-            >
-              Redo
-              <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path d="M12.146 4.854a.5.5 0 0 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L14.293 8l-2.147-2.146zM3.854 4.146a.5.5 0 0 0-.708 0l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L1.707 8l2.147 2.146z" /></svg>
-            </button>
             <div class="flex-1"></div>
             <div v-if="wizardPhase === 'questions' && currentQ && (currentQ.type === 'textarea' || currentQ.type === 'text_input')" class="flex gap-2">
               <button
-                v-if="userMessage.trim()"
-                @click="enhanceWithAI"
-                :disabled="isEnhancing"
-                class="px-6 py-3 border border-[#8D35FF]/50 text-[#8D35FF] rounded-none hover:bg-[#8D35FF]/10 transition text-sm flex items-center gap-2 disabled:opacity-50"
+                v-if="canUndo"
+                @click="undoEnhance"
+                class="px-6 py-3 border border-[#333] text-[#999] rounded-none hover:bg-[#1a1a1a] hover:text-white transition text-sm flex items-center gap-2"
+                title="Undo"
               >
-                <svg v-if="!isEnhancing" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path d="M8 1l2 4h4l-3 3 1 4-4-2-4 2 1-4-3-3h4l2-4z" /></svg>
-                <span v-if="isEnhancing">Enhancing...</span>
-                <span v-else>Enhance</span>
+                <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path d="M3.854 4.854a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L1.707 8l2.147-2.146zm8.292-.708a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L14.293 8l-2.147-2.146z" /></svg>
+                Undo
+              </button>
+              <button
+                v-if="canRedo"
+                @click="redoEnhance"
+                class="px-6 py-3 border border-[#333] text-[#999] rounded-none hover:bg-[#1a1a1a] hover:text-white transition text-sm flex items-center gap-2"
+                title="Redo"
+              >
+                Redo
+                <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path d="M12.146 4.854a.5.5 0 0 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L14.293 8l-2.147-2.146zM3.854 4.146a.5.5 0 0 0-.708 0l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L1.707 8l2.147 2.146z" /></svg>
               </button>
             </div>
             <button
