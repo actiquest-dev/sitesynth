@@ -96,11 +96,42 @@ export default defineEventHandler(async (event) => {
   }
 
   const driveClient = await getDriveClient()
-  const userFolderId = await getUserFolder(userEmail, driveClient)
+
+  // DELETE - Remove file from Google Drive (doesn't need user folder)
+  if (method === 'DELETE') {
+    try {
+      const { fileId } = await readBody(event)
+
+      if (!fileId) {
+        throw createError({
+          statusCode: 400,
+          statusMessage: 'File ID required',
+        })
+      }
+
+      await driveClient.files.delete({
+        fileId: fileId,
+        supportsAllDrives: true,
+      })
+
+      return {
+        success: true,
+        message: 'File deleted',
+      }
+    } catch (error: any) {
+      console.error('Error deleting file from Google Drive:', error?.message || error)
+      throw createError({
+        statusCode: 500,
+        statusMessage: error?.message || 'Failed to delete file',
+      })
+    }
+  }
 
   // GET - List user files from Google Drive
   if (method === 'GET') {
     try {
+      const userFolderId = await getUserFolder(userEmail, driveClient)
+
       const res = await driveClient.files.list({
         q: `'${userFolderId}' in parents and trashed = false`,
         spaces: 'drive',
@@ -124,42 +155,11 @@ export default defineEventHandler(async (event) => {
         success: true,
         data: files,
       }
-    } catch (error) {
-      console.error('Error listing files from Google Drive:', error)
+    } catch (error: any) {
+      console.error('Error listing files from Google Drive:', error?.message || error)
       throw createError({
         statusCode: 500,
         statusMessage: 'Failed to list files',
-      })
-    }
-  }
-
-  // DELETE - Remove file from Google Drive
-  if (method === 'DELETE') {
-    try {
-      const { fileId } = await readBody(event)
-
-      if (!fileId) {
-        throw createError({
-          statusCode: 400,
-          statusMessage: 'File ID required',
-        })
-      }
-
-      // Delete the file from Google Drive
-      await driveClient.files.delete({
-        fileId: fileId,
-        supportsAllDrives: true,
-      })
-
-      return {
-        success: true,
-        message: 'File deleted',
-      }
-    } catch (error) {
-      console.error('Error deleting file from Google Drive:', error)
-      throw createError({
-        statusCode: 500,
-        statusMessage: 'Failed to delete file',
       })
     }
   }
