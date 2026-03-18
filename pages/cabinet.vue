@@ -816,15 +816,6 @@
                 <!-- Action buttons for text fields -->
                 <div v-if="currentQ.type === 'text_input' || currentQ.type === 'textarea'" class="flex gap-3">
                   <button
-                    v-if="currentQ.type === 'textarea' && userMessage.trim().length > 10"
-                    @click="enhanceWithAI"
-                    :disabled="isEnhancing"
-                    class="flex-1 px-4 py-3 border border-[#8D35FF]/50 text-[#8D35FF] rounded-none hover:bg-[#8D35FF]/10 transition text-sm flex items-center justify-center gap-2 disabled:opacity-50"
-                  >
-                    <span v-if="isEnhancing">Enhancing...</span>
-                    <span v-else>✨ Check by AI (Ctrl+Enter)</span>
-                  </button>
-                  <button
                     @click="submitAnswer"
                     :disabled="!userMessage.trim()"
                     class="flex-1 px-4 py-3 bg-[#8D35FF] text-white rounded-none hover:bg-[#7B2AE8] transition text-sm disabled:opacity-50"
@@ -879,15 +870,16 @@
               Reset
             </button>
             <div class="flex-1"></div>
-            <!-- Check by AI button on the right -->
+            <!-- Improve button on the right -->
             <button
-              v-if="wizardPhase === 'questions' && currentQ && (currentQ.type === 'textarea' || currentQ.type === 'text_input') && userMessage.trim().length > 10"
+              v-if="wizardPhase === 'questions' && currentQ && (currentQ.type === 'textarea' || currentQ.type === 'text_input') && userMessage.trim()"
               @click="enhanceWithAI"
               :disabled="isEnhancing"
-              class="px-4 py-3 border border-[#8D35FF]/50 text-[#8D35FF] rounded-none hover:bg-[#8D35FF]/10 transition text-sm flex items-center gap-2 disabled:opacity-50"
+              class="px-4 py-2 border border-[#8D35FF]/50 text-[#8D35FF] rounded-none hover:bg-[#8D35FF]/10 transition text-xs flex items-center gap-1.5 disabled:opacity-50"
             >
-              <span v-if="isEnhancing">Enhancing...</span>
-              <span v-else>🪄 Check by AI</span>
+              <svg v-if="!isEnhancing" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5"><path d="M8 1l2 4h4l-3 3 1 4-4-2-4 2 1-4-3-3h4l2-4z" /></svg>
+              <span v-if="isEnhancing">Improving...</span>
+              <span v-else>Improve</span>
             </button>
             <button
               v-if="wizardPhase === 'upload'"
