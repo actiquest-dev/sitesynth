@@ -1,4 +1,5 @@
 import { google } from 'googleapis'
+import { Readable } from 'stream'
 
 const drive = google.drive('v3')
 
@@ -106,6 +107,9 @@ export default defineEventHandler(async (event) => {
     for (const file of files) {
       if (file.data) {
         try {
+          // Convert buffer to stream for Google Drive API
+          const fileStream = Readable.from(file.data)
+
           const res = await driveClient.files.create({
             requestBody: {
               name: file.filename || 'file',
@@ -115,7 +119,7 @@ export default defineEventHandler(async (event) => {
             },
             media: {
               mimeType: file.type,
-              body: file.data,
+              body: fileStream,
             },
           })
 

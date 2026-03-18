@@ -1,4 +1,5 @@
 import { google } from 'googleapis'
+import { Readable } from 'stream'
 
 // Helper to get authenticated Drive client
 async function getDriveClient() {
@@ -104,6 +105,9 @@ export default defineEventHandler(async (event) => {
     const driveClient = await getDriveClient()
     const userFolderId = await getUserFolder(userEmail, driveClient)
 
+    // Convert buffer to stream for Google Drive API
+    const fileStream = Readable.from(fileBuffer)
+
     // Upload file to Google Drive in user folder
     const response = await driveClient.files.create({
       requestBody: {
@@ -114,7 +118,7 @@ export default defineEventHandler(async (event) => {
       },
       media: {
         mimeType: fileField.type || 'application/octet-stream',
-        body: fileBuffer,
+        body: fileStream,
       },
     })
 
