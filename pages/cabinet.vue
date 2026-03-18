@@ -504,164 +504,248 @@
     <!-- Brief Wizard Modal -->
     <Teleport to="body" v-if="showBriefWizard">
       <div class="fixed inset-0 bg-black/80 backdrop-blur z-50 flex items-center justify-center">
-        <div class="bg-[#161616] border border-[#333] w-full max-w-2xl mx-4 rounded-none max-h-[90vh] overflow-y-auto">
+        <div class="bg-[#161616] border border-[#333] w-full max-w-3xl mx-4 rounded-none flex flex-col" style="max-height: 90vh">
           <!-- Header -->
-          <div class="sticky top-0 bg-[#161616] border-b border-[#333] p-6">
+          <div class="bg-[#161616] border-b border-[#333] p-6">
             <div class="flex items-center justify-between mb-4">
               <h2 class="text-xl font-semibold text-white">Create Brief</h2>
-              <button @click="showBriefWizard = false" class="text-[#666] hover:text-white">✕</button>
+              <button @click="showBriefWizard = false" class="text-[#666] hover:text-white text-xl">✕</button>
             </div>
-            <div class="flex gap-2">
-              <div v-for="i in 5" :key="i" class="flex-1 h-1 rounded-full" :class="wizardStage >= i ? 'bg-[#8D35FF]' : 'bg-[#333]'"></div>
+            <!-- Progress bar -->
+            <div class="w-full h-1 bg-[#333] rounded-none">
+              <div class="h-1 bg-[#8D35FF] rounded-none transition-all duration-300" :style="{ width: wizardProgress + '%' }"></div>
             </div>
-            <p class="text-[#999] text-sm mt-3">Stage {{ wizardStage }} of 5</p>
+            <p class="text-[#999] text-sm mt-2">{{ wizardProgressLabel }}</p>
           </div>
 
-          <!-- Content -->
-          <div class="p-6 space-y-6">
-            <!-- Stage 1: Files -->
-            <div v-if="wizardStage === 1" class="space-y-4">
+          <!-- Content (scrollable) -->
+          <div class="flex-1 overflow-y-auto p-6 space-y-6" ref="wizardContentRef">
+
+            <!-- Phase: Files -->
+            <div v-if="wizardPhase === 'upload'" class="space-y-4">
               <h3 class="text-white font-semibold">Upload Reference Files</h3>
-              <div @drop.prevent="(e) => wizardFiles.push(...Array.from((e as DragEvent).dataTransfer?.files || []))" @dragover.prevent class="border-2 border-dashed border-[#333] rounded-none p-8 text-center cursor-pointer hover:border-[#8D35FF]">
+              <p class="text-[#999] text-sm">Upload brand guidelines, wireframes, or any reference materials. You can skip this step.</p>
+              <div @drop.prevent="(e: DragEvent) => { wizardFiles.push(...Array.from(e.dataTransfer?.files || [])) }" @dragover.prevent class="border-2 border-dashed border-[#333] rounded-none p-8 text-center cursor-pointer hover:border-[#8D35FF] transition">
                 <input ref="wizardFileInput" type="file" multiple class="hidden" @change="handleWizardFileSelect" accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png" />
-                <button @click="wizardFileInput?.click()" class="text-center">
-                  <p class="text-[#999] mb-2">📁 Drop files or click to browse</p>
+                <button @click="wizardFileInput?.click()" class="text-center w-full">
+                  <p class="text-[#999] mb-2">Drop files or click to browse</p>
                   <p class="text-[#666] text-sm">PDF, DOC, DOCX, TXT, JPG, PNG</p>
                 </button>
               </div>
               <div v-if="wizardFiles.length > 0" class="space-y-2">
                 <p class="text-white text-sm font-semibold">{{ wizardFiles.length }} file(s) selected</p>
-                <div v-for="(f, i) in wizardFiles" :key="i" class="flex items-center justify-between bg-[#0f0f0f] p-3 border border-[#333]">
+                <div v-for="(f, i) in wizardFiles" :key="i" class="flex items-center justify-between bg-[#0f0f0f] p-3 border border-[#333] rounded-none">
                   <span class="text-white text-sm">{{ f.name }}</span>
                   <button @click="wizardFiles.splice(i, 1)" class="text-[#666] hover:text-red-400">✕</button>
                 </div>
               </div>
             </div>
 
-            <!-- Stage 2: Questions -->
-            <div v-if="wizardStage === 2" class="space-y-6">
-              <div>
-                <h3 class="text-xl font-bold text-white mb-2"><Icon name="comments" class="mr-2 inline" />Guided Conversation</h3>
-                <p class="text-[#999999] text-sm mb-6">
-                  Answer a few key questions about your project. The AI will extract important details to build your brief.
-                </p>
-                <div class="bg-[#0f0f0f] border border-[#333] rounded-lg p-3 mb-6">
-                  <p class="text-white text-xs font-semibold">Question {{ currentQuestionIndex + 1 }} of {{ questionTree.length }}</p>
-                </div>
-              </div>
+            <!-- Phase: Questions -->
+            <!-- Phase: Product Description -->
+            <div v-if="wizardPhase === 'description'" class="space-y-4">
+              <h3 class="text-white font-semibold">Describe Your Product</h3>
+              <p class="text-[#999] text-sm">Tell us about your product or company. Based on this, we'll generate a custom questionnaire tailored to your needs.</p>
+              <textarea
+                v-model="productDescription"
+                placeholder="E.g., 'We're building a SaaS project management tool for remote teams. It helps teams collaborate on tasks, set deadlines, and track progress. We're in MVP stage and targeting small startups...'"
+                rows="6"
+                class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-none text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none transition resize-none"
+              ></textarea>
+              <p class="text-[#666] text-xs">At least 20 characters. The more detail, the better the questions.</p>
+            </div>
 
-              <!-- Chat Messages -->
-              <div class="bg-[#0f0f0f] border border-[#333] rounded-lg p-6 max-h-80 overflow-y-auto space-y-4">
-                <div v-for="(msg, idx) in chatHistory" :key="idx" :class="[
-                  'p-4 rounded-lg',
-                  msg.role === 'assistant' ? 'bg-[#1a1a1a] border border-[#333]' : 'bg-[#8D35FF]/20 border border-[#8D35FF]/50'
-                ]">
-                  <p :class="msg.role === 'assistant' ? 'text-white' : 'text-[#8D35FF]'" class="text-sm flex items-center gap-2">
-                    <Icon :name="msg.role === 'assistant' ? 'wand-magic' : 'user'" size="16" />
-                    {{ msg.role === 'assistant' ? 'AI:' : 'You:' }}
-                  </p>
-                  <p class="text-[#999999] text-sm mt-1">{{ msg.content }}</p>
+            <div v-if="wizardPhase === 'questions'" class="space-y-4">
+              <!-- Answered questions history (chat-like) -->
+              <div v-for="(answer, idx) in answeredQuestions" :key="answer.id" class="space-y-2">
+                <!-- Question bubble -->
+                <div class="bg-[#1a1a1a] border border-[#333] rounded-none p-4">
+                  <p class="text-[#999] text-xs mb-1">Question {{ idx + 1 }}</p>
+                  <p class="text-white text-sm font-semibold">{{ answer.questionText }}</p>
+                </div>
+                <!-- Answer bubble -->
+                <div class="bg-[#8D35FF]/10 border border-[#8D35FF]/30 rounded-none p-4 relative group">
+                  <p class="text-white text-sm pr-8">{{ answer.value }}</p>
+                  <div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition">
+                    <button @click="editAnswer(idx)" class="text-[#999] hover:text-[#8D35FF] text-xs px-2 py-1 border border-[#333] rounded-none bg-[#161616]">Edit</button>
+                    <button @click="deleteAnswer(idx)" class="text-[#999] hover:text-red-400 text-xs px-2 py-1 border border-[#333] rounded-none bg-[#161616]">✕</button>
+                  </div>
+                  <!-- AI enhanced badge -->
+                  <p v-if="answer.enhanced" class="text-[#8D35FF] text-xs mt-2 flex items-center gap-1">✨ Enhanced by AI</p>
                 </div>
               </div>
 
               <!-- Current Question -->
-              <div v-if="questionTree[currentQuestionIndex]" class="bg-[#0f0f0f] border border-[#333] rounded-lg p-6 space-y-4">
-                <p class="text-white font-semibold">{{ questionTree[currentQuestionIndex].text }}</p>
+              <div v-if="currentQ" class="space-y-4">
+                <div class="bg-[#1a1a1a] border border-[#333] rounded-none p-4">
+                  <p class="text-[#999] text-xs mb-1">Question {{ currentQuestionIndex + 1 }}</p>
+                  <p class="text-white font-semibold">{{ currentQ.text }}</p>
+                </div>
 
                 <!-- Text Input -->
-                <div v-if="questionTree[currentQuestionIndex].type === 'text_input'" class="flex gap-3">
+                <div v-if="currentQ.type === 'text_input'" class="space-y-3">
                   <input
                     v-model="userMessage"
-                    @keyup.enter="sendMessage"
+                    @keyup.enter="submitAnswer"
                     type="text"
-                    :placeholder="questionTree[currentQuestionIndex].hint || 'Your answer...'"
-                    class="flex-1 px-4 py-3 bg-[#1a1a1a] border border-[#333] rounded-lg text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none transition"
+                    :placeholder="currentQ.hint || 'Your answer...'"
+                    class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-none text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none transition"
                   />
-                  <button
-                    @click="sendMessage"
-                    class="px-6 py-3 bg-[#8D35FF] text-white rounded-lg font-semibold hover:bg-purple-700 transition"
-                  >
-                    Next
-                  </button>
                 </div>
 
                 <!-- Textarea -->
-                <div v-else-if="questionTree[currentQuestionIndex].type === 'textarea'" class="flex flex-col gap-3">
+                <div v-else-if="currentQ.type === 'textarea'" class="space-y-3">
                   <textarea
                     v-model="userMessage"
-                    @keyup.ctrl.enter="sendMessage"
-                    :placeholder="questionTree[currentQuestionIndex].hint || 'Your answer...'"
-                    class="w-full px-4 py-3 bg-[#1a1a1a] border border-[#333] rounded-lg text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none transition h-24 resize-none"
+                    @keydown.ctrl.enter.prevent="enhanceWithAI"
+                    :placeholder="currentQ.hint || 'Your answer...'"
+                    rows="5"
+                    class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-none text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none transition resize-none"
                   ></textarea>
-                  <button
-                    @click="sendMessage"
-                    class="w-full px-6 py-3 bg-[#8D35FF] text-white rounded-lg font-semibold hover:bg-purple-700 transition"
-                  >
-                    Next (Ctrl+Enter)
-                  </button>
                 </div>
 
                 <!-- Single Select -->
-                <div v-else-if="questionTree[currentQuestionIndex].type === 'single_select'" class="flex flex-col gap-3">
+                <div v-else-if="currentQ.type === 'single_select'" class="space-y-3">
                   <div class="grid grid-cols-2 gap-2">
                     <button
-                      v-for="option in questionTree[currentQuestionIndex].options"
+                      v-for="option in currentQ.options"
                       :key="option.id"
-                      @click="userMessage = option.label; sendMessage()"
+                      @click="userMessage = option.label; submitAnswer()"
                       :class="{
                         'bg-[#8D35FF] border-[#8D35FF] text-white': userMessage === option.label,
-                        'bg-[#1a1a1a] border-[#333] text-[#999999] hover:border-[#8D35FF] hover:text-white': userMessage !== option.label
+                        'bg-[#0f0f0f] border-[#333] text-[#999] hover:border-[#8D35FF] hover:text-white': userMessage !== option.label
                       }"
-                      class="px-4 py-3 border rounded-lg font-semibold transition"
+                      class="px-4 py-3 border rounded-none font-medium transition text-sm"
                     >
                       {{ option.label }}
                     </button>
                   </div>
                 </div>
+
+                <!-- Multi Select -->
+                <div v-else-if="currentQ.type === 'multi_select'" class="space-y-3">
+                  <div class="flex flex-wrap gap-2">
+                    <button
+                      v-for="option in currentQ.options"
+                      :key="option.id"
+                      @click="toggleMultiSelect(option.label)"
+                      :class="{
+                        'bg-[#8D35FF] border-[#8D35FF] text-white': multiSelectValues.includes(option.label),
+                        'bg-[#0f0f0f] border-[#333] text-[#999] hover:border-[#8D35FF] hover:text-white': !multiSelectValues.includes(option.label)
+                      }"
+                      class="px-4 py-2 border rounded-none transition text-sm"
+                    >
+                      {{ option.label }}
+                    </button>
+                  </div>
+                  <p class="text-[#666] text-xs">Select all that apply, then click Next</p>
+                </div>
+
+                <!-- AI Enhancement area -->
+                <div v-if="enhancedText" class="bg-[#8D35FF]/5 border border-[#8D35FF]/30 rounded-none p-4 space-y-3">
+                  <p class="text-[#8D35FF] text-xs font-semibold flex items-center gap-1">✨ AI Enhanced Version</p>
+                  <p class="text-white text-sm">{{ enhancedText }}</p>
+                  <div class="flex gap-2">
+                    <button @click="acceptEnhanced" class="px-4 py-2 bg-[#8D35FF] text-white rounded-none text-sm hover:bg-[#7B2AE8] transition">Accept</button>
+                    <button @click="enhancedText = ''" class="px-4 py-2 border border-[#333] text-[#999] rounded-none text-sm hover:text-white transition">Keep Original</button>
+                  </div>
+                </div>
+
+                <!-- Action buttons for text fields -->
+                <div v-if="currentQ.type === 'text_input' || currentQ.type === 'textarea'" class="flex gap-3">
+                  <button
+                    v-if="currentQ.type === 'textarea' && userMessage.trim().length > 10"
+                    @click="enhanceWithAI"
+                    :disabled="isEnhancing"
+                    class="flex-1 px-4 py-3 border border-[#8D35FF]/50 text-[#8D35FF] rounded-none hover:bg-[#8D35FF]/10 transition text-sm flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    <span v-if="isEnhancing">Enhancing...</span>
+                    <span v-else>✨ Check by AI (Ctrl+Enter)</span>
+                  </button>
+                  <button
+                    @click="submitAnswer"
+                    :disabled="!userMessage.trim()"
+                    class="flex-1 px-4 py-3 bg-[#8D35FF] text-white rounded-none hover:bg-[#7B2AE8] transition text-sm disabled:opacity-50"
+                  >
+                    Next
+                  </button>
+                </div>
+
+                <!-- Next button for multi_select -->
+                <div v-if="currentQ.type === 'multi_select'" class="flex gap-3">
+                  <button
+                    @click="submitMultiSelect"
+                    :disabled="multiSelectValues.length === 0"
+                    class="w-full px-4 py-3 bg-[#8D35FF] text-white rounded-none hover:bg-[#7B2AE8] transition text-sm disabled:opacity-50"
+                  >
+                    Next
+                  </button>
+                </div>
               </div>
             </div>
 
-            <!-- Stage 3: Review -->
-            <div v-if="wizardStage === 3" class="space-y-4">
-              <h3 class="text-white font-semibold">Review Information</h3>
-              <div class="bg-[#0f0f0f] border border-[#333] p-4 space-y-2 rounded-none text-sm">
-                <p><span class="text-[#666]">Project:</span> <span class="text-white">{{ briefData.projectName || '—' }}</span></p>
-                <p><span class="text-[#666]">Type:</span> <span class="text-white">{{ briefData.projectCategory || '—' }}</span></p>
-                <p><span class="text-[#666]">Goal:</span> <span class="text-white">{{ briefData.primaryGoal || '—' }}</span></p>
+            <!-- Phase: Generating -->
+            <div v-if="wizardPhase === 'generating'" class="text-center py-16 space-y-4">
+              <div class="inline-block w-8 h-8 border-2 border-[#8D35FF] border-t-transparent rounded-full animate-spin"></div>
+              <p class="text-white font-semibold">Generating your brief with AI...</p>
+              <p class="text-[#999] text-sm">Analyzing your answers and uploaded files</p>
+            </div>
+
+            <!-- Phase: Review Brief -->
+            <div v-if="wizardPhase === 'review'" class="space-y-4">
+              <h3 class="text-white font-semibold">Your Generated Brief</h3>
+              <div class="bg-[#0f0f0f] border border-[#333] rounded-none p-6 max-h-[50vh] overflow-y-auto">
+                <div class="text-white text-sm whitespace-pre-wrap leading-relaxed" v-html="formatBriefHtml(generatedBrief)"></div>
               </div>
             </div>
 
-            <!-- Stage 4: Generated Brief -->
-            <div v-if="wizardStage === 4" class="space-y-4">
-              <h3 class="text-white font-semibold">Generated Brief</h3>
-              <div v-if="isGenerating" class="text-center py-8">
-                <p class="text-[#999]">Generating brief with AI...</p>
-              </div>
-              <div v-else class="bg-[#0f0f0f] border border-[#333] p-4 rounded-none max-h-64 overflow-y-auto text-white text-sm whitespace-pre-wrap">
-                {{ generatedBrief }}
-              </div>
-            </div>
-
-            <!-- Stage 5: Save -->
-            <div v-if="wizardStage === 5" class="space-y-4">
-              <h3 class="text-white font-semibold">Brief Created Successfully!</h3>
-              <p class="text-[#999] text-sm">Your brief has been saved and is ready for editing with AI assistance.</p>
+            <!-- Phase: Saved -->
+            <div v-if="wizardPhase === 'saved'" class="text-center py-16 space-y-4">
+              <p class="text-4xl">✅</p>
+              <h3 class="text-white font-semibold text-xl">Brief Saved Successfully!</h3>
+              <p class="text-[#999] text-sm">You can now edit it with AI assistance in your Projects.</p>
             </div>
           </div>
 
           <!-- Footer Navigation -->
-          <div class="sticky bottom-0 bg-[#161616] border-t border-[#333] p-6 flex gap-3">
-            <button v-if="wizardStage > 1" @click="wizardStage--" class="flex-1 px-4 py-2 border border-[#333] text-white rounded-none hover:bg-[#1a1a1a]">
-              Back
+          <div class="bg-[#161616] border-t border-[#333] p-4 flex gap-3">
+            <button
+              v-if="wizardPhase !== 'saved'"
+              @click="resetWizard"
+              class="px-6 py-3 border border-[#333] text-[#999] rounded-none hover:bg-[#1a1a1a] hover:text-white transition text-sm"
+            >
+              Reset
             </button>
-            <button v-if="wizardStage === 2" @click="currentQuestionIndex < questionTree.length - 1 ? currentQuestionIndex++ : nextWizardStage()" class="flex-1 px-4 py-2 bg-[#8D35FF] text-white rounded-none hover:bg-[#7B2AE8]">
-              {{ currentQuestionIndex < questionTree.length - 1 ? 'Next' : 'Continue' }}
+            <div class="flex-1"></div>
+            <button
+              v-if="wizardPhase === 'upload'"
+              @click="startDescription"
+              class="px-8 py-3 bg-[#8D35FF] text-white rounded-none hover:bg-[#7B2AE8] transition text-sm"
+            >
+              {{ wizardFiles.length > 0 ? 'Upload & Continue' : 'Skip & Continue' }}
             </button>
-            <button v-else-if="wizardStage < 5" @click="nextWizardStage()" :disabled="isGenerating" class="flex-1 px-4 py-2 bg-[#8D35FF] text-white rounded-none hover:bg-[#7B2AE8] disabled:opacity-50">
-              {{ wizardStage === 3 ? 'Generate' : 'Next' }}
+            <button
+              v-if="wizardPhase === 'description'"
+              @click="generateDynamicQuestions"
+              :disabled="isGeneratingQuestions || productDescription.length < 20"
+              class="px-8 py-3 bg-[#8D35FF] text-white rounded-none hover:bg-[#7B2AE8] transition text-sm disabled:opacity-50 flex items-center gap-2"
+            >
+              <span v-if="isGeneratingQuestions">Generating...</span>
+              <span v-else>Generate Questions</span>
             </button>
-            <button v-if="wizardStage === 5" @click="saveBrief()" class="flex-1 px-4 py-2 bg-green-600 text-white rounded-none hover:bg-green-700">
-              Save & Continue
+            <button
+              v-if="wizardPhase === 'review'"
+              @click="saveBrief"
+              class="px-8 py-3 bg-green-600 text-white rounded-none hover:bg-green-700 transition text-sm"
+            >
+              Save Brief
+            </button>
+            <button
+              v-if="wizardPhase === 'saved'"
+              @click="showBriefWizard = false"
+              class="px-8 py-3 bg-[#8D35FF] text-white rounded-none hover:bg-[#7B2AE8] transition text-sm"
+            >
+              Done
             </button>
           </div>
         </div>
@@ -674,6 +758,8 @@
 import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import FormDataDisplay from '@/components/FormDataDisplay.vue'
 import { useGoogleAuth } from '@/composables/useGoogleAuth'
+import { briefQuestions } from '@/config/brief-questions'
+import type { BriefQuestion } from '@/config/brief-questions'
 
 // ── SVG icon paths ──
 const iconPaths: Record<string, string> = {
@@ -769,22 +855,57 @@ const stats = ref({ totalProjects: 0, totalSpent: 0, activeWebsites: 0 })
 
 // ── Brief Wizard ──
 const showBriefWizard = ref(false)
-const wizardStage = ref(1)
+const wizardPhase = ref<'upload' | 'description' | 'questions' | 'generating' | 'review' | 'saved'>('upload')
 const wizardFiles = ref<File[]>([])
 const wizardFileInput = ref<HTMLInputElement | null>(null)
+const wizardContentRef = ref<HTMLElement | null>(null)
 const isGenerating = ref(false)
+const isEnhancing = ref(false)
 const generatedBrief = ref('')
 const brevityData = ref({ uploadedFileIds: [] as string[] })
 const currentQuestionIndex = ref(0)
 const chatDrawerOpen = ref(false)
 const chatConversationId = ref<string | null>(null)
 const wizardConversationId = ref<string | null>(null)
-const agentSuggestions = ref<Record<string, string>>({})
-const chatHistory = ref<Array<{ role: string; content: string }>>([])
 const userMessage = ref('')
+const enhancedText = ref('')
+const multiSelectValues = ref<string[]>([])
+const answeredQuestions = ref<Array<{ id: string; questionText: string; saveKey: string; value: string; enhanced: boolean }>>([])
+const productDescription = ref('')
+const dynamicQuestions = ref<any[]>([])
+const isGeneratingQuestions = ref(false)
+
+// Current question computed (dynamic or static)
+const currentQ = computed(() => {
+  if (dynamicQuestions.value.length > 0) {
+    return dynamicQuestions.value[currentQuestionIndex.value] || null
+  }
+  return briefQuestions[currentQuestionIndex.value] || null
+})
+
+// Progress
+const totalQuestions = computed(() => dynamicQuestions.value.length || briefQuestions.length)
+
+const wizardProgress = computed(() => {
+  if (wizardPhase.value === 'upload') return 0
+  if (wizardPhase.value === 'description') return 5
+  if (wizardPhase.value === 'questions') return Math.round(((currentQuestionIndex.value) / totalQuestions.value) * 80) + 10
+  if (wizardPhase.value === 'generating') return 90
+  if (wizardPhase.value === 'review') return 95
+  return 100
+})
+
+const wizardProgressLabel = computed(() => {
+  if (wizardPhase.value === 'upload') return 'Upload reference files'
+  if (wizardPhase.value === 'description') return 'Describe your product'
+  if (wizardPhase.value === 'questions') return `Question ${currentQuestionIndex.value + 1} of ${totalQuestions.value}`
+  if (wizardPhase.value === 'generating') return 'Generating brief...'
+  if (wizardPhase.value === 'review') return 'Review your brief'
+  return 'Done!'
+})
 
 // ── Brief Data ──
-const briefData = ref({
+const briefData = ref<Record<string, any>>({
   projectName: '',
   projectDescription: '',
   projectType: '',
@@ -792,40 +913,13 @@ const briefData = ref({
   industry: '',
   primaryGoal: '',
   targetAudience: '',
-  painPoints: [] as string[],
-  colorPalette: [] as any[],
+  painPoints: '',
+  colorPalette: '',
   timeline: '',
   budget: '',
-  deliverables: [] as string[],
-  technicalRequirements: [] as string[],
+  deliverables: '',
+  technicalRequirements: '',
 })
-
-// ── Question Tree ──
-const questionTree = [
-  { id: 'Q2.1', stage: 2, text: 'What is your project called?', type: 'text_input', saveKey: 'projectName', hint: 'e.g., E-Commerce Redesign, FinTech App' },
-  { id: 'Q2.2', stage: 2, text: 'In one sentence, what are you building?', type: 'textarea', saveKey: 'projectDescription', hint: 'Brief description of your project' },
-  { id: 'Q2.3', stage: 2, text: 'What type of project is this?', type: 'single_select', options: [
-    { id: 'website', label: 'Website / Landing page' },
-    { id: 'mobile_app', label: 'Mobile Application' },
-    { id: 'web_app', label: 'Web Application / SaaS' },
-    { id: 'branding', label: 'Branding / Brand Identity' },
-    { id: 'ecommerce', label: 'E-commerce Platform' }
-  ], saveKey: 'projectCategory' },
-  { id: 'Q2.4', stage: 2, text: 'What is the primary goal of this project?', type: 'text_input', saveKey: 'primaryGoal', hint: 'e.g., Increase conversion, improve UX, launch product' },
-  { id: 'Q2.5', stage: 2, text: 'Who is your target audience?', type: 'text_input', saveKey: 'targetAudience', hint: 'e.g., Small business owners aged 25-45' },
-  { id: 'Q2.6', stage: 2, text: 'What problems need to be solved? (list them)', type: 'textarea', saveKey: 'painPoints', hint: 'List 2-3 main problems' },
-  { id: 'Q2.7', stage: 2, text: 'What is your timeline? (when do you need results)', type: 'text_input', saveKey: 'timeline', hint: 'e.g., 2 weeks, by April 15' },
-  { id: 'Q2.8', stage: 2, text: 'What is your budget?', type: 'single_select', options: [
-    { id: 'low', label: '$500-2000' },
-    { id: 'medium', label: '$2000-5000' },
-    { id: 'high', label: '$5000-15000' },
-    { id: 'premium', label: '$15000+' }
-  ], saveKey: 'budget' },
-  { id: 'Q3.1', stage: 3, text: 'What is the primary industry / sector?', type: 'text_input', saveKey: 'industry', hint: 'e.g., FinTech, SaaS, E-commerce, Healthcare' },
-  { id: 'Q3.2', stage: 3, text: 'What are the main colors in your brand palette?', type: 'textarea', saveKey: 'colorPalette', hint: 'e.g., Primary: #8D35FF, Secondary: #FF6B35' },
-  { id: 'Q4.1', stage: 3, text: 'What are the main deliverables needed?', type: 'textarea', saveKey: 'deliverables', hint: 'e.g., UI Design, Wireframes, Prototype, Code' },
-  { id: 'Q5.1', stage: 3, text: 'What are the technical requirements?', type: 'textarea', saveKey: 'technicalRequirements', hint: 'e.g., Responsive, SEO-optimized, WCAG 2.1 AA' },
-]
 
 // ── Helpers ──
 const timeAgo = (dateString: string | Date): string => {
@@ -1164,40 +1258,22 @@ const sendChatMessage = async () => {
 // ── Brief Wizard Functions ──
 const openBriefWizard = async () => {
   showBriefWizard.value = true
-  wizardStage.value = 1
+  resetWizard()
+}
+
+const resetWizard = () => {
+  wizardPhase.value = 'upload'
   wizardFiles.value = []
-  briefData.value = {
-    projectName: '', projectDescription: '', projectType: '', projectCategory: '', industry: '',
-    primaryGoal: '', targetAudience: '', painPoints: [], colorPalette: [], timeline: '', budget: '',
-    deliverables: [], technicalRequirements: []
-  }
-  brevityData.value.uploadedFileIds = []
   currentQuestionIndex.value = 0
-  agentSuggestions.value = {}
-
-  // Create conversation for Brief Discovery agent
-  try {
-    const convResponse = await fetch('/api/chat/conversations', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-user-email': userEmail.value,
-      },
-      body: JSON.stringify({
-        agentType: 'briefing',
-        title: 'Brief Discovery',
-        stage: 'brief-discovery',
-      }),
-    })
-
-    if (convResponse.ok) {
-      const convData = await convResponse.json()
-      wizardConversationId.value = convData.data?.id
-      console.log('[Wizard] Created conversation:', wizardConversationId.value)
-    }
-  } catch (error) {
-    console.error('[Wizard] Error creating conversation:', error)
-  }
+  userMessage.value = ''
+  enhancedText.value = ''
+  multiSelectValues.value = []
+  answeredQuestions.value = []
+  generatedBrief.value = ''
+  productDescription.value = ''
+  dynamicQuestions.value = []
+  brevityData.value.uploadedFileIds = []
+  Object.keys(briefData.value).forEach(key => { briefData.value[key] = '' })
 }
 
 const handleWizardFileSelect = (event: Event) => {
@@ -1223,112 +1299,192 @@ const uploadWizardFiles = async () => {
   }
 }
 
-const getCurrentQuestion = () => {
-  return questionTree.find((q: any) => q.stage === wizardStage.value && q.id.split('.')[1] === String(currentQuestionIndex.value + 1))
+const startDescription = async () => {
+  if (wizardFiles.value.length > 0) await uploadWizardFiles()
+  wizardPhase.value = 'description'
+  productDescription.value = ''
 }
 
-const sendMessage = async () => {
-  if (!userMessage.value.trim()) return
-
-  const currentQuestion = getCurrentQuestion()
-  if (!currentQuestion) return
-
-  // Add user message to chat history
-  chatHistory.value.push({ role: 'user', content: userMessage.value })
-
-  // Save answer to briefData
-  const saveKey = currentQuestion.saveKey
-  if (currentQuestion.type === 'single_select') {
-    (briefData.value as any)[saveKey] = userMessage.value
-  } else if (currentQuestion.type === 'textarea') {
-    // For textareas, split by newlines for array fields
-    if (saveKey === 'painPoints' || saveKey === 'deliverables' || saveKey === 'technicalRequirements') {
-      (briefData.value as any)[saveKey] = userMessage.value.split('\n').filter((s: string) => s.trim())
-    } else if (saveKey === 'colorPalette') {
-      (briefData.value as any)[saveKey] = userMessage.value.split('\n').filter((s: string) => s.trim())
-    } else {
-      (briefData.value as any)[saveKey] = userMessage.value
-    }
-  } else {
-    (briefData.value as any)[saveKey] = userMessage.value
+const generateDynamicQuestions = async () => {
+  if (!productDescription.value.trim() || productDescription.value.length < 20) {
+    alert('Please provide a detailed product description (at least 20 characters)')
+    return
   }
 
-  // Send to agent for feedback
-  if (wizardConversationId.value) {
-    try {
-      const response = await fetch('/api/chat/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-email': userEmail.value,
-        },
-        body: JSON.stringify({
-          conversation_id: wizardConversationId.value,
-          message: `Question: "${currentQuestion.text}"\nAnswer: "${userMessage.value}"\n\nProvide brief feedback on this answer.`,
-          agent_type: 'briefing',
-          stage: 'brief-discovery',
-        }),
-      })
+  isGeneratingQuestions.value = true
+  try {
+    const response = await fetch('/api/questionnaire/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ productDescription: productDescription.value }),
+    })
 
-      if (response.ok) {
-        const data = await response.json()
-        // Add agent response to chat history
-        if (data.data?.response) {
-          chatHistory.value.push({ role: 'assistant', content: data.data.response })
-          agentSuggestions.value[currentQuestion.id] = data.data.response
-        }
-      }
-    } catch (error) {
-      console.error('[Wizard] Error sending answer to agent:', error)
+    const data = await response.json()
+
+    if (!data.success) {
+      throw new Error(data.error || 'Failed to generate questions')
     }
-  }
 
-  // Move to next question
-  userMessage.value = ''
-  if (currentQuestionIndex.value < questionTree.filter((q: any) => q.stage === wizardStage.value).length - 1) {
-    currentQuestionIndex.value++
-  } else {
-    // Move to next stage
-    if (wizardStage.value < 3) {
-      wizardStage.value++
-      currentQuestionIndex.value = 0
-      chatHistory.value = []
+    // Convert dynamic questions to standard format
+    dynamicQuestions.value = (data.data?.questions || []).map((q: any) => ({
+      id: q.id,
+      text: q.text,
+      type: q.type,
+      options: q.options,
+      hint: q.hint,
+      saveKey: q.id.toLowerCase(), // Use question ID as save key
+    }))
+
+    if (dynamicQuestions.value.length === 0) {
+      // Fallback to static questions if generation fails
+      dynamicQuestions.value = []
     }
-  }
-}
 
-const nextWizardStage = async () => {
-  if (wizardStage.value === 1) {
-    if (wizardFiles.value.length > 0) await uploadWizardFiles()
-    wizardStage.value = 2
     currentQuestionIndex.value = 0
-  } else if (wizardStage.value === 2) {
-    wizardStage.value = 3
-  } else if (wizardStage.value === 3) {
+    answeredQuestions.value = []
+    wizardPhase.value = 'questions'
+  } catch (error) {
+    console.error('[Questionnaire] Error:', error)
+    alert('Failed to generate questions. Using default questions instead.')
+    dynamicQuestions.value = []
+    currentQuestionIndex.value = 0
+    wizardPhase.value = 'questions'
+  } finally {
+    isGeneratingQuestions.value = false
+  }
+}
+
+const startQuestions = async () => {
+  if (wizardFiles.value.length > 0) await uploadWizardFiles()
+  wizardPhase.value = 'questions'
+  currentQuestionIndex.value = 0
+}
+
+const toggleMultiSelect = (label: string) => {
+  const idx = multiSelectValues.value.indexOf(label)
+  if (idx >= 0) multiSelectValues.value.splice(idx, 1)
+  else multiSelectValues.value.push(label)
+}
+
+const submitMultiSelect = () => {
+  if (!currentQ.value || multiSelectValues.value.length === 0) return
+  const value = multiSelectValues.value.join(', ')
+  briefData.value[currentQ.value.saveKey] = value
+  answeredQuestions.value.push({
+    id: currentQ.value.id,
+    questionText: currentQ.value.text,
+    saveKey: currentQ.value.saveKey,
+    value,
+    enhanced: false,
+  })
+  multiSelectValues.value = []
+  advanceQuestion()
+}
+
+const submitAnswer = () => {
+  if (!userMessage.value.trim() || !currentQ.value) return
+  briefData.value[currentQ.value.saveKey] = userMessage.value
+  answeredQuestions.value.push({
+    id: currentQ.value.id,
+    questionText: currentQ.value.text,
+    saveKey: currentQ.value.saveKey,
+    value: userMessage.value,
+    enhanced: !!enhancedText.value,
+  })
+  userMessage.value = ''
+  enhancedText.value = ''
+  advanceQuestion()
+}
+
+const advanceQuestion = async () => {
+  if (currentQuestionIndex.value < briefQuestions.length - 1) {
+    currentQuestionIndex.value++
+    await nextTick()
+    wizardContentRef.value?.scrollTo({ top: wizardContentRef.value.scrollHeight, behavior: 'smooth' })
+  } else {
+    // All questions answered - generate brief
+    wizardPhase.value = 'generating'
     await generateBriefWithGemini()
   }
+}
+
+const editAnswer = (idx: number) => {
+  // Go back to that question
+  const answer = answeredQuestions.value[idx]
+  userMessage.value = answer.value
+  currentQuestionIndex.value = briefQuestions.findIndex(q => q.id === answer.id)
+  // Remove this and all following answers
+  const removed = answeredQuestions.value.splice(idx)
+  removed.forEach(a => { briefData.value[a.saveKey] = '' })
+}
+
+const deleteAnswer = (idx: number) => {
+  const answer = answeredQuestions.value[idx]
+  userMessage.value = ''
+  currentQuestionIndex.value = briefQuestions.findIndex(q => q.id === answer.id)
+  const removed = answeredQuestions.value.splice(idx)
+  removed.forEach(a => { briefData.value[a.saveKey] = '' })
+}
+
+const enhanceWithAI = async () => {
+  if (!userMessage.value.trim() || !currentQ.value || isEnhancing.value) return
+  isEnhancing.value = true
+  try {
+    const response = await fetch('/api/brief/enhance', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        questionText: currentQ.value.text,
+        userAnswer: userMessage.value,
+      }),
+    })
+    const data = await response.json()
+    if (data.success && data.enhanced) {
+      enhancedText.value = data.enhanced
+    }
+  } catch (error) {
+    console.error('[Enhance] Error:', error)
+  } finally {
+    isEnhancing.value = false
+  }
+}
+
+const acceptEnhanced = () => {
+  if (enhancedText.value) {
+    userMessage.value = enhancedText.value
+    enhancedText.value = ''
+  }
+}
+
+const formatBriefHtml = (text: string): string => {
+  if (!text) return ''
+  return text
+    .replace(/^### (.+)$/gm, '<h3 class="text-lg font-bold text-[#8D35FF] mt-6 mb-2">$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2 class="text-xl font-bold text-white mt-8 mb-3">$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1 class="text-2xl font-bold text-white mt-8 mb-4">$1</h1>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong class="text-white">$1</strong>')
+    .replace(/^- (.+)$/gm, '<li class="text-[#ccc] ml-4 list-disc">$1</li>')
+    .replace(/\n\n/g, '<br><br>')
+    .replace(/\n/g, '<br>')
 }
 
 const generateBriefWithGemini = async () => {
   isGenerating.value = true
   try {
     const response = await fetch('/api/brief/generate', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ briefData: briefData.value, uploadedFiles: brevityData.value.uploadedFileIds })
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ briefData: briefData.value, uploadedFiles: brevityData.value.uploadedFileIds }),
     })
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status}`)
-    }
+    if (!response.ok) throw new Error(`API error: ${response.status}`)
     const data = await response.json()
-    if (!data.success) {
-      throw new Error(data.error || 'Failed to generate brief')
-    }
+    if (!data.success) throw new Error(data.error || 'Failed to generate brief')
     generatedBrief.value = data.content || ''
-    wizardStage.value = 4
-    chatDrawerOpen.value = true
+    wizardPhase.value = 'review'
   } catch (error) {
     console.error('Error generating brief:', error)
     generatedBrief.value = `Error: ${error instanceof Error ? error.message : 'Unknown error'}`
+    wizardPhase.value = 'review'
   } finally {
     isGenerating.value = false
   }
@@ -1337,11 +1493,15 @@ const generateBriefWithGemini = async () => {
 const saveBrief = async () => {
   try {
     await fetch('/api/briefs', {
-      method: 'POST', headers: { 'Content-Type': 'application/json', 'x-user-email': userEmail.value },
-      body: JSON.stringify({ name: briefData.value.projectName, description: briefData.value.projectDescription, content: generatedBrief.value })
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-user-email': userEmail.value },
+      body: JSON.stringify({
+        name: briefData.value.projectName || 'Untitled Brief',
+        description: briefData.value.projectDescription,
+        content: generatedBrief.value,
+      }),
     })
-    showBriefWizard.value = false
-    generatedBrief.value = ''
+    wizardPhase.value = 'saved'
   } catch (error) {
     console.error('Error saving brief:', error)
   }

@@ -56,21 +56,43 @@ export default defineEventHandler(async (event) => {
     const { briefData, uploadedFiles, userMessage, currentBrief } = body
 
     // System prompt for brief generation
-    const systemPrompt = `You are a professional Design Brief expert. Your role is to create comprehensive, high-quality design briefs based on client information.
+    const systemPrompt = `You are a professional Design Brief expert. Create a comprehensive, well-structured design brief.
 
-When generating a brief, you should:
-1. Analyze all provided information (data, files, conversation history)
-2. Create a well-structured 8-section brief:
-   - Project Overview
-   - Goals & Audience
-   - Pain Points & Challenges
-   - Brand Guidelines
-   - Deliverables & Scope
-   - Timeline & Budget
-   - Technical Requirements
-   - Success Metrics
+IMPORTANT RULES:
+- Do NOT repeat or duplicate information across sections
+- Each section should contain UNIQUE information
+- Be concise but thorough
+- Use professional language
+- Write in the same language the user provided their answers in
 
-Keep responses professional, concise, and actionable. Focus on clarity and alignment with client needs.`
+Generate the brief with these sections (use ## for headers):
+
+## 1. Project Overview
+Brief project summary, name, and type. One paragraph.
+
+## 2. Business Context & Goals
+Primary goals, business objectives, KPIs. What success looks like.
+
+## 3. Target Audience
+Who the users are, demographics, behaviors, needs.
+
+## 4. Problem Statement
+Key challenges and pain points to solve. What's not working today.
+
+## 5. Scope & Deliverables
+What will be delivered. List each deliverable clearly.
+
+## 6. Brand & Visual Direction
+Colors, typography preferences, style direction, existing brand guidelines.
+
+## 7. Technical Requirements
+Platforms, integrations, performance needs, accessibility standards.
+
+## 8. Timeline & Budget
+Project timeline, milestones, budget range.
+
+## 9. Success Metrics
+How to measure if the project achieved its goals.`
 
     // Prepare context from briefData
     const briefContext = `
@@ -101,7 +123,7 @@ BRIEF DATA:
     }
 
     const model = genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-2.5-pro',
       systemInstruction: systemPrompt,
     })
 
