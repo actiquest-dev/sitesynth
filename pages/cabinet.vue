@@ -940,7 +940,7 @@
             </button>
             <button
               v-if="wizardPhase === 'saved'"
-              @click="showBriefWizard = false"
+              @click="finishWizard"
               class="px-8 py-3 bg-[#8D35FF] text-white rounded-none hover:bg-[#7B2AE8] transition text-sm"
             >
               Done
@@ -1867,9 +1867,11 @@ const generateBriefWithGemini = async () => {
   }
 }
 
+const newlySavedBrief = ref<any>(null)
+
 const saveBrief = async () => {
   try {
-    await fetch('/api/briefs', {
+    const response = await fetch('/api/briefs', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-user-email': userEmail.value },
       body: JSON.stringify({
@@ -1878,10 +1880,55 @@ const saveBrief = async () => {
         content: generatedBrief.value,
       }),
     })
+    
+    if (!response.ok) throw new Error('Failed to save brief')
+    const data = await response.json()
+    if (data.success && data.data) {
+      newlySavedBrief.value = data.data
+    }
+
     wizardPhase.value = 'saved'
     await loadBriefs()
   } catch (error) {
     console.error('Error saving brief:', error)
+  }
+}
+
+const finishWizard = async () => {
+  showBriefWizard.value = false
+  activeTab.value = 'projects'
+  
+  if (newlySavedBrief.value) {
+    // Open the newly created brief
+    openBriefEditor(newlySavedBrief.value)
+    
+    // Automatically open chat and send the next steps message
+    chatDrawerOpen.value = true
+    chatConversationId.value = newlySavedBrief.value.conversation_id
+    
+    // Add the AI message locally to the chat UI immediately
+    chatMessages.value.push({
+      id: Date.now().toString(),
+      role: 'assistant',
+      content: "Ура, у нас есть бриф! 🎉 Но это еще не все! Теперь надо его доработать и сгенерировать на основе брифа полноценное ТЗ на разработку и шаблон сайта в Figma!",
+      createdAt: new Date()
+    })
+    
+    // Also save this message to the database for this conversation
+    try {
+      await fetch('/api/chat/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-user-email': getChatUserEmail() },
+        body: JSON.stringify({
+          conversationId: newlySavedBrief.value.conversation_id,
+          message: "Ура, у нас есть бриф! 🎉 Но это еще не все! Теперь надо его доработать и сгенерировать на основе брифа полноценное ТЗ на разработку и шаблон сайта в Figma!",
+          role: 'assistant',
+          agentType: 'briefing'
+        })
+      })
+    } catch (e) {
+      console.error('Error saving intro message:', e)
+    }
   }
 }
 
