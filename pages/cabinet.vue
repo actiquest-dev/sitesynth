@@ -662,6 +662,13 @@
                         <p class="text-xs text-[#555] mt-0.5">{{ formatFileSize(file.size) }}</p>
                       </div>
                     </div>
+                    <button
+                      @click.stop="deleteFile(file.id)"
+                      class="p-1.5 text-[#666] hover:text-red-400 rounded-none transition-colors ml-4 flex-shrink-0"
+                      title="Delete file"
+                    >
+                      <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path :d="iconPaths.trash" /></svg>
+                    </button>
                   </div>
                 </div>
                 <div class="px-5 py-3 border-t border-[#333]">
@@ -906,6 +913,20 @@
         </div>
       </div>
     </Teleport>
+
+    <!-- Toast Notification -->
+    <Transition name="fade">
+      <div v-if="toast" class="fixed bottom-6 right-6 z-50">
+        <div :class="[
+          'px-4 py-3 rounded-none text-sm font-medium transition-all',
+          toast.type === 'success'
+            ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+            : 'bg-red-500/20 text-red-400 border border-red-500/30'
+        ]">
+          {{ toast.message }}
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -1030,6 +1051,7 @@ const currentQuestionIndex = ref(0)
 const chatDrawerOpen = ref(false)
 const chatConversationId = ref<string | null>(null)
 const wizardConversationId = ref<string | null>(null)
+const toast = ref<{ message: string; type: 'success' | 'error' } | null>(null)
 const userMessage = ref('')
 const enhancedText = ref('')
 const multiSelectValues = ref<string[]>([])
@@ -1230,21 +1252,26 @@ const uploadFiles = async (files: File[]) => {
   finally { uploading.value = false; uploadProgress.value = 0 }
 }
 
+const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+  toast.value = { message, type }
+  setTimeout(() => { toast.value = null }, 2500)
+}
+
 const deleteFile = async (fileId: string) => {
-  if (!confirm('Delete this file?')) return
   try {
     const r = await fetch('/api/files', { method: 'DELETE', headers: { 'x-user-email': userEmail.value, 'Content-Type': 'application/json' }, body: JSON.stringify({ fileId }) })
     if (!r.ok) {
       const err = await r.json().catch(() => ({ message: r.statusText }))
       console.error('[Files] Delete error:', r.status, err)
-      alert('Failed to delete file: ' + (err?.message || err?.statusMessage || 'Unknown error'))
+      showToast('Failed to delete file', 'error')
       return
     }
     console.log('[Files] Deleted:', fileId)
+    showToast('File deleted', 'success')
     await loadUserFiles()
   } catch (e) {
     console.error('[Files] Delete error:', e)
-    alert('Failed to delete file')
+    showToast('Failed to delete file', 'error')
   }
 }
 
@@ -1799,3 +1826,13 @@ useSeoMeta({
   description: 'Manage your SiteSynth projects and account settings.',
 })
 </script>
+
+<style scoped>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+</style>
