@@ -32,7 +32,7 @@ async function getDriveClient() {
 
   const auth = new google.auth.GoogleAuth({
     credentials,
-    scopes: ['https://www.googleapis.com/auth/drive.file'],
+    scopes: ['https://www.googleapis.com/auth/drive'],
   })
 
   return google.drive({
@@ -107,6 +107,8 @@ export default defineEventHandler(async (event) => {
         fields: 'files(id, name, size, createdTime, mimeType, webViewLink)',
         pageSize: 100,
         orderBy: 'createdTime desc',
+        includeItemsFromAllDrives: true,
+        supportsAllDrives: true,
       })
 
       const files = (res.data.files || []).map((file: any) => ({
@@ -146,6 +148,7 @@ export default defineEventHandler(async (event) => {
       // Delete the file from Google Drive
       await driveClient.files.delete({
         fileId: fileId,
+        supportsAllDrives: true,
       })
 
       return {

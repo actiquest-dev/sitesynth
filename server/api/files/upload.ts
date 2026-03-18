@@ -31,7 +31,7 @@ async function getDriveClient() {
 
   const auth = new google.auth.GoogleAuth({
     credentials,
-    scopes: ['https://www.googleapis.com/auth/drive.file'],
+    scopes: ['https://www.googleapis.com/auth/drive'],
   })
 
   return google.drive({
@@ -126,12 +126,13 @@ export default defineEventHandler(async (event) => {
         name: fileName,
         mimeType: fileField.type || 'application/octet-stream',
         parents: [userFolderId],
-        fields: 'id, name, size, webViewLink, mimeType',
       },
       media: {
         mimeType: fileField.type || 'application/octet-stream',
         body: fileStream,
       },
+      fields: 'id, name, size, webViewLink, mimeType',
+      supportsAllDrives: true,
     })
 
     console.log(`[Files] Uploaded: ${fileName} (${fileBuffer.length} bytes)`)
