@@ -1194,16 +1194,35 @@ const uploadFiles = async (files: File[]) => {
   uploadProgress.value = 0
   try {
     for (let i = 0; i < files.length; i++) {
-      const fd = new FormData()
-      fd.append('file', files[i])
-      console.log('[Files] Uploading:', files[i].name, 'Email:', userEmail.value)
-      const r = await fetch('/api/files/upload', { method: 'POST', headers: { 'x-user-email': userEmail.value }, body: fd })
-      const data = await r.json()
-      if (!r.ok) {
-        console.error('[Files] Upload error:', r.status, data)
-        throw new Error(`Upload failed: ${files[i].name} - ${data?.statusMessage || r.statusText}`)
+      const file = files[i]
+      console.log('[Files] Uploading:', file.name, 'Size:', file.size, 'Email:', userEmail.value)
+
+      // Step 1: Get resumable upload URL from server (small JSON request)
+      const urlRes = await fetch('/api/files/get-upload-url', {
+        method: 'POST',
+        headers: { 'x-user-email': userEmail.value, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fileName: file.name, mimeType: file.type, fileSize: file.size }),
+      })
+      if (!urlRes.ok) {
+        const err = await urlRes.json().catch(() => ({}))
+        console.error('[Files] Get upload URL error:', urlRes.status, err)
+        throw new Error(`Failed to get upload URL for ${file.name}`)
       }
-      console.log('[Files] Uploaded:', files[i].name)
+      const { uploadUrl } = await urlRes.json()
+
+      // Step 2: Upload file directly to Google Drive (bypasses Vercel size limit)
+      const uploadRes = await fetch(uploadUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': file.type || 'application/octet-stream' },
+        body: file,
+      })
+      if (!uploadRes.ok) {
+        const errText = await uploadRes.text()
+        console.error('[Files] Direct upload error:', uploadRes.status, errText)
+        throw new Error(`Upload failed: ${file.name}`)
+      }
+
+      console.log('[Files] Uploaded:', file.name)
       uploadProgress.value = Math.round(((i + 1) / files.length) * 100)
     }
     await loadUserFiles()
@@ -1521,13 +1540,29 @@ const toggleStorageFile = (fileId: string) => {
 const uploadWizardFiles = async () => {
   if (wizardFiles.value.length === 0) return
   try {
-    const formData = new FormData()
-    wizardFiles.value.forEach(file => formData.append('files', file))
-    const response = await fetch('/api/brief/upload-files', { method: 'POST', headers: { 'x-user-email': userEmail.value }, body: formData })
-    if (!response.ok) throw new Error('Failed to upload files')
-    const data = await response.json()
-    brevityData.value.uploadedFileIds = (data.files || []).map((f: any) => f.id)
-    console.log('[Brief] Files uploaded:', brevityData.value.uploadedFileIds)
+    const uploadedIds: string[] = []
+    for (const file of wizardFiles.value) {
+      // Step 1: Get resumable upload URL (briefMode creates a subfolder)
+      const urlRes = await fetch('/api/files/get-upload-url', {
+        method: 'POST',
+        headers: { 'x-user-email': userEmail.value, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fileName: file.name, mimeType: file.type, fileSize: file.size, briefMode: true }),
+      })
+      if (!urlRes.ok) throw new Error('Failed to get upload URL')
+      const { uploadUrl } = await urlRes.json()
+
+      // Step 2: Upload directly to Google Drive
+      const uploadRes = await fetch(uploadUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': file.type || 'application/octet-stream' },
+        body: file,
+      })
+      if (!uploadRes.ok) throw new Error(`Failed to upload ${file.name}`)
+      const fileData = await uploadRes.json()
+      if (fileData.id) uploadedIds.push(fileData.id)
+    }
+    brevityData.value.uploadedFileIds = uploadedIds
+    console.log('[Brief] Files uploaded:', uploadedIds)
   } catch (error) {
     console.error('Error uploading files:', error)
   }
