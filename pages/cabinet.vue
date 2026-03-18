@@ -1233,9 +1233,19 @@ const uploadFiles = async (files: File[]) => {
 const deleteFile = async (fileId: string) => {
   if (!confirm('Delete this file?')) return
   try {
-    const r = await fetch('/api/files', { method: 'DELETE', headers: { 'x-user-email': userEmail.value }, body: JSON.stringify({ fileId }) })
-    if (r.ok) await loadUserFiles()
-  } catch {}
+    const r = await fetch('/api/files', { method: 'DELETE', headers: { 'x-user-email': userEmail.value, 'Content-Type': 'application/json' }, body: JSON.stringify({ fileId }) })
+    if (!r.ok) {
+      const err = await r.json().catch(() => ({ message: r.statusText }))
+      console.error('[Files] Delete error:', r.status, err)
+      alert('Failed to delete file: ' + (err?.message || err?.statusMessage || 'Unknown error'))
+      return
+    }
+    console.log('[Files] Deleted:', fileId)
+    await loadUserFiles()
+  } catch (e) {
+    console.error('[Files] Delete error:', e)
+    alert('Failed to delete file')
+  }
 }
 
 const formatFileSize = (bytes: number): string => {
