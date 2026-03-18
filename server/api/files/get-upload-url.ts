@@ -75,6 +75,7 @@ export default defineEventHandler(async (event) => {
 
   const body = await readBody(event)
   const { fileName, mimeType, fileSize, briefMode } = body
+  const origin = getHeader(event, 'origin') || getHeader(event, 'referer')?.replace(/\/[^/]*$/, '') || '*'
 
   if (!fileName) {
     throw createError({ statusCode: 400, statusMessage: 'fileName required' })
@@ -119,6 +120,7 @@ export default defineEventHandler(async (event) => {
           'Authorization': `Bearer ${accessToken}`,
           'Content-Type': 'application/json; charset=UTF-8',
           'X-Upload-Content-Type': mimeType || 'application/octet-stream',
+          'Origin': origin,
           ...(fileSize ? { 'X-Upload-Content-Length': String(fileSize) } : {}),
         },
         body: metadata,
