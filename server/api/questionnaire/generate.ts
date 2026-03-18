@@ -32,9 +32,15 @@ export default defineEventHandler(async (event) => {
       model: 'gemini-2.5-pro',
     })
 
-    const systemPrompt = `You are a senior product strategist. Generate a branching discovery questionnaire as a JSON array.
+    const systemPrompt = `You are a senior product strategist. Generate a branching discovery questionnaire as a JSON object.
 
-IMPORTANT: Output ONLY valid JSON. No markdown, no explanations.
+CRITICAL: You MUST output ONLY valid, parseable JSON. Do NOT:
+- Wrap JSON in markdown code blocks (no triple backticks)
+- Add any text before or after the JSON
+- Include explanations or comments
+- Return anything except the JSON object itself
+
+Start your response with { and end with }
 
 Analyze the product description and:
 1. Classify: product type, business model, stage, complexity
@@ -105,7 +111,7 @@ Output valid JSON ONLY.`
         },
       ],
       generationConfig: {
-        temperature: 0.7,
+        temperature: 0.2,
         maxOutputTokens: 4000,
       },
     })
@@ -115,15 +121,33 @@ Output valid JSON ONLY.`
     // Parse JSON from response
     let questionsData
     try {
+      // First, try direct parsing
       questionsData = JSON.parse(responseText)
-    } catch {
-      // Try to extract JSON if wrapped in code blocks
-      const jsonMatch = responseText.match(/```json\n?([\s\S]*?)\n?```/)
-      if (jsonMatch) {
-        questionsData = JSON.parse(jsonMatch[1])
-      } else {
-        throw new Error('Invalid JSON response')
+    } catch (parseError) {
+      // Try to extract JSON if wrapped in code blocks (multiple formats)
+      let jsonMatch = responseText.match(/```json\s*\n?([\s\S]*?)\n?```/)
+      if (!jsonMatch) {
+        jsonMatch = responseText.match(/```\s*\n?([\s\S]*?)\n?```/)
       }
+
+      if (jsonMatch && jsonMatch[1]) {
+        try {
+          questionsData = JSON.parse(jsonMatch[1].trim())
+        } catch {
+          console.error('[Questionnaire] Failed to parse extracted JSON:', jsonMatch[1].substring(0, 200))
+          throw new Error('Failed to parse JSON from response')
+        }
+      } else {
+        // Log the actual response for debugging
+        console.error('[Questionnaire] Response was not valid JSON. Raw response (first 500 chars):', responseText.substring(0, 500))
+        throw new Error('Response was not valid JSON format')
+      }
+    }
+
+    // Validate the response has expected structure
+    if (!questionsData.questions || !Array.isArray(questionsData.questions)) {
+      console.error('[Questionnaire] Invalid response structure:', JSON.stringify(questionsData).substring(0, 300))
+      throw new Error('Response missing questions array')
     }
 
     return {

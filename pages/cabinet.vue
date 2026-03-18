@@ -577,7 +577,37 @@
             <div class="w-full h-1 bg-[#333] rounded-none">
               <div class="h-1 bg-[#8D35FF] rounded-none transition-all duration-300" :style="{ width: wizardProgress + '%' }"></div>
             </div>
-            <p class="text-[#999] text-sm mt-2">{{ wizardProgressLabel }}</p>
+            <div class="flex items-center justify-between mt-3">
+              <p class="text-[#999] text-sm">{{ wizardProgressLabel }}</p>
+              <!-- Attached Files Badge -->
+              <div v-if="wizardFiles.length > 0" class="flex items-center gap-2 px-3 py-1 bg-[#8D35FF]/10 border border-[#8D35FF]/30 rounded-none">
+                <span class="text-[#8D35FF] text-xs font-semibold">📎 {{ wizardFiles.length }} file{{ wizardFiles.length !== 1 ? 's' : '' }} attached</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Attached Files Panel (always visible when files exist) -->
+          <div v-if="wizardFiles.length > 0" class="border-b border-[#333] bg-[#0f0f0f]">
+            <button
+              @click="expandFilesPanel = !expandFilesPanel"
+              class="w-full px-6 py-3 flex items-center justify-between hover:bg-[#1a1a1a] transition"
+            >
+              <div class="flex items-center gap-2">
+                <span class="text-[#8D35FF]">📎</span>
+                <span class="text-white text-sm font-semibold">Attached Files ({{ wizardFiles.length }})</span>
+              </div>
+              <span class="text-[#666]" :class="expandFilesPanel ? 'transform rotate-180' : ''">▼</span>
+            </button>
+            <div v-if="expandFilesPanel" class="border-t border-[#333] p-4 space-y-2">
+              <div v-for="(f, i) in wizardFiles" :key="i" class="flex items-center justify-between bg-[#161616] p-3 border border-[#333] rounded-none">
+                <div class="flex items-center gap-2 flex-1">
+                  <span class="text-[#999] text-xs">📄</span>
+                  <span class="text-white text-sm truncate">{{ f.name }}</span>
+                  <span class="text-[#666] text-xs">({{ (f.size / 1024).toFixed(1) }}KB)</span>
+                </div>
+                <button @click="wizardFiles.splice(i, 1)" class="text-[#666] hover:text-red-400 transition text-xs">Remove</button>
+              </div>
+            </div>
           </div>
 
           <!-- Content (scrollable) -->
@@ -585,8 +615,16 @@
 
             <!-- Phase: Files -->
             <div v-if="wizardPhase === 'upload'" class="space-y-4">
-              <h3 class="text-white font-semibold">Upload Reference Files</h3>
-              <p class="text-[#999] text-sm">Upload brand guidelines, wireframes, or any reference materials. You can skip this step.</p>
+              <div class="flex items-center justify-between mb-2">
+                <div>
+                  <h3 class="text-white font-semibold">Upload Reference Files</h3>
+                  <p class="text-[#999] text-sm">Upload brand guidelines, wireframes, or any reference materials. You can skip this step.</p>
+                </div>
+                <div v-if="wizardFiles.length > 0" class="px-3 py-2 bg-[#8D35FF]/10 border border-[#8D35FF]/50 rounded-none">
+                  <p class="text-[#8D35FF] text-sm font-semibold">📎 {{ wizardFiles.length }} file{{ wizardFiles.length !== 1 ? 's' : '' }}</p>
+                </div>
+              </div>
+
               <div @drop.prevent="(e: DragEvent) => { wizardFiles.push(...Array.from(e.dataTransfer?.files || [])) }" @dragover.prevent class="border-2 border-dashed border-[#333] rounded-none p-8 text-center cursor-pointer hover:border-[#8D35FF] transition">
                 <input ref="wizardFileInput" type="file" multiple class="hidden" @change="handleWizardFileSelect" accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png" />
                 <button @click="wizardFileInput?.click()" class="text-center w-full">
@@ -594,11 +632,22 @@
                   <p class="text-[#666] text-sm">PDF, DOC, DOCX, TXT, JPG, PNG</p>
                 </button>
               </div>
-              <div v-if="wizardFiles.length > 0" class="space-y-2">
-                <p class="text-white text-sm font-semibold">{{ wizardFiles.length }} file(s) selected</p>
-                <div v-for="(f, i) in wizardFiles" :key="i" class="flex items-center justify-between bg-[#0f0f0f] p-3 border border-[#333] rounded-none">
-                  <span class="text-white text-sm">{{ f.name }}</span>
-                  <button @click="wizardFiles.splice(i, 1)" class="text-[#666] hover:text-red-400">✕</button>
+
+              <!-- Files list -->
+              <div v-if="wizardFiles.length > 0" class="bg-[#8D35FF]/5 border border-[#8D35FF]/20 rounded-none p-4 space-y-2">
+                <p class="text-white text-sm font-semibold flex items-center gap-2">
+                  <span>📄 Selected Files</span>
+                  <span class="text-[#8D35FF] text-xs px-2 py-1 bg-[#8D35FF]/20 rounded-none">{{ wizardFiles.length }}</span>
+                </p>
+                <div v-for="(f, i) in wizardFiles" :key="i" class="flex items-center justify-between bg-[#161616] p-3 border border-[#333] rounded-none">
+                  <div class="flex items-center gap-3 flex-1">
+                    <span class="text-[#999]">📋</span>
+                    <div class="flex-1">
+                      <p class="text-white text-sm truncate">{{ f.name }}</p>
+                      <p class="text-[#666] text-xs">{{ (f.size / 1024).toFixed(1) }}KB</p>
+                    </div>
+                  </div>
+                  <button @click="wizardFiles.splice(i, 1)" class="text-[#666] hover:text-red-400 transition text-sm">✕</button>
                 </div>
               </div>
             </div>
@@ -927,6 +976,7 @@ const wizardPhase = ref<'upload' | 'description' | 'questions' | 'generating' | 
 const wizardFiles = ref<File[]>([])
 const wizardFileInput = ref<HTMLInputElement | null>(null)
 const wizardContentRef = ref<HTMLElement | null>(null)
+const expandFilesPanel = ref(false)
 const isGenerating = ref(false)
 const isEnhancing = ref(false)
 const generatedBrief = ref('')
