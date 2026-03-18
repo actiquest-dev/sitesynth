@@ -1489,7 +1489,7 @@ const uploadWizardFiles = async () => {
   try {
     const formData = new FormData()
     wizardFiles.value.forEach(file => formData.append('files', file))
-    const response = await fetch('/api/brief/upload-files', { method: 'POST', body: formData })
+    const response = await fetch('/api/brief/upload-files', { method: 'POST', headers: { 'x-user-email': userEmail.value }, body: formData })
     if (!response.ok) throw new Error('Failed to upload files')
     const data = await response.json()
     brevityData.value.uploadedFileIds = (data.files || []).map((f: any) => f.id)
