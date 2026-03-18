@@ -113,6 +113,7 @@ Output valid JSON ONLY.`
       generationConfig: {
         temperature: 0.1,
         maxOutputTokens: 4000,
+        responseMimeType: 'application/json',
       },
     })
 
