@@ -4,7 +4,7 @@ import { google } from 'googleapis'
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || '')
 
 // Helper function to read file content from Google Drive
-async function readGoogleDriveFileContent(fileId: string): Promise<string> {
+async function readGoogleDriveFile(fileId: string): Promise<{ mimeType: string; data: string } | null> {
   try {
     const auth = new google.auth.GoogleAuth({
       credentials: {
@@ -17,7 +17,7 @@ async function readGoogleDriveFileContent(fileId: string): Promise<string> {
         auth_uri: 'https://accounts.google.com/o/oauth2/auth',
         token_uri: 'https://oauth2.googleapis.com/token',
       },
-      scopes: ['https://www.googleapis.com/auth/drive.file'],
+      scopes: ['https://www.googleapis.com/auth/drive.file', 'https://www.googleapis.com/auth/drive.readonly'],
     })
 
     const driveClient = google.drive({
@@ -29,6 +29,7 @@ async function readGoogleDriveFileContent(fileId: string): Promise<string> {
     const metadata = await driveClient.files.get({
       fileId,
       fields: 'name, mimeType, size',
+      supportsAllDrives: true,
     })
 
     // Download file content
@@ -36,19 +37,34 @@ async function readGoogleDriveFileContent(fileId: string): Promise<string> {
       {
         fileId,
         alt: 'media',
+        supportsAllDrives: true,
       },
       { responseType: 'arraybuffer' }
     )
 
     const buffer = Buffer.from(file.data as ArrayBuffer)
-    const text = buffer.toString('utf-8').substring(0, 5000) // First 5KB
+    const base64Data = buffer.toString('base64')
 
     console.log(`[Brief] ✓ File read successfully: ${metadata.data.name} (${metadata.data.size} bytes, type: ${metadata.data.mimeType})`)
 
-    return `### File: ${metadata.data.name}\n\`\`\`\n${text}\n\`\`\``
+    // Ensure we send a valid mime type for Gemini
+    let mimeType = metadata.data.mimeType || 'application/octet-stream'
+    
+    // Gemini supports PDF, images, and text. Fallback to plain text for unknown types.
+    const supportedTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/webp', 'image/heic', 'image/heif', 'text/plain', 'text/html', 'text/csv', 'text/markdown']
+    if (!supportedTypes.includes(mimeType)) {
+      if (mimeType.includes('image/')) mimeType = 'image/jpeg'
+      else if (mimeType.includes('text/')) mimeType = 'text/plain'
+      else mimeType = 'text/plain' // Fallback
+    }
+
+    return {
+      mimeType,
+      data: base64Data
+    }
   } catch (error) {
     console.error(`[Brief] ✗ Could not read file ${fileId}:`, error instanceof Error ? error.message : String(error))
-    return `### File: [Unable to read]\n(File content could not be extracted)`
+    return null
   }
 }
 
@@ -114,21 +130,34 @@ BRIEF DATA:
 `
 
     // Read file contents if provided
-    let filesContext = ''
     const allFileIds = [...(uploadedFiles || []), ...(storageFileIds || [])]
     const totalFiles = allFileIds.length
+    
+    // Array to hold the parts for the Gemini API call (text + files)
+    const promptParts: any[] = []
 
     if (totalFiles > 0) {
       console.log(`[Brief] 📁 Reading ${totalFiles} file(s) from Google Drive: ${uploadedFiles?.length || 0} uploaded + ${storageFileIds?.length || 0} from storage`)
       try {
-        const fileContents = await Promise.all(
-          allFileIds.map(fileId => readGoogleDriveFileContent(fileId))
+        const filesData = await Promise.all(
+          allFileIds.map(fileId => readGoogleDriveFile(fileId))
         )
-        filesContext = `\n\n## REFERENCE FILES\n${fileContents.join('\n\n')}`
-        console.log(`[Brief] ✓ All files read successfully (${fileContents.length} files processed)`)
+        
+        let validFilesCount = 0
+        for (const file of filesData) {
+          if (file) {
+            promptParts.push({
+              inlineData: {
+                data: file.data,
+                mimeType: file.mimeType
+              }
+            })
+            validFilesCount++
+          }
+        }
+        console.log(`[Brief] ✓ All files read successfully (${validFilesCount} files ready for Gemini)`)
       } catch (error) {
         console.error(`[Brief] ✗ Error reading files:`, error instanceof Error ? error.message : String(error))
-        filesContext = '\n\n## REFERENCE FILES\n[Files could not be processed]'
       }
     } else {
       console.log(`[Brief] ℹ No files provided for this brief`)
@@ -143,24 +172,23 @@ BRIEF DATA:
     let prompt = ''
     if (userMessage) {
       // User is asking a question about the brief
-      prompt = `${briefContext}${filesContext}\n\nCurrent Brief:\n${currentBrief || 'No brief yet'}\n\nUser Question: ${userMessage}\n\nPlease respond to this question about the brief, staying in context.`
+      prompt = `${briefContext}\n\nCurrent Brief:\n${currentBrief || 'No brief yet'}\n\nUser Question: ${userMessage}\n\nPlease respond to this question about the brief, staying in context.`
       console.log(`[Brief] 💬 Generating response to user question...`)
     } else {
       // Generate complete brief
-      prompt = `${briefContext}${filesContext}\n\nBased on the above information, generate a comprehensive 8-section design brief. Format it clearly with headers for each section.`
+      prompt = `${briefContext}\n\nBased on the above information, generate a comprehensive 8-section design brief. Format it clearly with headers for each section. If the user provided any reference files, use them as additional context.`
       console.log(`[Brief] 🚀 Generating comprehensive brief...`)
       console.log(`[Brief] 📋 Prompt length: ${prompt.length} characters, Files included: ${totalFiles}, Data fields: ${Object.keys(briefData || {}).length}`)
     }
+
+    // Add the text prompt as the first part
+    promptParts.unshift({ text: prompt })
 
     const result = await model.generateContent({
       contents: [
         {
           role: 'user',
-          parts: [
-            {
-              text: prompt,
-            },
-          ],
+          parts: promptParts,
         },
       ],
       generationConfig: {
