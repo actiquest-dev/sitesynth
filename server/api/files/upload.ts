@@ -2,24 +2,34 @@ import { google } from 'googleapis'
 
 // Helper to get authenticated Drive client
 async function getDriveClient() {
-  if (!process.env.GOOGLE_DRIVE_PRIVATE_KEY) {
-    throw new Error('GOOGLE_DRIVE_PRIVATE_KEY environment variable is not set')
-  }
-  if (!process.env.GOOGLE_DRIVE_SERVICE_ACCOUNT_EMAIL) {
-    throw new Error('GOOGLE_DRIVE_SERVICE_ACCOUNT_EMAIL environment variable is not set')
-  }
+  let credentials
 
-  const auth = new google.auth.GoogleAuth({
-    credentials: {
+  // Try to use JSON if available (preferred method)
+  if (process.env.GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON) {
+    try {
+      credentials = JSON.parse(process.env.GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON)
+    } catch (e) {
+      console.error('Failed to parse GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON:', e)
+      throw new Error('Invalid GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON format')
+    }
+  } else if (process.env.GOOGLE_DRIVE_PRIVATE_KEY && process.env.GOOGLE_DRIVE_SERVICE_ACCOUNT_EMAIL) {
+    // Fallback to separate environment variables
+    credentials = {
       type: 'service_account',
       project_id: 'sitesynth-llm',
       private_key_id: 'key',
-      private_key: process.env.GOOGLE_DRIVE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+      private_key: process.env.GOOGLE_DRIVE_PRIVATE_KEY,
       client_email: process.env.GOOGLE_DRIVE_SERVICE_ACCOUNT_EMAIL,
       client_id: '1234567890',
       auth_uri: 'https://accounts.google.com/o/oauth2/auth',
       token_uri: 'https://oauth2.googleapis.com/token',
-    },
+    }
+  } else {
+    throw new Error('Google Drive credentials not configured. Set GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON or GOOGLE_DRIVE_PRIVATE_KEY + GOOGLE_DRIVE_SERVICE_ACCOUNT_EMAIL')
+  }
+
+  const auth = new google.auth.GoogleAuth({
+    credentials,
     scopes: ['https://www.googleapis.com/auth/drive.file'],
   })
 
