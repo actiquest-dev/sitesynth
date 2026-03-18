@@ -41,33 +41,45 @@ async function getDriveClient() {
   })
 }
 
-// Helper to get or create user folder in Google Drive
+// Helper to get or create user folder in shared drive
 async function getUserFolder(userEmail: string, driveClient: any) {
+  if (!process.env.GOOGLE_DRIVE_SHARED_DRIVE_ID) {
+    throw new Error('GOOGLE_DRIVE_SHARED_DRIVE_ID environment variable is not set. Use a Shared Drive instead of Service Account Drive.')
+  }
+
+  const sharedDriveId = process.env.GOOGLE_DRIVE_SHARED_DRIVE_ID
+
   try {
-    // Search for existing folder
+    // Search for existing folder in shared drive
     const res = await driveClient.files.list({
-      q: `name = '${userEmail}_Files' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
+      q: `name = '${userEmail}_Files' and mimeType = 'application/vnd.google-apps.folder' and trashed = false and '${sharedDriveId}' in parents`,
       spaces: 'drive',
       fields: 'files(id, name)',
       pageSize: 1,
+      corpora: 'drive',
+      driveId: sharedDriveId,
+      includeItemsFromAllDrives: true,
+      supportsAllDrives: true,
     })
 
     if (res.data.files && res.data.files.length > 0) {
       return res.data.files[0].id
     }
 
-    // Create new folder if doesn't exist
+    // Create new folder in shared drive if doesn't exist
     const folderRes = await driveClient.files.create({
       requestBody: {
         name: `${userEmail}_Files`,
         mimeType: 'application/vnd.google-apps.folder',
+        parents: [sharedDriveId],
         fields: 'id',
       },
+      supportsAllDrives: true,
     })
 
     return folderRes.data.id
   } catch (error) {
-    console.error('Error managing user folder:', error)
+    console.error('Error managing user folder in shared drive:', error)
     throw error
   }
 }
