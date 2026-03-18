@@ -637,7 +637,7 @@
                 </div>
               </div>
 
-              <div @drop.prevent="(e: DragEvent) => { wizardFiles.push(...Array.from(e.dataTransfer?.files || [])) }" @dragover.prevent class="border-2 border-dashed border-[#333] rounded-none p-8 text-center cursor-pointer hover:border-[#8D35FF] transition">
+              <div @drop.prevent="handleWizardFileDrop" @dragover.prevent class="border-2 border-dashed border-[#333] rounded-none p-8 text-center cursor-pointer hover:border-[#8D35FF] transition">
                 <input ref="wizardFileInput" type="file" multiple class="hidden" @change="handleWizardFileSelect" accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png" />
                 <button @click="wizardFileInput?.click()" class="text-center w-full">
                   <p class="text-[#999] mb-2">Drop files or click to browse</p>
@@ -1489,11 +1489,23 @@ const resetWizard = () => {
   Object.keys(briefData.value).forEach(key => { briefData.value[key] = '' })
 }
 
-const handleWizardFileSelect = (event: Event) => {
+const handleWizardFileSelect = async (event: Event) => {
   const input = event.target as HTMLInputElement
   if (input.files) {
-    wizardFiles.value.push(...Array.from(input.files))
+    const files = Array.from(input.files)
+    wizardFiles.value.push(...files)
     input.value = ''
+    await uploadFiles(files)
+    selectedStorageFileIds.value = userFiles.value.map((f: any) => f.id)
+  }
+}
+
+const handleWizardFileDrop = async (e: DragEvent) => {
+  const files = Array.from(e.dataTransfer?.files || [])
+  if (files.length) {
+    wizardFiles.value.push(...files)
+    await uploadFiles(files)
+    selectedStorageFileIds.value = userFiles.value.map((f: any) => f.id)
   }
 }
 
@@ -1522,7 +1534,6 @@ const uploadWizardFiles = async () => {
 }
 
 const startDescription = async () => {
-  if (wizardFiles.value.length > 0) await uploadWizardFiles()
   wizardPhase.value = 'description'
   productDescription.value = ''
 }
@@ -1577,7 +1588,6 @@ const generateDynamicQuestions = async () => {
 }
 
 const startQuestions = async () => {
-  if (wizardFiles.value.length > 0) await uploadWizardFiles()
   wizardPhase.value = 'questions'
   currentQuestionIndex.value = 0
 }
@@ -1698,7 +1708,6 @@ const generateBriefWithGemini = async () => {
       headers: { 'Content-Type': 'application/json', 'x-user-email': userEmail.value },
       body: JSON.stringify({
         briefData: briefData.value,
-        uploadedFiles: brevityData.value.uploadedFileIds,
         storageFileIds: selectedStorageFileIds.value
       }),
     })
