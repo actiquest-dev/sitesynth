@@ -852,6 +852,24 @@
               </div>
             </div>
 
+            <!-- Phase: Error -->
+            <div v-if="wizardPhase === 'error'" class="text-center py-16 space-y-4 px-6">
+              <div class="text-red-400 text-4xl mb-2">⚠️</div>
+              <h3 class="text-white font-semibold text-lg">AI Service Busy</h3>
+              <p class="text-[#999] text-sm max-w-sm mx-auto leading-relaxed">
+                The AI model is currently experiencing high demand. Your data is safe—please try again in a few moments.
+              </p>
+              <div class="pt-4">
+                <button 
+                  @click="generateBriefWithGemini"
+                  class="px-8 py-3 bg-[#8D35FF] text-white rounded-none hover:bg-[#7B2AE8] transition text-sm flex items-center gap-2 mx-auto"
+                >
+                  <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path d="M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.148A5.5 5.5 0 0 0 8 2.5Z"/></svg>
+                  Retry Generation
+                </button>
+              </div>
+            </div>
+
             <!-- Phase: Saved -->
             <div v-if="wizardPhase === 'saved'" class="text-center py-16 space-y-4">
               <p class="text-4xl">✅</p>
@@ -919,9 +937,16 @@
             <button
               v-if="wizardPhase === 'review'"
               @click="saveBrief"
-              class="px-8 py-3 bg-green-600 text-white rounded-none hover:bg-green-700 transition text-sm"
+              class="px-8 py-3 bg-[#8D35FF] text-white rounded-none hover:bg-[#7B2AE8] transition text-sm"
             >
               Save Brief
+            </button>
+            <button
+              v-if="wizardPhase === 'error'"
+              @click="wizardPhase = 'questions'"
+              class="px-8 py-3 bg-[#1a1a1a] border border-[#333] text-white rounded-none hover:bg-[#222] transition text-sm"
+            >
+              Back to Questions
             </button>
             <button
               v-if="wizardPhase === 'saved'"
@@ -1058,7 +1083,7 @@ const isSavingBrief = ref(false)
 
 // ── Brief Wizard ──
 const showBriefWizard = ref(false)
-const wizardPhase = ref<'upload' | 'description' | 'questions' | 'generating' | 'review' | 'saved'>('upload')
+const wizardPhase = ref<'upload' | 'description' | 'questions' | 'generating' | 'review' | 'saved' | 'error'>('upload')
 const wizardFiles = ref<File[]>([])
 const wizardFileInput = ref<HTMLInputElement | null>(null)
 const wizardContentRef = ref<HTMLElement | null>(null)
@@ -1067,6 +1092,7 @@ const selectedStorageFileIds = ref<string[]>([])
 const isGenerating = ref(false)
 const isEnhancing = ref(false)
 const generatedBrief = ref('')
+const briefError = ref('')
 const brevityData = ref({ uploadedFileIds: [] as string[] })
 const currentQuestionIndex = ref(0)
 const chatDrawerOpen = ref(false)
@@ -1844,8 +1870,8 @@ const generateBriefWithGemini = async () => {
     wizardPhase.value = 'review'
   } catch (error) {
     console.error('Error generating brief:', error)
-    generatedBrief.value = `Error: ${error instanceof Error ? error.message : 'Unknown error'}`
-    wizardPhase.value = 'review'
+    briefError.value = error instanceof Error ? error.message : 'Unknown error'
+    wizardPhase.value = 'error'
   } finally {
     isGenerating.value = false
   }
