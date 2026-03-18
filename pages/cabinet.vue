@@ -594,7 +594,7 @@
               class="w-full px-6 py-3 flex items-center justify-between hover:bg-[#1a1a1a] transition"
             >
               <div class="flex items-center gap-2">
-                <span class="text-[#8D35FF]">📎</span>
+                <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 text-[#8D35FF] flex-shrink-0"><path :d="iconPaths.file" /></svg>
                 <span class="text-white text-sm font-semibold">Attached Files ({{ wizardFiles.length }})</span>
               </div>
               <span class="text-[#666]" :class="expandFilesPanel ? 'transform rotate-180' : ''">▼</span>
@@ -602,7 +602,9 @@
             <div v-if="expandFilesPanel" class="border-t border-[#333] p-4 space-y-2">
               <div v-for="(f, i) in wizardFiles" :key="i" class="flex items-center justify-between bg-[#161616] p-3 border border-[#333] rounded-none">
                 <div class="flex items-center gap-2 flex-1">
-                  <span class="text-[#999] text-xs">📄</span>
+                  <div class="w-6 h-6 rounded-none bg-[#222] flex items-center justify-center flex-shrink-0 text-[#555]">
+                    <svg viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5"><path :d="iconPaths.file" /></svg>
+                  </div>
                   <span class="text-white text-sm truncate">{{ f.name }}</span>
                   <span class="text-[#666] text-xs">({{ (f.size / 1024).toFixed(1) }}KB)</span>
                 </div>
@@ -622,7 +624,7 @@
                   <p class="text-[#999] text-sm">Upload brand guidelines, wireframes, or any reference materials. You can skip this step.</p>
                 </div>
                 <div v-if="wizardFiles.length > 0" class="px-3 py-2 bg-[#8D35FF]/10 border border-[#8D35FF]/50 rounded-none">
-                  <p class="text-[#8D35FF] text-sm font-semibold">📎 {{ wizardFiles.length }} file{{ wizardFiles.length !== 1 ? 's' : '' }}</p>
+                  <p class="text-[#8D35FF] text-sm font-semibold">{{ wizardFiles.length }} file{{ wizardFiles.length !== 1 ? 's' : '' }}</p>
                 </div>
               </div>
 
@@ -655,12 +657,14 @@
               <!-- Files list (newly uploaded) -->
               <div v-if="wizardFiles.length > 0" class="bg-[#8D35FF]/5 border border-[#8D35FF]/20 rounded-none p-4 space-y-2">
                 <p class="text-white text-sm font-semibold flex items-center gap-2">
-                  <span>📋 Newly Uploaded Files</span>
+                  <span>Newly Uploaded Files</span>
                   <span class="text-[#8D35FF] text-xs px-2 py-1 bg-[#8D35FF]/20 rounded-none">{{ wizardFiles.length }}</span>
                 </p>
                 <div v-for="(f, i) in wizardFiles" :key="i" class="flex items-center justify-between bg-[#161616] p-3 border border-[#333] rounded-none">
                   <div class="flex items-center gap-3 flex-1">
-                    <span class="text-[#999]">📋</span>
+                    <div class="w-8 h-8 rounded-none bg-[#222] flex items-center justify-center flex-shrink-0 text-[#555]">
+                      <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path :d="iconPaths.upload" /></svg>
+                    </div>
                     <div class="flex-1">
                       <p class="text-white text-sm truncate">{{ f.name }}</p>
                       <p class="text-[#666] text-xs">{{ (f.size / 1024).toFixed(1) }}KB</p>
