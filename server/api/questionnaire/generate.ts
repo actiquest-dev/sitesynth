@@ -110,36 +110,27 @@ Output valid JSON ONLY.`
           ],
         },
       ],
+      systemInstruction: { parts: [{ text: systemPrompt }] },
       generationConfig: {
         temperature: 0.2,
         maxOutputTokens: 4000,
+        responseMimeType: 'application/json',
       },
     })
 
     const responseText = result.response.text()
 
-    // Parse JSON from response
+    // Parse JSON — with responseMimeType: 'application/json', Gemini returns clean JSON
     let questionsData
     try {
-      // First, try direct parsing
       questionsData = JSON.parse(responseText)
     } catch (parseError) {
-      // Try to extract JSON if wrapped in code blocks (multiple formats)
-      let jsonMatch = responseText.match(/```json\s*\n?([\s\S]*?)\n?```/)
-      if (!jsonMatch) {
-        jsonMatch = responseText.match(/```\s*\n?([\s\S]*?)\n?```/)
-      }
-
+      // Fallback: try to extract from markdown code blocks
+      const jsonMatch = responseText.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/)
       if (jsonMatch && jsonMatch[1]) {
-        try {
-          questionsData = JSON.parse(jsonMatch[1].trim())
-        } catch {
-          console.error('[Questionnaire] Failed to parse extracted JSON:', jsonMatch[1].substring(0, 200))
-          throw new Error('Failed to parse JSON from response')
-        }
+        questionsData = JSON.parse(jsonMatch[1].trim())
       } else {
-        // Log the actual response for debugging
-        console.error('[Questionnaire] Response was not valid JSON. Raw response (first 500 chars):', responseText.substring(0, 500))
+        console.error('[Questionnaire] Failed to parse. Raw (first 500 chars):', responseText.substring(0, 500))
         throw new Error('Response was not valid JSON format')
       }
     }
