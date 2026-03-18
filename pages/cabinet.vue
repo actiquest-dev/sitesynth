@@ -414,7 +414,8 @@
                   </div>
                   <button
                     @click.stop="deleteFile(file.id)"
-                    class="opacity-0 group-hover:opacity-100 p-1.5 text-[#555] hover:text-red-400 rounded-none transition-all ml-4"
+                    class="p-1.5 text-[#666] hover:text-red-400 rounded-none transition-colors ml-4 flex-shrink-0"
+                    title="Delete file"
                   >
                     <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path :d="iconPaths.trash" /></svg>
                   </button>
@@ -633,10 +634,32 @@
                 </button>
               </div>
 
-              <!-- Files list -->
+              <!-- Available files from storage -->
+              <div v-if="userFiles.length > 0" class="bg-[#1a1a1a] border border-[#333] rounded-none p-4 space-y-3">
+                <p class="text-white text-sm font-semibold">📚 Available Project Files</p>
+                <p class="text-[#666] text-xs">Select files from your project to include in this brief (no re-upload needed)</p>
+                <div class="space-y-2">
+                  <div v-for="file in userFiles" :key="file.id" class="flex items-center gap-3 p-3 border border-[#333] rounded-none hover:bg-[#0f0f0f] transition cursor-pointer" @click="toggleStorageFile(file.id)">
+                    <input
+                      type="checkbox"
+                      :checked="selectedStorageFileIds.includes(file.id)"
+                      class="w-4 h-4 accent-[#8D35FF]"
+                      @click.stop
+                    />
+                    <span class="text-[#999] text-sm">📄</span>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-white text-sm truncate">{{ file.name }}</p>
+                      <p class="text-[#666] text-xs">{{ formatFileSize(file.size) }}</p>
+                    </div>
+                  </div>
+                </div>
+                <p v-if="selectedStorageFileIds.length > 0" class="text-[#8D35FF] text-xs">✓ {{ selectedStorageFileIds.length }} file(s) selected</p>
+              </div>
+
+              <!-- Files list (newly uploaded) -->
               <div v-if="wizardFiles.length > 0" class="bg-[#8D35FF]/5 border border-[#8D35FF]/20 rounded-none p-4 space-y-2">
                 <p class="text-white text-sm font-semibold flex items-center gap-2">
-                  <span>📄 Selected Files</span>
+                  <span>📋 Newly Uploaded Files</span>
                   <span class="text-[#8D35FF] text-xs px-2 py-1 bg-[#8D35FF]/20 rounded-none">{{ wizardFiles.length }}</span>
                 </p>
                 <div v-for="(f, i) in wizardFiles" :key="i" class="flex items-center justify-between bg-[#161616] p-3 border border-[#333] rounded-none">
@@ -977,6 +1000,7 @@ const wizardFiles = ref<File[]>([])
 const wizardFileInput = ref<HTMLInputElement | null>(null)
 const wizardContentRef = ref<HTMLElement | null>(null)
 const expandFilesPanel = ref(false)
+const selectedStorageFileIds = ref<string[]>([])
 const isGenerating = ref(false)
 const isEnhancing = ref(false)
 const generatedBrief = ref('')
@@ -1424,11 +1448,13 @@ const saveBriefEdit = async () => {
 const openBriefWizard = async () => {
   showBriefWizard.value = true
   resetWizard()
+  await loadUserFiles() // Load available files from storage
 }
 
 const resetWizard = () => {
   wizardPhase.value = 'upload'
   wizardFiles.value = []
+  selectedStorageFileIds.value = [] // Clear selected files
   currentQuestionIndex.value = 0
   userMessage.value = ''
   enhancedText.value = ''
@@ -1446,6 +1472,15 @@ const handleWizardFileSelect = (event: Event) => {
   if (input.files) {
     wizardFiles.value.push(...Array.from(input.files))
     input.value = ''
+  }
+}
+
+const toggleStorageFile = (fileId: string) => {
+  const idx = selectedStorageFileIds.value.indexOf(fileId)
+  if (idx > -1) {
+    selectedStorageFileIds.value.splice(idx, 1)
+  } else {
+    selectedStorageFileIds.value.push(fileId)
   }
 }
 
@@ -1638,8 +1673,12 @@ const generateBriefWithGemini = async () => {
   try {
     const response = await fetch('/api/brief/generate', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ briefData: briefData.value, uploadedFiles: brevityData.value.uploadedFileIds }),
+      headers: { 'Content-Type': 'application/json', 'x-user-email': userEmail.value },
+      body: JSON.stringify({
+        briefData: briefData.value,
+        uploadedFiles: brevityData.value.uploadedFileIds,
+        storageFileIds: selectedStorageFileIds.value
+      }),
     })
     if (!response.ok) throw new Error(`API error: ${response.status}`)
     const data = await response.json()

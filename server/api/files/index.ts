@@ -1,8 +1,62 @@
-import { createClient } from '@supabase/supabase-js'
+import { google } from 'googleapis'
+
+const drive = google.drive('v3')
+
+// Helper to get authenticated Drive client
+async function getDriveClient() {
+  const auth = new google.auth.GoogleAuth({
+    credentials: {
+      type: 'service_account',
+      project_id: 'sitesynth-llm',
+      private_key_id: 'key',
+      private_key: process.env.GOOGLE_DRIVE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+      client_email: process.env.GOOGLE_DRIVE_SERVICE_ACCOUNT_EMAIL,
+      client_id: '1234567890',
+      auth_uri: 'https://accounts.google.com/o/oauth2/auth',
+      token_uri: 'https://oauth2.googleapis.com/token',
+    },
+    scopes: ['https://www.googleapis.com/auth/drive.file'],
+  })
+
+  return google.drive({
+    version: 'v3',
+    auth,
+  })
+}
+
+// Helper to get or create user folder in Google Drive
+async function getUserFolder(userEmail: string, driveClient: any) {
+  try {
+    // Search for existing folder
+    const res = await driveClient.files.list({
+      q: `name = '${userEmail}_Files' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
+      spaces: 'drive',
+      fields: 'files(id, name)',
+      pageSize: 1,
+    })
+
+    if (res.data.files && res.data.files.length > 0) {
+      return res.data.files[0].id
+    }
+
+    // Create new folder if doesn't exist
+    const folderRes = await driveClient.files.create({
+      requestBody: {
+        name: `${userEmail}_Files`,
+        mimeType: 'application/vnd.google-apps.folder',
+        fields: 'id',
+      },
+    })
+
+    return folderRes.data.id
+  } catch (error) {
+    console.error('Error managing user folder:', error)
+    throw error
+  }
+}
 
 export default defineEventHandler(async (event) => {
-  const req = event.node.req
-  const userEmail = req.headers['x-user-email'] || ''
+  const userEmail = getHeader(event, 'x-user-email') || ''
   const method = event.node.req.method
 
   if (!userEmail) {
@@ -12,60 +66,43 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const supabaseUrl = process.env.SUPABASE_URL
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  const driveClient = await getDriveClient()
+  const userFolderId = await getUserFolder(userEmail, driveClient)
 
-  if (!supabaseUrl || !supabaseKey) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'Supabase credentials missing',
-    })
-  }
-
-  const supabase = createClient(supabaseUrl, supabaseKey)
-
-  // GET - List user files
+  // GET - List user files from Google Drive
   if (method === 'GET') {
     try {
-      const { data, error } = await supabase.storage
-        .from('brief-files')
-        .list(userEmail, {
-          limit: 100,
-          offset: 0,
-          sortBy: { column: 'updated_at', order: 'desc' },
-        })
-
-      if (error) {
-        console.error('Supabase list error:', error)
-        throw error
-      }
-
-      const files = (data || []).map((file) => {
-        const { data: publicData } = supabase.storage
-          .from('brief-files')
-          .getPublicUrl(`${userEmail}/${file.name}`)
-
-        return {
-          id: file.id,
-          name: file.name,
-          path: `${userEmail}/${file.name}`,
-          url: publicData?.publicUrl,
-          size: file.metadata?.size || 0,
-          uploadedAt: file.created_at,
-        }
+      const res = await driveClient.files.list({
+        q: `'${userFolderId}' in parents and trashed = false`,
+        spaces: 'drive',
+        fields: 'files(id, name, size, createdTime, mimeType, webViewLink)',
+        pageSize: 100,
+        orderBy: 'createdTime desc',
       })
+
+      const files = (res.data.files || []).map((file: any) => ({
+        id: file.id,
+        name: file.name,
+        size: file.size || 0,
+        uploadedAt: file.createdTime,
+        mimeType: file.mimeType,
+        url: file.webViewLink,
+      }))
 
       return {
         success: true,
         data: files,
       }
     } catch (error) {
-      console.error('Error listing files:', error)
-      throw error
+      console.error('Error listing files from Google Drive:', error)
+      throw createError({
+        statusCode: 500,
+        statusMessage: 'Failed to list files',
+      })
     }
   }
 
-  // DELETE - Remove file
+  // DELETE - Remove file from Google Drive
   if (method === 'DELETE') {
     try {
       const { fileId } = await readBody(event)
@@ -77,21 +114,21 @@ export default defineEventHandler(async (event) => {
         })
       }
 
-      const { error } = await supabase.storage
-        .from('brief-files')
-        .remove([fileId])
-
-      if (error) {
-        throw error
-      }
+      // Delete the file from Google Drive
+      await driveClient.files.delete({
+        fileId: fileId,
+      })
 
       return {
         success: true,
         message: 'File deleted',
       }
     } catch (error) {
-      console.error('Error deleting file:', error)
-      throw error
+      console.error('Error deleting file from Google Drive:', error)
+      throw createError({
+        statusCode: 500,
+        statusMessage: 'Failed to delete file',
+      })
     }
   }
 

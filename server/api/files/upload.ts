@@ -1,8 +1,60 @@
-import { createClient } from '@supabase/supabase-js'
+import { google } from 'googleapis'
+
+// Helper to get authenticated Drive client
+async function getDriveClient() {
+  const auth = new google.auth.GoogleAuth({
+    credentials: {
+      type: 'service_account',
+      project_id: 'sitesynth-llm',
+      private_key_id: 'key',
+      private_key: process.env.GOOGLE_DRIVE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+      client_email: process.env.GOOGLE_DRIVE_SERVICE_ACCOUNT_EMAIL,
+      client_id: '1234567890',
+      auth_uri: 'https://accounts.google.com/o/oauth2/auth',
+      token_uri: 'https://oauth2.googleapis.com/token',
+    },
+    scopes: ['https://www.googleapis.com/auth/drive.file'],
+  })
+
+  return google.drive({
+    version: 'v3',
+    auth,
+  })
+}
+
+// Helper to get or create user folder in Google Drive
+async function getUserFolder(userEmail: string, driveClient: any) {
+  try {
+    // Search for existing folder
+    const res = await driveClient.files.list({
+      q: `name = '${userEmail}_Files' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
+      spaces: 'drive',
+      fields: 'files(id, name)',
+      pageSize: 1,
+    })
+
+    if (res.data.files && res.data.files.length > 0) {
+      return res.data.files[0].id
+    }
+
+    // Create new folder if doesn't exist
+    const folderRes = await driveClient.files.create({
+      requestBody: {
+        name: `${userEmail}_Files`,
+        mimeType: 'application/vnd.google-apps.folder',
+        fields: 'id',
+      },
+    })
+
+    return folderRes.data.id
+  } catch (error) {
+    console.error('Error managing user folder:', error)
+    throw error
+  }
+}
 
 export default defineEventHandler(async (event) => {
-  const req = event.node.req as any
-  const userEmail = req.headers['x-user-email']
+  const userEmail = getHeader(event, 'x-user-email') || ''
 
   if (!userEmail) {
     throw createError({
@@ -31,68 +83,42 @@ export default defineEventHandler(async (event) => {
 
     const fileName = fileField.filename || `upload_${Date.now()}`
     const fileBuffer = fileField.data
-    const filePath = `${userEmail}/${Date.now()}_${fileName}`
 
-    // Upload to Supabase
-    const supabaseUrl = process.env.SUPABASE_URL
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+    const driveClient = await getDriveClient()
+    const userFolderId = await getUserFolder(userEmail, driveClient)
 
-    if (!supabaseUrl || !supabaseKey) {
-      throw createError({
-        statusCode: 500,
-        statusMessage: 'Supabase credentials missing',
-      })
-    }
+    // Upload file to Google Drive in user folder
+    const response = await driveClient.files.create({
+      requestBody: {
+        name: fileName,
+        mimeType: fileField.type || 'application/octet-stream',
+        parents: [userFolderId],
+        fields: 'id, name, size, webViewLink, mimeType',
+      },
+      media: {
+        mimeType: fileField.type || 'application/octet-stream',
+        body: fileBuffer,
+      },
+    })
 
-    const supabase = createClient(supabaseUrl, supabaseKey)
-
-    // Ensure bucket exists
-    try {
-      await supabase.storage.createBucket('brief-files', {
-        public: true,
-      })
-    } catch (e) {
-      // Bucket might already exist, ignore
-    }
-
-    // Upload file to storage
-    const { data, error } = await supabase.storage
-      .from('brief-files')
-      .upload(filePath, fileBuffer, {
-        contentType: fileField.type || 'application/octet-stream',
-      })
-
-    if (error) {
-      console.error('Supabase upload error:', JSON.stringify(error))
-      throw createError({
-        statusCode: 500,
-        statusMessage: `File upload failed: ${error.message || 'Unknown error'}`,
-      })
-    }
-
-    // Get public URL
-    const { data: publicUrl } = supabase.storage
-      .from('brief-files')
-      .getPublicUrl(filePath)
+    console.log(`[Files] Uploaded: ${fileName} (${fileBuffer.length} bytes)`)
 
     return {
       success: true,
       file: {
-        id: data?.path,
-        name: fileName,
-        path: filePath,
-        url: publicUrl?.publicUrl,
+        id: response.data.id,
+        name: response.data.name,
+        size: response.data.size,
+        url: response.data.webViewLink,
+        mimeType: response.data.mimeType,
         uploadedAt: new Date().toISOString(),
       },
     }
   } catch (error: any) {
     console.error('Upload error:', error?.message || String(error))
-    if (!error?.statusCode) {
-      throw createError({
-        statusCode: 500,
-        statusMessage: error?.message || 'File upload failed',
-      })
-    }
-    throw error
+    throw createError({
+      statusCode: 500,
+      statusMessage: error?.message || 'File upload failed',
+    })
   }
 })

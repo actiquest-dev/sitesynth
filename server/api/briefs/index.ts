@@ -1,48 +1,53 @@
-import { defineEventHandler, readBody, getHeader, createError } from 'h3'
-import { createClient } from '@supabase/supabase-js'
-
-const supabaseUrl = process.env.SUPABASE_URL
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-
-if (!supabaseUrl || !supabaseServiceKey) {
-  throw new Error('Missing Supabase credentials')
-}
-
-const supabase = createClient(supabaseUrl, supabaseServiceKey)
-
 export default defineEventHandler(async (event) => {
-  const method = event.node.req.method
   const userEmail = getHeader(event, 'x-user-email')
 
   if (!userEmail) {
-    return createError({ statusCode: 401, statusMessage: 'User email required' })
+    return { success: false, error: 'Missing user email' }
   }
 
-  // GET /api/briefs - get all briefs for user
-  if (method === 'GET') {
+  if (event.method === 'GET') {
+    // Get all briefs for user
     try {
-      const { data, error } = await supabase
+      const { data, error } = await useDatabaseClient()
         .from('briefs')
         .select('*')
         .eq('user_email', userEmail)
         .order('created_at', { ascending: false })
 
-      if (error) {
-        throw new Error(error.message)
-      }
-
-      return {
-        status: 'success',
-        data: data || []
-      }
-    } catch (error: any) {
-      console.error('[Briefs API] Error fetching briefs:', error)
-      return createError({
-        statusCode: 500,
-        statusMessage: error.message
-      })
+      if (error) throw error
+      return { success: true, data: data || [] }
+    } catch (error) {
+      console.error('[Briefs] Error fetching briefs:', error)
+      return { success: true, data: [] } // Return empty array on error
     }
   }
 
-  return createError({ statusCode: 405, statusMessage: 'Method not allowed' })
+  if (event.method === 'POST') {
+    // Create new brief
+    try {
+      const body = await readBody(event)
+      const { name, description, content } = body
+
+      const { data, error } = await useDatabaseClient()
+        .from('briefs')
+        .insert([{
+          user_email: userEmail,
+          name: name || 'Untitled Brief',
+          description: description || '',
+          content: content || '',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        }])
+        .select()
+
+      if (error) throw error
+      console.log(`[Briefs] Brief created for ${userEmail}`)
+      return { success: true, data: data?.[0] || null }
+    } catch (error) {
+      console.error('[Briefs] Error creating brief:', error)
+      return { success: false, error: 'Failed to create brief' }
+    }
+  }
+
+  return { success: false, error: 'Method not allowed' }
 })
