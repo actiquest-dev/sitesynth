@@ -633,7 +633,18 @@
           <div class="flex-1 overflow-y-auto p-6 space-y-6" ref="wizardContentRef">
 
             <!-- Phase: Files -->
-            <div v-if="wizardPhase === 'upload'" class="space-y-4">
+            <div v-if="wizardPhase === 'upload'" class="space-y-6">
+              <!-- Brief Name Input -->
+              <div class="space-y-2">
+                <label class="block text-white text-sm font-semibold">Brief Name</label>
+                <input
+                  v-model="briefData.projectName"
+                  type="text"
+                  placeholder="e.g., Membria Redesign, Mobile App Brief"
+                  class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-none text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none transition"
+                />
+              </div>
+
               <div class="flex items-center justify-between mb-2">
                 <div>
                   <h3 class="text-white font-semibold">Upload Reference Files</h3>
