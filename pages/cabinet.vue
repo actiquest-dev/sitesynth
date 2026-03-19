@@ -772,7 +772,7 @@
               <div v-if="currentQ" class="space-y-4">
                 <div class="bg-[#1a1a1a] border border-[#333] rounded-none p-4">
                   <p class="text-[#999] text-xs mb-1">Question {{ currentQuestionIndex + 1 }}</p>
-                  <p class="text-white font-semibold">{{ currentQ.text }}</p>
+                  <p class="text-white text-lg font-bold">{{ currentQ.text }}</p>
                 </div>
 
                 <!-- Text Input -->
