@@ -90,9 +90,17 @@ User feels educated, knows next steps, either books consultation or continues le
 /**
  * Get appropriate agent based on mode
  */
-export function getAgentForMode(mode: 'active' | 'passive'): Agent {
-  return mode === 'active' ? briefingAgent : consultantAgent
-}
+export const architectAgent = new Agent({
+  name: 'Architect',
+  instructions: 'Ты — Senior UX-архитектор. Твоя задача: перевести бизнес-бриф в структуру сайта (JSON).',
+  model: google('gemini-2.5-pro'),
+})
+
+export const criticAgent = new Agent({
+  name: 'Art Director',
+  instructions: 'Ты — Senior UI/UX дизайнер с 10-летним опытом. Твоя задача: оценить дизайн по шкале 0-5. Будь безжалостен.',
+  model: google('gemini-2.5-pro'),
+})
 
 /**
  * Get initial greeting based on mode

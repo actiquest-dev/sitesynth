@@ -1,3 +1,15 @@
+import { defineEventHandler, getRouterParam, getHeader, readBody } from 'h3'
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = process.env.SUPABASE_URL
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+if (!supabaseUrl || !supabaseServiceKey) {
+  throw new Error('Missing Supabase credentials')
+}
+
+const supabase = createClient(supabaseUrl, supabaseServiceKey)
+
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
   const userEmail = getHeader(event, 'x-user-email')
@@ -9,7 +21,7 @@ export default defineEventHandler(async (event) => {
   if (event.method === 'GET') {
     // Get brief by ID
     try {
-      const { data, error } = await useDatabaseClient()
+      const { data, error } = await supabase
         .from('briefs')
         .select('*')
         .eq('id', id)
@@ -28,22 +40,31 @@ export default defineEventHandler(async (event) => {
     // Update brief
     try {
       const body = await readBody(event)
-      const { content, name, description } = body
+      const { content, name, description, briefData } = body
 
-      const { data, error } = await useDatabaseClient()
+      // Map to correct DB columns
+      const updates: any = { updated_at: new Date().toISOString() }
+      if (content !== undefined) updates.markdown_content = content
+      if (briefData !== undefined) updates.brief_data = briefData
+
+      const { data, error } = await supabase
         .from('briefs')
-        .update({
-          content: content || undefined,
-          name: name || undefined,
-          description: description || undefined,
-          updated_at: new Date().toISOString(),
-        })
+        .update(updates)
         .eq('id', id)
         .eq('user_email', userEmail)
         .select()
         .single()
 
       if (error) throw error
+      
+      // We also need to update the conversation title if name is provided
+      if (name) {
+        await supabase
+          .from('conversations')
+          .update({ title: name })
+          .eq('id', data.conversation_id)
+      }
+      
       console.log(`[Briefs] Brief updated: ${id}`)
       return { success: true, data }
     } catch (error) {
@@ -55,7 +76,7 @@ export default defineEventHandler(async (event) => {
   if (event.method === 'DELETE') {
     // Delete brief
     try {
-      const { error } = await useDatabaseClient()
+      const { error } = await supabase
         .from('briefs')
         .delete()
         .eq('id', id)
