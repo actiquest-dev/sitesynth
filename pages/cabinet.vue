@@ -1940,6 +1940,7 @@ const saveBrief = async () => {
     
     if (!response.ok) throw new Error('Failed to save brief')
     const data = await response.json()
+    if (!data.success) throw new Error(data.error || "Failed to save brief")
     if (data.success && data.data) {
       newlySavedBrief.value = data.data
     }
