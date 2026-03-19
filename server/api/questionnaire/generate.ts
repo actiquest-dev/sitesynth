@@ -28,8 +28,8 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    // Try primary model, fallback to flash if unavailable
-    const modelNames = ['gemini-2.5-pro', 'gemini-2.5-flash', 'gemini-2.0-flash']
+    // Try primary model, fallback to other Pro models
+    const modelNames = ['gemini-2.5-pro', 'gemini-2.0-pro', 'gemini-1.5-pro']
     let model = genAI.getGenerativeModel({ model: modelNames[0] })
 
     const systemPrompt = `You are a senior product strategist. Generate a branching discovery questionnaire as a JSON object.
@@ -118,7 +118,7 @@ Output valid JSON ONLY.`
           generationConfig: {
             temperature: 0.1,
             maxOutputTokens: 4000,
-            responseMimeType: 'application/json',
+            responseMimeType: 'application/json', // All Pro models support this
           },
         })
         responseText = result.response.text()
