@@ -28,9 +28,9 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-2.5-pro',
-    })
+    // Try primary model, fallback to flash if unavailable
+    const modelNames = ['gemini-2.5-pro', 'gemini-2.5-flash', 'gemini-2.0-flash']
+    let model = genAI.getGenerativeModel({ model: modelNames[0] })
 
     const systemPrompt = `You are a senior product strategist. Generate a branching discovery questionnaire as a JSON object.
 
@@ -99,25 +99,36 @@ Domain branches (add only if relevant):
 
 Output valid JSON ONLY.`
 
-    const result = await model.generateContent({
-      contents: [
-        {
-          role: 'user',
-          parts: [
+    let responseText = ''
+    for (const modelName of modelNames) {
+      try {
+        model = genAI.getGenerativeModel({ model: modelName })
+        console.log(`[Questionnaire] Trying model: ${modelName}`)
+        const result = await model.generateContent({
+          contents: [
             {
-              text: `${systemPrompt}\n\nGenerate a questionnaire for this product:\n\n${productDescription}`,
+              role: 'user',
+              parts: [
+                {
+                  text: `${systemPrompt}\n\nGenerate a questionnaire for this product:\n\n${productDescription}`,
+                },
+              ],
             },
           ],
-        },
-      ],
-      generationConfig: {
-        temperature: 0.1,
-        maxOutputTokens: 4000,
-        responseMimeType: 'application/json',
-      },
-    })
-
-    const responseText = result.response.text()
+          generationConfig: {
+            temperature: 0.1,
+            maxOutputTokens: 4000,
+            responseMimeType: 'application/json',
+          },
+        })
+        responseText = result.response.text()
+        console.log(`[Questionnaire] Success with model: ${modelName}`)
+        break
+      } catch (modelError: any) {
+        console.warn(`[Questionnaire] Model ${modelName} failed:`, modelError?.message || modelError)
+        if (modelName === modelNames[modelNames.length - 1]) throw modelError
+      }
+    }
     console.log('[Questionnaire] Raw response (first 300 chars):', responseText.substring(0, 300))
 
     // Parse JSON with multiple strategies
