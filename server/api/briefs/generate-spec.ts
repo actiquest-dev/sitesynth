@@ -2,6 +2,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 import { z } from 'zod'
 import { generateObject } from 'ai'
 import { google } from '@ai-sdk/google'
+import { useDatabaseClient } from '~~/server/utils/supabase'
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || '')
 
