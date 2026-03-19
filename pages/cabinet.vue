@@ -1938,17 +1938,19 @@ const saveBrief = async () => {
       }),
     })
     
-    if (!response.ok) throw new Error('Failed to save brief')
+    if (!response.ok) throw new Error('Failed to save brief (Network/Server error)')
     const data = await response.json()
-    if (!data.success) throw new Error(data.error || "Failed to save brief")
-    if (data.success && data.data) {
+    if (!data.success) throw new Error(data.error || "Failed to save brief (API returned success: false)")
+    
+    if (data.data) {
       newlySavedBrief.value = data.data
     }
 
     wizardPhase.value = 'saved'
     await loadBriefs()
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error saving brief:', error)
+    alert(`Could not save brief: ${error.message}`)
   }
 }
 
