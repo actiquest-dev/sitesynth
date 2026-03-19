@@ -163,10 +163,10 @@ BRIEF DATA:
       console.log(`[Brief] ℹ No files provided for this brief`)
     }
 
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-2.5-pro',
-      systemInstruction: systemPrompt,
-    })
+    // Model fallback chain for brief generation
+    const modelNames = ['gemini-2.5-pro', 'gemini-2.5-flash', 'gemini-2.0-flash']
+    let result: any = null
+    let usedModel = ''
 
     // Generate brief or answer user question about brief
     let prompt = ''
@@ -184,27 +184,44 @@ BRIEF DATA:
     // Add the text prompt as the first part
     promptParts.unshift({ text: prompt })
 
-    const result = await model.generateContent({
-      contents: [
-        {
-          role: 'user',
-          parts: promptParts,
-        },
-      ],
-      generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 4096,
-      },
-      safetySettings: [
-        {
-          category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-          threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-        },
-      ],
-    })
+    // Try each model in order
+    for (const modelName of modelNames) {
+      try {
+        console.log(`[Brief] Trying model: ${modelName}`)
+        const model = genAI.getGenerativeModel({
+          model: modelName,
+          systemInstruction: systemPrompt,
+        })
+
+        result = await model.generateContent({
+          contents: [
+            {
+              role: 'user',
+              parts: promptParts,
+            },
+          ],
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 4096,
+          },
+          safetySettings: [
+            {
+              category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+              threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+            },
+          ],
+        })
+        usedModel = modelName
+        console.log(`[Brief] ✓ Success with model: ${modelName}`)
+        break
+      } catch (modelError: any) {
+        console.warn(`[Brief] Model ${modelName} failed:`, modelError?.message || modelError)
+        if (modelName === modelNames[modelNames.length - 1]) throw modelError
+      }
+    }
 
     const responseText = result.response.text()
-    console.log(`[Brief] ✓ Brief generated successfully (${responseText.length} characters)`)
+    console.log(`[Brief] ✓ Brief generated successfully with ${usedModel} (${responseText.length} characters)`)
 
     return {
       success: true,

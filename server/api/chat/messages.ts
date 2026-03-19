@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { generateText, tool } from 'ai'
 import { google } from '@ai-sdk/google'
 import { z } from 'zod'
-import { briefingAgent, consultantAgent, architectAgent } from '../../agents'
+import { briefingAgent, consultantAgent, architectAgent, criticAgent } from '../../agents'
 import { getAgentConfig } from '~~/server/utils/agent-config'
 import { getActiveWorkflow, getCurrentStepPrompt, buildWorkflowSystemPrompt } from '~~/server/utils/workflow-helper'
 

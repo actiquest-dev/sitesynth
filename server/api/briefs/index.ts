@@ -39,7 +39,9 @@ export default defineEventHandler(async (event) => {
     try {
       const body = await readBody(event)
       const { name, briefData, content } = body
-      
+
+      console.log(`[Briefs] Creating brief for ${userEmail}, name: "${name}", content length: ${content?.length || 0}`)
+
       // 1. Create a new conversation for this brief first (since conversation_id is required)
       const { data: convData, error: convError } = await supabase
         .from('conversations')
@@ -54,8 +56,10 @@ export default defineEventHandler(async (event) => {
 
       if (convError || !convData?.[0]) {
         console.error('[Briefs] Error creating conversation for brief:', convError)
-        throw new Error('Failed to create conversation')
+        throw new Error(`Failed to create conversation: ${convError?.message || 'Unknown error'}`)
       }
+
+      console.log(`[Briefs] Conversation created: ${convData[0].id}`)
 
       // 2. Insert the brief using the correct schema fields
       const { data, error } = await supabase
@@ -71,12 +75,16 @@ export default defineEventHandler(async (event) => {
         }])
         .select()
 
-      if (error) throw error
-      console.log(`[Briefs] Brief created for ${userEmail}`)
+      if (error) {
+        console.error('[Briefs] Error inserting brief:', error)
+        throw new Error(`Failed to insert brief: ${error.message}`)
+      }
+
+      console.log(`[Briefs] ✓ Brief created successfully for ${userEmail}, id: ${data?.[0]?.id}`)
       return { success: true, data: data?.[0] || null }
     } catch (error) {
-      console.error('[Briefs] Error creating brief:', error)
-      return { success: false, error: 'Failed to create brief' }
+      console.error('[Briefs] Error creating brief:', error instanceof Error ? error.message : String(error))
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to create brief' }
     }
   }
 
