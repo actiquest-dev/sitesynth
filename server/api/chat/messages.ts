@@ -127,56 +127,71 @@ export default defineEventHandler(async (event) => {
         const { z } = await import('zod')
         
         // Define tool for updating brief content
+import { briefingAgent, consultantAgent, architectAgent, criticAgent } from '../../../server/agents'
+// ... (остальной импорт)
+
+// Внутри обработки POST:
+        // Define tools
+        const { z } = await import('zod')
         const tools = agentType === 'briefing' ? {
           update_brief_content: tool({
-            description: 'Update the project brief content in the database. Use this when the user asks you to modify, rewrite, or add something to the current brief.',
+            description: 'Update the project brief content. Use this when the user asks you to modify, rewrite, or add something to the current brief.',
             parameters: z.object({
-              new_markdown_content: z.string().describe('The complete, updated markdown content for the brief. Must include all sections, incorporating the user\'s requested changes.'),
-              brief_id: z.string().describe('The ID of the brief to update (you must ask the user for this if not provided in context, though the system usually provides it implicitly by association with the conversation).'),
+              new_markdown_content: z.string().describe('The complete, updated markdown content for the brief.'),
             }),
             execute: async ({ new_markdown_content }) => {
-              console.log(`[Tools] Updating brief content for conversation: ${conversationId}`)
-              
-              // Find the brief associated with this conversation
+              console.log(`[Tool] update_brief_content called for conv: ${conversationId}`)
               const { data: brief, error: findError } = await supabase
                 .from('briefs')
                 .select('id')
                 .eq('conversation_id', conversationId)
                 .single()
-                
-              if (findError || !brief) {
-                return 'Error: Could not find a brief associated with this conversation to update.'
+              
+              if (findError) {
+                console.error('[Tool] Error finding brief:', findError)
+                return `Error: Could not find brief: ${findError.message}`
               }
               
-              // Update the brief
               const { error: updateError } = await supabase
                 .from('briefs')
                 .update({ markdown_content: new_markdown_content, updated_at: new Date().toISOString() })
                 .eq('id', brief.id)
                 
               if (updateError) {
+                console.error('[Tool] Error updating brief:', updateError)
                 return `Error updating brief: ${updateError.message}`
               }
               
-              return 'Success: Brief content updated successfully. The user can now see the changes live on their screen.'
+              console.log('[Tool] Brief updated successfully in DB')
+              return 'Success: Brief content updated.'
+            }
+          }),
+          evaluate_design_quality: tool({
+            description: 'Оценить дизайн-макет по шкале красоты (0-5) и дать рекомендации.',
+            parameters: z.object({
+              description: z.string().describe('Описание экрана'),
+            }),
+            execute: async ({ description }) => {
+              const { generateText } = await import('ai')
+              const res = await generateText({
+                model: google('gemini-2.5-pro'),
+                system: criticAgent.instructions,
+                messages: [{ role: 'user', content: `Оцени этот дизайн: ${description}` }]
+              })
+              return res.text
             }
           })
         } : undefined
-        
-        // Add current brief content to system prompt if this is a briefing agent
+
+        // Add current brief content to system prompt
         if (agentType === 'briefing') {
-          try {
-            const { data: brief } = await supabase
-              .from('briefs')
-              .select('markdown_content')
-              .eq('conversation_id', conversationId)
-              .single()
-              
-            if (brief && brief.markdown_content) {
-              systemPrompt += `\n\nCURRENT BRIEF CONTENT:\n${brief.markdown_content}\n\nWhen the user asks you to change the brief, use the update_brief_content tool and provide the FULL updated markdown text. Never just say you will update it without actually calling the tool.`
-            }
-          } catch (e) {
-            console.error('Failed to attach current brief to prompt:', e)
+          const { data: brief } = await supabase
+            .from('briefs')
+            .select('markdown_content')
+            .eq('conversation_id', conversationId)
+            .single()
+          if (brief?.markdown_content) {
+            systemPrompt += `\n\nCURRENT BRIEF CONTENT:\n${brief.markdown_content}\n\nUSE TOOL update_brief_content TO UPDATE THIS CONTENT.`
           }
         }
         
@@ -190,7 +205,11 @@ export default defineEventHandler(async (event) => {
           maxSteps: 5, // Allow the model to call the tool and then respond
         })
 
+        // Combine text response with tool execution status if needed
         response = result.text || ''
+        if (!response && result.toolResults && result.toolResults.length > 0) {
+            response = 'Brief updated successfully based on your request.'
+        }
         
         if (!response) {
           throw new Error('Empty response from Gemini')
