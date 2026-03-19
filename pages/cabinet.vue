@@ -724,6 +724,30 @@
               <p class="text-[#666] text-xs">At least 20 characters. The more detail, the better the questions.</p>
             </div>
 
+            <!-- Phase: Questions Error -->
+            <div v-if="wizardPhase === 'questions_error'" class="text-center py-16 space-y-4 px-6">
+              <div class="text-red-400 text-4xl mb-2">⚠️</div>
+              <h3 class="text-white font-semibold text-lg">AI Service Busy</h3>
+              <p class="text-[#999] text-sm max-w-sm mx-auto leading-relaxed">
+                We couldn't generate dynamic questions right now because the AI model is experiencing high demand.
+              </p>
+              <div class="pt-4 flex flex-col sm:flex-row gap-3 justify-center items-center">
+                <button 
+                  @click="generateDynamicQuestions"
+                  class="px-8 py-3 bg-[#8D35FF] text-white rounded-none hover:bg-[#7B2AE8] transition text-sm flex items-center gap-2"
+                >
+                  <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path d="M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.148A5.5 5.5 0 0 0 8 2.5Z"/></svg>
+                  Retry AI Generation
+                </button>
+                <button 
+                  @click="useDefaultQuestions"
+                  class="px-8 py-3 border border-[#333] text-white rounded-none hover:bg-[#1a1a1a] transition text-sm"
+                >
+                  Use Default Questions
+                </button>
+              </div>
+            </div>
+
             <div v-if="wizardPhase === 'questions'" class="space-y-4">
               <!-- Answered questions history (chat-like) -->
               <div v-for="(answer, idx) in answeredQuestions" :key="answer.id" class="space-y-2">
@@ -1108,7 +1132,7 @@ const generateDesignSpec = async () => {
 
 // ── Brief Wizard ──
 const showBriefWizard = ref(false)
-const wizardPhase = ref<'upload' | 'description' | 'questions' | 'generating' | 'review' | 'saved' | 'error'>('upload')
+const wizardPhase = ref<'upload' | 'description' | 'questions' | 'generating' | 'review' | 'saved' | 'error' | 'questions_error'>('upload')
 const wizardFiles = ref<File[]>([])
 const wizardFileInput = ref<HTMLInputElement | null>(null)
 const wizardContentRef = ref<HTMLElement | null>(null)
@@ -1749,13 +1773,16 @@ const generateDynamicQuestions = async () => {
     wizardPhase.value = 'questions'
   } catch (error) {
     console.error('[Questionnaire] Error:', error)
-    alert('Failed to generate questions. Using default questions instead.')
-    dynamicQuestions.value = []
-    currentQuestionIndex.value = 0
-    wizardPhase.value = 'questions'
+    wizardPhase.value = 'questions_error'
   } finally {
     isGeneratingQuestions.value = false
   }
+}
+
+const useDefaultQuestions = () => {
+  dynamicQuestions.value = []
+  currentQuestionIndex.value = 0
+  wizardPhase.value = 'questions'
 }
 
 const startQuestions = async () => {
