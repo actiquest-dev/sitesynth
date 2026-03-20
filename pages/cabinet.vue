@@ -277,15 +277,16 @@
                     Preview
                   </button>
                 </div>
-                
-                <ClientOnly>
-                  <RichTextEditor
-                    v-if="editModeTab === 'edit'"
-                    v-model="briefEditContent"
-                  />
-                </ClientOnly>
-                
-                <div v-else-if="editModeTab === 'preview'" class="bg-[#0f0f0f] border border-[#333] rounded-none p-6 max-h-[50vh] overflow-y-auto">
+
+                <template v-if="editModeTab === 'edit'">
+                  <ClientOnly>
+                    <RichTextEditor
+                      v-model="briefEditContent"
+                    />
+                  </ClientOnly>
+                </template>
+
+                <div v-else class="bg-[#0f0f0f] border border-[#333] rounded-none p-6 max-h-[50vh] overflow-y-auto">
                   <div class="text-white text-sm whitespace-pre-wrap leading-relaxed" v-html="formatBriefHtml(briefEditContent)"></div>
                 </div>
                 
