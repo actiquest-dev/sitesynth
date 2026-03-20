@@ -1,5 +1,5 @@
 <template>
-  <div class="rich-text-editor">
+  <div v-if="isClient" class="rich-text-editor">
     <div class="editor-toolbar mb-3 flex gap-2 flex-wrap">
       <button
         @click="() => editor?.chain().focus().toggleBold().run()"
@@ -128,7 +128,13 @@ import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
 import Link from '@tiptap/extension-link'
-import { watch, onBeforeUnmount } from 'vue'
+import { watch, onBeforeUnmount, onMounted, ref } from 'vue'
+
+// Prevent SSR issues - only render on client
+const isClient = ref(false)
+onMounted(() => {
+  isClient.value = true
+})
 
 interface Props {
   modelValue: string
