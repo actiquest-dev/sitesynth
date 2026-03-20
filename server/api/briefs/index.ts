@@ -27,7 +27,13 @@ export default defineEventHandler(async (event) => {
         .order('created_at', { ascending: false })
 
       if (error) throw error
-      return { success: true, data: data || [] }
+      // Map markdown_content to content for UI compatibility
+      const mapped = (data || []).map((b: any) => ({
+        ...b,
+        content: b.markdown_content || '',
+        name: b.brief_data?.projectName || 'Untitled Brief',
+      }))
+      return { success: true, data: mapped }
     } catch (error) {
       console.error('[Briefs] Error fetching briefs:', error)
       return { success: true, data: [] } // Return empty array on error
