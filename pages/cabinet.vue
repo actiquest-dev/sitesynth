@@ -278,13 +278,11 @@
                   </button>
                 </div>
 
-                <template v-if="editModeTab === 'edit'">
-                  <ClientOnly>
-                    <RichTextEditor
-                      v-model="briefEditContent"
-                    />
-                  </ClientOnly>
-                </template>
+                <div v-if="editModeTab === 'edit'" class="relative">
+                  <RichTextEditor
+                    v-model="briefEditContent"
+                  />
+                </div>
 
                 <div v-else class="bg-[#0f0f0f] border border-[#333] rounded-none p-6 max-h-[50vh] overflow-y-auto">
                   <div class="text-white text-sm whitespace-pre-wrap leading-relaxed" v-html="formatBriefHtml(briefEditContent)"></div>
