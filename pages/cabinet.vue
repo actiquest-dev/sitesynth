@@ -1256,6 +1256,22 @@ const getEmailFromToken = (rawToken: string | null): string => {
 }
 
 onMounted(async () => {
+  // Get user email from auth
+  const user = getCurrentUser()
+  if (user?.email) {
+    userEmail.value = user.email
+  } else {
+    // Fallback: try token
+    const token = getToken()
+    const email = getEmailFromToken(token)
+    if (email) userEmail.value = email
+  }
+
+  if (!userEmail.value) {
+    navigateTo('/login')
+    return
+  }
+
   // Load projects and briefs first to update stats correctly
   await loadBriefs()
   await loadUserFiles()
