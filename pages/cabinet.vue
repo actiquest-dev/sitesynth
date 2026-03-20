@@ -249,16 +249,36 @@
 
               <!-- Edit mode -->
               <div v-if="briefEditMode" class="space-y-4">
-                <input
-                  v-model="briefEditName"
-                  placeholder="Brief name"
-                  class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-none text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none"
-                />
+                <div class="flex gap-2 border-b border-[#333] mb-2">
+                  <button 
+                    @click="editModeTab = 'edit'" 
+                    :class="editModeTab === 'edit' ? 'border-b-2 border-[#8D35FF] text-white' : 'border-b-2 border-transparent text-[#666] hover:text-white'"
+                    class="pb-2 px-3 text-sm transition"
+                  >
+                    Edit
+                  </button>
+                  <button 
+                    @click="editModeTab = 'preview'" 
+                    :class="editModeTab === 'preview' ? 'border-b-2 border-[#8D35FF] text-white' : 'border-b-2 border-transparent text-[#666] hover:text-white'"
+                    class="pb-2 px-3 text-sm transition"
+                  >
+                    Preview
+                  </button>
+                </div>
+                
                 <textarea
+                  v-if="editModeTab === 'edit'"
                   v-model="briefEditContent"
                   rows="20"
+                  placeholder="Enter brief in Markdown..."
                   class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-none text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none resize-none font-mono text-sm leading-relaxed"
                 ></textarea>
+                
+                <div v-else-if="editModeTab === 'preview'" class="bg-[#0f0f0f] border border-[#333] rounded-none p-6 max-h-[50vh] overflow-y-auto">
+                  <div class="text-white text-sm whitespace-pre-wrap leading-relaxed" v-html="formatBriefHtml(briefEditContent)"></div>
+                </div>
+                
+                <!-- Design Spec and Actions -->
                 <div class="flex gap-3">
                   <button
                     @click="generateDesignSpec"
@@ -268,6 +288,20 @@
                     {{ isGeneratingSpec ? 'Generating Spec...' : 'Generate Design Spec' }}
                   </button>
                 </div>
+
+                <!-- Preview generated spec -->
+                <div v-if="designSpec" class="mt-8 border-t border-[#333] pt-6 space-y-4">
+                  <h3 class="text-white font-semibold text-lg">Design Specification Structure</h3>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div v-for="page in designSpec.pages" :key="page.path" class="p-4 border border-[#333] bg-[#0f0f0f]">
+                      <p class="text-white font-semibold text-sm">{{ page.title }}</p>
+                      <ul class="text-[#666] text-xs list-disc ml-4 mt-2 space-y-1">
+                        <li v-for="block in page.ui_blocks" :key="block.type">{{ block.type }} - {{ block.description }}</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
                 <!-- Preview generated spec -->
                 <div v-if="designSpec" class="mt-8 border-t border-[#333] pt-6 space-y-4">
