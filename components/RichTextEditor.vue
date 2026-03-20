@@ -141,13 +141,14 @@ interface Props {
   disabled?: boolean
 }
 
-defineProps<Props>()
-
 const emit = defineEmits<{
   'update:modelValue': [value: string]
 }>()
 
+const props = defineProps<Props>()
+
 const editor = useEditor({
+  content: props.modelValue,
   extensions: [
     StarterKit.configure({
       paragraph: {
@@ -194,10 +195,12 @@ const editor = useEditor({
   },
 })
 
-// Watch for prop changes
-watch(() => {
-  // Component will handle this in onMounted/onUpdate
-}, { immediate: true })
+// Sync external modelValue changes into the editor
+watch(() => props.modelValue, (newVal) => {
+  if (editor.value && editor.value.getHTML() !== newVal) {
+    editor.value.commands.setContent(newVal, false)
+  }
+})
 
 // Cleanup
 onBeforeUnmount(() => {
