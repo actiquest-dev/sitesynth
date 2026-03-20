@@ -355,7 +355,7 @@
                       Brief
                     </span>
                   </div>
-                  <p class="text-xs text-[#666] mb-4 leading-relaxed line-clamp-2">{{ brief.description || (brief.content || '').substring(0, 120) + '...' }}</p>
+                  <p class="text-xs text-[#666] mb-4 leading-relaxed line-clamp-2">{{ brief.description || stripHtmlPreview(brief.content || '') }}</p>
                   <div class="flex items-center justify-between">
                     <span class="text-xs text-[#555]">{{ formatDate(brief.created_at) }}</span>
                     <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition">
@@ -1931,6 +1931,21 @@ const redoEnhance = () => {
 
 const canUndo = computed(() => enhanceHistoryIndex.value >= 0 || !!lastOriginalMessage.value)
 const canRedo = computed(() => enhanceHistoryIndex.value < enhanceHistory.value.length - 1)
+
+// Strip HTML tags and return preview text (first 120 chars + ellipsis)
+const stripHtmlPreview = (html: string): string => {
+  // Remove HTML tags
+  let text = html.replace(/<[^>]*>/g, '')
+  // Decode common HTML entities
+  text = text.replace(/&nbsp;/g, ' ')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+  // Trim whitespace and return first 120 chars with ellipsis
+  text = text.trim()
+  return text.length > 120 ? text.substring(0, 120) + '...' : text
+}
 
 const formatBriefHtml = (text: string): string => {
   if (!text) return ''
