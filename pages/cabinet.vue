@@ -232,7 +232,7 @@
                 <!-- Edit/Save Button (toggles based on mode) -->
                 <button
                   v-if="briefEditMode"
-                  @click="saveBrief"
+                  @click="saveBriefEdit"
                   :disabled="isSavingBrief"
                   class="px-6 py-2 bg-[#8D35FF] text-white rounded-none hover:bg-[#7B2AE8] transition disabled:opacity-50 text-sm"
                 >
