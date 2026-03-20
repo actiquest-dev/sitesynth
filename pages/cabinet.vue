@@ -228,20 +228,37 @@
                 <button @click="selectedBrief = null" class="text-[#999] hover:text-white text-sm flex items-center gap-1 transition">
                   ← Back to projects
                 </button>
-                <div class="flex gap-2">
-                  <button
-                    @click="briefEditMode = true"
-                    class="px-6 py-2 border border-[#333] text-[#999] rounded-none hover:bg-[#1a1a1a] transition text-sm"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    @click="deleteBrief(selectedBrief)"
-                    class="px-4 py-2 border border-[#333] text-[#999] rounded-none text-sm hover:text-red-400 hover:border-red-500/30 transition"
-                  >
-                    Delete
-                  </button>
-                </div>
+              <div class="flex gap-2">
+                <button
+                  v-if="!briefEditMode && briefEditContent !== selectedBrief.content"
+                  @click="saveBrief"
+                  :disabled="isSavingBrief"
+                  class="px-6 py-2 bg-[#8D35FF] text-white rounded-none hover:bg-[#7B2AE8] transition disabled:opacity-50 text-sm"
+                >
+                  {{ isSavingBrief ? 'Saving...' : 'Save Changes' }}
+                </button>
+                <button
+                  v-if="!briefEditMode"
+                  @click="briefEditMode = true"
+                  class="px-6 py-2 border border-[#333] text-[#999] rounded-none hover:bg-[#1a1a1a] transition text-sm"
+                >
+                  Edit
+                </button>
+                <button
+                  v-if="!briefEditMode"
+                  @click="deleteBrief"
+                  class="px-6 py-2 border border-[#333] text-[#999] rounded-none hover:bg-[#1a1a1a] transition text-sm"
+                >
+                  Delete
+                </button>
+                <button
+                  v-if="briefEditMode || !briefEditMode"
+                  @click="activeTab = 'projects'"
+                  class="px-6 py-2 border border-[#333] text-[#999] rounded-none hover:bg-[#1a1a1a] transition text-sm"
+                >
+                  ← Back to projects
+                </button>
+              </div>
               </div>
 
               <h2 class="text-xl font-semibold text-white mb-1">{{ selectedBrief.name || 'Untitled Brief' }}</h2>
@@ -265,6 +282,43 @@
                     Preview
                   </button>
                 </div>
+                
+                <textarea
+                  v-if="editModeTab === 'edit'"
+                  v-model="briefEditContent"
+                  rows="20"
+                  placeholder="Enter brief in Markdown..."
+                  class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-none text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none resize-none font-mono text-sm leading-relaxed"
+                ></textarea>
+                
+                <div v-else-if="editModeTab === 'preview'" class="bg-[#0f0f0f] border border-[#333] rounded-none p-6 max-h-[50vh] overflow-y-auto">
+                  <div class="text-white text-sm whitespace-pre-wrap leading-relaxed" v-html="formatBriefHtml(briefEditContent)"></div>
+                </div>
+                
+                <!-- Design Spec and Actions -->
+                <div class="flex gap-3">
+                  <button
+                    @click="generateDesignSpec"
+                    :disabled="isGeneratingSpec"
+                    class="px-6 py-3 border border-[#8D35FF] text-white rounded-none hover:bg-[#8D35FF]/20 transition disabled:opacity-50 text-sm"
+                  >
+                    {{ isGeneratingSpec ? 'Generating Spec...' : 'Generate Design Spec' }}
+                  </button>
+                </div>
+
+                <!-- Preview generated spec -->
+                <div v-if="designSpec" class="mt-8 border-t border-[#333] pt-6 space-y-4">
+                  <h3 class="text-white font-semibold text-lg">Design Specification Structure</h3>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div v-for="page in designSpec.pages" :key="page.path" class="p-4 border border-[#333] bg-[#0f0f0f]">
+                      <p class="text-white font-semibold text-sm">{{ page.title }}</p>
+                      <ul class="text-[#666] text-xs list-disc ml-4 mt-2 space-y-1">
+                        <li v-for="block in page.ui_blocks" :key="block.type">{{ block.type }} - {{ block.description }}</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
                 
                 <textarea
                   v-if="editModeTab === 'edit'"
