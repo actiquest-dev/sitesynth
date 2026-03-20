@@ -312,7 +312,6 @@
                   </div>
                 </div>
               </div>
-            </div>
 
               <!-- View mode -->
               <div v-else class="bg-[#0f0f0f] border border-[#333] rounded-none p-6">
