@@ -230,10 +230,10 @@
                 </button>
                 <div class="flex gap-2">
                   <button
-                    @click="briefEditMode = !briefEditMode"
-                    class="px-4 py-2 border border-[#8D35FF] text-[#8D35FF] rounded-none text-sm hover:bg-[#8D35FF]/10 transition"
+                    @click="briefEditMode = true"
+                    class="px-6 py-2 border border-[#333] text-[#999] rounded-none hover:bg-[#1a1a1a] transition text-sm"
                   >
-                    {{ briefEditMode ? 'Preview' : '✎ Edit' }}
+                    Edit
                   </button>
                   <button
                     @click="deleteBrief(selectedBrief)"
@@ -281,11 +281,18 @@
                 <!-- Design Spec and Actions -->
                 <div class="flex gap-3">
                   <button
-                    @click="generateDesignSpec"
-                    :disabled="isGeneratingSpec"
-                    class="px-6 py-3 border border-[#8D35FF] text-white rounded-none hover:bg-[#8D35FF]/20 transition disabled:opacity-50 text-sm"
+                    @click="saveBrief"
+                    :disabled="isSavingBrief"
+                    class="px-6 py-2 border border-[#8D35FF] text-[#8D35FF] rounded-none hover:bg-[#8D35FF]/20 transition disabled:opacity-50 text-sm"
                   >
-                    {{ isGeneratingSpec ? 'Generating Spec...' : 'Generate Design Spec' }}
+                    {{ isSavingBrief ? 'Saving...' : 'Save Changes' }}
+                  </button>
+                  <button
+                    @click="briefEditMode = false; briefEditContent = selectedBrief.content"
+                    :disabled="isSavingBrief"
+                    class="px-6 py-2 border border-[#333] text-[#999] rounded-none hover:bg-[#1a1a1a] transition disabled:opacity-50 text-sm"
+                  >
+                    Cancel
                   </button>
                 </div>
 
@@ -991,15 +998,52 @@
             >
               Continue
             </button>
-            <button
-              v-if="wizardPhase === 'description'"
-              @click="generateDynamicQuestions"
-              :disabled="isGeneratingQuestions || productDescription.length < 20"
-              class="px-8 py-3 bg-[#8D35FF] text-white rounded-none hover:bg-[#7B2AE8] transition text-sm disabled:opacity-50 flex items-center gap-2"
-            >
-              <span v-if="isGeneratingQuestions">Generating...</span>
-              <span v-else>Generate Questions</span>
-            </button>
+              <button
+                v-if="!briefEditMode && briefEditContent !== selectedBrief.content"
+                @click="saveBrief"
+                :disabled="isSavingBrief"
+                class="px-6 py-2 bg-[#8D35FF] text-white rounded-none hover:bg-[#7B2AE8] transition disabled:opacity-50 text-sm"
+              >
+                {{ isSavingBrief ? 'Saving...' : 'Save Changes' }}
+              </button>
+              <button
+                v-if="!briefEditMode"
+                @click="activeTab = 'projects'"
+                class="px-6 py-2 border border-[#333] text-[#999] rounded-none hover:bg-[#1a1a1a] transition text-sm"
+              >
+                ← Back to projects
+              </button>
+              <button
+                v-if="!briefEditMode"
+                @click="openBriefEditor(selectedBrief)"
+                :class="{'border-[#8D35FF] text-[#8D35FF]': briefEditMode}"
+                class="px-6 py-2 border border-[#333] text-[#999] rounded-none hover:bg-[#1a1a1a] transition text-sm"
+              >
+                Preview
+              </button>
+              <button
+                v-if="!briefEditMode"
+                @click="deleteBrief"
+                class="px-6 py-2 border border-[#333] text-[#999] rounded-none hover:bg-[#1a1a1a] transition text-sm"
+              >
+                Delete
+              </button>
+              <button
+                v-if="briefEditMode"
+                @click="generateDesignSpec"
+                :disabled="isGeneratingSpec"
+                class="px-6 py-2 border border-[#8D35FF] text-white rounded-none hover:bg-[#8D35FF]/20 transition disabled:opacity-50 text-sm"
+              >
+                {{ isGeneratingSpec ? 'Generating Spec...' : 'Generate Design Spec' }}
+              </button>
+              <button
+                v-if="briefEditMode"
+                @click="briefEditMode = false; briefEditContent = selectedBrief.content"
+                :disabled="isSavingBrief"
+                class="px-6 py-2 border border-[#333] text-[#999] rounded-none hover:bg-[#1a1a1a] transition disabled:opacity-50 text-sm"
+              >
+                Cancel
+              </button>
             <button
               v-if="wizardPhase === 'review'"
               @click="saveBrief"
