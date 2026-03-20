@@ -259,34 +259,17 @@
               <h2 class="text-xl font-semibold text-white mb-1">{{ selectedBrief.name || 'Untitled Brief' }}</h2>
               <p class="text-xs text-[#666] mb-6">Created {{ formatDate(selectedBrief.created_at) }}{{ selectedBrief.updated_at ? ' · Updated ' + formatDate(selectedBrief.updated_at) : '' }}</p>
 
-              <!-- Edit mode -->
+              <!-- Edit mode: TipTap WYSIWYG editor, no tabs needed -->
               <div v-if="briefEditMode" class="space-y-4">
-                <div class="flex gap-2 border-b border-[#333] mb-2">
-                  <button 
-                    @click="editModeTab = 'edit'" 
-                    :class="editModeTab === 'edit' ? 'border-b-2 border-[#8D35FF] text-white' : 'border-b-2 border-transparent text-[#666] hover:text-white'"
-                    class="pb-2 px-3 text-sm transition"
-                  >
-                    Edit
-                  </button>
-                  <button 
-                    @click="editModeTab = 'preview'" 
-                    :class="editModeTab === 'preview' ? 'border-b-2 border-[#8D35FF] text-white' : 'border-b-2 border-transparent text-[#666] hover:text-white'"
-                    class="pb-2 px-3 text-sm transition"
-                  >
-                    Preview
-                  </button>
-                </div>
-
-                <div v-if="editModeTab === 'edit'" class="relative">
-                  <RichTextEditor
-                    v-model="briefEditContent"
-                  />
-                </div>
-
-                <div v-else class="bg-[#0f0f0f] border border-[#333] rounded-none p-6 max-h-[50vh] overflow-y-auto">
-                  <div class="text-white text-sm whitespace-pre-wrap leading-relaxed" v-html="formatBriefHtml(briefEditContent)"></div>
-                </div>
+                <ClientOnly>
+                  <RichTextEditor v-model="briefEditContent" />
+                  <template #fallback>
+                    <textarea
+                      v-model="briefEditContent"
+                      class="w-full min-h-[400px] px-4 py-3 bg-[#0f0f0f] border border-[#333] text-white text-sm leading-relaxed focus:border-[#8D35FF] focus:outline-none resize-y"
+                    />
+                  </template>
+                </ClientOnly>
                 
                 <!-- Design Spec and Actions -->
                 <div class="flex gap-3">
