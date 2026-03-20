@@ -364,20 +364,6 @@
                 </div>
               </div>
 
-                <!-- Preview generated spec -->
-                <div v-if="designSpec" class="mt-8 border-t border-[#333] pt-6 space-y-4">
-                  <h3 class="text-white font-semibold text-lg">Design Specification Structure</h3>
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div v-for="page in designSpec.pages" :key="page.path" class="p-4 border border-[#333] bg-[#0f0f0f]">
-                      <p class="text-white font-semibold text-sm">{{ page.title }}</p>
-                      <ul class="text-[#666] text-xs list-disc ml-4 mt-2 space-y-1">
-                        <li v-for="block in page.ui_blocks" :key="block.type">{{ block.type }} - {{ block.description }}</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
               <!-- View mode -->
               <div v-else class="bg-[#0f0f0f] border border-[#333] rounded-none p-6">
                 <div class="text-white text-sm whitespace-pre-wrap leading-relaxed" v-html="formatBriefHtml(selectedBrief.content || '')"></div>
