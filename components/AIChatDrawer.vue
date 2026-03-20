@@ -131,6 +131,10 @@ const props = defineProps({
   isOpen: {
     type: Boolean,
     default: false
+  },
+  briefContext: {
+    type: Object as () => { id: string; name: string; content: string; files?: string[] } | null,
+    default: null
   }
 })
 
@@ -143,7 +147,11 @@ const error = ref('')
 const messagesContainer = ref<HTMLElement>()
 const selectedConversationId = ref<string | null>(null)
 
-const agentLabel = computed(() => props.agentType === 'briefing' ? 'Briefing Assistant' : 'AI Consultant')
+const agentLabel = computed(() => {
+  if (props.agentType === 'post-brief') return 'Design Strategist'
+  if (props.agentType === 'briefing') return 'Briefing Assistant'
+  return 'AI Consultant'
+})
 
 // Get user email for API calls
 const getUserEmail = () => props.userEmail || localStorage.getItem('user_email') || 'anonymous'
@@ -288,10 +296,57 @@ const loadConversationMessages = async (conversationId: string) => {
   }
 }
 
+// Send proactive greeting from AI after brief is created
+const sendProactiveGreeting = async () => {
+  if (!selectedConversationId.value || !props.briefContext) return
+  loading.value = true
+  error.value = ''
+
+  try {
+    const email = getUserEmail()
+    const brief = props.briefContext
+    const filesNote = brief.files?.length
+      ? `\n\nAttached files: ${brief.files.join(', ')}`
+      : ''
+
+    // We send a hidden "system trigger" message that makes AI respond proactively
+    const triggerPrompt = `[SYSTEM: The user has just finished creating their project brief titled "${brief.name}". The brief content is below. Greet them, briefly summarize what the brief covers, then proactively guide them through the next steps: (1) refine the brief if needed, (2) generate design specifications. Be concise, friendly, and action-oriented. Do NOT ask them to do anything — tell them what YOU will help them with next.]
+
+Brief content:
+${brief.content?.slice(0, 2000)}${filesNote}`
+
+    const response = await fetch('/api/chat/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-user-email': email },
+      body: JSON.stringify({
+        conversation_id: selectedConversationId.value,
+        message: triggerPrompt,
+        history: [],
+        agent_type: 'post-brief',
+        hidden_trigger: true  // flag so we don't display the trigger as user message
+      })
+    })
+
+    const data = await response.json()
+    if (response.ok && data.messages) {
+      // Only keep AI response messages (skip the hidden trigger)
+      messages.value = data.messages.filter((m: Message) => m.role === 'assistant')
+      await scrollToBottom()
+    }
+  } catch (err) {
+    console.error('Failed to send proactive greeting:', err)
+  } finally {
+    loading.value = false
+  }
+}
+
 onMounted(async () => {
   // Initialize when component mounts and drawer is already open
   if (props.isOpen) {
     await initializeConversation()
+    if (props.agentType === 'post-brief' && props.briefContext) {
+      await sendProactiveGreeting()
+    }
   }
 })
 
@@ -299,6 +354,9 @@ onMounted(async () => {
 watch(() => props.isOpen, async (newVal) => {
   if (newVal && !selectedConversationId.value) {
     await initializeConversation()
+    if (props.agentType === 'post-brief' && props.briefContext) {
+      await sendProactiveGreeting()
+    }
   }
 })
 

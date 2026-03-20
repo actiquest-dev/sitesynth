@@ -7,6 +7,7 @@
       :isOpen="isChatOpen"
       :agentType="agentMode"
       :userEmail="userEmail"
+      :briefContext="chatBriefContext"
       @update:isOpen="isChatOpen = $event"
     />
   </ClientOnly>
@@ -21,6 +22,7 @@ import AIChatButton from "~/components/AIChatButton.vue";
 import AIChatDrawer from "~/components/AIChatDrawer.vue";
 import { useSupabaseAuth } from "~/composables/useSupabaseAuth";
 import { useCanonicalUrl } from "~/composables/useCanonicalUrl";
+import { useChatDrawer } from "~/composables/useChatDrawer";
 import "~/assets/style.scss";
 
 const route = useRoute();
@@ -28,11 +30,12 @@ const config = useRuntimeConfig();
 const baseUrl = config.public?.siteUrl;
 const { isAuthenticated, user, initAuth } = useSupabaseAuth();
 
-// Chat state
-const isChatOpen = ref(false);
+// Chat state — driven by shared composable
+const { isOpen: isChatOpen, agentMode: chatAgentMode, briefContext: chatBriefContext } = useChatDrawer();
 
-// Determine agent mode based on auth state
+// Determine agent mode: post-brief stays as-is, otherwise auth-based
 const agentMode = computed(() => {
+  if (chatAgentMode.value === 'post-brief') return 'post-brief';
   return isAuthenticated.value ? "briefing" : "presale";
 });
 
