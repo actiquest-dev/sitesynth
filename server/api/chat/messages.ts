@@ -62,26 +62,46 @@ export default defineEventHandler(async (event) => {
     const message = body.message || body.content
     const agentType = body.agent_type || 'presale'
     const history = body.history || []
+    const hiddenTrigger = body.hidden_trigger === true  // post-brief proactive greeting
 
     if (!conversationId || !message) {
       return createError({ statusCode: 400, statusMessage: 'Conversation ID and message required' })
     }
 
+    const isPostBrief = agentType === 'post-brief'
+    const isBriefMode = agentType === 'briefing' || isPostBrief
+
     try {
-      // 1. Save user message
-      await supabase.from('messages').insert([{ conversation_id: conversationId, role: 'user', content: message }])
+      // 1. Save user message — skip for hidden triggers (post-brief proactive greeting)
+      if (!hiddenTrigger) {
+        await supabase.from('messages').insert([{ conversation_id: conversationId, role: 'user', content: message }])
+      }
 
       // 2. Setup Agent & Prompt
-      const agent = agentType === 'briefing' ? briefingAgent : consultantAgent
-      const agentConfig = getAgentConfig(agentType === 'briefing' ? 'briefingAgent' : 'consultantAgent')
+      const agent = isBriefMode ? briefingAgent : consultantAgent
+      const agentConfig = getAgentConfig(isBriefMode ? 'briefingAgent' : 'consultantAgent')
       let systemPrompt = agentConfig.systemPrompt
-      
-      const workflow = await getActiveWorkflow(agentType === 'briefing' ? 'briefing' : 'presale')
-      const currentStepPrompt = getCurrentStepPrompt(workflow, history.length)
-      systemPrompt = buildWorkflowSystemPrompt(systemPrompt, workflow, currentStepPrompt)
+
+      // Post-brief mode: override with proactive design strategist persona
+      if (isPostBrief) {
+        systemPrompt = `You are a Design Strategist at SiteSynth. The client has just finished creating their project brief.
+
+Your role in this first message:
+1. Warmly acknowledge the brief by name
+2. In 2-3 sentences, summarize what the brief is about (show you've read it)
+3. Suggest 1-2 specific improvements if you see gaps or vague sections
+4. Clearly state the next step: "When you're happy with the brief, I'll generate a full Design Specification — screen structure, UI blocks, and a Figma template plan"
+5. End with a specific question to move forward
+
+Be concise, professional, proactive. Respond in the same language as the brief content.`
+      } else {
+        const workflow = await getActiveWorkflow(agentType === 'briefing' ? 'briefing' : 'presale')
+        const currentStepPrompt = getCurrentStepPrompt(workflow, history.length)
+        systemPrompt = buildWorkflowSystemPrompt(systemPrompt, workflow, currentStepPrompt)
+      }
 
       // 3. Define Tools
-      const tools = agentType === 'briefing' ? {
+      const tools = isBriefMode ? {
         update_brief_content: tool({
           description: 'Update the project brief content.',
           parameters: z.object({ new_markdown_content: z.string() }),
@@ -107,7 +127,15 @@ export default defineEventHandler(async (event) => {
       } : undefined
 
       // 4. Load Current Brief Context
-      if (agentType === 'briefing') {
+      if (isPostBrief && body.briefContext) {
+        // Brief content passed directly from client (post-brief mode)
+        const b = body.briefContext
+        systemPrompt += `\n\nPROJECT BRIEF:\nTitle: ${b.name}\n\n${b.content}`
+        if (b.files?.length) {
+          systemPrompt += `\n\nAttached files: ${b.files.join(', ')}`
+        }
+      } else if (agentType === 'briefing') {
+        // Load brief from DB by conversation_id (briefing mode)
         const { data: brief } = await supabase.from('briefs').select('markdown_content').eq('conversation_id', conversationId).single()
         if (brief?.markdown_content) {
           systemPrompt += `\n\nCURRENT BRIEF CONTENT:\n${brief.markdown_content}\n\nUSE TOOL update_brief_content TO UPDATE.`

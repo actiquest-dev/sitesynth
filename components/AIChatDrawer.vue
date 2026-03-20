@@ -223,7 +223,14 @@ watch(messages, scrollToBottom, { deep: true })
 const initializeConversation = async () => {
   try {
     const email = getUserEmail()
-    
+
+    // Post-brief mode: reuse the brief's own conversation_id directly
+    if (props.agentType === 'post-brief' && props.briefContext?.conversationId) {
+      selectedConversationId.value = props.briefContext.conversationId
+      await loadConversationMessages(props.briefContext.conversationId)
+      return
+    }
+
     // First, try to get existing conversations
     const getResponse = await fetch(`/api/chat/conversations?agentType=${props.agentType}`, {
       method: 'GET',
@@ -305,15 +312,9 @@ const sendProactiveGreeting = async () => {
   try {
     const email = getUserEmail()
     const brief = props.briefContext
-    const filesNote = brief.files?.length
-      ? `\n\nAttached files: ${brief.files.join(', ')}`
-      : ''
 
-    // We send a hidden "system trigger" message that makes AI respond proactively
-    const triggerPrompt = `[SYSTEM: The user has just finished creating their project brief titled "${brief.name}". The brief content is below. Greet them, briefly summarize what the brief covers, then proactively guide them through the next steps: (1) refine the brief if needed, (2) generate design specifications. Be concise, friendly, and action-oriented. Do NOT ask them to do anything — tell them what YOU will help them with next.]
-
-Brief content:
-${brief.content?.slice(0, 2000)}${filesNote}`
+    // Short trigger — server builds the real system prompt with brief context
+    const triggerPrompt = `Brief "${brief.name}" has been created. Please introduce yourself and guide the user proactively.`
 
     const response = await fetch('/api/chat/messages', {
       method: 'POST',
@@ -323,7 +324,8 @@ ${brief.content?.slice(0, 2000)}${filesNote}`
         message: triggerPrompt,
         history: [],
         agent_type: 'post-brief',
-        hidden_trigger: true  // flag so we don't display the trigger as user message
+        hidden_trigger: true,       // don't save trigger as user message
+        briefContext: props.briefContext  // pass brief for server-side system prompt
       })
     })
 

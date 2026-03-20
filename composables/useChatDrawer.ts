@@ -5,6 +5,7 @@ export interface BriefContext {
   id: string
   name: string
   content: string
+  conversationId: string   // brief's own conversation_id — reuse it in chat
   files?: string[]
 }
 

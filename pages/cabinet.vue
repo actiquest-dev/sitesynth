@@ -2018,6 +2018,7 @@ const finishWizard = async () => {
       id: newlySavedBrief.value.id,
       name: newlySavedBrief.value.name || 'Untitled Brief',
       content: newlySavedBrief.value.content || '',
+      conversationId: newlySavedBrief.value.conversation_id,
       files: uploadedFiles.value.map((f: any) => f.name)
     })
   }
