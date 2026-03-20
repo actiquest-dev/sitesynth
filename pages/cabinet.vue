@@ -1647,11 +1647,13 @@ const saveBriefEdit = async () => {
       headers: { 'Content-Type': 'application/json', 'x-user-email': userEmail.value },
       body: JSON.stringify({ content: briefEditContent.value, name: briefEditName.value }),
     })
-    if (r.ok) {
-      const d = await r.json()
-      selectedBrief.value = d.data || { ...selectedBrief.value, content: briefEditContent.value, name: briefEditName.value }
+    const d = await r.json()
+    if (r.ok && d.success) {
+      selectedBrief.value = { ...selectedBrief.value, ...d.data, content: d.data?.content ?? briefEditContent.value, name: briefEditName.value }
       briefEditMode.value = false
       await loadBriefs()
+    } else {
+      console.error('Save brief failed:', d.error)
     }
   } catch (e) { console.error('Error saving brief:', e) }
   finally { isSavingBrief.value = false }

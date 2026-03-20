@@ -45,6 +45,7 @@ export default defineEventHandler(async (event) => {
       // Map to correct DB columns
       const updates: any = { updated_at: new Date().toISOString() }
       if (content !== undefined) updates.markdown_content = content
+      if (name !== undefined) updates.name = name
       if (briefData !== undefined) updates.brief_data = briefData
 
       const { data, error } = await supabase
@@ -56,17 +57,20 @@ export default defineEventHandler(async (event) => {
         .single()
 
       if (error) throw error
-      
-      // We also need to update the conversation title if name is provided
-      if (name) {
+
+      // Update conversation title if name provided
+      if (name && data?.conversation_id) {
         await supabase
           .from('conversations')
           .update({ title: name })
           .eq('id', data.conversation_id)
       }
-      
+
+      // Map DB fields to frontend expectations
+      const mapped = { ...data, content: data.markdown_content }
+
       console.log(`[Briefs] Brief updated: ${id}`)
-      return { success: true, data }
+      return { success: true, data: mapped }
     } catch (error) {
       console.error('[Briefs] Error updating brief:', error)
       return { success: false, error: 'Failed to update brief' }
