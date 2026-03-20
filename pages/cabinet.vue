@@ -256,7 +256,13 @@
               </div>
               </div>
 
-              <h2 class="text-xl font-semibold text-white mb-1">{{ selectedBrief.name || 'Untitled Brief' }}</h2>
+              <input
+                v-if="briefEditMode"
+                v-model="briefEditName"
+                class="text-xl font-semibold text-white mb-1 bg-transparent border-b border-[#444] focus:border-[#8D35FF] focus:outline-none w-full pb-1"
+                placeholder="Brief name..."
+              />
+              <h2 v-else class="text-xl font-semibold text-white mb-1">{{ selectedBrief.name || 'Untitled Brief' }}</h2>
               <p class="text-xs text-[#666] mb-6">Created {{ formatDate(selectedBrief.created_at) }}{{ selectedBrief.updated_at ? ' · Updated ' + formatDate(selectedBrief.updated_at) : '' }}</p>
 
               <!-- Edit mode: TipTap WYSIWYG editor, no tabs needed -->
@@ -1014,6 +1020,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick, watch } from 'vue'
+import { marked } from 'marked'
 import FormDataDisplay from '@/components/FormDataDisplay.vue'
 import { useGoogleAuth } from '@/composables/useGoogleAuth'
 import { useChatDrawer } from '@/composables/useChatDrawer'
@@ -1613,7 +1620,9 @@ const loadBriefs = async () => {
 const openBriefEditor = (brief: any) => {
   selectedBrief.value = brief
   briefEditMode.value = false
-  briefEditContent.value = brief.content || ''
+  // Convert markdown to HTML for TipTap (handles both old markdown and new HTML content)
+  const raw = brief.content || ''
+  briefEditContent.value = raw.startsWith('<') ? raw : marked(raw) as string
   briefEditName.value = brief.name || ''
 }
 
