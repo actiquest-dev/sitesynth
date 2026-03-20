@@ -49,7 +49,7 @@
           style="font-family: Inter, sans-serif"
         >
             <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 flex-shrink-0"><path :d="iconPaths.logout" /></svg>
-          Log In
+          Log Out
         </button>
       </div>
     </aside>
@@ -1613,7 +1613,11 @@ const loadOrders = async () => {
 const loadBriefs = async () => {
   try {
     const r = await fetch('/api/briefs', { headers: { 'x-user-email': userEmail.value } })
-    if (r.ok) { const d = await r.json(); briefs.value = d.data || [] }
+    if (r.ok) {
+      const d = await r.json()
+      briefs.value = d.data || []
+      stats.value.totalProjects = briefs.value.length
+    }
   } catch {}
 }
 
