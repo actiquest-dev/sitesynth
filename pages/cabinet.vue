@@ -278,13 +278,12 @@
                   </button>
                 </div>
                 
-                <textarea
-                  v-if="editModeTab === 'edit'"
-                  v-model="briefEditContent"
-                  rows="20"
-                  placeholder="Enter brief in Markdown..."
-                  class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-none text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none resize-none font-mono text-sm leading-relaxed"
-                ></textarea>
+                <ClientOnly>
+                  <RichTextEditor
+                    v-if="editModeTab === 'edit'"
+                    v-model="briefEditContent"
+                  />
+                </ClientOnly>
                 
                 <div v-else-if="editModeTab === 'preview'" class="bg-[#0f0f0f] border border-[#333] rounded-none p-6 max-h-[50vh] overflow-y-auto">
                   <div class="text-white text-sm whitespace-pre-wrap leading-relaxed" v-html="formatBriefHtml(briefEditContent)"></div>
