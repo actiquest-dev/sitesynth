@@ -987,52 +987,6 @@
             >
               Continue
             </button>
-              <button
-                v-if="!briefEditMode && briefEditContent !== selectedBrief.content"
-                @click="saveBrief"
-                :disabled="isSavingBrief"
-                class="px-6 py-2 bg-[#8D35FF] text-white rounded-none hover:bg-[#7B2AE8] transition disabled:opacity-50 text-sm"
-              >
-                {{ isSavingBrief ? 'Saving...' : 'Save Changes' }}
-              </button>
-              <button
-                v-if="!briefEditMode"
-                @click="activeTab = 'projects'"
-                class="px-6 py-2 border border-[#333] text-[#999] rounded-none hover:bg-[#1a1a1a] transition text-sm"
-              >
-                ← Back to projects
-              </button>
-              <button
-                v-if="!briefEditMode"
-                @click="openBriefEditor(selectedBrief)"
-                :class="{'border-[#8D35FF] text-[#8D35FF]': briefEditMode}"
-                class="px-6 py-2 border border-[#333] text-[#999] rounded-none hover:bg-[#1a1a1a] transition text-sm"
-              >
-                Preview
-              </button>
-              <button
-                v-if="!briefEditMode"
-                @click="deleteBrief"
-                class="px-6 py-2 border border-[#333] text-[#999] rounded-none hover:bg-[#1a1a1a] transition text-sm"
-              >
-                Delete
-              </button>
-              <button
-                v-if="briefEditMode"
-                @click="generateDesignSpec"
-                :disabled="isGeneratingSpec"
-                class="px-6 py-2 border border-[#8D35FF] text-white rounded-none hover:bg-[#8D35FF]/20 transition disabled:opacity-50 text-sm"
-              >
-                {{ isGeneratingSpec ? 'Generating Spec...' : 'Generate Design Spec' }}
-              </button>
-              <button
-                v-if="briefEditMode"
-                @click="briefEditMode = false; briefEditContent = selectedBrief.content"
-                :disabled="isSavingBrief"
-                class="px-6 py-2 border border-[#333] text-[#999] rounded-none hover:bg-[#1a1a1a] transition disabled:opacity-50 text-sm"
-              >
-                Cancel
-              </button>
             <button
               v-if="wizardPhase === 'review'"
               @click="saveBrief"
@@ -1657,6 +1611,13 @@ const sendChatMessage = async () => {
 }
 
 // ── Brief Management ──
+const loadOrders = async () => {
+  try {
+    const r = await fetch('/api/orders', { headers: { 'x-user-email': userEmail.value } })
+    if (r.ok) { const d = await r.json(); orders.value = d.data || [] }
+  } catch {}
+}
+
 const loadBriefs = async () => {
   try {
     const r = await fetch('/api/briefs', { headers: { 'x-user-email': userEmail.value } })
