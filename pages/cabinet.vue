@@ -1143,7 +1143,6 @@ const generateDesignSpec = async () => {
     const data = await res.json()
     if (data.success) {
       designSpec.value = data.data
-      alert('Design Spec generated! See structure below.')
     } else {
       alert('Failed to generate spec: ' + data.error)
     }
