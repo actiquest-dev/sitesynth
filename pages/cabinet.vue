@@ -1257,6 +1257,8 @@ const getEmailFromToken = (rawToken: string | null): string => {
 
 onMounted(async () => {
   // Get user email from auth
+  const { loadStoredAuth } = useGoogleAuth()
+  loadStoredAuth()
   const user = getCurrentUser()
   if (user?.email) {
     userEmail.value = user.email
