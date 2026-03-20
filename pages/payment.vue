@@ -487,6 +487,10 @@ const submitPayment = async () => {
         timestamp: new Date().toISOString(),
       }
 
+      // Carry over presale conversation_id so it can be claimed after login
+      const presaleConvId = localStorage.getItem('presale_conversation_id')
+      if (presaleConvId) sessionData.presale_conversation_id = presaleConvId
+
       localStorage.setItem('paymentResult', JSON.stringify(sessionData))
 
       // Create auth token so user can access cabinet
@@ -500,7 +504,6 @@ const submitPayment = async () => {
       }))
 
       // Payment successful - redirect to confirmation
-      // User will be able to login via Google or email on the login page
       console.log('✅ Payment successful, redirecting to confirmation')
       await navigateTo('/confirmation')
     } else {

@@ -272,6 +272,11 @@ const initializeConversation = async () => {
       const data = await createResponse.json()
       selectedConversationId.value = data.data?.id || data.conversation?.id
       console.log('Created new conversation:', selectedConversationId.value)
+
+      // Persist presale conversation_id so payment page can claim it after registration
+      if (props.agentType === 'presale' && selectedConversationId.value) {
+        try { localStorage.setItem('presale_conversation_id', selectedConversationId.value) } catch {}
+      }
     } else {
       console.error('Failed to create conversation:', createResponse.status, createResponse.statusText)
       error.value = `Chat initialization failed: ${createResponse.status}`

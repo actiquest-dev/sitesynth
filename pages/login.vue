@@ -112,7 +112,32 @@ import GoogleSignInButton from '@/components/auth/GoogleSignInButton.vue'
 import { useGoogleAuth } from '@/composables/useGoogleAuth'
 import { useNocoBase } from '@/composables/useNocoBase'
 
-const { handleGoogleSignIn, isLoading } = useGoogleAuth()
+const { handleGoogleSignIn, isLoading, getCurrentUser } = useGoogleAuth()
+
+// After any successful login: link presale conversation to the user's email
+const claimPresaleConversation = async (email: string) => {
+  try {
+    // Check localStorage directly and also paymentResult for the conversation_id
+    let convId = localStorage.getItem('presale_conversation_id')
+    if (!convId) {
+      const paymentResult = JSON.parse(localStorage.getItem('paymentResult') || '{}')
+      convId = paymentResult.presale_conversation_id || null
+    }
+    if (!convId) return
+
+    await fetch('/api/conversations/claim', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ conversation_id: convId, user_email: email })
+    })
+
+    // Clean up — only needed once
+    localStorage.removeItem('presale_conversation_id')
+    console.log(`[Login] Claimed presale conversation ${convId} → ${email}`)
+  } catch (e) {
+    console.warn('[Login] Could not claim presale conversation:', e)
+  }
+}
 const { getList } = useNocoBase()
 
 const emailInput = ref('')
@@ -127,6 +152,8 @@ const handleGoogleResponse = async (response: any) => {
     const success = await handleGoogleSignIn(response)
     if (success) {
       console.log('✅ Google Sign-In successful, redirecting...')
+      const user = getCurrentUser()
+      if (user?.email) await claimPresaleConversation(user.email)
       await navigateTo('/cabinet')
     } else {
       errorMessage.value = 'Google Sign-In failed. Please try again.'
@@ -173,6 +200,7 @@ const handleEmailLogin = async () => {
     }))
 
     console.log('✅ Email login successful')
+    await claimPresaleConversation(emailInput.value)
 
     // Redirect to cabinet
     await navigateTo('/cabinet')
