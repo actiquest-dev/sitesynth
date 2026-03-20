@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
       const mapped = (data || []).map((b: any) => ({
         ...b,
         content: b.markdown_content || '',
-        name: b.brief_data?.projectName || 'Untitled Brief',
+        name: b.name || b.brief_data?.projectName || 'Untitled Brief',
       }))
       return { success: true, data: mapped }
     } catch (error) {
