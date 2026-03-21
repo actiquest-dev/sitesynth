@@ -505,6 +505,42 @@ const buildFromPlan = async (jobId, plan) => {
           node.fontSize = props.size
         }
       }
+      if (cmd.op === 'set_autolayout') {
+        const node = registry.get(cmd.name)
+        if (node && node.type !== 'TEXT') {
+          node.layoutMode = props.layoutMode || 'VERTICAL'
+        }
+      }
+      if (cmd.op === 'set_padding') {
+        const node = registry.get(cmd.name)
+        if (node && node.type !== 'TEXT') {
+          node.paddingTop = props.top || 0
+          node.paddingRight = props.right || 0
+          node.paddingBottom = props.bottom || 0
+          node.paddingLeft = props.left || 0
+        }
+      }
+      if (cmd.op === 'set_spacing') {
+        const node = registry.get(cmd.name)
+        if (node && node.type !== 'TEXT') {
+          node.itemSpacing = props.value || 0
+        }
+      }
+      if (cmd.op === 'set_alignment') {
+        const node = registry.get(cmd.name)
+        if (node && node.type !== 'TEXT') {
+          if (props.primaryAxisAlign) node.primaryAxisAlignItems = props.primaryAxisAlign
+          if (props.counterAxisAlign) node.counterAxisAlignItems = props.counterAxisAlign
+        }
+      }
+      if (cmd.op === 'set_text_style') {
+        const node = registry.get(cmd.name)
+        if (node && node.type === 'TEXT') {
+          if (props.fontSize) node.fontSize = props.fontSize
+          if (props.lineHeight) node.lineHeight = { value: props.lineHeight, unit: 'PIXELS' }
+          if (props.letterSpacing) node.letterSpacing = { value: props.letterSpacing, unit: 'PERCENT' }
+        }
+      }
     })
   } else {
     const designSystemPage = createPage(`Build ${pageSuffix} · Design System`)

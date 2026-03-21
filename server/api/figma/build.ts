@@ -77,7 +77,12 @@ export default defineEventHandler(async (event) => {
             'resize',
             'move',
             'set_text',
-            'set_font_size'
+            'set_font_size',
+            'set_autolayout',
+            'set_padding',
+            'set_spacing',
+            'set_alignment',
+            'set_text_style'
           ]),
           name: z.string(),
           parent: z.string().optional(),
