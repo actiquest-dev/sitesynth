@@ -3,6 +3,12 @@ import { useDatabaseClient } from '~~/server/utils/supabase'
 import { verifyBuildToken } from '~~/server/utils/figma-build-token'
 
 export default defineEventHandler(async (event) => {
+  setHeader(event, 'Access-Control-Allow-Origin', '*')
+  setHeader(event, 'Access-Control-Allow-Methods', 'GET, OPTIONS')
+  setHeader(event, 'Access-Control-Allow-Headers', 'Content-Type')
+  if (event.node.req.method === 'OPTIONS') {
+    return { success: true }
+  }
   const query = getQuery(event)
   const jobId = typeof query.jobId === 'string' ? query.jobId : ''
   const token = typeof query.token === 'string' ? query.token : ''

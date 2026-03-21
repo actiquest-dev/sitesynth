@@ -5,6 +5,12 @@ const getPluginSecret = () =>
   process.env.FIGMA_PLUGIN_SECRET || process.env.NUXT_SESSION_PASSWORD || 'local-figma-plugin-secret'
 
 export default defineEventHandler(async (event) => {
+  setHeader(event, 'Access-Control-Allow-Origin', '*')
+  setHeader(event, 'Access-Control-Allow-Methods', 'POST, OPTIONS')
+  setHeader(event, 'Access-Control-Allow-Headers', 'Content-Type')
+  if (event.node.req.method === 'OPTIONS') {
+    return { success: true }
+  }
   const body = await readBody(event)
   const token = body?.token
   const jobId = body?.jobId
