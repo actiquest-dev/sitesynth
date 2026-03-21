@@ -221,7 +221,7 @@ onMounted(async () => {
   currentUserEmail.value = user?.email || ''
 
   if (!currentUserEmail.value) {
-    navigateTo('/login')
+    navigateTo('/admin/login')
     return
   }
 
