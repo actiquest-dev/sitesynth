@@ -161,7 +161,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useGoogleAuth } from '@/composables/useGoogleAuth'
 
 interface AgentConfig {
   name: string
@@ -173,6 +174,9 @@ interface AgentConfig {
 
 const loading = ref(true)
 const configs = ref<{ briefingAgent?: AgentConfig; consultantAgent?: AgentConfig }>({})
+const { getCurrentUser, getGoogleIdToken, loadStoredAuth } = useGoogleAuth()
+const currentUserEmail = ref('')
+const isAdmin = computed(() => currentUserEmail.value.toLowerCase() === 'hello@sitesynth.com')
 
 // Form states
 const briefingForm = ref<Partial<AgentConfig>>({ temperature: 0.7, maxTokens: 4096, systemPrompt: '' })
@@ -188,8 +192,20 @@ const errorPresale = ref('')
 
 // Load initial configs
 onMounted(async () => {
+  loadStoredAuth()
+  const user = getCurrentUser()
+  currentUserEmail.value = user?.email || ''
+  if (!isAdmin.value) {
+    errorBriefing.value = 'Admin access required'
+    loading.value = false
+    return
+  }
   try {
-    const response = await fetch('/api/admin/agents-config')
+    const response = await fetch('/api/admin/agents-config', {
+      headers: {
+        'x-google-id-token': getGoogleIdToken() || '',
+      },
+    })
     const result = await response.json()
 
     if (result.data) {
@@ -219,7 +235,10 @@ const saveConfig = async (agentType: 'briefingAgent' | 'consultantAgent') => {
   try {
     const response = await fetch('/api/admin/agents-config', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-google-id-token': getGoogleIdToken() || '',
+      },
       body: JSON.stringify({
         agentType,
         temperature: form.value.temperature,

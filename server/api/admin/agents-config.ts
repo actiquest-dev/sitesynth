@@ -1,7 +1,10 @@
 import { defineEventHandler, readBody, createError } from 'h3'
 import { agentConfigs, updateAgentConfig } from '~~/server/utils/agent-config'
+import { requireAdminSession } from '~~/server/utils/admin-session'
 
 export default defineEventHandler(async (event) => {
+  await requireAdminSession(event)
+
   if (event.node.req.method === 'GET') {
     return {
       status: 'success',
