@@ -20,18 +20,23 @@ export default defineEventHandler(async (event) => {
   const model = genAI.getGenerativeModel({ model: 'gemini-2.5-pro' })
 
   const prompt = `
-You are preparing a polished project narrative for a design brief wizard.
+You are preparing a polished intake summary for a design brief wizard.
 
-Write a detailed but concise summary in plain text.
+Write a structured working summary in plain text using exactly these sections:
+
+Project
+Client
+Goals
+Constraints
+Design implications
 
 Rules:
-- Write as a strong working summary for a strategist or designer.
 - Do not output JSON.
 - Do not mention missing fields explicitly.
-- Organize the summary into short paragraphs or bullet points.
-- Cover: what is being built, business context, likely users, goals, constraints, deliverables, signals from the client intake.
-- If explicit project type is provided, treat it as authoritative.
-- End with 2-4 concrete design considerations that should influence discovery questions.
+- Use concise, editable prose with short bullets where helpful.
+- Treat the explicit project type as authoritative if provided.
+- Make this suitable for a strategist or designer to refine directly in a textarea.
+- In "Design implications", include 3-5 concrete implications that should influence discovery questions and later design spec generation.
 
 Explicit project type: ${projectType || 'not provided'}
 
