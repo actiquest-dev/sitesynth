@@ -123,6 +123,11 @@ Be concise, professional, proactive. Respond in the same language as the brief c
         })
       } : undefined
 
+      const shouldDraftUpdate =
+        isBriefMode &&
+        typeof message === 'string' &&
+        /(внеси|внести|измен|обнов|исправ|перепиш|доработ|refine|update|edit|revise|change|adjust)/i.test(message)
+
       // 4. Load Current Brief Context
       if (isPostBrief && body.briefContext) {
         // Brief content passed directly from client (post-brief mode)
@@ -131,17 +136,17 @@ Be concise, professional, proactive. Respond in the same language as the brief c
         if (b.files?.length) {
           systemPrompt += `\n\nAttached files: ${b.files.join(', ')}`
         }
-        systemPrompt += `\n\nIf the user requests edits or refinements to the brief, CALL draft_brief_update with the full updated markdown and tell the user to review and click Save.`
+        systemPrompt += `\n\nIf the user requests edits or refinements to the brief, YOU MUST CALL draft_brief_update with the full updated markdown. Do not claim changes are saved. Tell the user to review and click Save.`
       } else if (isPostBrief) {
         const { data: brief } = await supabase.from('briefs').select('markdown_content').eq('conversation_id', conversationId).single()
         if (brief?.markdown_content) {
-          systemPrompt += `\n\nCURRENT BRIEF CONTENT:\n${brief.markdown_content}\n\nUSE TOOL draft_brief_update TO PREPARE CHANGES.`
+          systemPrompt += `\n\nCURRENT BRIEF CONTENT:\n${brief.markdown_content}\n\nYOU MUST USE TOOL draft_brief_update TO PREPARE CHANGES.`
         }
       } else if (agentType === 'briefing') {
         // Load brief from DB by conversation_id (briefing mode)
         const { data: brief } = await supabase.from('briefs').select('markdown_content').eq('conversation_id', conversationId).single()
         if (brief?.markdown_content) {
-          systemPrompt += `\n\nCURRENT BRIEF CONTENT:\n${brief.markdown_content}\n\nUSE TOOL draft_brief_update TO PREPARE CHANGES.`
+          systemPrompt += `\n\nCURRENT BRIEF CONTENT:\n${brief.markdown_content}\n\nYOU MUST USE TOOL draft_brief_update TO PREPARE CHANGES.`
         }
       }
 
@@ -156,6 +161,7 @@ Be concise, professional, proactive. Respond in the same language as the brief c
         temperature: 0.7,
         maxTokens: 4096,
         tools,
+        toolChoice: shouldDraftUpdate ? { type: 'tool', toolName: 'draft_brief_update' } : 'auto',
         maxSteps: 5,
       })
 
