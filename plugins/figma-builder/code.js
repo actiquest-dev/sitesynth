@@ -412,14 +412,13 @@ const applyFixes = (page, fixes) => {
     if ('fills' in node && Array.isArray(node.fills) && brighten) {
       node.fills = node.fills.map((fill) => {
         if (fill.type !== 'SOLID') return fill
-        return {
-          ...fill,
+        return Object.assign({}, fill, {
           color: {
             r: Math.min(1, fill.color.r + brighten),
             g: Math.min(1, fill.color.g + brighten),
             b: Math.min(1, fill.color.b + brighten),
           },
-        }
+        })
       })
     }
   })
