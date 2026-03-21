@@ -19,14 +19,17 @@ create index if not exists briefs_created_at_idx on briefs(created_at);
 alter table briefs enable row level security;
 
 -- RLS policies - users can only see their own briefs
+drop policy if exists briefs_select_policy on briefs;
 create policy briefs_select_policy
   on briefs for select
   using (user_email = auth.email());
 
+drop policy if exists briefs_insert_policy on briefs;
 create policy briefs_insert_policy
   on briefs for insert
   with check (user_email = auth.email());
 
+drop policy if exists briefs_update_policy on briefs;
 create policy briefs_update_policy
   on briefs for update
   using (user_email = auth.email());
