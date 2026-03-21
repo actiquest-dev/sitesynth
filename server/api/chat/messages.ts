@@ -127,6 +127,10 @@ Be concise, professional, proactive. Respond in the same language as the brief c
         isBriefMode &&
         typeof message === 'string' &&
         /(внеси|внести|измен|обнов|исправ|перепиш|доработ|refine|update|edit|revise|change|adjust)/i.test(message)
+      const shouldConvertPlanningToBrief =
+        isBriefMode &&
+        typeof message === 'string' &&
+        /(figma|wireframe|wireframes|mockup|mockups|design system|дизайн-систем|вайрфрейм|макет|мокап|структур|спек|специфик|экран|страниц|страница)/i.test(message)
 
       let currentBriefContent = ''
 
@@ -139,19 +143,19 @@ Be concise, professional, proactive. Respond in the same language as the brief c
         if (b.files?.length) {
           systemPrompt += `\n\nAttached files: ${b.files.join(', ')}`
         }
-        systemPrompt += `\n\nIf the user requests edits or refinements to the brief, YOU MUST CALL draft_brief_update with the full updated markdown. Do not claim changes are saved. Tell the user to review and click Save.`
+        systemPrompt += `\n\nIf the user requests edits, refinements, or proposes Figma structure, screens, wireframes, mockups, or design deliverables, YOU MUST CALL draft_brief_update with the full updated markdown. Add those planning details into the brief itself. Do not claim changes are saved. Do not say you will do work later. Tell the user to review and click Save.`
       } else if (isPostBrief) {
         const { data: brief } = await supabase.from('briefs').select('markdown_content').eq('conversation_id', conversationId).single()
         if (brief?.markdown_content) {
           currentBriefContent = brief.markdown_content
-          systemPrompt += `\n\nCURRENT BRIEF CONTENT:\n${brief.markdown_content}\n\nYOU MUST USE TOOL draft_brief_update TO PREPARE CHANGES.`
+          systemPrompt += `\n\nCURRENT BRIEF CONTENT:\n${brief.markdown_content}\n\nYOU MUST USE TOOL draft_brief_update TO PREPARE CHANGES. If you suggest Figma pages, wireframes, mockups, deliverables, or structure, insert them into the brief as planning content instead of promising future work.`
         }
       } else if (agentType === 'briefing') {
         // Load brief from DB by conversation_id (briefing mode)
         const { data: brief } = await supabase.from('briefs').select('markdown_content').eq('conversation_id', conversationId).single()
         if (brief?.markdown_content) {
           currentBriefContent = brief.markdown_content
-          systemPrompt += `\n\nCURRENT BRIEF CONTENT:\n${brief.markdown_content}\n\nYOU MUST USE TOOL draft_brief_update TO PREPARE CHANGES.`
+          systemPrompt += `\n\nCURRENT BRIEF CONTENT:\n${brief.markdown_content}\n\nYOU MUST USE TOOL draft_brief_update TO PREPARE CHANGES. If you suggest Figma pages, wireframes, mockups, deliverables, or structure, insert them into the brief as planning content instead of promising future work.`
         }
       }
 
@@ -166,7 +170,7 @@ Be concise, professional, proactive. Respond in the same language as the brief c
         temperature: 0.7,
         maxTokens: 4096,
         tools,
-        toolChoice: shouldDraftUpdate ? { type: 'tool', toolName: 'draft_brief_update' } : 'auto',
+        toolChoice: (shouldDraftUpdate || shouldConvertPlanningToBrief) ? { type: 'tool', toolName: 'draft_brief_update' } : 'auto',
         maxSteps: 5,
       })
 
@@ -191,7 +195,7 @@ Be concise, professional, proactive. Respond in the same language as the brief c
 
       // Deterministic fallback: if the model answered without producing a draft,
       // generate the updated brief directly and return it to the client.
-      if (shouldDraftUpdate && !briefDraft && currentBriefContent) {
+      if ((shouldDraftUpdate || shouldConvertPlanningToBrief) && !briefDraft && currentBriefContent) {
         const draftResult = await generateText({
           model: agent.model,
           system: `You rewrite project briefs.
@@ -200,7 +204,9 @@ Return the FULL updated brief as markdown only.
 Do not explain what you changed.
 Do not add preamble or code fences.
 Preserve useful structure and headings.
-Apply the user's requested edits directly to the existing brief.`,
+Apply the user's requested edits directly to the existing brief.
+If the user is discussing Figma structure, wireframes, mockups, screens, or deliverables, convert those ideas into explicit brief content and planning sections.
+Never promise future work. Fold the plan into the brief now.`,
           messages: [
             {
               role: 'user',
