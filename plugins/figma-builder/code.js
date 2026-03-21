@@ -361,6 +361,70 @@ const markComplete = async (jobId, fileKey) => {
   })
 }
 
+const sendCritique = async (jobId, stage, node, structure) => {
+  const bytes = await node.exportAsync({ format: 'PNG', constraint: { type: 'WIDTH', value: 1600 } })
+  const base64 = figma.base64Encode(bytes)
+  const url = `${API_BASE}/api/figma/build/critique`
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      token: PLUGIN_TOKEN,
+      jobId,
+      stage,
+      imageBase64: base64,
+      structure,
+    }),
+  })
+  const data = await response.json()
+  if (!data.success) {
+    postStatus(data.error || 'Critique failed')
+    return null
+  }
+  return data.data
+}
+
+const collectStructure = (page) => {
+  return page.findAll().map((node) => ({
+    id: node.id,
+    name: node.name,
+    type: node.type,
+    x: node.x,
+    y: node.y,
+    width: node.width,
+    height: node.height,
+  }))
+}
+
+const applyFixes = (page, fixes) => {
+  if (!fixes) return
+  const textDelta = typeof fixes.text_size_delta === 'number' ? fixes.text_size_delta : 0
+  const radiusDelta = typeof fixes.radius_delta === 'number' ? fixes.radius_delta : 0
+  const brighten = typeof fixes.brightness_delta === 'number' ? fixes.brightness_delta : 0
+
+  page.findAll().forEach((node) => {
+    if (node.type === 'TEXT' && textDelta) {
+      node.fontSize = Math.max(10, node.fontSize + textDelta)
+    }
+    if ('cornerRadius' in node && radiusDelta) {
+      node.cornerRadius = Math.max(0, (node.cornerRadius || 0) + radiusDelta)
+    }
+    if ('fills' in node && Array.isArray(node.fills) && brighten) {
+      node.fills = node.fills.map((fill) => {
+        if (fill.type !== 'SOLID') return fill
+        return {
+          ...fill,
+          color: {
+            r: Math.min(1, fill.color.r + brighten),
+            g: Math.min(1, fill.color.g + brighten),
+            b: Math.min(1, fill.color.b + brighten),
+          },
+        }
+      })
+    }
+  })
+}
+
 const buildFromPlan = async (jobId, plan) => {
   await ensureFont()
   const pageSuffix = `${formatTimestamp(new Date())} (${jobId})`
@@ -373,6 +437,13 @@ const buildFromPlan = async (jobId, plan) => {
   buildWireframes(wireframesPage, plan)
   buildMockups(mockupsPage, plan)
   buildPageMap(pageMap, plan)
+
+  const dsStructure = collectStructure(designSystemPage)
+  const critique = await sendCritique(jobId, 'design_system', designSystemPage, dsStructure)
+  if (critique?.fixes) {
+    applyFixes(designSystemPage, critique.fixes)
+    await sendCritique(jobId, 'design_system_after', designSystemPage, collectStructure(designSystemPage))
+  }
 
   figma.viewport.scrollAndZoomIntoView([...designSystemPage.children])
 }
