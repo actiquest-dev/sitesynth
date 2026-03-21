@@ -114,6 +114,68 @@ const createTypographySample = (parent, name, value, x, y) => {
   parent.appendChild(label)
 }
 
+const createButtonSample = (parent, label, x, y, fill) => {
+  const button = figma.createFrame()
+  button.name = `Button/${label}`
+  button.x = x
+  button.y = y
+  button.resize(160, 44)
+  button.fills = [{ type: 'SOLID', color: fill }]
+  button.cornerRadius = 10
+  parent.appendChild(button)
+
+  const text = figma.createText()
+  text.fontName = FONT
+  text.fontSize = 12
+  text.characters = label
+  text.x = x + 20
+  text.y = y + 13
+  text.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
+  parent.appendChild(text)
+}
+
+const createInputSample = (parent, label, x, y) => {
+  const input = figma.createFrame()
+  input.name = `Input/${label}`
+  input.x = x
+  input.y = y
+  input.resize(220, 44)
+  input.fills = [{ type: 'SOLID', color: { r: 0.12, g: 0.12, b: 0.13 } }]
+  input.strokes = [{ type: 'SOLID', color: { r: 0.25, g: 0.25, b: 0.27 } }]
+  input.cornerRadius = 8
+  parent.appendChild(input)
+
+  const text = figma.createText()
+  text.fontName = FONT
+  text.fontSize = 11
+  text.characters = label
+  text.x = x + 12
+  text.y = y + 14
+  text.fills = [{ type: 'SOLID', color: { r: 0.6, g: 0.6, b: 0.62 } }]
+  parent.appendChild(text)
+}
+
+const createCardSample = (parent, title, x, y) => {
+  const card = figma.createFrame()
+  card.name = `Card/${title}`
+  card.x = x
+  card.y = y
+  card.resize(240, 140)
+  card.fills = [{ type: 'SOLID', color: { r: 0.1, g: 0.1, b: 0.11 } }]
+  card.strokes = [{ type: 'SOLID', color: { r: 0.24, g: 0.24, b: 0.26 } }]
+  card.cornerRadius = 12
+  parent.appendChild(card)
+
+  const label = figma.createText()
+  label.fontName = FONT
+  label.fontSize = 12
+  label.characters = title
+  label.x = x + 12
+  label.y = y + 12
+  label.fills = [{ type: 'SOLID', color: { r: 0.85, g: 0.85, b: 0.87 } }]
+  parent.appendChild(label)
+}
+
 const createBulletList = (parent, lines, x, y) => {
   if (!lines || !lines.length) return
   const textNode = figma.createText()
@@ -164,16 +226,13 @@ const buildDesignSystem = (page, plan) => {
   createTypographySample(frame, 'Accent', typography[2] || 'Accent / 12px', 24, 420)
 
   createTitle(frame, 'Components', 520, 330)
-  let compX = 520
-  let compY = 360
-  components.slice(0, 6).forEach((component) => {
-    createComponentCard(frame, component, '', compX, compY)
-    compX += 240
-    if (compX > 980) {
-      compX = 520
-      compY += 140
-    }
-  })
+  const primaryColor = hexToRgb(tokens.brand_primary || '#8D35FF')
+  createButtonSample(frame, 'Primary', 520, 360, primaryColor)
+  createButtonSample(frame, 'Secondary', 700, 360, hexToRgb(tokens.brand_secondary || '#5B5B5B'))
+  createInputSample(frame, 'Email input', 520, 420)
+  createInputSample(frame, 'Search input', 760, 420)
+  createCardSample(frame, 'Summary card', 520, 480)
+  createCardSample(frame, 'Preview card', 780, 480)
 
   createTitle(frame, 'Spacing', 520, 540)
   createBulletList(frame, spacing, 520, 570)

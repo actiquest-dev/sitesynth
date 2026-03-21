@@ -405,6 +405,21 @@
               <div v-if="figmaBuildStatus" class="mt-2 text-xs text-[#8b8b8b]">
                 {{ figmaBuildStatus }}
               </div>
+              <div v-if="figmaJob" class="mt-4 border border-[#2f2f2f] bg-[#0f0f0f] p-4 text-xs text-[#cfcfcf] space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-[#9a9a9a]">Figma build status</span>
+                  <span class="uppercase tracking-[0.2em] text-[10px] text-[#8b8b8b]">{{ figmaJob.status }}</span>
+                </div>
+                <div v-if="figmaJob.figma_file_url" class="text-[#8D35FF]">
+                  <a :href="figmaJob.figma_file_url" target="_blank" rel="noopener">Open Figma file</a>
+                </div>
+                <div v-if="figmaEvents.length" class="space-y-1 text-[#8b8b8b]">
+                  <div v-for="event in figmaEvents" :key="event.id">
+                    {{ formatDateTime(event.created_at) }} — {{ event.message }}
+                  </div>
+                </div>
+                <div v-else class="text-[#777]">No build events yet.</div>
+              </div>
 
               <!-- Preview generated spec (visible in both modes) -->
               <div v-if="designSpec" class="mt-8 border-t border-[#333] pt-6 space-y-4">
@@ -1432,6 +1447,10 @@ const isBuildingFigma = ref(false)
 const figmaBuildStatus = ref<string | null>(null)
 const lastFigmaJobId = ref<string | null>(null)
 const lastFigmaBuildPlan = ref<any | null>(null)
+const figmaJob = ref<any | null>(null)
+const figmaEvents = ref<any[]>([])
+const isLoadingFigmaStatus = ref(false)
+let figmaStatusTimer: number | null = null
 const designSpec = ref<any>(null)
 const lastSavedContent = ref('')
 const lastSavedAt = ref<string | null>(null)
@@ -1807,6 +1826,17 @@ const generateDesignSpec = async () => {
   }
 }
 
+watch(selectedBrief, async (value) => {
+  if (!value) return
+  await loadFigmaBuildStatus()
+  if (figmaStatusTimer) window.clearInterval(figmaStatusTimer)
+  figmaStatusTimer = window.setInterval(loadFigmaBuildStatus, 8000)
+})
+
+onBeforeUnmount(() => {
+  if (figmaStatusTimer) window.clearInterval(figmaStatusTimer)
+})
+
 const queueFigmaBuild = async () => {
   if (!selectedBrief.value) return
   if (!designSpec.value) {
@@ -1827,6 +1857,7 @@ const queueFigmaBuild = async () => {
     }
     lastFigmaJobId.value = data.data?.jobId || null
     lastFigmaBuildPlan.value = data.data?.buildPlan || null
+    await loadFigmaBuildStatus()
     const buildToken = data.data?.buildToken || null
     figmaBuildStatus.value = `Build queued${lastFigmaJobId.value ? ` (job ${lastFigmaJobId.value})` : ''}`
     if (lastFigmaBuildPlan.value && buildToken) {
@@ -1850,6 +1881,24 @@ const queueFigmaBuild = async () => {
     showToast(figmaBuildStatus.value, 'error')
   } finally {
     isBuildingFigma.value = false
+  }
+}
+
+const loadFigmaBuildStatus = async () => {
+  if (!selectedBrief.value) return
+  isLoadingFigmaStatus.value = true
+  try {
+    const res = await fetch(`/api/figma/build/status?briefId=${encodeURIComponent(selectedBrief.value.id)}`, {
+      headers: { 'x-user-email': userEmail.value },
+    })
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok || !data?.success) {
+      return
+    }
+    figmaJob.value = data.data?.job || null
+    figmaEvents.value = data.data?.events || []
+  } finally {
+    isLoadingFigmaStatus.value = false
   }
 }
 
