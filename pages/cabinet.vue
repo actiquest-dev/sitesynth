@@ -271,7 +271,7 @@
                                 : 'border-[#333] text-[#bbb] hover:bg-[#1a1a1a]'
                             ]"
                           >
-                            {{ compareVersionId === version.id ? 'Exit compare' : 'Compare' }}
+                            {{ compareVersionId === version.id ? 'Close' : 'Compare' }}
                           </button>
                         </div>
                       </div>
@@ -328,7 +328,7 @@
                     <span class="px-2 py-1 border border-emerald-500/30 bg-emerald-500/10 text-emerald-300">Added {{ compareCounts.added }}</span>
                     <span class="px-2 py-1 border border-rose-500/30 bg-rose-500/10 text-rose-300">Removed {{ compareCounts.removed }}</span>
                     <span class="px-2 py-1 border border-sky-500/30 bg-sky-500/10 text-sky-300">Changed {{ compareCounts.changed }}</span>
-                    <button @click="compareVersionId = null" class="px-2 py-1 border border-[#333] text-[#bbb] hover:bg-[#1a1a1a]">Close compare</button>
+                    <button @click="compareVersionId = null" class="px-2 py-1 border border-[#333] text-[#bbb] hover:bg-[#1a1a1a]">Close</button>
                   </div>
                 </div>
                 <div v-if="compareSections.length === 0" class="px-4 py-8 text-sm text-[#777]">No section-level differences detected.</div>
