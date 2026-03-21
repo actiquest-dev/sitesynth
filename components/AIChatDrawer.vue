@@ -435,7 +435,11 @@ const sendMessage = async () => {
       messages.value = data.messages
       await scrollToBottom()
       if (data.briefDraft && props.briefContext?.id) {
-        setBriefDraft({ briefId: props.briefContext.id, markdown: data.briefDraft })
+        const draftPayload = { briefId: props.briefContext.id, markdown: data.briefDraft }
+        setBriefDraft(draftPayload)
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('sitesynth:brief-draft-ready', { detail: draftPayload }))
+        }
       }
     } else {
       error.value = data.error || 'Failed to send message'

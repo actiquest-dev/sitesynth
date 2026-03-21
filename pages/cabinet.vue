@@ -1324,6 +1324,32 @@ const confirmDiscardUnsaved = () => {
   return confirm('You have unsaved changes. Discard them and continue?')
 }
 
+const processIncomingBriefDraft = async (draft: { briefId: string; markdown: string }) => {
+  if (!draft) return
+  if (!selectedBrief.value) {
+    if (briefs.value.length === 0) {
+      queuedDraft.value = { briefId: draft.briefId, markdown: draft.markdown }
+      return
+    }
+    const match = briefs.value.find((b: any) => b.id === draft.briefId)
+    if (!match) {
+      toast.value = { message: 'Draft prepared, but the brief could not be found.', type: 'error' }
+      return
+    }
+    openBriefEditor(match)
+    await nextTick()
+  }
+
+  if (draft.briefId !== selectedBrief.value?.id) {
+    const match = briefs.value.find((b: any) => b.id === draft.briefId)
+    if (!match) return
+    openBriefEditor(match)
+    await nextTick()
+  }
+
+  handleIncomingDraft(draft.markdown, 'agent')
+}
+
 const generateDesignSpec = async () => {
   if (!selectedBrief.value) return
   isGeneratingSpec.value = true
@@ -1505,12 +1531,20 @@ const handleBeforeUnload = (e: BeforeUnloadEvent) => {
   e.returnValue = ''
 }
 
+const handleBrowserDraftEvent = (event: Event) => {
+  const customEvent = event as CustomEvent<{ briefId: string; markdown: string }>
+  if (!customEvent.detail) return
+  processIncomingBriefDraft(customEvent.detail)
+}
+
 onMounted(() => {
   window.addEventListener('beforeunload', handleBeforeUnload)
+  window.addEventListener('sitesynth:brief-draft-ready', handleBrowserDraftEvent as EventListener)
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('beforeunload', handleBeforeUnload)
+  window.removeEventListener('sitesynth:brief-draft-ready', handleBrowserDraftEvent as EventListener)
 })
 
 onBeforeRouteLeave(() => {
@@ -1518,24 +1552,9 @@ onBeforeRouteLeave(() => {
   return confirm('You have unsaved changes. Leave this page and discard them?')
 })
 
-watch(briefDraft, (draft) => {
+watch(briefDraft, async (draft) => {
   if (!draft) return
-  if (!selectedBrief.value) {
-    if (briefs.value.length === 0) {
-      queuedDraft.value = { briefId: draft.briefId, markdown: draft.markdown }
-      return
-    }
-    const match = briefs.value.find((b: any) => b.id === draft.briefId)
-    if (match) {
-      openBriefEditor(match)
-    } else {
-      toast.value = { message: 'Draft prepared, but the brief is not open. Please open the brief to review.', type: 'error' }
-      clearBriefDraft()
-      return
-    }
-  }
-  if (draft.briefId !== selectedBrief.value?.id) return
-  handleIncomingDraft(draft.markdown, 'agent')
+  await processIncomingBriefDraft(draft)
   clearBriefDraft()
 })
 
@@ -1869,8 +1888,7 @@ const loadBriefs = async () => {
       if (queuedDraft.value) {
         const match = briefs.value.find((b: any) => b.id === queuedDraft.value?.briefId)
         if (match) {
-          openBriefEditor(match)
-          handleIncomingDraft(queuedDraft.value.markdown, 'agent')
+          await processIncomingBriefDraft(queuedDraft.value)
           queuedDraft.value = null
         }
       }
