@@ -995,6 +995,9 @@
             <div v-if="wizardPhase === 'description'" class="space-y-4">
               <h3 class="text-white font-semibold">Describe Your Product</h3>
               <p class="text-[#999] text-sm">Tell us about your product or company. Based on this, we'll generate a custom questionnaire tailored to your needs.</p>
+              <div v-if="isGeneratingIntakeSummary" class="text-xs text-[#8D35FF]">
+                Preparing summary from intake data...
+              </div>
               <div class="space-y-2">
                 <p class="text-xs uppercase tracking-[0.16em] text-[#777]">What are we designing?</p>
                 <div class="flex flex-wrap gap-2">
@@ -1816,6 +1819,8 @@ const multiSelectValues = ref<string[]>([])
 const answeredQuestions = ref<Array<{ id: string; questionText: string; saveKey: string; value: string; enhanced: boolean }>>([])
 const productDescription = ref('')
 const dynamicQuestions = ref<any[]>([])
+const intakeSummaryDraft = ref('')
+const isGeneratingIntakeSummary = ref(false)
 const isGeneratingQuestions = ref(false)
 
 // Current question computed (dynamic or static)
@@ -1921,6 +1926,8 @@ const intakeSummaryText = computed(() => {
   sections.push('', 'Expand this into a fuller project description: what is being built, for whom, what outcomes matter, what constraints exist, and what should shape the design work.')
   return sections.join('\n')
 })
+
+const effectiveIntakeSummary = computed(() => intakeSummaryDraft.value.trim() || intakeSummaryText.value)
 
 const projectTypeOptions = [
   { value: 'website', label: 'Website' },
@@ -2503,9 +2510,12 @@ const openBriefWizard = async () => {
   resetWizard()
   await loadUserFiles() // Load available files from storage
   selectedStorageFileIds.value = userFiles.value.map((f: any) => f.id)
-  if (intakeSummaryText.value) {
-    productDescription.value = intakeSummaryText.value
-    briefData.value.projectDescription = intakeSummaryText.value
+  if (latestIntakePayload.value) {
+    await generateIntakeSummary()
+  }
+  if (effectiveIntakeSummary.value) {
+    productDescription.value = effectiveIntakeSummary.value
+    briefData.value.projectDescription = effectiveIntakeSummary.value
   }
 }
 
@@ -2520,6 +2530,7 @@ const resetWizard = () => {
   answeredQuestions.value = []
   generatedBrief.value = ''
   productDescription.value = ''
+  intakeSummaryDraft.value = ''
   wizardConversationId.value = null
   dynamicQuestions.value = []
   brevityData.value.uploadedFileIds = []
@@ -2599,7 +2610,10 @@ const uploadWizardFiles = async () => {
 const startDescription = async () => {
   wizardPhase.value = 'description'
   if (!productDescription.value.trim()) {
-    productDescription.value = intakeSummaryText.value || ''
+    if (!intakeSummaryDraft.value.trim() && latestIntakePayload.value) {
+      await generateIntakeSummary()
+    }
+    productDescription.value = effectiveIntakeSummary.value || ''
   }
   briefData.value.projectDescription = productDescription.value
 }
@@ -2623,20 +2637,49 @@ const ensureWizardConversation = async () => {
 }
 
 const persistIntakeSummaryToConversation = async () => {
-  if (!intakeSummaryText.value.trim()) return
+  if (!effectiveIntakeSummary.value.trim()) return
   const conversationId = await ensureWizardConversation()
   await fetch('/api/chat/conversations/intake-summary', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'x-user-email': userEmail.value },
     body: JSON.stringify({
       conversationId,
-      summary: intakeSummaryText.value,
+      summary: effectiveIntakeSummary.value,
     }),
   })
 }
 
+const generateIntakeSummary = async () => {
+  if (!latestIntakePayload.value || isGeneratingIntakeSummary.value) return
+  isGeneratingIntakeSummary.value = true
+  try {
+    const response = await fetch('/api/intake/summarize', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-user-email': userEmail.value },
+      body: JSON.stringify({
+        intakePayload: latestIntakePayload.value,
+        projectType: briefData.value.projectType || null,
+      }),
+    })
+    const data = await response.json()
+    if (response.ok && data?.success && data?.data?.summary) {
+      intakeSummaryDraft.value = data.data.summary
+      if (!productDescription.value.trim() || productDescription.value === intakeSummaryText.value) {
+        productDescription.value = data.data.summary
+      }
+    }
+  } catch (error) {
+    console.error('[Intake Summary] Error:', error)
+  } finally {
+    isGeneratingIntakeSummary.value = false
+  }
+}
+
 const selectProjectType = (type: string) => {
   briefData.value.projectType = type
+  if (latestIntakePayload.value) {
+    generateIntakeSummary()
+  }
 }
 
 const generateDynamicQuestions = async () => {
