@@ -196,7 +196,7 @@ onMounted(async () => {
   const user = getCurrentUser()
   currentUserEmail.value = user?.email || ''
   if (!currentUserEmail.value) {
-    navigateTo('/login')
+    navigateTo('/admin/login')
     return
   }
   if (!isAdmin.value) {
