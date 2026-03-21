@@ -318,9 +318,11 @@
                     <span class="px-2 py-1 border border-emerald-500/30 bg-emerald-500/10 text-emerald-300">Added {{ compareCounts.added }}</span>
                     <span class="px-2 py-1 border border-rose-500/30 bg-rose-500/10 text-rose-300">Removed {{ compareCounts.removed }}</span>
                     <span class="px-2 py-1 border border-sky-500/30 bg-sky-500/10 text-sky-300">Changed {{ compareCounts.changed }}</span>
+                    <button @click="compareVersionId = null" class="px-2 py-1 border border-[#333] text-[#bbb] hover:bg-[#1a1a1a]">Close compare</button>
                   </div>
                 </div>
-                <div class="grid grid-cols-1 xl:grid-cols-2 gap-px bg-[#333]">
+                <div v-if="compareSections.length === 0" class="px-4 py-8 text-sm text-[#777]">No section-level differences detected.</div>
+                <div v-else class="grid grid-cols-1 xl:grid-cols-2 gap-px bg-[#333]">
                   <div class="bg-[#121212] px-4 py-3 text-xs uppercase tracking-[0.18em] text-[#7f7f7f]">Compared version</div>
                   <div class="bg-[#121212] px-4 py-3 text-xs uppercase tracking-[0.18em] text-[#7f7f7f]">Current</div>
                   <template v-for="section in compareSections" :key="section.title">
@@ -352,6 +354,7 @@
                 </div>
               </div>
 
+              <template v-if="!compareVersion">
               <!-- Edit mode: TipTap WYSIWYG editor, no tabs needed -->
               <div v-if="briefEditMode" class="space-y-4">
                 <ClientOnly>
@@ -369,6 +372,8 @@
               <div v-else class="bg-[#0f0f0f] border border-[#333] rounded-none p-6">
                 <div class="text-white text-sm whitespace-pre-wrap leading-relaxed" v-html="formatBriefHtml(selectedBrief.content || '')"></div>
               </div>
+
+              </template>
 
               <!-- Design Spec Actions (visible in both modes) -->
               <div class="flex gap-3 mt-6">
@@ -1390,6 +1395,7 @@ const extractSections = (html: string): Array<{ title: string; html: string }> =
       if (['H1', 'H2', 'H3'].includes(el.tagName)) {
         flush()
         currentTitle = el.textContent?.trim() || 'Untitled'
+        continue
       }
     }
     buffer.push(node)
