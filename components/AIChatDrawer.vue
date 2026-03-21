@@ -357,11 +357,23 @@ onMounted(async () => {
   }
 })
 
-// Initialize conversation when drawer opens
+// Initialize conversation when drawer opens or switches to post-brief mode
 watch(() => props.isOpen, async (newVal) => {
-  if (newVal && !selectedConversationId.value) {
+  if (newVal) {
     await initializeConversation()
-    if (props.agentType === 'post-brief' && props.briefContext) {
+    if (props.agentType === 'post-brief' && props.briefContext && messages.value.length === 0) {
+      await sendProactiveGreeting()
+    }
+  }
+})
+
+// Re-initialize when agent type changes (e.g. presale → post-brief)
+watch(() => props.agentType, async (newVal, oldVal) => {
+  if (newVal !== oldVal && props.isOpen) {
+    selectedConversationId.value = ''
+    messages.value = []
+    await initializeConversation()
+    if (newVal === 'post-brief' && props.briefContext && messages.value.length === 0) {
       await sendProactiveGreeting()
     }
   }

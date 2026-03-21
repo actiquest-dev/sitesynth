@@ -1291,8 +1291,8 @@ onMounted(async () => {
   await loadUserFiles()
   await loadOrders()
   
-  // Update stats based on loaded data
-  stats.value.totalProjects = projects.value.length
+  // Update stats — briefs ARE the projects now
+  stats.value.totalProjects = briefs.value.length
   stats.value.totalSpent = orders.value.reduce((s: number, o: any) => s + (o.amount || 0), 0)
   stats.value.activeWebsites = projects.value.filter((p: any) => p.status === 'in_progress').length
 })
@@ -1604,7 +1604,8 @@ const sendChatMessage = async () => {
 // ── Brief Management ──
 const loadOrders = async () => {
   try {
-    const r = await fetch('/api/orders', { headers: { 'x-user-email': userEmail.value } })
+    const token = localStorage.getItem('authToken') || ''
+    const r = await fetch('/api/orders', { headers: { 'Authorization': `Bearer ${token}` } })
     if (r.ok) { const d = await r.json(); orders.value = d.data || [] }
   } catch {}
 }
@@ -1627,6 +1628,19 @@ const openBriefEditor = (brief: any) => {
   const raw = brief.content || ''
   briefEditContent.value = raw.startsWith('<') ? raw : marked(raw) as string
   briefEditName.value = brief.name || ''
+  // Restore saved design spec if exists
+  designSpec.value = brief.design_spec_json || null
+
+  // Open chat drawer in post-brief mode so AI can assist with this brief
+  if (brief.content) {
+    openPostBrief({
+      id: brief.id,
+      name: brief.name || 'Untitled Brief',
+      content: brief.content,
+      conversationId: brief.conversation_id,
+      files: []
+    })
+  }
 }
 
 const deleteBrief = async (brief: any) => {
