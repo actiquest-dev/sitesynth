@@ -598,10 +598,10 @@ const buildFromPlan = async (jobId, plan) => {
 
     const dsStructure = collectStructure(designSystemPage)
     const critique = await sendCritique(jobId, 'design_system', designSystemPage, dsStructure)
-  if (critique && critique.fixes) {
-    applyFixes(designSystemPage, critique.fixes)
-    await sendCritique(jobId, 'design_system_after', designSystemPage, collectStructure(designSystemPage))
-  }
+    if (critique && critique.fixes) {
+      applyFixes(designSystemPage, critique.fixes)
+      await sendCritique(jobId, 'design_system_after', designSystemPage, collectStructure(designSystemPage))
+    }
 
     figma.viewport.scrollAndZoomIntoView([...designSystemPage.children])
   }

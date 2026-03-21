@@ -198,29 +198,24 @@ async function callAgent(
       agentInput += `\n\n<user_context>\nPast projects: ${context.userProjects}\n</user_context>`
     }
 
-    // Execute agent using VoltAgent's execute method
-    // The agent will use its instructions and model to process the input
-    const response = await agent.execute(agentInput)
+    const response = await agent.generateText(agentInput)
+    const responseText = typeof response?.text === 'string'
+      ? response.text
+      : typeof response === 'string'
+        ? response
+        : response && typeof response === 'object'
+          ? (response.text || response.content || response.message || JSON.stringify(response))
+          : String(response || 'No response from agent')
 
-    if (typeof response === 'string') {
+    if (typeof responseText === 'string') {
       voltAgent.logger.debug('✅ Agent response received', {
         agent: agent.name,
-        responseLength: response.length,
+        responseLength: responseText.length,
       })
-      return response
+      return responseText
     }
 
-    // If response is an object, extract text from it
-    if (response && typeof response === 'object') {
-      const text = response.text || response.content || response.message || JSON.stringify(response)
-      voltAgent.logger.debug('✅ Agent response extracted', {
-        agent: agent.name,
-        responseLength: text.length,
-      })
-      return text
-    }
-
-    return String(response || 'No response from agent')
+    return 'No response from agent'
   } catch (error: any) {
     voltAgent.logger.warn(`⚠️  Agent execute failed, falling back to direct API`, {
       agent: agent.name,

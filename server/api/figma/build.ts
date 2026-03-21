@@ -4,7 +4,7 @@ import { google } from '@ai-sdk/google'
 import { z } from 'zod'
 import { useDatabaseClient } from '~~/server/utils/supabase'
 import { issueBuildToken } from '~~/server/utils/figma-build-token'
-import { getVoltAgentInstance } from '~~/server/voltagent'
+import { getAgent, getVoltAgentInstance } from '~~/server/voltagent'
 
 export default defineEventHandler(async (event) => {
   const userEmail = getHeader(event, 'x-user-email')
@@ -119,20 +119,20 @@ ${JSON.stringify(commandTemplates, null, 2)}
     `.trim()
 
     const registry = getVoltAgentInstance()
-    const figmaBuilderAgent = registry.agents?.figmaBuilderAgent
-    if (!figmaBuilderAgent || typeof (figmaBuilderAgent as any).execute !== 'function') {
+    const figmaBuilderAgent = getAgent('figmaBuilderAgent')
+    if (!figmaBuilderAgent || typeof (figmaBuilderAgent as any).generateObject !== 'function') {
       const available = registry?.agents ? Object.keys(registry.agents).join(', ') : 'none'
-      throw new Error(`Figma builder agent is not initialized (available: ${available})`)
-    }
-    const agentResponse = await (figmaBuilderAgent as any).execute(agentPrompt)
-    let parsedAgent: any = null
-    try {
-      parsedAgent = JSON.parse(String(agentResponse || '{}'))
-    } catch {
-      parsedAgent = null
+      throw new Error(`Figma builder agent is unavailable (available: ${available})`)
     }
 
-    const candidatePlan = parsedAgent?.plan || null
+    const agentResult = await figmaBuilderAgent.generateObject(
+      agentPrompt,
+      z.object({
+        plan: buildPlanSchema,
+      })
+    )
+
+    const candidatePlan = agentResult?.object?.plan || null
     const validatePlan = (plan: any) => {
       try {
         buildPlanSchema.parse(plan)
