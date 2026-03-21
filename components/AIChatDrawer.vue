@@ -140,7 +140,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:isOpen'])
-const { setBriefDraft } = useChatDrawer()
+const { setBriefDraft, requestBriefDraftApply } = useChatDrawer()
 
 const messages = ref<Message[]>([])
 const messageInput = ref('')
@@ -437,6 +437,7 @@ const sendMessage = async () => {
       if (data.briefDraft && props.briefContext?.id) {
         const draftPayload = { briefId: props.briefContext.id, markdown: data.briefDraft }
         setBriefDraft(draftPayload)
+        requestBriefDraftApply(draftPayload)
         if (typeof window !== 'undefined') {
           window.dispatchEvent(new CustomEvent('sitesynth:brief-draft-ready', { detail: draftPayload }))
         }

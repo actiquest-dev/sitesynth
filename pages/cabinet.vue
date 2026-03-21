@@ -1088,7 +1088,7 @@ const currentTab = computed(() => tabs.find(t => t.id === activeTab.value))
 
 // ── Auth ──
 const { logout, getCurrentUser, getToken } = useGoogleAuth()
-const { openPostBrief, briefDraft, clearBriefDraft } = useChatDrawer()
+const { openPostBrief, briefDraft, briefEditorIntent, clearBriefDraft, clearBriefEditorIntent } = useChatDrawer()
 
 const userEmail = ref('')
 const greeting = computed(() => {
@@ -1556,6 +1556,12 @@ watch(briefDraft, async (draft) => {
   if (!draft) return
   await processIncomingBriefDraft(draft)
   clearBriefDraft()
+})
+
+watch(briefEditorIntent, async (intent) => {
+  if (!intent) return
+  await processIncomingBriefDraft({ briefId: intent.briefId, markdown: intent.markdown })
+  clearBriefEditorIntent()
 })
 
 const loadUserFiles = async () => {

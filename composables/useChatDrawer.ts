@@ -14,11 +14,18 @@ export interface BriefDraft {
   markdown: string
 }
 
+export interface BriefEditorIntent {
+  briefId: string
+  markdown: string
+  nonce: number
+}
+
 export const useChatDrawer = () => {
   const isOpen = useState<boolean>('chatIsOpen', () => false)
   const agentMode = useState<'presale' | 'briefing' | 'post-brief'>('chatAgentMode', () => 'presale')
   const briefContext = useState<BriefContext | null>('chatBriefContext', () => null)
   const briefDraft = useState<BriefDraft | null>('chatBriefDraft', () => null)
+  const briefEditorIntent = useState<BriefEditorIntent | null>('chatBriefEditorIntent', () => null)
 
   const open = () => { isOpen.value = true }
   const close = () => { isOpen.value = false }
@@ -39,6 +46,24 @@ export const useChatDrawer = () => {
 
   const setBriefDraft = (draft: BriefDraft) => { briefDraft.value = draft }
   const clearBriefDraft = () => { briefDraft.value = null }
+  const requestBriefDraftApply = (draft: BriefDraft) => {
+    briefEditorIntent.value = { ...draft, nonce: Date.now() }
+  }
+  const clearBriefEditorIntent = () => { briefEditorIntent.value = null }
 
-  return { isOpen, agentMode, briefContext, briefDraft, open, close, openPostBrief, resetToDefault, setBriefDraft, clearBriefDraft }
+  return {
+    isOpen,
+    agentMode,
+    briefContext,
+    briefDraft,
+    briefEditorIntent,
+    open,
+    close,
+    openPostBrief,
+    resetToDefault,
+    setBriefDraft,
+    clearBriefDraft,
+    requestBriefDraftApply,
+    clearBriefEditorIntent,
+  }
 }
