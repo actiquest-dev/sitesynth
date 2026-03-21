@@ -46,14 +46,9 @@ onMounted(() => {
   const user = getCurrentUser()
   currentUserEmail.value = user?.email || ''
 
-  if (!currentUserEmail.value) {
+  if (!isAdmin.value) {
     navigateTo('/admin/login')
     return
-  }
-
-  if (!isAdmin.value) {
-    hasError.value = true
-    message.value = 'Admin access required'
   }
 })
 </script>

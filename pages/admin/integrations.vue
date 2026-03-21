@@ -220,14 +220,8 @@ onMounted(async () => {
   const user = getCurrentUser()
   currentUserEmail.value = user?.email || ''
 
-  if (!currentUserEmail.value) {
-    navigateTo('/admin/login')
-    return
-  }
-
   if (!isAdmin.value) {
-    hasError.value = true
-    message.value = 'Admin access required'
+    navigateTo('/admin/login')
     return
   }
 

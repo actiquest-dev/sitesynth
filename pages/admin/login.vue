@@ -23,6 +23,19 @@
             <p class="text-[#AA3733] text-xs">{{ errorMessage }}</p>
           </div>
 
+          <div v-if="currentUserEmail && currentUserEmail.toLowerCase() !== 'hello@sitesynth.com'" class="p-3.5 bg-[#1f1f1f] border border-[#333] space-y-3">
+            <p class="text-xs text-[#bdbdbd]">
+              You are currently signed in as <span class="text-white">{{ currentUserEmail }}</span>.
+              This account cannot access Sitesynth Admin.
+            </p>
+            <button
+              @click="switchAccount"
+              class="px-4 py-2 border border-[#333] text-white text-sm hover:bg-[#1a1a1a] transition"
+            >
+              Sign out and use another Google account
+            </button>
+          </div>
+
           <GoogleSignInButton
             :clientId="googleClientId"
             :onSuccess="handleGoogleResponse"
@@ -39,16 +52,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import ParticleEffect from '@/components/effects/ParticleEffect.vue'
 import GlowEffect from '@/components/effects/GlowEffect.vue'
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton.vue'
 import { useGoogleAuth } from '@/composables/useGoogleAuth'
 
-const { handleGoogleSignIn, getCurrentUser } = useGoogleAuth()
+const { handleGoogleSignIn, getCurrentUser, loadStoredAuth, logout } = useGoogleAuth()
 const config = useRuntimeConfig()
 const googleClientId = computed(() => config.public?.googleClientId || '')
 const errorMessage = ref('')
+const currentUserEmail = ref('')
 
 const handleGoogleResponse = async (response: any) => {
   errorMessage.value = ''
@@ -75,6 +89,21 @@ const handleGoogleResponse = async (response: any) => {
     errorMessage.value = error.message || 'Admin sign-in failed.'
   }
 }
+
+const switchAccount = async () => {
+  await logout()
+  currentUserEmail.value = ''
+  errorMessage.value = ''
+}
+
+onMounted(() => {
+  loadStoredAuth()
+  const user = getCurrentUser()
+  currentUserEmail.value = user?.email || ''
+  if (currentUserEmail.value.toLowerCase() === 'hello@sitesynth.com') {
+    navigateTo('/admin')
+  }
+})
 
 useSeoMeta({
   title: 'Admin Login | SiteSynth',
