@@ -399,12 +399,160 @@
               <!-- Preview generated spec (visible in both modes) -->
               <div v-if="designSpec" class="mt-8 border-t border-[#333] pt-6 space-y-4">
                 <h3 class="text-white font-semibold text-lg">Design Specification Structure</h3>
+                <div v-if="designSpec.product_summary" class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                  <div class="p-4 border border-[#333] bg-[#0f0f0f]">
+                    <p class="text-xs uppercase tracking-[0.18em] text-[#777] mb-3">Product Summary</p>
+                    <p class="text-sm text-white font-medium mb-2">{{ designSpec.product_summary.primary_goal }}</p>
+                    <p class="text-xs text-[#9a9a9a] leading-relaxed">{{ designSpec.product_summary.vision }}</p>
+                  </div>
+                  <div class="p-4 border border-[#333] bg-[#0f0f0f]">
+                    <p class="text-xs uppercase tracking-[0.18em] text-[#777] mb-3">Audience</p>
+                    <p class="text-sm text-[#d4d4d4] leading-relaxed">{{ designSpec.product_summary.audience }}</p>
+                  </div>
+                  <div class="p-4 border border-[#333] bg-[#0f0f0f]">
+                    <p class="text-xs uppercase tracking-[0.18em] text-[#777] mb-3">Experience Principles</p>
+                    <ul class="space-y-2 text-sm text-[#d4d4d4]">
+                      <li v-for="principle in designSpec.product_summary.experience_principles || []" :key="principle">• {{ principle }}</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div v-if="designSpec.design_direction || designSpec.theme" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <div v-if="designSpec.design_direction" class="p-4 border border-[#333] bg-[#0f0f0f]">
+                    <p class="text-xs uppercase tracking-[0.18em] text-[#777] mb-3">Design Direction</p>
+                    <div class="space-y-3 text-sm">
+                      <div>
+                        <p class="text-[#8b8b8b] mb-1">Visual style</p>
+                        <p class="text-white">{{ designSpec.design_direction.visual_style }}</p>
+                      </div>
+                      <div>
+                        <p class="text-[#8b8b8b] mb-1">Interaction style</p>
+                        <p class="text-white">{{ designSpec.design_direction.interaction_style }}</p>
+                      </div>
+                      <div>
+                        <p class="text-[#8b8b8b] mb-1">Content tone</p>
+                        <p class="text-white">{{ designSpec.design_direction.content_tone }}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div v-if="designSpec.theme" class="p-4 border border-[#333] bg-[#0f0f0f]">
+                    <p class="text-xs uppercase tracking-[0.18em] text-[#777] mb-3">Theme</p>
+                    <div class="grid grid-cols-2 gap-3 text-sm">
+                      <div v-for="(value, key) in designSpec.theme.colors || {}" :key="key" class="border border-[#262626] p-3">
+                        <p class="text-[#8b8b8b] text-xs uppercase mb-1">{{ key }}</p>
+                        <p class="text-white">{{ value }}</p>
+                      </div>
+                    </div>
+                    <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+                      <div class="border border-[#262626] p-3">
+                        <p class="text-[#8b8b8b] text-xs uppercase mb-1">Heading</p>
+                        <p class="text-white">{{ designSpec.theme.typography?.heading }}</p>
+                      </div>
+                      <div class="border border-[#262626] p-3">
+                        <p class="text-[#8b8b8b] text-xs uppercase mb-1">Body</p>
+                        <p class="text-white">{{ designSpec.theme.typography?.body }}</p>
+                      </div>
+                      <div class="border border-[#262626] p-3">
+                        <p class="text-[#8b8b8b] text-xs uppercase mb-1">Accent</p>
+                        <p class="text-white">{{ designSpec.theme.typography?.accent }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div v-for="page in designSpec.pages" :key="page.path" class="p-4 border border-[#333] bg-[#0f0f0f]">
-                    <p class="text-white font-semibold text-sm">{{ page.title }}</p>
-                    <ul class="text-[#666] text-xs list-disc ml-4 mt-2 space-y-1">
-                      <li v-for="block in page.ui_blocks" :key="block.type">{{ block.type }} - {{ block.description }}</li>
-                    </ul>
+                    <div class="flex items-start justify-between gap-4 mb-3">
+                      <div>
+                        <p class="text-white font-semibold text-sm">{{ page.title }}</p>
+                        <p class="text-xs text-[#777] mt-1">{{ page.path }}</p>
+                      </div>
+                      <span class="text-[10px] uppercase tracking-[0.16em] text-[#8D35FF] border border-[#8D35FF]/30 px-2 py-1">Page</span>
+                    </div>
+                    <div class="space-y-3 text-sm">
+                      <div>
+                        <p class="text-[#8b8b8b] text-xs uppercase mb-1">Purpose</p>
+                        <p class="text-[#dcdcdc]">{{ page.purpose }}</p>
+                      </div>
+                      <div>
+                        <p class="text-[#8b8b8b] text-xs uppercase mb-1">Primary user goal</p>
+                        <p class="text-[#dcdcdc]">{{ page.primary_user_goal }}</p>
+                      </div>
+                      <div v-if="page.success_criteria?.length">
+                        <p class="text-[#8b8b8b] text-xs uppercase mb-1">Success criteria</p>
+                        <ul class="text-[#dcdcdc] text-xs list-disc ml-4 space-y-1">
+                          <li v-for="item in page.success_criteria" :key="item">{{ item }}</li>
+                        </ul>
+                      </div>
+                      <div v-if="page.key_states?.length">
+                        <p class="text-[#8b8b8b] text-xs uppercase mb-1">States</p>
+                        <div class="flex flex-wrap gap-2">
+                          <span v-for="state in page.key_states" :key="state" class="px-2 py-1 text-xs border border-[#333] text-[#cfcfcf]">{{ state }}</span>
+                        </div>
+                      </div>
+                      <div v-if="page.ui_blocks?.length">
+                        <p class="text-[#8b8b8b] text-xs uppercase mb-1">UI blocks</p>
+                        <div class="space-y-3">
+                          <div v-for="block in page.ui_blocks" :key="`${page.path}-${block.type}-${block.description}`" class="border border-[#262626] p-3">
+                            <p class="text-white text-sm font-medium">{{ block.type }}</p>
+                            <p class="text-[#bdbdbd] text-xs mt-1">{{ block.description }}</p>
+                            <div v-if="block.content?.length" class="mt-3">
+                              <p class="text-[#8b8b8b] text-[10px] uppercase mb-1">Content</p>
+                              <ul class="text-[#d0d0d0] text-xs list-disc ml-4 space-y-1">
+                                <li v-for="item in block.content" :key="item">{{ item }}</li>
+                              </ul>
+                            </div>
+                            <div v-if="block.interactions?.length" class="mt-3">
+                              <p class="text-[#8b8b8b] text-[10px] uppercase mb-1">Interactions</p>
+                              <ul class="text-[#d0d0d0] text-xs list-disc ml-4 space-y-1">
+                                <li v-for="item in block.interactions" :key="item">{{ item }}</li>
+                              </ul>
+                            </div>
+                            <div v-if="block.states?.length" class="mt-3">
+                              <p class="text-[#8b8b8b] text-[10px] uppercase mb-1">States</p>
+                              <div class="flex flex-wrap gap-2">
+                                <span v-for="item in block.states" :key="item" class="px-2 py-1 text-[11px] border border-[#333] text-[#cfcfcf]">{{ item }}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div v-if="page.notes_for_figma?.length">
+                        <p class="text-[#8b8b8b] text-xs uppercase mb-1">Notes for Figma</p>
+                        <ul class="text-[#dcdcdc] text-xs list-disc ml-4 space-y-1">
+                          <li v-for="note in page.notes_for_figma" :key="note">{{ note }}</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div v-if="designSpec.figma_structure || designSpec.open_questions?.length" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <div v-if="designSpec.figma_structure" class="p-4 border border-[#333] bg-[#0f0f0f]">
+                    <p class="text-xs uppercase tracking-[0.18em] text-[#777] mb-3">Figma File Structure</p>
+                    <div class="space-y-3">
+                      <div v-for="page in designSpec.figma_structure.pages || []" :key="page.name" class="border border-[#262626] p-3">
+                        <p class="text-white text-sm font-medium">{{ page.name }}</p>
+                        <p class="text-[#bdbdbd] text-xs mt-1">{{ page.purpose }}</p>
+                        <ul class="text-[#d0d0d0] text-xs list-disc ml-4 mt-2 space-y-1">
+                          <li v-for="item in page.contents" :key="item">{{ item }}</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="space-y-4">
+                    <div v-if="designSpec.figma_structure?.handoff_notes?.length" class="p-4 border border-[#333] bg-[#0f0f0f]">
+                      <p class="text-xs uppercase tracking-[0.18em] text-[#777] mb-3">Handoff Notes</p>
+                      <ul class="text-[#d0d0d0] text-sm list-disc ml-4 space-y-2">
+                        <li v-for="note in designSpec.figma_structure.handoff_notes" :key="note">{{ note }}</li>
+                      </ul>
+                    </div>
+                    <div v-if="designSpec.open_questions?.length" class="p-4 border border-[#333] bg-[#0f0f0f]">
+                      <p class="text-xs uppercase tracking-[0.18em] text-[#777] mb-3">Open Questions</p>
+                      <ul class="text-[#d0d0d0] text-sm list-disc ml-4 space-y-2">
+                        <li v-for="question in designSpec.open_questions" :key="question">{{ question }}</li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -1,10 +1,7 @@
-import { GoogleGenerativeAI } from '@google/generative-ai'
 import { z } from 'zod'
 import { generateObject } from 'ai'
 import { google } from '@ai-sdk/google'
 import { useDatabaseClient } from '~~/server/utils/supabase'
-
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || '')
 
 export default defineEventHandler(async (event) => {
   const userEmail = getHeader(event, 'x-user-email')
@@ -18,24 +15,83 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    // Generate structured Design Spec JSON from Markdown brief
+    // Generate a richer design spec so the result can directly guide wireframes and Figma production.
     const { object } = await generateObject({
       model: google('gemini-2.5-pro'),
       schema: z.object({
+        product_summary: z.object({
+          vision: z.string(),
+          audience: z.string(),
+          primary_goal: z.string(),
+          experience_principles: z.array(z.string()).min(3).max(6),
+        }),
+        design_direction: z.object({
+          visual_style: z.string(),
+          interaction_style: z.string(),
+          content_tone: z.string(),
+        }),
         pages: z.array(z.object({
           title: z.string(),
           path: z.string(),
+          purpose: z.string(),
+          primary_user_goal: z.string(),
+          success_criteria: z.array(z.string()),
+          key_states: z.array(z.string()),
+          content_requirements: z.array(z.string()),
           ui_blocks: z.array(z.object({
-            type: z.string(), // e.g., 'Hero', 'Features', 'Pricing'
-            description: z.string()
-          }))
+            type: z.string(),
+            description: z.string(),
+            content: z.array(z.string()),
+            interactions: z.array(z.string()),
+            states: z.array(z.string()),
+          })),
+          notes_for_figma: z.array(z.string()),
         })),
         theme: z.object({
-          colors: z.object({ primary: z.string(), secondary: z.string(), background: z.string() }),
-          typography: z.object({ heading: z.string(), body: z.string() })
-        })
+          colors: z.object({
+            primary: z.string(),
+            secondary: z.string(),
+            background: z.string(),
+            surface: z.string(),
+            accent: z.string(),
+            text: z.string(),
+          }),
+          typography: z.object({
+            heading: z.string(),
+            body: z.string(),
+            accent: z.string(),
+          }),
+          spacing: z.array(z.string()),
+          components: z.array(z.string()),
+        }),
+        figma_structure: z.object({
+          pages: z.array(z.object({
+            name: z.string(),
+            purpose: z.string(),
+            contents: z.array(z.string()),
+          })),
+          handoff_notes: z.array(z.string()),
+        }),
+        open_questions: z.array(z.string()),
       }),
-      prompt: `Analyze this design brief and convert it into a structured technical design specification for Figma components: \n\n${markdownContent}`
+      prompt: `
+You are converting a design brief into a production-grade design specification for UX/UI and Figma work.
+
+Return a concrete, information-dense JSON object.
+
+Rules:
+- Be materially richer than the brief's outline.
+- Infer the actual product structure, critical screens, states, and UI blocks needed to design the product.
+- Do not stay generic. Avoid placeholders like "Hero", "Features", "CTA" unless the brief is explicitly marketing-site oriented.
+- For application products, prefer real product surfaces: dashboard, onboarding, empty states, settings, detail views, management flows, search, filters, modals, alerts, etc.
+- Every page must include purpose, user goal, success criteria, states, content requirements, and actionable Figma notes.
+- Every ui_block must include content, interactions, and states.
+- Figma structure must describe how the file should be organized for actual delivery.
+- If the brief is missing specifics, make reasonable design assumptions grounded in the brief.
+
+Brief:
+${markdownContent}
+      `.trim()
     })
 
     // Save/Update the spec in the database
