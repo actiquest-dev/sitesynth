@@ -308,10 +308,47 @@
               <h2 v-else class="text-xl font-semibold text-white mb-1">{{ selectedBrief.name || 'Untitled Brief' }}</h2>
               <p class="text-xs text-[#666] mb-6">Created {{ formatDate(selectedBrief.created_at) }}{{ selectedBrief.updated_at ? ' · Updated ' + formatDate(selectedBrief.updated_at) : '' }}</p>
 
-              <div v-if="compareVersion" class="mb-4 border border-[#333] bg-[#161616] px-4 py-3 text-sm text-[#ddd]">
-                <div class="font-medium text-white">Compare with {{ compareVersion.version > 0 ? `Version ${compareVersion.version}` : 'Local snapshot' }}</div>
-                <div class="text-[#b7b7b7] text-xs mt-1">
-                  {{ compareSummary.length > 0 ? `Changed sections: ${compareSummary.join(', ')}` : 'No section-level differences detected.' }}
+              <div v-if="compareVersion" class="mb-4 border border-[#333] bg-[#161616]">
+                <div class="border-b border-[#333] px-4 py-3 flex items-center justify-between gap-4">
+                  <div>
+                    <div class="font-medium text-white">Comparing {{ compareVersion.version > 0 ? `Version ${compareVersion.version}` : 'Local snapshot' }} vs current</div>
+                    <div class="text-[#8b8b8b] text-xs mt-1">Left = older version. Right = current draft.</div>
+                  </div>
+                  <div class="flex items-center gap-2 text-xs">
+                    <span class="px-2 py-1 border border-emerald-500/30 bg-emerald-500/10 text-emerald-300">Added {{ compareCounts.added }}</span>
+                    <span class="px-2 py-1 border border-rose-500/30 bg-rose-500/10 text-rose-300">Removed {{ compareCounts.removed }}</span>
+                    <span class="px-2 py-1 border border-sky-500/30 bg-sky-500/10 text-sky-300">Changed {{ compareCounts.changed }}</span>
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-px bg-[#333]">
+                  <div class="bg-[#121212] px-4 py-3 text-xs uppercase tracking-[0.18em] text-[#7f7f7f]">Compared version</div>
+                  <div class="bg-[#121212] px-4 py-3 text-xs uppercase tracking-[0.18em] text-[#7f7f7f]">Current</div>
+                  <template v-for="section in compareSections" :key="section.title">
+                    <div :class="[
+                      'bg-[#0f0f0f] p-4 min-h-[120px]',
+                      section.status === 'removed' ? 'compare-removed' : (section.status === 'changed' ? 'compare-changed' : '')
+                    ]">
+                      <div class="flex items-center justify-between mb-3">
+                        <div class="text-white text-sm font-semibold">{{ section.title }}</div>
+                        <span v-if="section.status === 'removed'" class="text-[10px] uppercase tracking-[0.16em] text-rose-300">Removed</span>
+                        <span v-else-if="section.status === 'changed'" class="text-[10px] uppercase tracking-[0.16em] text-sky-300">Changed</span>
+                      </div>
+                      <div v-if="section.leftHtml" class="text-sm leading-relaxed text-[#d8d8d8]" v-html="section.leftHtml"></div>
+                      <div v-else class="text-sm text-[#666]">No content in this version.</div>
+                    </div>
+                    <div :class="[
+                      'bg-[#0f0f0f] p-4 min-h-[120px]',
+                      section.status === 'added' ? 'compare-added' : (section.status === 'changed' ? 'compare-changed' : '')
+                    ]">
+                      <div class="flex items-center justify-between mb-3">
+                        <div class="text-white text-sm font-semibold">{{ section.title }}</div>
+                        <span v-if="section.status === 'added'" class="text-[10px] uppercase tracking-[0.16em] text-emerald-300">Added</span>
+                        <span v-else-if="section.status === 'changed'" class="text-[10px] uppercase tracking-[0.16em] text-sky-300">Changed</span>
+                      </div>
+                      <div v-if="section.rightHtml" class="text-sm leading-relaxed text-[#d8d8d8]" v-html="section.rightHtml"></div>
+                      <div v-else class="text-sm text-[#666]">No content in current draft.</div>
+                    </div>
+                  </template>
                 </div>
               </div>
 
@@ -1241,6 +1278,37 @@ const compareSummary = computed(() => {
   if (!compareVersion.value) return [] as string[]
   return computeDraftDiff(lastSavedContent.value, normalizeBriefContent(compareVersion.value.markdown_content)).changedTitles
 })
+const currentCompareHtml = computed(() => {
+  if (isDirty.value && briefEditContent.value.trim()) return stripDraftDecorations(briefEditContent.value)
+  return stripDraftDecorations(lastSavedContent.value || selectedBrief.value?.content || '')
+})
+const compareSections = computed(() => {
+  if (!compareVersion.value) return [] as Array<{
+    title: string
+    leftHtml: string
+    rightHtml: string
+    status: 'added' | 'removed' | 'changed' | 'same'
+  }>
+
+  const leftMap = buildSectionMap(normalizeBriefContent(compareVersion.value.markdown_content || ''))
+  const rightMap = buildSectionMap(currentCompareHtml.value)
+  const titles = Array.from(new Set([...leftMap.keys(), ...rightMap.keys()]))
+
+  return titles.map((title) => {
+    const leftHtml = leftMap.get(title) || ''
+    const rightHtml = rightMap.get(title) || ''
+    let status: 'added' | 'removed' | 'changed' | 'same' = 'same'
+    if (!leftHtml && rightHtml) status = 'added'
+    else if (leftHtml && !rightHtml) status = 'removed'
+    else if (leftHtml !== rightHtml) status = 'changed'
+    return { title, leftHtml, rightHtml, status }
+  })
+})
+const compareCounts = computed(() => ({
+  added: compareSections.value.filter((section) => section.status === 'added').length,
+  removed: compareSections.value.filter((section) => section.status === 'removed').length,
+  changed: compareSections.value.filter((section) => section.status === 'changed').length,
+}))
 const initialVersionItem = computed<BriefVersionItem | null>(() => {
   if (!selectedBrief.value || briefVersions.value.length > 0) return null
   const initialContent = selectedBrief.value.content || lastSavedContent.value
@@ -2560,6 +2628,21 @@ useSeoMeta({
 
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
+}
+
+:deep(.compare-added) {
+  box-shadow: inset 3px 0 0 rgba(16, 185, 129, 0.8);
+  background: rgba(16, 185, 129, 0.06);
+}
+
+:deep(.compare-removed) {
+  box-shadow: inset 3px 0 0 rgba(244, 63, 94, 0.8);
+  background: rgba(244, 63, 94, 0.06);
+}
+
+:deep(.compare-changed) {
+  box-shadow: inset 3px 0 0 rgba(56, 189, 248, 0.8);
+  background: rgba(56, 189, 248, 0.06);
 }
 
 :deep([data-brief-section][data-changed]) {
