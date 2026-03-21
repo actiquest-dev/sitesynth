@@ -38,16 +38,14 @@
   <body>
     <h1>SiteSynth Build Plan</h1>
     <textarea id="status" readonly placeholder="Waiting for SiteSynth handoff..."></textarea>
-    <button id="run">Fetch & Build</button>
-    <div class="hint">Click “Build in Figma” in SiteSynth first. The handoff token is copied to clipboard automatically.</div>
+    <div class="hint">Open after clicking “Build in Figma” in SiteSynth. The plugin will auto-fetch the plan.</div>
 
     <script>
       const statusEl = document.getElementById('status')
-      const runBtn = document.getElementById('run')
 
-      runBtn.onclick = () => {
+      window.addEventListener('load', () => {
         parent.postMessage({ pluginMessage: { type: 'fetch' } }, '*')
-      }
+      })
 
       window.onmessage = (event) => {
         const msg = event.data.pluginMessage
