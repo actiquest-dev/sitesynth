@@ -428,24 +428,104 @@ const applyFixes = (page, fixes) => {
 const buildFromPlan = async (jobId, plan) => {
   await ensureFont()
   const pageSuffix = `${formatTimestamp(new Date())} (${jobId})`
-  const designSystemPage = createPage(`Build ${pageSuffix} · Design System`)
-  const wireframesPage = createPage(`Build ${pageSuffix} · Wireframes`)
-  const mockupsPage = createPage(`Build ${pageSuffix} · Mockups`)
-  const pageMap = createPage(`Build ${pageSuffix} · Page Map`)
+  const registry = new Map()
 
-  buildDesignSystem(designSystemPage, plan)
-  buildWireframes(wireframesPage, plan)
-  buildMockups(mockupsPage, plan)
-  buildPageMap(pageMap, plan)
-
-  const dsStructure = collectStructure(designSystemPage)
-  const critique = await sendCritique(jobId, 'design_system', designSystemPage, dsStructure)
-  if (critique?.fixes) {
-    applyFixes(designSystemPage, critique.fixes)
-    await sendCritique(jobId, 'design_system_after', designSystemPage, collectStructure(designSystemPage))
+  const register = (name, node) => {
+    if (name && node) registry.set(name, node)
   }
 
-  figma.viewport.scrollAndZoomIntoView([...designSystemPage.children])
+  const getParent = (parentName) => {
+    if (!parentName) return figma.currentPage
+    return registry.get(parentName) || figma.currentPage
+  }
+
+  if (Array.isArray(plan.commands) && plan.commands.length) {
+    plan.commands.forEach((cmd) => {
+      const props = cmd.props || {}
+      if (cmd.op === 'create_page') {
+        const page = createPage(cmd.name)
+        register(cmd.name, page)
+      }
+      if (cmd.op === 'create_frame') {
+        const parent = getParent(cmd.parent)
+        const frame = createFrame(parent, cmd.name, props.x || 40, props.y || 40, props.width || 800, props.height || 520)
+        register(cmd.name, frame)
+      }
+      if (cmd.op === 'create_text') {
+        const parent = getParent(cmd.parent)
+        const node = figma.createText()
+        node.fontName = FONT
+        node.characters = props.text || cmd.name
+        node.fontSize = props.fontSize || 12
+        node.x = props.x || 0
+        node.y = props.y || 0
+        parent.appendChild(node)
+        register(cmd.name, node)
+      }
+      if (cmd.op === 'set_fill') {
+        const node = registry.get(cmd.name)
+        if (node && props.color) {
+          node.fills = [{ type: 'SOLID', color: hexToRgb(props.color) }]
+        }
+      }
+      if (cmd.op === 'set_stroke') {
+        const node = registry.get(cmd.name)
+        if (node && props.color) {
+          node.strokes = [{ type: 'SOLID', color: hexToRgb(props.color) }]
+        }
+      }
+      if (cmd.op === 'set_radius') {
+        const node = registry.get(cmd.name)
+        if (node && typeof props.radius === 'number') {
+          node.cornerRadius = props.radius
+        }
+      }
+      if (cmd.op === 'resize') {
+        const node = registry.get(cmd.name)
+        if (node && typeof props.width === 'number' && typeof props.height === 'number') {
+          node.resize(props.width, props.height)
+        }
+      }
+      if (cmd.op === 'move') {
+        const node = registry.get(cmd.name)
+        if (node && typeof props.x === 'number' && typeof props.y === 'number') {
+          node.x = props.x
+          node.y = props.y
+        }
+      }
+      if (cmd.op === 'set_text') {
+        const node = registry.get(cmd.name)
+        if (node && node.type === 'TEXT' && typeof props.text === 'string') {
+          node.characters = props.text
+        }
+      }
+      if (cmd.op === 'set_font_size') {
+        const node = registry.get(cmd.name)
+        if (node && node.type === 'TEXT' && typeof props.size === 'number') {
+          node.fontSize = props.size
+        }
+      }
+    })
+  } else {
+    const designSystemPage = createPage(`Build ${pageSuffix} · Design System`)
+    const wireframesPage = createPage(`Build ${pageSuffix} · Wireframes`)
+    const mockupsPage = createPage(`Build ${pageSuffix} · Mockups`)
+    const pageMap = createPage(`Build ${pageSuffix} · Page Map`)
+
+    buildDesignSystem(designSystemPage, plan)
+    buildWireframes(wireframesPage, plan)
+    buildMockups(mockupsPage, plan)
+    buildPageMap(pageMap, plan)
+
+    const dsStructure = collectStructure(designSystemPage)
+    const critique = await sendCritique(jobId, 'design_system', designSystemPage, dsStructure)
+    if (critique?.fixes) {
+      applyFixes(designSystemPage, critique.fixes)
+      await sendCritique(jobId, 'design_system_after', designSystemPage, collectStructure(designSystemPage))
+    }
+
+    figma.viewport.scrollAndZoomIntoView([...designSystemPage.children])
+  }
 }
 
 const pollLoop = async () => {

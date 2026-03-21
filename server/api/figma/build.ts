@@ -66,6 +66,23 @@ export default defineEventHandler(async (event) => {
           sections: z.array(z.string()),
           critical_components: z.array(z.string()),
         })),
+        commands: z.array(z.object({
+          op: z.enum([
+            'create_page',
+            'create_frame',
+            'create_text',
+            'set_fill',
+            'set_stroke',
+            'set_radius',
+            'resize',
+            'move',
+            'set_text',
+            'set_font_size'
+          ]),
+          name: z.string(),
+          parent: z.string().optional(),
+          props: z.record(z.any()).optional(),
+        })).optional(),
         layout_rules: z.array(z.string()),
         handoff_notes: z.array(z.string()),
       }),
@@ -74,6 +91,8 @@ You are preparing a precise Figma build plan for a design system, wireframes, an
 Use the design spec below and expand it into a step-by-step build plan.
 Be concrete: name pages, frames, component groups, and flows.
 Include a minimal Design System with color tokens and core components (buttons, inputs, cards, badges).
+Also output a command list for the plugin to execute (create pages/frames/text and apply styles). 
+Use stable node names and parent references by name.
 
 Design spec:
 ${JSON.stringify(brief.design_spec_json, null, 2)}
