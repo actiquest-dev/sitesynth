@@ -3,6 +3,7 @@ import { useRuntimeConfig } from '#app'
 
 const user = ref<any>(null)
 const token = ref<string | null>(null)
+const googleIdToken = ref<string | null>(null)
 const isLoading = ref(false)
 const error = ref<string | null>(null)
 
@@ -67,10 +68,12 @@ export const useGoogleAuth = () => {
       // Store token and user data
       token.value = result.token
       user.value = result.user
+      googleIdToken.value = idToken
 
       // Save token to localStorage for persistence
       localStorage.setItem('authToken', result.token)
       localStorage.setItem('user', JSON.stringify(result.user))
+      localStorage.setItem('googleIdToken', idToken)
 
       console.log('✅ Google Sign-In successful:', result.user.email)
       return true
@@ -88,10 +91,12 @@ export const useGoogleAuth = () => {
     try {
       const storedToken = localStorage.getItem('authToken')
       const storedUser = localStorage.getItem('user')
+      const storedGoogleIdToken = localStorage.getItem('googleIdToken')
 
       if (storedToken && storedUser) {
         token.value = storedToken
         user.value = JSON.parse(storedUser)
+        googleIdToken.value = storedGoogleIdToken
         return true
       }
 
@@ -113,10 +118,12 @@ export const useGoogleAuth = () => {
       // Clear local storage
       localStorage.removeItem('authToken')
       localStorage.removeItem('user')
+      localStorage.removeItem('googleIdToken')
 
       // Clear state
       user.value = null
       token.value = null
+      googleIdToken.value = null
 
       console.log('✅ Logged out successfully')
       return true
@@ -137,6 +144,10 @@ export const useGoogleAuth = () => {
     return token.value
   }
 
+  const getGoogleIdToken = () => {
+    return googleIdToken.value
+  }
+
   return {
     user,
     token,
@@ -149,5 +160,6 @@ export const useGoogleAuth = () => {
     logout,
     getCurrentUser,
     getToken,
+    getGoogleIdToken,
   }
 }
