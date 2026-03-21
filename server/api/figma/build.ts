@@ -4,7 +4,7 @@ import { google } from '@ai-sdk/google'
 import { z } from 'zod'
 import { useDatabaseClient } from '~~/server/utils/supabase'
 import { issueBuildToken } from '~~/server/utils/figma-build-token'
-import { figmaBuilderAgent } from '~~/server/agents'
+import { getAgent } from '~~/server/voltagent'
 
 export default defineEventHandler(async (event) => {
   const userEmail = getHeader(event, 'x-user-email')
@@ -118,8 +118,11 @@ Command templates (extend/modify, keep names stable):
 ${JSON.stringify(commandTemplates, null, 2)}
     `.trim()
 
-    const canExecute = figmaBuilderAgent && typeof (figmaBuilderAgent as any).execute === 'function'
-    const agentResponse = canExecute ? await (figmaBuilderAgent as any).execute(agentPrompt) : null
+    const figmaBuilderAgent = getAgent('figmaBuilderAgent')
+    if (!figmaBuilderAgent || typeof (figmaBuilderAgent as any).execute !== 'function') {
+      throw new Error('Figma builder agent is not initialized')
+    }
+    const agentResponse = await (figmaBuilderAgent as any).execute(agentPrompt)
     let parsedAgent: any = null
     try {
       parsedAgent = JSON.parse(String(agentResponse || '{}'))
@@ -141,32 +144,11 @@ ${JSON.stringify(commandTemplates, null, 2)}
       return hasComponents && hasComponentSet
     }
 
-    let finalPlan = candidatePlan
-    if (!validatePlan(finalPlan)) {
-      const regeneration = await generateObject({
-        model: google('gemini-2.5-pro'),
-        schema: buildPlanSchema,
-        prompt: `
-You are preparing a precise Figma build plan for a design system, wireframes, and mockups.
-Use the design spec below and expand it into a step-by-step build plan.
-Be concrete: name pages, frames, component groups, and flows.
-Include a minimal Design System with color tokens and core components (buttons, inputs, cards, badges).
-Also output a command list for the plugin to execute (create pages/frames/text and apply styles). 
-Use stable node names and parent references by name.
-Include at least one component set and two variants.
-
-Design spec:
-${JSON.stringify(brief.design_spec_json, null, 2)}
-        `.trim(),
-      })
-      finalPlan = regeneration.object
-    }
-
-    if (!validatePlan(finalPlan)) {
+    if (!validatePlan(candidatePlan)) {
       throw new Error('Figma build plan failed validation')
     }
 
-    const buildPlan = finalPlan
+    const buildPlan = candidatePlan
 
     const { data: job, error: jobError } = await db
       .from('figma_build_jobs')
