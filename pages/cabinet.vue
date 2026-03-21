@@ -1518,8 +1518,18 @@ onBeforeRouteLeave(() => {
 })
 
 watch(briefDraft, (draft) => {
-  if (!draft || !selectedBrief.value) return
-  if (draft.briefId !== selectedBrief.value.id) return
+  if (!draft) return
+  if (!selectedBrief.value) {
+    const match = briefs.value.find((b: any) => b.id === draft.briefId)
+    if (match) {
+      openBriefEditor(match)
+    } else {
+      toast.value = { message: 'Draft prepared, but the brief is not open. Please open the brief to review.', type: 'error' }
+      clearBriefDraft()
+      return
+    }
+  }
+  if (draft.briefId !== selectedBrief.value?.id) return
   handleIncomingDraft(draft.markdown, 'agent')
   clearBriefDraft()
 })
