@@ -401,13 +401,6 @@
                 >
                   {{ isBuildingFigma ? 'Queuing Build...' : 'Build in Figma' }}
                 </button>
-                <button
-                  v-if="lastFigmaBuildPlan"
-                  @click="copyFigmaBuildPlan"
-                  class="px-4 py-3 border border-[#2f2f2f] text-white/80 rounded-none hover:bg-[#1f1f1f] transition text-sm"
-                >
-                  Copy Build Plan
-                </button>
               </div>
               <div v-if="figmaBuildStatus" class="mt-2 text-xs text-[#8b8b8b]">
                 {{ figmaBuildStatus }}
@@ -1835,27 +1828,22 @@ const queueFigmaBuild = async () => {
     lastFigmaJobId.value = data.data?.jobId || null
     lastFigmaBuildPlan.value = data.data?.buildPlan || null
     figmaBuildStatus.value = `Build queued${lastFigmaJobId.value ? ` (job ${lastFigmaJobId.value})` : ''}`
-    showToast('Figma build queued', 'success')
+    if (lastFigmaBuildPlan.value) {
+      try {
+        await navigator.clipboard.writeText(JSON.stringify(lastFigmaBuildPlan.value, null, 2))
+        showToast('Figma build queued (plan copied)', 'success')
+      } catch {
+        showToast('Figma build queued', 'success')
+        figmaBuildStatus.value += ' · Copy the build plan from logs if needed.'
+      }
+    } else {
+      showToast('Figma build queued', 'success')
+    }
   } catch (error: any) {
     figmaBuildStatus.value = error.message || 'Failed to queue build'
     showToast(figmaBuildStatus.value, 'error')
   } finally {
     isBuildingFigma.value = false
-  }
-}
-
-const copyFigmaBuildPlan = async () => {
-  if (!lastFigmaBuildPlan.value) {
-    showToast('No build plan available', 'error')
-    return
-  }
-  try {
-    const payload = JSON.stringify(lastFigmaBuildPlan.value, null, 2)
-    await navigator.clipboard.writeText(payload)
-    showToast('Build plan copied', 'success')
-  } catch (error) {
-    console.error('[FigmaBuild] Copy error', error)
-    showToast('Failed to copy build plan', 'error')
   }
 }
 
