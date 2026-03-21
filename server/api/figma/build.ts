@@ -4,6 +4,7 @@ import { google } from '@ai-sdk/google'
 import { z } from 'zod'
 import { useDatabaseClient } from '~~/server/utils/supabase'
 import { issueBuildToken } from '~~/server/utils/figma-build-token'
+import { figmaBuilderAgent } from '~~/server/agents'
 
 export default defineEventHandler(async (event) => {
   const userEmail = getHeader(event, 'x-user-email')
@@ -32,66 +33,83 @@ export default defineEventHandler(async (event) => {
       return { success: false, error: 'Design spec not found. Generate it first.' }
     }
 
-    const { object: buildPlan } = await generateObject({
-      model: google('gemini-2.5-pro'),
-      schema: z.object({
-        project_summary: z.string(),
-        design_system: z.object({
-          colors: z.array(z.string()),
-          typography: z.array(z.string()),
-          components: z.array(z.string()),
-          tokens: z.object({
-            brand_primary: z.string(),
-            brand_secondary: z.string(),
-            background: z.string(),
-            surface: z.string(),
-            text_primary: z.string(),
-            text_secondary: z.string(),
-            accent: z.string(),
-          }),
-          spacing: z.array(z.string()),
+    const buildPlanSchema = z.object({
+      project_summary: z.string(),
+      design_system: z.object({
+        colors: z.array(z.string()),
+        typography: z.array(z.string()),
+        components: z.array(z.string()),
+        tokens: z.object({
+          brand_primary: z.string(),
+          brand_secondary: z.string(),
+          background: z.string(),
+          surface: z.string(),
+          text_primary: z.string(),
+          text_secondary: z.string(),
+          accent: z.string(),
         }),
-        wireframes: z.array(z.object({
-          name: z.string(),
-          frames: z.array(z.string()),
-          key_flows: z.array(z.string()),
-        })),
-        mockups: z.array(z.object({
-          name: z.string(),
-          frames: z.array(z.string()),
-          visual_notes: z.array(z.string()),
-        })),
-        page_map: z.array(z.object({
-          page: z.string(),
-          sections: z.array(z.string()),
-          critical_components: z.array(z.string()),
-        })),
-        commands: z.array(z.object({
-          op: z.enum([
-            'create_page',
-            'create_frame',
-            'create_text',
-            'set_fill',
-            'set_stroke',
-            'set_radius',
-            'resize',
-            'move',
-            'set_text',
-            'set_font_size',
-            'set_autolayout',
-            'set_padding',
-            'set_spacing',
-            'set_alignment',
-            'set_text_style'
-          ]),
-          name: z.string(),
-          parent: z.string().optional(),
-          props: z.record(z.any()).optional(),
-        })).optional(),
-        layout_rules: z.array(z.string()),
-        handoff_notes: z.array(z.string()),
+        spacing: z.array(z.string()),
       }),
-      prompt: `
+      wireframes: z.array(z.object({
+        name: z.string(),
+        frames: z.array(z.string()),
+        key_flows: z.array(z.string()),
+      })),
+      mockups: z.array(z.object({
+        name: z.string(),
+        frames: z.array(z.string()),
+        visual_notes: z.array(z.string()),
+      })),
+      page_map: z.array(z.object({
+        page: z.string(),
+        sections: z.array(z.string()),
+        critical_components: z.array(z.string()),
+      })),
+      commands: z.array(z.object({
+        op: z.enum([
+          'create_page',
+          'create_frame',
+          'create_text',
+          'set_fill',
+          'set_stroke',
+          'set_radius',
+          'resize',
+          'move',
+          'set_text',
+          'set_font_size',
+          'set_autolayout',
+          'set_padding',
+          'set_spacing',
+          'set_alignment',
+          'set_text_style'
+        ]),
+        name: z.string(),
+        parent: z.string().optional(),
+        props: z.record(z.any()).optional(),
+      })),
+      layout_rules: z.array(z.string()),
+      handoff_notes: z.array(z.string()),
+    })
+
+    const agentPrompt = `
+Design spec:
+${JSON.stringify(brief.design_spec_json, null, 2)}
+    `.trim()
+
+    const agentResponse = await figmaBuilderAgent.execute(agentPrompt)
+    let parsedAgent: any = null
+    try {
+      parsedAgent = JSON.parse(String(agentResponse || '{}'))
+    } catch {
+      parsedAgent = null
+    }
+
+    const { object: buildPlan } = parsedAgent?.plan
+      ? { object: parsedAgent.plan }
+      : await generateObject({
+        model: google('gemini-2.5-pro'),
+        schema: buildPlanSchema,
+        prompt: `
 You are preparing a precise Figma build plan for a design system, wireframes, and mockups.
 Use the design spec below and expand it into a step-by-step build plan.
 Be concrete: name pages, frames, component groups, and flows.
@@ -101,8 +119,8 @@ Use stable node names and parent references by name.
 
 Design spec:
 ${JSON.stringify(brief.design_spec_json, null, 2)}
-      `.trim(),
-    })
+        `.trim(),
+      })
 
     const { data: job, error: jobError } = await db
       .from('figma_build_jobs')

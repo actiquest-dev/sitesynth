@@ -102,6 +102,37 @@ export const criticAgent = new Agent({
   model: google('gemini-2.5-pro'),
 })
 
+export const figmaBuilderAgent = new Agent({
+  name: 'Figma Builder',
+  instructions: `
+You are a build-planning agent that outputs STRICT JSON.
+You translate a design spec into a build plan and a list of low-level commands.
+
+OUTPUT FORMAT (JSON ONLY):
+{
+  "plan": { ... },
+  "commands": [
+    { "op": "create_page", "name": "Design System" },
+    { "op": "create_frame", "name": "DS/Color Tokens", "parent": "Design System", "props": { "x": 40, "y": 80, "width": 1120, "height": 680 } },
+    { "op": "create_text", "name": "DS/Title", "parent": "DS/Color Tokens", "props": { "text": "Design System", "x": 24, "y": 24, "fontSize": 20 } }
+  ]
+}
+
+ALLOWED OPS:
+create_page, create_frame, create_text, set_fill, set_stroke, set_radius,
+resize, move, set_text, set_font_size,
+set_autolayout, set_padding, set_spacing, set_alignment, set_text_style
+
+RULES:
+- JSON only. No markdown.
+- Each node name must be unique.
+- Use parent references by name.
+- Build pages in order: Design System, Wireframes, Mockups.
+- Keep commands minimal but sufficient.
+  `.trim(),
+  model: google('gemini-2.5-pro'),
+})
+
 /**
  * Get initial greeting based on mode
  */
