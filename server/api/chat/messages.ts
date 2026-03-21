@@ -143,19 +143,19 @@ Be concise, professional, proactive. Respond in the same language as the brief c
         if (b.files?.length) {
           systemPrompt += `\n\nAttached files: ${b.files.join(', ')}`
         }
-        systemPrompt += `\n\nIf the user requests edits, refinements, or proposes Figma structure, screens, wireframes, mockups, or design deliverables, YOU MUST CALL draft_brief_update with the full updated markdown. Add those planning details into the brief itself. Do not claim changes are saved. Do not say you will do work later. Tell the user to review and click Save.`
+        systemPrompt += `\n\nIf the user requests edits, refinements, or proposes Figma structure, screens, wireframes, mockups, or design deliverables, YOU MUST CALL draft_brief_update with the full updated markdown. Add those planning details into a dedicated brief section named "## Planned Figma Structure" or "## Design Deliverables". Create the section if it does not exist. Do not claim changes are saved. Do not say you will do work later. Tell the user to review and click Save.`
       } else if (isPostBrief) {
         const { data: brief } = await supabase.from('briefs').select('markdown_content').eq('conversation_id', conversationId).single()
         if (brief?.markdown_content) {
           currentBriefContent = brief.markdown_content
-          systemPrompt += `\n\nCURRENT BRIEF CONTENT:\n${brief.markdown_content}\n\nYOU MUST USE TOOL draft_brief_update TO PREPARE CHANGES. If you suggest Figma pages, wireframes, mockups, deliverables, or structure, insert them into the brief as planning content instead of promising future work.`
+          systemPrompt += `\n\nCURRENT BRIEF CONTENT:\n${brief.markdown_content}\n\nYOU MUST USE TOOL draft_brief_update TO PREPARE CHANGES. If you suggest Figma pages, wireframes, mockups, deliverables, or structure, insert them into a dedicated brief section named "## Planned Figma Structure" or "## Design Deliverables" instead of promising future work.`
         }
       } else if (agentType === 'briefing') {
         // Load brief from DB by conversation_id (briefing mode)
         const { data: brief } = await supabase.from('briefs').select('markdown_content').eq('conversation_id', conversationId).single()
         if (brief?.markdown_content) {
           currentBriefContent = brief.markdown_content
-          systemPrompt += `\n\nCURRENT BRIEF CONTENT:\n${brief.markdown_content}\n\nYOU MUST USE TOOL draft_brief_update TO PREPARE CHANGES. If you suggest Figma pages, wireframes, mockups, deliverables, or structure, insert them into the brief as planning content instead of promising future work.`
+          systemPrompt += `\n\nCURRENT BRIEF CONTENT:\n${brief.markdown_content}\n\nYOU MUST USE TOOL draft_brief_update TO PREPARE CHANGES. If you suggest Figma pages, wireframes, mockups, deliverables, or structure, insert them into a dedicated brief section named "## Planned Figma Structure" or "## Design Deliverables" instead of promising future work.`
         }
       }
 
@@ -205,7 +205,7 @@ Do not explain what you changed.
 Do not add preamble or code fences.
 Preserve useful structure and headings.
 Apply the user's requested edits directly to the existing brief.
-If the user is discussing Figma structure, wireframes, mockups, screens, or deliverables, convert those ideas into explicit brief content and planning sections.
+If the user is discussing Figma structure, wireframes, mockups, screens, or deliverables, convert those ideas into explicit brief content under a dedicated section named "## Planned Figma Structure" or "## Design Deliverables". Create that section if needed.
 Never promise future work. Fold the plan into the brief now.`,
           messages: [
             {
