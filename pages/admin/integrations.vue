@@ -96,10 +96,6 @@
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useGoogleAuth } from '@/composables/useGoogleAuth'
 
-definePageMeta({
-  middleware: ['auth'],
-})
-
 const { getCurrentUser, getGoogleIdToken, loadStoredAuth } = useGoogleAuth()
 
 const currentUserEmail = ref('')
