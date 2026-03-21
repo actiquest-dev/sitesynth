@@ -51,7 +51,7 @@
             </button>
             <button
               @click="probeMcp"
-              :disabled="loading || !figma.connected"
+              :disabled="loading"
               class="px-4 py-3 border border-slate-700 text-slate-200 hover:bg-slate-800 transition disabled:opacity-50"
             >
               MCP probe
