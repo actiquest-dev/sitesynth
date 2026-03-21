@@ -167,26 +167,18 @@
             <!-- Package -->
             <div class="p-4 border border-[#222] mb-4" style="background: #1a1a1a;">
               <div class="flex justify-between items-start mb-1">
-                <span class="text-sm text-white font-medium">Growth Plan</span>
-                <span class="text-sm text-white font-semibold">€900</span>
+                <span class="text-sm text-white font-medium">{{ packageTitle }}</span>
+                <span class="text-sm text-white font-semibold">€{{ subtotal }}</span>
               </div>
-              <span class="text-xs text-[#444]">Service Package</span>
+              <span class="text-xs text-[#444]">Selected package</span>
             </div>
 
-            <!-- Features -->
+            <!-- Breakdown -->
             <div class="space-y-2 mb-4 pb-4 border-b border-[#222]">
-              <p class="text-[10px] uppercase tracking-widest text-[#444] mb-3">Included Features</p>
-              <div class="flex justify-between text-sm">
-                <span class="text-[#555]">Decap CMS</span>
-                <span class="text-[#444] text-xs">Included</span>
-              </div>
-              <div class="flex justify-between text-sm">
-                <span class="text-[#555]">5 Pages</span>
-                <span class="text-[#444] text-xs">Included</span>
-              </div>
-              <div class="flex justify-between text-sm">
-                <span class="text-[#555]">SEO Setup</span>
-                <span class="text-xs text-[#8D35FF]">+€75</span>
+              <p class="text-[10px] uppercase tracking-widest text-[#444] mb-3">Order Details</p>
+              <div v-for="item in summaryItems" :key="item.label" class="flex justify-between text-sm">
+                <span class="text-[#555]">{{ item.label }}</span>
+                <span :class="item.muted ? 'text-[#444] text-xs' : 'text-xs text-[#8D35FF]'">{{ item.value }}</span>
               </div>
             </div>
 
@@ -194,17 +186,17 @@
             <div class="space-y-2 mb-4 pb-4 border-b border-[#222]">
               <div class="flex justify-between text-sm">
                 <span class="text-[#444]">Subtotal</span>
-                <span class="text-white">€975</span>
+                <span class="text-white">€{{ subtotal }}</span>
               </div>
               <div class="flex justify-between text-sm">
                 <span class="text-[#444]">Tax (20%)</span>
-                <span class="text-white">€195</span>
+                <span class="text-white">€{{ taxAmount }}</span>
               </div>
             </div>
 
             <div class="flex justify-between items-center mb-8">
               <span class="text-sm text-white font-medium">Total</span>
-              <span class="text-xl font-bold text-[#8D35FF]">€1,170</span>
+              <span class="text-xl font-bold text-[#8D35FF]">€{{ orderTotal }}</span>
             </div>
 
             <!-- Buttons -->
@@ -216,12 +208,12 @@
                 </svg>
                 {{ isProcessing ? 'Processing…' : 'Place Order' }}
               </button>
-              <NuxtLink to="/intake"
+              <NuxtLink :to="backLink"
                 class="w-full flex items-center justify-center gap-1.5 px-6 py-2.5 text-sm text-[#555] hover:text-white border border-[#222] hover:border-[#333] transition-all">
                 <svg viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5">
                   <path d="M9.78 12.78a.75.75 0 0 1-1.06 0L4.47 8.53a.75.75 0 0 1 0-1.06l4.25-4.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042L6.06 8l3.72 3.72a.75.75 0 0 1 0 1.06Z" />
                 </svg>
-                Back to Intake
+                Back to Form
               </NuxtLink>
             </div>
 
@@ -245,7 +237,13 @@
 import { ref, onMounted } from 'vue'
 import ParticleEffect from '@/components/effects/ParticleEffect.vue'
 
-const orderTotal = ref(1170)
+const orderTotal = ref(0)
+const subtotal = ref(0)
+const taxAmount = ref(0)
+const packageTitle = ref('Selected Plan')
+const backLink = ref('/pricing')
+const summaryItems = ref<{ label: string; value: string; muted?: boolean }[]>([])
+const TAX_RATE = 0.2
 let stripePublishableKey = ''
 
 // Stripe refs
@@ -302,6 +300,24 @@ const loadStripe = async (publishableKey: string) => {
 // Get intake data from intake form (saved in sessionStorage)
 const intakeFormData = ref<any>(null)
 
+const featureCatalog: Record<string, { label: string; price: number }> = {
+  analytics: { label: 'Plausible Analytics', price: 0 },
+  deploy: { label: 'Vercel Deploy', price: 0 },
+  seo: { label: 'SEO Optimization', price: 75 },
+  email: { label: 'Email Setup', price: 75 },
+  cloudflare: { label: 'Cloudflare Email Routing', price: 0 },
+  cms: { label: 'Decap CMS', price: 0 },
+}
+
+const addonCatalog: Record<string, { label: string; onetime: number; monthly: number }> = {
+  seo: { label: 'SEO Optimization', onetime: 75, monthly: 49 },
+  email: { label: 'Email Setup', onetime: 75, monthly: 15 },
+  analytics: { label: 'Plausible Analytics', onetime: 0, monthly: 12 },
+  deploy: { label: 'Vercel Hosting & Deploy', onetime: 0, monthly: 20 },
+  cloudflare: { label: 'Cloudflare Email Routing', onetime: 49, monthly: 0 },
+  maintenance: { label: 'Maintenance & Support', onetime: 0, monthly: 99 },
+}
+
 const billingData = ref({
   fullName: '',
   email: '',
@@ -323,10 +339,86 @@ const paymentError = ref('')
 onMounted(async () => {
   // Get intake form data from sessionStorage
   try {
+    const addonDataRaw = sessionStorage.getItem('addonOrderData')
     const intakeData = sessionStorage.getItem('intakeFormData')
-    if (intakeData) {
+
+    if (addonDataRaw) {
+      const addonData = JSON.parse(addonDataRaw)
+      packageTitle.value = 'Add-on Services'
+      backLink.value = '/addons'
+
+      const selections = Array.isArray(addonData.selections) ? addonData.selections : []
+      const lines = selections.map((s: any) => {
+        const def = addonCatalog[s.id]
+        const monthly = s.billing === 'monthly'
+        const amount = monthly ? def?.monthly ?? 0 : def?.onetime ?? 0
+        return {
+          label: `${def?.label ?? s.id} (${monthly ? 'monthly' : 'one-time'})`,
+          value: monthly ? `€${amount}/mo` : `+€${amount}`,
+          muted: amount === 0,
+        }
+      })
+
+      summaryItems.value = lines
+      subtotal.value = Number(addonData.onetimeTotal || 0) + Number(addonData.monthlyTotal || 0)
+      taxAmount.value = Math.round(subtotal.value * TAX_RATE)
+      orderTotal.value = subtotal.value + taxAmount.value
+
+      if (addonData.email) billingData.value.email = addonData.email
+      if (addonData.fullName) billingData.value.fullName = addonData.fullName
+      if (addonData.company) billingData.value.company = addonData.company
+    } else if (intakeData) {
       intakeFormData.value = JSON.parse(intakeData)
       console.log('✅ Intake data loaded:', intakeFormData.value)
+
+      const tier = intakeFormData.value.tier || intakeFormData.value.budget || 'starter'
+      const isGrowth = tier === 'growth'
+      const basePrice = Number(intakeFormData.value.basePrice || (isGrowth ? 900 : 500))
+      const extraPagesTotal = Number(intakeFormData.value.extraPagesTotal || 0)
+
+      const selectedFeatures = Array.isArray(intakeFormData.value.selectedFeatures)
+        ? intakeFormData.value.selectedFeatures
+        : []
+
+      const addOnTotal = selectedFeatures.reduce((sum: number, id: string) => {
+        return sum + (featureCatalog[id]?.price || 0)
+      }, 0)
+
+      let tierTotal = Number(intakeFormData.value.total || basePrice + addOnTotal + extraPagesTotal)
+      if (!intakeFormData.value.total && intakeFormData.value.rushFee) {
+        tierTotal = Math.round(tierTotal * 1.2)
+      }
+
+      packageTitle.value = `${isGrowth ? 'Growth' : 'Starter'} Plan`
+      backLink.value = isGrowth ? '/intake/growth' : '/intake/starter'
+      subtotal.value = tierTotal
+      taxAmount.value = Math.round(subtotal.value * TAX_RATE)
+      orderTotal.value = subtotal.value + taxAmount.value
+
+      const lines: { label: string; value: string; muted?: boolean }[] = [
+        { label: packageTitle.value, value: `+€${basePrice}` },
+      ]
+
+      selectedFeatures.forEach((id: string) => {
+        const feature = featureCatalog[id]
+        if (!feature) return
+        lines.push({
+          label: feature.label,
+          value: feature.price > 0 ? `+€${feature.price}` : 'Included',
+          muted: feature.price === 0,
+        })
+      })
+
+      if (extraPagesTotal > 0) {
+        lines.push({ label: 'Extra pages', value: `+€${extraPagesTotal}` })
+      }
+
+      if (intakeFormData.value.rushFee) {
+        const rushValue = Math.round((basePrice + addOnTotal + extraPagesTotal) * 0.2)
+        lines.push({ label: 'Rush fee', value: `+€${rushValue}` })
+      }
+
+      summaryItems.value = lines
 
       // Pre-fill email and name from intake form
       if (intakeFormData.value.email) {
@@ -338,6 +430,10 @@ onMounted(async () => {
       if (intakeFormData.value.companyName) {
         billingData.value.company = intakeFormData.value.companyName
       }
+    } else {
+      packageTitle.value = 'No order data found'
+      backLink.value = '/pricing'
+      summaryItems.value = [{ label: 'Order', value: 'Please return and select a plan', muted: true }]
     }
   } catch (error) {
     console.warn('Could not load intake data:', error)
@@ -480,7 +576,7 @@ const submitPayment = async () => {
       const sessionData = {
         chargeId: result.chargeId,
         amount: orderTotal.value,
-        currency: 'USD',
+        currency: 'EUR',
         email: billingData.value.email,
         fullName: billingData.value.fullName,
         paymentMethod: 'Credit Card',

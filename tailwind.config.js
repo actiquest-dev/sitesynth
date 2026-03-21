@@ -14,6 +14,7 @@ module.exports = {
   plugins: [],
   safelist: [
     // Safelist hover colors to ensure Tailwind generates the classes
+    "text-[#d4d4d4]",
     "hover:bg-[#0033ff]",
     "hover:border-[#0033ff]",
     "border-[#0033ff]",

@@ -13,7 +13,7 @@
       <!-- Heading -->
       <div class="mb-8 text-center">
         <h1 class="text-3xl font-semibold text-white mb-2">Welcome back</h1>
-        <p class="text-base text-[#555]">Sign in to access your SiteSynth cabinet</p>
+        <p class="text-base text-[#999999]" style="color: #999999;">Sign in to access your SiteSynth cabinet</p>
       </div>
 
       <!-- Card -->
@@ -21,12 +21,12 @@
 
         <!-- Topbar -->
         <div class="h-11 border-b border-[#2a2a2a] flex items-center justify-between px-5" style="background: #1a1a1a;">
-          <span class="text-xs text-[#444]" style="font-family: 'Inter', sans-serif;">Sign In</span>
+          <span class="text-xs text-[#777]" style="font-family: 'Inter', sans-serif;">Sign In</span>
           <div class="flex items-center gap-1.5">
-            <svg viewBox="0 0 16 16" fill="currentColor" class="w-3 h-3 text-[#555]">
+            <svg viewBox="0 0 16 16" fill="currentColor" class="w-3 h-3 text-[#777]">
               <path d="M8 0a3.5 3.5 0 0 0-3.5 3.5V5H3.5A1.5 1.5 0 0 0 2 6.5v7A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5v-7A1.5 1.5 0 0 0 12.5 5h-1V3.5A3.5 3.5 0 0 0 8 0Zm-2 5V3.5a2 2 0 1 1 4 0V5H6Z"/>
             </svg>
-            <span class="text-[10px] text-[#444]" style="font-family: 'Inter', sans-serif;">SSL Secured</span>
+            <span class="text-[10px] text-[#777]" style="font-family: 'Inter', sans-serif;">SSL Secured</span>
           </div>
         </div>
 
@@ -50,19 +50,19 @@
           <!-- Divider -->
           <div class="flex items-center gap-3 my-5">
             <div class="flex-1 h-px bg-[#222]"></div>
-            <span class="text-[10px] uppercase tracking-widest text-[#333]">or</span>
+            <span class="text-[10px] uppercase tracking-widest text-[#666]">or</span>
             <div class="flex-1 h-px bg-[#222]"></div>
           </div>
 
           <!-- Magic Link -->
           <div class="space-y-3">
             <div>
-              <label class="block text-[10px] uppercase tracking-widest text-[#444] mb-1.5">Email *</label>
+              <label class="block text-[10px] uppercase tracking-widest text-[#777] mb-1.5">Email *</label>
               <input
                 v-model="emailInput"
                 type="email"
                 placeholder="your@email.com"
-                class="w-full border px-3 py-2.5 text-sm text-white placeholder:text-[#333] focus:outline-none transition-colors"
+                class="w-full border px-3 py-2.5 text-sm text-white placeholder:text-[#888] focus:outline-none transition-colors"
                 style="background: #1a1a1a; border-color: #2a2a2a;"
                 @focus="e => (e.target as HTMLInputElement).style.borderColor = '#8D35FF'"
                 @blur="e => (e.target as HTMLInputElement).style.borderColor = '#2a2a2a'"
@@ -71,7 +71,7 @@
             <button
               @click="handleEmailLogin"
               :disabled="isLoading || !emailInput"
-              class="w-full flex items-center justify-center gap-2 px-6 py-3 text-sm font-medium transition-all disabled:opacity-30 disabled:cursor-not-allowed bg-[#8D35FF] text-white hover:bg-[#7B2EF0]"
+              class="w-full flex items-center justify-center gap-2 px-6 py-3 text-sm font-medium transition-all disabled:opacity-30 disabled:cursor-not-allowed bg-white text-[#161616] hover:bg-[#eaeaea]"
             >
               <svg v-if="isLoading" class="animate-spin w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
@@ -86,8 +86,8 @@
 
       <!-- Help -->
       <div class="mt-5 text-center" style="font-family: 'Inter', sans-serif;">
-        <p class="mb-1.5 flex items-center justify-center gap-1.5 text-[11px] text-[#444]">
-          <svg viewBox="0 0 16 16" fill="currentColor" class="w-3 h-3 text-[#555] flex-shrink-0">
+        <p class="mb-1.5 flex items-center justify-center gap-1.5 text-[11px] text-[#777]">
+          <svg viewBox="0 0 16 16" fill="currentColor" class="w-3 h-3 text-[#777] flex-shrink-0">
             <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.92 6.085h.001a.75.75 0 1 1-1.342-.67c.8-1.6 2.254-1.86 3.172-1.677.942.188 1.674.7 2.018 1.477.35.795.257 1.947-.877 2.968a5.134 5.134 0 0 1-.66.51 3.63 3.63 0 0 0-.43.344.365.365 0 0 0-.084.157v.013a.75.75 0 0 1-1.496-.082 1.86 1.86 0 0 1 .4-.947c.19-.23.43-.428.6-.563l.04-.03a4.05 4.05 0 0 0 .47-.38c.68-.62.74-1.132.617-1.413-.13-.295-.437-.524-.842-.607-.38-.076-.921.024-1.587 1.32ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/>
           </svg>
           Questions or issues?

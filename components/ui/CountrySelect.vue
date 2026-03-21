@@ -10,7 +10,7 @@
         <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM5.854 4.854a.5.5 0 1 0-.708-.708l-3.5 3.5a.5.5 0 0 0 0 .708l3.5 3.5a.5.5 0 0 0 .708-.708L2.707 8l3.147-3.146Zm4 .708a.5.5 0 0 0-.708.708L10.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5Z"/>
       </svg>
       <!-- Country Name -->
-      <span class="text-sm flex-1 truncate" :class="selectedCountry ? 'text-white' : 'text-[#333]'">
+      <span class="text-sm flex-1 truncate" :class="selectedCountry ? 'text-white' : 'text-[#999999]'">
         {{ selectedCountry?.name || 'Select country' }}
       </span>
 

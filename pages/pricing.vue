@@ -240,7 +240,7 @@ const pricingCards = [
       "Decap CMS Integration",
       "Up to 5 Pages",
       "Everything from Starter",
-      "+€100 per extra page",
+      "+€85 per extra page",
     ],
     cta: {
       text: "Get Started",
@@ -274,14 +274,14 @@ const pricingCards = [
     id: "addons",
     title: "Add-ons",
     price: "From",
-    period: "€49/mo",
+    period: "€12/mo",
     deliveryLabel: "Type",
     delivery: "Optional",
     features: [
-      "Maintenance Pro €149/mo",
-      "Domain & Setup €75",
-      "Maintenance Basic €49/mo",
-      "Customizable packages",
+      "Maintenance & Support €99/mo",
+      "Plausible Analytics €12/mo",
+      "SEO Optimization from €49/mo",
+      "Email Setup from €15/mo",
     ],
     cta: {
       text: "Add to Plan",
@@ -321,7 +321,7 @@ const faqItems = [
   {
     question: "What if I need more pages?",
     answer:
-      "Each additional page beyond your plan limit costs €100. You can add pages anytime, and we'll adjust your timeline accordingly. For bulk additions, contact us for custom pricing.",
+      "Each additional page beyond your plan limit costs €85. You can add pages anytime, and we'll adjust your timeline accordingly. For bulk additions, contact us for custom pricing.",
   },
   {
     question: "Is hosting included?",

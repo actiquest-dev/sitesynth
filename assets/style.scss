@@ -155,6 +155,20 @@ body {
     color: #999999 !important;
   }
 
+  /* Allow explicit color utilities to override the global body p rule */
+  p.text-white {
+    color: #ffffff !important;
+  }
+  p.text-\[\#d4d4d4\] {
+    color: #d4d4d4 !important;
+  }
+  p.text-\[\#999999\] {
+    color: #999999 !important;
+  }
+  p.text-\[\#8D35FF\] {
+    color: #8D35FF !important;
+  }
+
   .bg-\[\#DDDDDD\] p,
   .bg-\[\#ffffff\] p,
   .bg-white p,

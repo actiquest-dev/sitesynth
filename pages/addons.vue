@@ -3,7 +3,7 @@
 
   <section
     class="relative min-h-screen overflow-hidden bg-cover bg-center bg-no-repeat"
-    style="background-image: url('/assets/new-assets/test/sitesynth-animated-gradient-v2.svg'); background-color: #161616; padding-top: 128px;"
+    style="background-image: url('/assets/new-assets/test/sitesynth-animated-gradient-v2.svg'); background-color: #161616; padding-top: 128px; color: #999999;"
   >
     <GlowEffect />
     <ParticleEffect />
@@ -15,7 +15,7 @@
         <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium border border-[#8D35FF]/30 text-[#8D35FF]" style="background: #8D35FF18;">
           Add-on Services
         </span>
-        <span class="text-xs text-[#888]">Subscribe to any service — no website build required</span>
+        <span class="text-xs text-[#999999]">Subscribe to any service — no website build required</span>
       </div>
 
       <!-- Step progress -->
@@ -33,7 +33,7 @@
                 ? 'bg-[#8D35FF] border-[#8D35FF] text-white'
                 : currentStep === index + 1
                   ? 'bg-[#161616] border-[#8D35FF] text-[#8D35FF]'
-                  : 'bg-[#161616] border-[#2a2a2a] text-[#888]'
+                  : 'bg-[#161616] border-[#2a2a2a] text-[#999999]'
             ]">
               <svg v-if="currentStep > index + 1" viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5">
                 <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z" />
@@ -42,7 +42,7 @@
             </div>
             <span :class="[
               'text-[11px] transition-colors',
-              currentStep === index + 1 ? 'text-white' : currentStep > index + 1 ? 'text-[#8D35FF]/60' : 'text-[#888]'
+              currentStep === index + 1 ? 'text-white' : currentStep > index + 1 ? 'text-[#8D35FF]/60' : 'text-[#999999]'
             ]">{{ step.title }}</span>
           </div>
         </div>
@@ -54,7 +54,7 @@
         <!-- Topbar -->
         <div class="h-11 border-b border-[#2a2a2a] flex items-center justify-between px-6" style="background: #1a1a1a;">
           <span class="text-sm text-white font-medium">{{ steps[currentStep - 1]?.title }}</span>
-          <span class="text-xs text-[#888] tabular-nums">{{ currentStep }} of {{ totalSteps }}</span>
+          <span class="text-xs text-[#999999] tabular-nums">{{ currentStep }} of {{ totalSteps }}</span>
         </div>
 
         <!-- Content -->
@@ -63,7 +63,7 @@
           <!-- STEP 1: Select services -->
           <div v-if="currentStep === 1">
             <h1 class="text-xl font-semibold text-white mb-1">Which services do you need?</h1>
-            <p class="text-sm text-[#888] mb-7">Select one or more — mix and match as needed</p>
+            <p class="text-sm text-[#999999] mb-7">Select one or more — mix and match as needed</p>
 
             <div class="space-y-2">
               <div v-for="service in services" :key="service.id"
@@ -86,28 +86,30 @@
 
                 <!-- Info -->
                 <div class="flex-1 min-w-0">
-                  <p class="text-sm text-white font-medium">{{ service.label }}</p>
-                  <p class="text-xs text-[#888] mt-0.5">{{ service.description }}</p>
+                  <p class="text-sm font-medium transition-colors" :class="isSelected(service.id) ? 'text-white' : 'text-[#999999]'">{{ service.label }}</p>
+                  <p class="text-xs mt-0.5 transition-colors" :class="isSelected(service.id) ? 'text-white' : 'text-[#999999]'">{{ service.description }}</p>
                 </div>
 
                 <!-- Pricing toggle (visible only when selected) -->
                 <div v-if="isSelected(service.id)" class="flex-shrink-0 flex items-center gap-1 border border-[#2a2a2a]" @click.stop>
                   <button
+                    v-if="canUseOnetime(service)"
                     @click="setBilling(service.id, 'onetime')"
                     :class="[
                       'px-3 py-1.5 text-xs transition-all',
-                      getBilling(service.id) === 'onetime' ? 'bg-[#8D35FF] text-white' : 'text-[#888] hover:text-white'
+                      getBilling(service.id) === 'onetime' ? 'bg-[#8D35FF] text-white' : 'text-[#999999] hover:text-white'
                     ]"
                   >
                     One-time<br/>
                     <span class="font-semibold">€{{ service.priceOnetime }}</span>
                   </button>
-                  <div class="w-px h-8 bg-[#2a2a2a]"></div>
+                  <div v-if="canUseOnetime(service) && canUseMonthly(service)" class="w-px h-8 bg-[#2a2a2a]"></div>
                   <button
+                    v-if="canUseMonthly(service)"
                     @click="setBilling(service.id, 'monthly')"
                     :class="[
                       'px-3 py-1.5 text-xs transition-all',
-                      getBilling(service.id) === 'monthly' ? 'bg-[#8D35FF] text-white' : 'text-[#888] hover:text-white'
+                      getBilling(service.id) === 'monthly' ? 'bg-[#8D35FF] text-white' : 'text-[#999999] hover:text-white'
                     ]"
                   >
                     Monthly<br/>
@@ -117,15 +119,17 @@
 
                 <!-- Price preview (not selected) -->
                 <div v-else class="flex-shrink-0 text-right">
-                  <p class="text-xs text-[#777]">from €{{ service.priceOnetime }}</p>
-                  <p class="text-[10px] text-[#666]">or €{{ service.priceMonthly }}/mo</p>
+                  <p v-if="canUseOnetime(service) && canUseMonthly(service)" class="text-xs text-[#999999]">from €{{ service.priceOnetime }}</p>
+                  <p v-else-if="canUseOnetime(service)" class="text-xs text-[#999999]">€{{ service.priceOnetime }} one-time</p>
+                  <p v-else class="text-xs text-[#999999]">€{{ service.priceMonthly }}/mo</p>
+                  <p v-if="canUseOnetime(service) && canUseMonthly(service)" class="text-[10px] text-[#999999]">or €{{ service.priceMonthly }}/mo</p>
                 </div>
               </div>
             </div>
 
             <!-- Total -->
             <div v-if="selectedServices.length > 0" class="mt-5 flex items-center justify-between pt-4 border-t border-[#1f1f1f]">
-              <span class="text-xs text-[#888]">{{ selectedServices.length }} service{{ selectedServices.length > 1 ? 's' : '' }} selected</span>
+              <span class="text-xs text-[#999999]">{{ selectedServices.length }} service{{ selectedServices.length > 1 ? 's' : '' }} selected</span>
               <span class="text-sm text-white tabular-nums">{{ orderTotal }}</span>
             </div>
           </div>
@@ -133,21 +137,21 @@
           <!-- STEP 2: Contact -->
           <div v-if="currentStep === 2">
             <h1 class="text-xl font-semibold text-white mb-1">Your details</h1>
-            <p class="text-sm text-[#888] mb-7">We'll set up your services and send access details here</p>
+            <p class="text-sm text-[#999999] mb-7">We'll set up your services and send access details here</p>
             <div class="space-y-4">
               <div class="grid grid-cols-2 gap-3">
                 <div>
-                  <label class="block text-[10px] uppercase tracking-widest text-[#888] mb-1.5">Full name *</label>
+                  <label class="block text-[10px] uppercase tracking-widest text-[#999999] mb-1.5">Full name *</label>
                   <input v-model="formData.fullName" type="text" placeholder="Jane Smith" required
-                    class="w-full border px-3 py-2.5 text-sm text-white placeholder:text-[#888] focus:outline-none transition-colors"
+                    class="w-full border px-3 py-2.5 text-sm text-white placeholder:text-[#999999] focus:outline-none transition-colors"
                     style="background: #1a1a1a; border-color: #2a2a2a;"
                     @focus="e => e.target.style.borderColor = '#8D35FF'"
                     @blur="e => e.target.style.borderColor = '#2a2a2a'" />
                 </div>
                 <div>
-                  <label class="block text-[10px] uppercase tracking-widest text-[#888] mb-1.5">Company</label>
+                  <label class="block text-[10px] uppercase tracking-widest text-[#999999] mb-1.5">Company</label>
                   <input v-model="formData.company" type="text" placeholder="Acme Inc."
-                    class="w-full border px-3 py-2.5 text-sm text-white placeholder:text-[#888] focus:outline-none transition-colors"
+                    class="w-full border px-3 py-2.5 text-sm text-white placeholder:text-[#999999] focus:outline-none transition-colors"
                     style="background: #1a1a1a; border-color: #2a2a2a;"
                     @focus="e => e.target.style.borderColor = '#8D35FF'"
                     @blur="e => e.target.style.borderColor = '#2a2a2a'" />
@@ -155,27 +159,27 @@
               </div>
               <div class="grid grid-cols-2 gap-3">
                 <div>
-                  <label class="block text-[10px] uppercase tracking-widest text-[#888] mb-1.5">Email *</label>
+                  <label class="block text-[10px] uppercase tracking-widest text-[#999999] mb-1.5">Email *</label>
                   <input v-model="formData.email" type="email" placeholder="jane@example.com" required
-                    class="w-full border px-3 py-2.5 text-sm text-white placeholder:text-[#888] focus:outline-none transition-colors"
+                    class="w-full border px-3 py-2.5 text-sm text-white placeholder:text-[#999999] focus:outline-none transition-colors"
                     style="background: #1a1a1a; border-color: #2a2a2a;"
                     @focus="e => e.target.style.borderColor = '#8D35FF'"
                     @blur="e => e.target.style.borderColor = '#2a2a2a'" />
                 </div>
                 <div>
-                  <label class="block text-[10px] uppercase tracking-widest text-[#888] mb-1.5">Website URL</label>
+                  <label class="block text-[10px] uppercase tracking-widest text-[#999999] mb-1.5">Website URL</label>
                   <input v-model="formData.website" type="url" placeholder="https://yoursite.com"
-                    class="w-full border px-3 py-2.5 text-sm text-white placeholder:text-[#888] focus:outline-none transition-colors"
+                    class="w-full border px-3 py-2.5 text-sm text-white placeholder:text-[#999999] focus:outline-none transition-colors"
                     style="background: #1a1a1a; border-color: #2a2a2a;"
                     @focus="e => e.target.style.borderColor = '#8D35FF'"
                     @blur="e => e.target.style.borderColor = '#2a2a2a'" />
                 </div>
               </div>
               <div>
-                <label class="block text-[10px] uppercase tracking-widest text-[#888] mb-1.5">Additional notes</label>
+                <label class="block text-[10px] uppercase tracking-widest text-[#999999] mb-1.5">Additional notes</label>
                 <textarea v-model="formData.notes" rows="3"
                   placeholder="Anything we should know about your project or setup…"
-                  class="w-full border px-3 py-2.5 text-sm text-white placeholder:text-[#888] focus:outline-none transition-colors resize-none"
+                  class="w-full border px-3 py-2.5 text-sm text-white placeholder:text-[#999999] focus:outline-none transition-colors resize-none"
                   style="background: #1a1a1a; border-color: #2a2a2a;"
                   @focus="e => e.target.style.borderColor = '#8D35FF'"
                   @blur="e => e.target.style.borderColor = '#2a2a2a'"></textarea>
@@ -190,7 +194,7 @@
                     <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z" />
                   </svg>
                 </span>
-                <span class="text-xs text-[#888]">Subscribe to updates and insights from SiteSynth</span>
+                <span class="text-xs text-[#999999]">Subscribe to updates and insights from SiteSynth</span>
               </label>
             </div>
           </div>
@@ -198,19 +202,19 @@
           <!-- STEP 3: Summary -->
           <div v-if="currentStep === 3">
             <h1 class="text-xl font-semibold text-white mb-1">Order summary</h1>
-            <p class="text-sm text-[#888] mb-7">Review your selected services before payment</p>
+            <p class="text-sm text-[#999999] mb-7">Review your selected services before payment</p>
 
             <div class="space-y-3">
               <!-- Services breakdown -->
               <div class="border border-[#2a2a2a]" style="background: #1a1a1a;">
                 <div class="px-4 py-2.5 border-b border-[#2a2a2a]">
-                  <p class="text-[10px] uppercase tracking-widest text-[#888]">Services</p>
+                  <p class="text-[10px] uppercase tracking-widest text-[#999999]">Services</p>
                 </div>
                 <div class="px-4 py-3 space-y-2">
                   <div v-for="id in selectedServices" :key="id" class="flex justify-between text-sm">
                     <div>
                       <span class="text-white">{{ getService(id)?.label }}</span>
-                      <span class="ml-2 text-[10px] px-1.5 py-0.5 border" :class="getBilling(id) === 'monthly' ? 'border-[#8D35FF]/30 text-[#8D35FF]' : 'border-[#2a2a2a] text-[#888]'">
+                      <span class="ml-2 text-[10px] px-1.5 py-0.5 border" :class="getBilling(id) === 'monthly' ? 'border-[#8D35FF]/30 text-[#8D35FF]' : 'border-[#2a2a2a] text-[#999999]'">
                         {{ getBilling(id) === 'monthly' ? 'monthly' : 'one-time' }}
                       </span>
                     </div>
@@ -224,19 +228,19 @@
               <!-- Contact -->
               <div class="border border-[#2a2a2a]" style="background: #1a1a1a;">
                 <div class="px-4 py-2.5 border-b border-[#2a2a2a]">
-                  <p class="text-[10px] uppercase tracking-widest text-[#888]">Contact</p>
+                  <p class="text-[10px] uppercase tracking-widest text-[#999999]">Contact</p>
                 </div>
                 <div class="px-4 py-3 space-y-2">
                   <div class="flex justify-between text-sm">
-                    <span class="text-[#888]">Name</span>
+                    <span class="text-[#999999]">Name</span>
                     <span class="text-white">{{ formData.fullName }}</span>
                   </div>
                   <div class="flex justify-between text-sm">
-                    <span class="text-[#888]">Email</span>
+                    <span class="text-[#999999]">Email</span>
                     <span class="text-white">{{ formData.email }}</span>
                   </div>
                   <div v-if="formData.website" class="flex justify-between text-sm">
-                    <span class="text-[#888]">Website</span>
+                    <span class="text-[#999999]">Website</span>
                     <span class="text-white">{{ formData.website }}</span>
                   </div>
                 </div>
@@ -246,15 +250,15 @@
               <div class="border border-[#2a2a2a]" style="background: #1a1a1a;">
                 <div class="px-4 py-2.5 border-b border-[#2a2a2a] flex items-center gap-2">
                   <div class="w-0.5 h-3.5 bg-[#8D35FF] rounded"></div>
-                  <p class="text-[10px] uppercase tracking-widest text-[#888]">Pricing</p>
+                  <p class="text-[10px] uppercase tracking-widest text-[#999999]">Pricing</p>
                 </div>
                 <div class="px-4 py-3 space-y-2">
                   <div v-if="onetimeTotal > 0" class="flex justify-between text-sm">
-                    <span class="text-[#888]">One-time fees</span>
+                    <span class="text-[#999999]">One-time fees</span>
                     <span class="text-white">€{{ onetimeTotal }}</span>
                   </div>
                   <div v-if="monthlyTotal > 0" class="flex justify-between text-sm">
-                    <span class="text-[#888]">Monthly recurring</span>
+                    <span class="text-[#999999]">Monthly recurring</span>
                     <span class="text-white">€{{ monthlyTotal }}/mo</span>
                   </div>
                   <div class="pt-2 border-t border-[#2a2a2a] flex justify-between">
@@ -271,7 +275,7 @@
         <!-- Footer nav -->
         <div class="border-t border-[#2a2a2a] px-6 py-4 flex items-center justify-between" style="background: #1a1a1a;">
           <button v-if="currentStep > 1" @click="previousStep"
-            class="flex items-center gap-1.5 text-sm text-[#888] hover:text-white transition-colors">
+            class="flex items-center gap-1.5 text-sm text-[#999999] hover:text-white transition-colors">
             <svg viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5">
               <path d="M9.78 12.78a.75.75 0 0 1-1.06 0L4.47 8.53a.75.75 0 0 1 0-1.06l4.25-4.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042L6.06 8l3.72 3.72a.75.75 0 0 1 0 1.06Z" />
             </svg>
@@ -281,7 +285,7 @@
 
           <button v-if="currentStep < totalSteps" @click="nextStep" :disabled="!isStepValid"
             class="flex items-center gap-2 px-6 py-2.5 text-sm font-medium transition-all disabled:opacity-25 disabled:cursor-not-allowed"
-            :class="isStepValid ? 'bg-[#8D35FF] text-white hover:bg-[#7B2EF0]' : 'bg-[#333] text-[#888]'">
+            :class="isStepValid ? 'bg-[#8D35FF] text-white hover:bg-[#7B2EF0]' : 'bg-[#333] text-[#999999]'">
             Continue
             <svg viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5">
               <path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z" />
@@ -290,7 +294,7 @@
 
           <button v-if="currentStep === totalSteps" @click="goToPayment" :disabled="!isStepValid"
             class="flex items-center gap-2 px-6 py-2.5 text-sm font-medium transition-all disabled:opacity-25 disabled:cursor-not-allowed"
-            :class="isStepValid ? 'bg-[#8D35FF] text-white hover:bg-[#7B2EF0]' : 'bg-[#333] text-[#888]'">
+            :class="isStepValid ? 'bg-[#8D35FF] text-white hover:bg-[#7B2EF0]' : 'bg-[#333] text-[#999999]'">
             Continue to Payment
             <svg viewBox="0 0 16 16" fill="currentColor" class="w-3.5 h-3.5">
               <path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z" />
@@ -381,6 +385,8 @@ const selectedServices = computed(() => selections.value.map(s => s.id))
 const isSelected = (id) => selections.value.some(s => s.id === id)
 const getBilling = (id) => selections.value.find(s => s.id === id)?.billing ?? 'onetime'
 const getService = (id) => services.find(s => s.id === id)
+const canUseOnetime = (service) => Number(service?.priceOnetime || 0) > 0
+const canUseMonthly = (service) => Number(service?.priceMonthly || 0) > 0
 
 const toggleService = (id) => {
   const idx = selections.value.findIndex(s => s.id === id)
@@ -389,14 +395,18 @@ const toggleService = (id) => {
   } else {
     const svc = getService(id)
     // Default to monthly if no onetime price, else onetime
-    const billing = svc?.priceOnetime > 0 ? 'onetime' : 'monthly'
+    const billing = canUseOnetime(svc) ? 'onetime' : 'monthly'
     selections.value.push({ id, billing })
   }
 }
 
 const setBilling = (id, billing) => {
   const item = selections.value.find(s => s.id === id)
-  if (item) item.billing = billing
+  const svc = getService(id)
+  if (!item || !svc) return
+  if (billing === 'onetime' && !canUseOnetime(svc)) return
+  if (billing === 'monthly' && !canUseMonthly(svc)) return
+  item.billing = billing
 }
 
 const onetimeTotal = computed(() =>
