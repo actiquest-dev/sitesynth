@@ -262,7 +262,17 @@
                         <div class="flex gap-2">
                           <button @click="viewHistoryVersion(version)" class="px-2 py-1 text-xs border border-[#333] text-[#bbb] hover:bg-[#1a1a1a]">View</button>
                           <button @click="restoreHistoryVersion(version)" class="px-2 py-1 text-xs border border-[#8D35FF]/40 text-[#d8c0ff] hover:bg-[#8D35FF]/10">Restore</button>
-                          <button @click="toggleCompareVersion(version)" class="px-2 py-1 text-xs border border-[#333] text-[#bbb] hover:bg-[#1a1a1a]">Compare</button>
+                          <button
+                            @click="toggleCompareVersion(version)"
+                            :class="[
+                              'px-2 py-1 text-xs border transition',
+                              compareVersionId === version.id
+                                ? 'border-sky-500/40 bg-sky-500/10 text-sky-300'
+                                : 'border-[#333] text-[#bbb] hover:bg-[#1a1a1a]'
+                            ]"
+                          >
+                            {{ compareVersionId === version.id ? 'Exit compare' : 'Compare' }}
+                          </button>
                         </div>
                       </div>
                     </div>
