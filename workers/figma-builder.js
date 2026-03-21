@@ -98,6 +98,58 @@ const callMcpFront = async (serverName, payload) => {
   return json
 }
 
+const buildDesignPrompt = (specSnapshot) => {
+  const pages = Array.isArray(specSnapshot?.pages) ? specSnapshot.pages : []
+  const pageLines = pages.map((page, index) => {
+    const blocks = Array.isArray(page.ui_blocks) ? page.ui_blocks : []
+    const blockLines = blocks.map((block) => {
+      const content = Array.isArray(block.content) ? block.content.join('; ') : block.content
+      const interactions = Array.isArray(block.interactions) ? block.interactions.join('; ') : block.interactions
+      const states = Array.isArray(block.states) ? block.states.join('; ') : block.states
+      return `- ${block.type}: ${block.description || ''}${content ? ` | Content: ${content}` : ''}${interactions ? ` | Interactions: ${interactions}` : ''}${states ? ` | States: ${states}` : ''}`.trim()
+    })
+    const notes = Array.isArray(page.notes_for_figma) ? page.notes_for_figma.join('; ') : page.notes_for_figma
+    return [
+      `${index + 1}. ${page.title || page.path || 'Page'}`,
+      `Purpose: ${page.purpose || ''}`,
+      `Primary goal: ${page.primary_user_goal || ''}`,
+      `Success criteria: ${(page.success_criteria || []).join('; ')}`,
+      `Key states: ${(page.key_states || []).join('; ')}`,
+      `Content requirements: ${(page.content_requirements || []).join('; ')}`,
+      blockLines.length ? `UI blocks:\n${blockLines.join('\n')}` : 'UI blocks: (none specified)',
+      notes ? `Figma notes: ${notes}` : '',
+    ].filter(Boolean).join('\n')
+  })
+
+  const theme = specSnapshot?.theme || {}
+  const designDirection = specSnapshot?.design_direction || {}
+  const figmaStructure = specSnapshot?.figma_structure || {}
+  const figmaPages = Array.isArray(figmaStructure.pages) ? figmaStructure.pages : []
+
+  return [
+    'You are a senior product designer building a clean, production-ready Figma file.',
+    'Follow the specification strictly. Do not invent unrelated screens.',
+    '',
+    'Design direction:',
+    `- Visual style: ${designDirection.visual_style || 'n/a'}`,
+    `- Interaction style: ${designDirection.interaction_style || 'n/a'}`,
+    `- Content tone: ${designDirection.content_tone || 'n/a'}`,
+    '',
+    'Theme:',
+    `- Colors: ${theme.colors ? JSON.stringify(theme.colors) : 'n/a'}`,
+    `- Typography: ${theme.typography ? JSON.stringify(theme.typography) : 'n/a'}`,
+    `- Components: ${(theme.components || []).join('; ')}`,
+    '',
+    'Figma file structure:',
+    figmaPages.length
+      ? figmaPages.map((page) => `- ${page.name}: ${page.purpose || ''} (${(page.contents || []).join('; ')})`).join('\n')
+      : '- Use pages for: Design System, Wireframes, Mockups',
+    '',
+    'Pages to build:',
+    pageLines.join('\n\n'),
+  ].join('\n')
+}
+
 const buildToolArgs = (schema, specSnapshot) => {
   if (!schema || typeof schema !== 'object') return {}
   const properties = schema.properties || {}
@@ -106,7 +158,7 @@ const buildToolArgs = (schema, specSnapshot) => {
   if (properties.design_spec) args.design_spec = specSnapshot
   if (properties.specification) args.specification = specSnapshot
   if (properties.prompt && !args.prompt) {
-    args.prompt = `Generate a Figma file from this design specification:\n${JSON.stringify(specSnapshot, null, 2)}`
+    args.prompt = buildDesignPrompt(specSnapshot)
   }
   if (properties.context && !args.context) {
     args.context = specSnapshot
