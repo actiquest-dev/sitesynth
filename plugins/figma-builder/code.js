@@ -115,58 +115,82 @@ const buildPageMap = (page, plan) => {
   })
 }
 
-figma.showUI(__html__, { width: 420, height: 420 })
+figma.showUI(__html__, { width: 420, height: 200 })
 
-const fetchBuildPlan = async () => {
-  if (!navigator.clipboard || !navigator.clipboard.readText) {
-    figma.ui.postMessage({ type: 'status', text: 'Clipboard access not available.' })
-    return null
-  }
-  const handoffRaw = await navigator.clipboard.readText()
-  let handoff
-  try {
-    handoff = JSON.parse(handoffRaw)
-  } catch {
-    figma.ui.postMessage({ type: 'status', text: 'Clipboard does not contain SiteSynth handoff JSON.' })
-    return null
-  }
-  if (!handoff || !handoff.jobId || !handoff.token) {
-    figma.ui.postMessage({ type: 'status', text: 'Handoff JSON missing jobId/token.' })
-    return null
-  }
+const API_BASE = 'https://sitesynth-eight.vercel.app'
+const PLUGIN_TOKEN = 'REPLACE_WITH_FIGMA_PLUGIN_SECRET'
+const POLL_INTERVAL = 8000
 
-  figma.ui.postMessage({ type: 'status', text: 'Fetching build plan from SiteSynth...' })
-  const url = `https://sitesynth-eight.vercel.app/api/figma/build/plan?jobId=${encodeURIComponent(handoff.jobId)}&token=${encodeURIComponent(handoff.token)}`
+let isBusy = false
+
+const formatTimestamp = (date) => {
+  const pad = (value) => String(value).padStart(2, '0')
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`
+}
+
+const postStatus = (text) => {
+  figma.ui.postMessage({ type: 'status', text })
+}
+
+const fetchNextJob = async () => {
+  const url = `${API_BASE}/api/figma/build/next?token=${encodeURIComponent(PLUGIN_TOKEN)}`
   const response = await fetch(url)
   const data = await response.json()
   if (!data.success) {
-    figma.ui.postMessage({ type: 'status', text: data.error || 'Failed to fetch build plan.' })
     return null
   }
   return data.data
 }
 
-figma.ui.onmessage = async (message) => {
-  if (message.type !== 'fetch') return
+const markComplete = async (jobId, fileKey) => {
+  const url = `${API_BASE}/api/figma/build/complete`
+  await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      token: PLUGIN_TOKEN,
+      jobId,
+      fileKey,
+      fileUrl: `https://www.figma.com/file/${fileKey}`,
+    }),
+  })
+}
+
+const buildFromPlan = async (jobId, plan) => {
+  await ensureFont()
+  const pageSuffix = `${formatTimestamp(new Date())} (${jobId})`
+  const designSystemPage = createPage(`Build ${pageSuffix} · Design System`)
+  const wireframesPage = createPage(`Build ${pageSuffix} · Wireframes`)
+  const mockupsPage = createPage(`Build ${pageSuffix} · Mockups`)
+  const pageMap = createPage(`Build ${pageSuffix} · Page Map`)
+
+  buildDesignSystem(designSystemPage, plan)
+  buildWireframes(wireframesPage, plan)
+  buildMockups(mockupsPage, plan)
+  buildPageMap(pageMap, plan)
+
+  figma.viewport.scrollAndZoomIntoView([...designSystemPage.children])
+}
+
+const pollLoop = async () => {
+  if (isBusy) return
+  isBusy = true
   try {
-    const plan = await fetchBuildPlan()
-    if (!plan) return
-    figma.ui.postMessage({ type: 'ready' })
-    await ensureFont()
-
-    const designSystemPage = createPage('Design System')
-    const wireframesPage = createPage('Wireframes')
-    const mockupsPage = createPage('Mockups')
-    const pageMap = createPage('Page Map')
-
-    buildDesignSystem(designSystemPage, plan)
-    buildWireframes(wireframesPage, plan)
-    buildMockups(mockupsPage, plan)
-    buildPageMap(pageMap, plan)
-
-    figma.viewport.scrollAndZoomIntoView([...designSystemPage.children])
-    figma.notify('SiteSynth build plan applied')
+    const job = await fetchNextJob()
+    if (!job) {
+      postStatus('Idle. Waiting for new build jobs...')
+      return
+    }
+    postStatus(`Building job ${job.jobId}...`)
+    await buildFromPlan(job.jobId, job.buildPlan)
+    await markComplete(job.jobId, figma.fileKey)
+    postStatus(`Job ${job.jobId} completed.`)
   } catch (error) {
-    figma.notify(`Build failed: ${error.message || error}`)
+    postStatus(`Build failed: ${error.message || error}`)
+  } finally {
+    isBusy = false
   }
 }
+
+setInterval(pollLoop, POLL_INTERVAL)
+pollLoop()
