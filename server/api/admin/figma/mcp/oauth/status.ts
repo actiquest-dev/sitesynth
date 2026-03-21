@@ -11,7 +11,7 @@ const getMcpFrontConfig = () => {
 const probeMcpFront = async () => {
   const config = getMcpFrontConfig()
   if (!config) return null
-  const response = await fetch(`${config.url}/figma/health`, {
+  const response = await fetch(`${config.url}/health`, {
     headers: {
       Authorization: `Bearer ${config.token}`,
       Accept: 'text/event-stream',

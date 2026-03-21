@@ -56,7 +56,7 @@ export default defineEventHandler(async (event) => {
     } catch (error) {
       const config = getMcpFrontConfig()
       if (!config) throw error
-      const response = await fetch(`${config.url}/figma/health`, {
+      const response = await fetch(`${config.url}/health`, {
         headers: {
           Authorization: `Bearer ${config.token}`,
           Accept: 'text/event-stream',
