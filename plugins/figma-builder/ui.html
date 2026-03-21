@@ -37,23 +37,27 @@
   </head>
   <body>
     <h1>SiteSynth Build Plan</h1>
-    <textarea id="plan" placeholder="Paste build plan JSON here"></textarea>
-    <button id="run">Build in Figma</button>
-    <div class="hint">Copy the build plan from SiteSynth cabinet and paste here.</div>
+    <textarea id="status" readonly placeholder="Waiting for SiteSynth handoff..."></textarea>
+    <button id="run">Fetch & Build</button>
+    <div class="hint">Click “Build in Figma” in SiteSynth first. The handoff token is copied to clipboard automatically.</div>
 
     <script>
-      const planEl = document.getElementById('plan')
+      const statusEl = document.getElementById('status')
       const runBtn = document.getElementById('run')
 
       runBtn.onclick = () => {
-        let plan
-        try {
-          plan = JSON.parse(planEl.value)
-        } catch (e) {
-          alert('Invalid JSON')
-          return
+        parent.postMessage({ pluginMessage: { type: 'fetch' } }, '*')
+      }
+
+      window.onmessage = (event) => {
+        const msg = event.data.pluginMessage
+        if (!msg) return
+        if (msg.type === 'status') {
+          statusEl.value = msg.text
         }
-        parent.postMessage({ pluginMessage: { type: 'build', plan } }, '*')
+        if (msg.type === 'ready') {
+          statusEl.value = 'Build plan received. Starting build...'
+        }
       }
     </script>
   </body>

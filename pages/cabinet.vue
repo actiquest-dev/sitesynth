@@ -1827,14 +1827,20 @@ const queueFigmaBuild = async () => {
     }
     lastFigmaJobId.value = data.data?.jobId || null
     lastFigmaBuildPlan.value = data.data?.buildPlan || null
+    const buildToken = data.data?.buildToken || null
     figmaBuildStatus.value = `Build queued${lastFigmaJobId.value ? ` (job ${lastFigmaJobId.value})` : ''}`
-    if (lastFigmaBuildPlan.value) {
+    if (lastFigmaBuildPlan.value && buildToken) {
       try {
-        await navigator.clipboard.writeText(JSON.stringify(lastFigmaBuildPlan.value, null, 2))
-        showToast('Figma build queued (plan copied)', 'success')
+        const handoff = JSON.stringify({
+          jobId: lastFigmaJobId.value,
+          token: buildToken,
+          source: 'sitesynth',
+        })
+        await navigator.clipboard.writeText(handoff)
+        showToast('Figma build queued (handoff copied)', 'success')
       } catch {
         showToast('Figma build queued', 'success')
-        figmaBuildStatus.value += ' · Copy the build plan from logs if needed.'
+        figmaBuildStatus.value += ' · Handoff token copy failed.'
       }
     } else {
       showToast('Figma build queued', 'success')

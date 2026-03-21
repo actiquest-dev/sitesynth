@@ -117,11 +117,42 @@ const buildPageMap = (page, plan) => {
 
 figma.showUI(__html__, { width: 420, height: 420 })
 
-figma.ui.onmessage = async (message) => {
-  if (message.type !== 'build') return
+const fetchBuildPlan = async () => {
+  if (!navigator.clipboard || !navigator.clipboard.readText) {
+    figma.ui.postMessage({ type: 'status', text: 'Clipboard access not available.' })
+    return null
+  }
+  const handoffRaw = await navigator.clipboard.readText()
+  let handoff
   try {
+    handoff = JSON.parse(handoffRaw)
+  } catch {
+    figma.ui.postMessage({ type: 'status', text: 'Clipboard does not contain SiteSynth handoff JSON.' })
+    return null
+  }
+  if (!handoff || !handoff.jobId || !handoff.token) {
+    figma.ui.postMessage({ type: 'status', text: 'Handoff JSON missing jobId/token.' })
+    return null
+  }
+
+  figma.ui.postMessage({ type: 'status', text: 'Fetching build plan from SiteSynth...' })
+  const url = `https://sitesynth-eight.vercel.app/api/figma/build/plan?jobId=${encodeURIComponent(handoff.jobId)}&token=${encodeURIComponent(handoff.token)}`
+  const response = await fetch(url)
+  const data = await response.json()
+  if (!data.success) {
+    figma.ui.postMessage({ type: 'status', text: data.error || 'Failed to fetch build plan.' })
+    return null
+  }
+  return data.data
+}
+
+figma.ui.onmessage = async (message) => {
+  if (message.type !== 'fetch') return
+  try {
+    const plan = await fetchBuildPlan()
+    if (!plan) return
+    figma.ui.postMessage({ type: 'ready' })
     await ensureFont()
-    const plan = message.plan || {}
 
     const designSystemPage = createPage('Design System')
     const wireframesPage = createPage('Wireframes')

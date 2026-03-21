@@ -3,6 +3,7 @@ import { generateObject } from 'ai'
 import { google } from '@ai-sdk/google'
 import { z } from 'zod'
 import { useDatabaseClient } from '~~/server/utils/supabase'
+import { issueBuildToken } from '~~/server/utils/figma-build-token'
 
 export default defineEventHandler(async (event) => {
   const userEmail = getHeader(event, 'x-user-email')
@@ -93,6 +94,7 @@ ${JSON.stringify(brief.design_spec_json, null, 2)}
         status: job.status,
         createdAt: job.created_at,
         buildPlan,
+        buildToken: issueBuildToken(job.id),
       },
     }
   } catch (error: any) {
