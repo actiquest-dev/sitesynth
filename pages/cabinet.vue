@@ -1160,6 +1160,7 @@ const lastDraftSource = ref<'agent' | null>(null)
 const pendingDraft = ref<{ markdown: string; html: string; receivedAt: string } | null>(null)
 const saveError = ref('')
 const changeSummary = ref<string[]>([])
+const queuedDraft = ref<{ briefId: string; markdown: string } | null>(null)
 
 const isDirty = computed(() => {
   if (!briefEditMode.value) return false
@@ -1520,6 +1521,10 @@ onBeforeRouteLeave(() => {
 watch(briefDraft, (draft) => {
   if (!draft) return
   if (!selectedBrief.value) {
+    if (briefs.value.length === 0) {
+      queuedDraft.value = { briefId: draft.briefId, markdown: draft.markdown }
+      return
+    }
     const match = briefs.value.find((b: any) => b.id === draft.briefId)
     if (match) {
       openBriefEditor(match)
@@ -1861,6 +1866,14 @@ const loadBriefs = async () => {
       const d = await r.json()
       briefs.value = d.data || []
       stats.value.totalProjects = briefs.value.length
+      if (queuedDraft.value) {
+        const match = briefs.value.find((b: any) => b.id === queuedDraft.value?.briefId)
+        if (match) {
+          openBriefEditor(match)
+          handleIncomingDraft(queuedDraft.value.markdown, 'agent')
+          queuedDraft.value = null
+        }
+      }
     }
   } catch {}
 }
