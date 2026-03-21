@@ -118,7 +118,8 @@ Command templates (extend/modify, keep names stable):
 ${JSON.stringify(commandTemplates, null, 2)}
     `.trim()
 
-    const agentResponse = await figmaBuilderAgent.execute(agentPrompt)
+    const canExecute = figmaBuilderAgent && typeof (figmaBuilderAgent as any).execute === 'function'
+    const agentResponse = canExecute ? await (figmaBuilderAgent as any).execute(agentPrompt) : null
     let parsedAgent: any = null
     try {
       parsedAgent = JSON.parse(String(agentResponse || '{}'))
