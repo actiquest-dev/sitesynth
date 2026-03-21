@@ -1,4 +1,7 @@
 import { defineEventHandler, readBody } from 'h3'
+import { generateObject } from 'ai'
+import { google } from '@ai-sdk/google'
+import { z } from 'zod'
 import { useDatabaseClient } from '~~/server/utils/supabase'
 
 export default defineEventHandler(async (event) => {
@@ -28,13 +31,54 @@ export default defineEventHandler(async (event) => {
       return { success: false, error: 'Design spec not found. Generate it first.' }
     }
 
+    const { object: buildPlan } = await generateObject({
+      model: google('gemini-2.5-pro'),
+      schema: z.object({
+        project_summary: z.string(),
+        design_system: z.object({
+          colors: z.array(z.string()),
+          typography: z.array(z.string()),
+          components: z.array(z.string()),
+          spacing: z.array(z.string()),
+        }),
+        wireframes: z.array(z.object({
+          name: z.string(),
+          frames: z.array(z.string()),
+          key_flows: z.array(z.string()),
+        })),
+        mockups: z.array(z.object({
+          name: z.string(),
+          frames: z.array(z.string()),
+          visual_notes: z.array(z.string()),
+        })),
+        page_map: z.array(z.object({
+          page: z.string(),
+          sections: z.array(z.string()),
+          critical_components: z.array(z.string()),
+        })),
+        layout_rules: z.array(z.string()),
+        handoff_notes: z.array(z.string()),
+      }),
+      prompt: `
+You are preparing a precise Figma build plan for a design system, wireframes, and mockups.
+Use the design spec below and expand it into a step-by-step build plan.
+Be concrete: name pages, frames, component groups, and flows.
+
+Design spec:
+${JSON.stringify(brief.design_spec_json, null, 2)}
+      `.trim(),
+    })
+
     const { data: job, error: jobError } = await db
       .from('figma_build_jobs')
       .insert({
         brief_id: briefId,
         requested_by: userEmail,
         source: 'cabinet',
-        spec_snapshot: brief.design_spec_json,
+        spec_snapshot: {
+          spec: brief.design_spec_json,
+          build_plan: buildPlan,
+        },
         status: 'queued',
       })
       .select('id, status, created_at')

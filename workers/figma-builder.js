@@ -99,7 +99,9 @@ const callMcpFront = async (serverName, payload) => {
 }
 
 const buildDesignPrompt = (specSnapshot) => {
-  const pages = Array.isArray(specSnapshot?.pages) ? specSnapshot.pages : []
+  const spec = specSnapshot?.spec || specSnapshot
+  const plan = specSnapshot?.build_plan || null
+  const pages = Array.isArray(spec?.pages) ? spec.pages : []
   const pageLines = pages.map((page, index) => {
     const blocks = Array.isArray(page.ui_blocks) ? page.ui_blocks : []
     const blockLines = blocks.map((block) => {
@@ -121,14 +123,36 @@ const buildDesignPrompt = (specSnapshot) => {
     ].filter(Boolean).join('\n')
   })
 
-  const theme = specSnapshot?.theme || {}
-  const designDirection = specSnapshot?.design_direction || {}
-  const figmaStructure = specSnapshot?.figma_structure || {}
+  const theme = spec?.theme || {}
+  const designDirection = spec?.design_direction || {}
+  const figmaStructure = spec?.figma_structure || {}
   const figmaPages = Array.isArray(figmaStructure.pages) ? figmaStructure.pages : []
+
+  const planLines = plan
+    ? [
+        'Agent build plan:',
+        plan.project_summary ? `Summary: ${plan.project_summary}` : '',
+        plan.design_system
+          ? `Design system: colors (${(plan.design_system.colors || []).join('; ')}); typography (${(plan.design_system.typography || []).join('; ')}); components (${(plan.design_system.components || []).join('; ')}); spacing (${(plan.design_system.spacing || []).join('; ')})`
+          : '',
+        Array.isArray(plan.wireframes)
+          ? `Wireframes: ${plan.wireframes.map((wf) => `${wf.name}: ${wf.frames?.join(', ')}`).join(' | ')}`
+          : '',
+        Array.isArray(plan.mockups)
+          ? `Mockups: ${plan.mockups.map((mk) => `${mk.name}: ${mk.frames?.join(', ')}`).join(' | ')}`
+          : '',
+        Array.isArray(plan.page_map)
+          ? `Page map: ${plan.page_map.map((p) => `${p.page}: ${p.sections?.join(', ')}`).join(' | ')}`
+          : '',
+        Array.isArray(plan.layout_rules) ? `Layout rules: ${plan.layout_rules.join('; ')}` : '',
+        Array.isArray(plan.handoff_notes) ? `Handoff notes: ${plan.handoff_notes.join('; ')}` : '',
+      ].filter(Boolean)
+    : []
 
   return [
     'You are a senior product designer building a clean, production-ready Figma file.',
     'Follow the specification strictly. Do not invent unrelated screens.',
+    ...planLines,
     '',
     'Design direction:',
     `- Visual style: ${designDirection.visual_style || 'n/a'}`,
