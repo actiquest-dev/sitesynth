@@ -233,10 +233,45 @@
                   <span :class="['px-2 py-1 rounded-none text-xs font-medium', statusClass]">{{ statusLabel }}</span>
                   <span v-if="lastDraftSource === 'agent' && isDirty" class="px-2 py-1 rounded-none text-xs font-medium bg-[#8D35FF]/10 text-[#C9A7FF] border border-[#8D35FF]/40">Updated by agent</span>
                   <span v-if="!isDirty && lastSavedAt" class="text-xs text-[#666]">Last saved {{ formatDateTime(lastSavedAt) }}</span>
+                  <span v-if="isViewingHistory" class="px-2 py-1 rounded-none text-xs font-medium bg-[#1e3a8a]/20 text-[#bfdbfe] border border-[#1e3a8a]/40">Viewing version</span>
                 </div>
                 <span v-if="changeSummary.length > 0" class="text-xs text-[#b7b7b7]">
                   Updated sections: {{ changeSummary.slice(0, 3).join(', ') }}<span v-if="changeSummary.length > 3"> +{{ changeSummary.length - 3 }}</span>
                 </span>
+                <div class="relative">
+                  <button
+                    @click="showHistoryMenu = !showHistoryMenu"
+                    class="px-4 py-2 border border-[#333] text-[#bbb] rounded-none hover:bg-[#1a1a1a] transition text-sm"
+                  >
+                    History
+                  </button>
+                  <div v-if="showHistoryMenu" class="absolute right-0 top-full mt-2 w-[360px] border border-[#333] bg-[#121212] z-20 p-3 space-y-2">
+                    <div class="flex items-center justify-between mb-2">
+                      <p class="text-white text-sm font-medium">Version history</p>
+                      <button v-if="isViewingHistory" @click="exitHistoryView" class="text-xs text-[#999] hover:text-white">Back to current</button>
+                    </div>
+                    <div v-if="historyItems.length === 0" class="text-xs text-[#666]">No saved versions yet.</div>
+                    <div v-for="version in historyItems" :key="version.id" class="border border-[#2a2a2a] p-3">
+                      <div class="flex items-center justify-between gap-3">
+                        <div>
+                          <p class="text-sm text-white">
+                            {{ version.is_current ? 'Current' : (version.version > 0 ? `Version ${version.version}` : 'Local snapshot') }}
+                          </p>
+                          <p class="text-xs text-[#777]">{{ formatDateTime(version.created_at) }} · {{ version.source }}</p>
+                        </div>
+                        <div class="flex gap-2">
+                          <button @click="viewHistoryVersion(version)" class="px-2 py-1 text-xs border border-[#333] text-[#bbb] hover:bg-[#1a1a1a]">View</button>
+                          <button @click="restoreHistoryVersion(version)" class="px-2 py-1 text-xs border border-[#8D35FF]/40 text-[#d8c0ff] hover:bg-[#8D35FF]/10">Restore</button>
+                          <button @click="toggleCompareVersion(version)" class="px-2 py-1 text-xs border border-[#333] text-[#bbb] hover:bg-[#1a1a1a]">Compare</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div v-if="isViewingHistory" class="flex items-center gap-2">
+                  <button @click="navigateHistory(-1)" class="px-2 py-1 border border-[#333] text-[#999] text-xs hover:bg-[#1a1a1a]">←</button>
+                  <button @click="navigateHistory(1)" class="px-2 py-1 border border-[#333] text-[#999] text-xs hover:bg-[#1a1a1a]">→</button>
+                </div>
                 <!-- Edit/Save Button (toggles based on mode) -->
                 <button
                   v-if="briefEditMode"
@@ -273,14 +308,10 @@
               <h2 v-else class="text-xl font-semibold text-white mb-1">{{ selectedBrief.name || 'Untitled Brief' }}</h2>
               <p class="text-xs text-[#666] mb-6">Created {{ formatDate(selectedBrief.created_at) }}{{ selectedBrief.updated_at ? ' · Updated ' + formatDate(selectedBrief.updated_at) : '' }}</p>
 
-              <div v-if="pendingDraft" class="mb-4 border border-[#8D35FF]/40 bg-[#8D35FF]/10 px-4 py-3 text-sm text-[#ddd] flex items-center justify-between">
-                <div>
-                  <div class="font-medium text-white">Draft prepared (not saved)</div>
-                  <div class="text-[#b7b7b7] text-xs">A new agent draft is ready. Apply it to replace your current edits.</div>
-                </div>
-                <div class="flex gap-2">
-                  <button @click="applyPendingDraft" class="px-3 py-1.5 bg-[#8D35FF] text-white text-xs rounded-none">Apply draft</button>
-                  <button @click="discardPendingDraft" class="px-3 py-1.5 border border-[#444] text-[#bbb] text-xs rounded-none">Keep current</button>
+              <div v-if="compareVersion" class="mb-4 border border-[#333] bg-[#161616] px-4 py-3 text-sm text-[#ddd]">
+                <div class="font-medium text-white">Compare with {{ compareVersion.version > 0 ? `Version ${compareVersion.version}` : 'Local snapshot' }}</div>
+                <div class="text-[#b7b7b7] text-xs mt-1">
+                  {{ compareSummary.length > 0 ? `Changed sections: ${compareSummary.join(', ')}` : 'No section-level differences detected.' }}
                 </div>
               </div>
 
@@ -1125,6 +1156,16 @@ type ConversationMessage = {
   created_at: string
 }
 
+type BriefVersionItem = {
+  id: string
+  version: number
+  markdown_content: string
+  created_at: string
+  source: string
+  is_current?: boolean
+  name?: string
+}
+
 const conversations = ref<Conversation[]>([])
 const selectedConversationId = ref<string | null>(null)
 const chatMessages = ref<ConversationMessage[]>([])
@@ -1157,11 +1198,15 @@ const designSpec = ref<any>(null)
 const lastSavedContent = ref('')
 const lastSavedAt = ref<string | null>(null)
 const lastDraftSource = ref<'agent' | null>(null)
-const pendingDraft = ref<{ markdown: string; html: string; receivedAt: string } | null>(null)
 const saveError = ref('')
 const changeSummary = ref<string[]>([])
 const queuedDraft = ref<{ briefId: string; markdown: string } | null>(null)
 const draftDebug = ref<string[]>([])
+const briefVersions = ref<BriefVersionItem[]>([])
+const localHistoryVersions = ref<BriefVersionItem[]>([])
+const showHistoryMenu = ref(false)
+const viewedVersionId = ref<string | null>(null)
+const compareVersionId = ref<string | null>(null)
 
 const pushDraftDebug = (message: string) => {
   const line = `${new Date().toLocaleTimeString('en-US', { hour12: false })} ${message}`
@@ -1187,6 +1232,31 @@ const statusClass = computed(() => {
   if (isDirty.value) return 'bg-yellow-500/10 text-yellow-300 border border-yellow-500/30'
   return 'bg-green-500/10 text-green-400 border border-green-500/30'
 })
+
+const historyItems = computed(() => [...localHistoryVersions.value, ...briefVersions.value])
+const viewedVersion = computed(() => historyItems.value.find((item) => item.id === viewedVersionId.value) || null)
+const compareVersion = computed(() => historyItems.value.find((item) => item.id === compareVersionId.value) || null)
+const isViewingHistory = computed(() => !!viewedVersion.value)
+const compareSummary = computed(() => {
+  if (!compareVersion.value) return [] as string[]
+  return computeDraftDiff(lastSavedContent.value, normalizeBriefContent(compareVersion.value.markdown_content)).changedTitles
+})
+
+const pushLocalHistorySnapshot = (html: string, source: string) => {
+  if (!html.trim()) return
+  localHistoryVersions.value = [
+    {
+      id: `local-${Date.now()}`,
+      version: 0,
+      markdown_content: stripDraftDecorations(html),
+      created_at: new Date().toISOString(),
+      source,
+      is_current: false,
+      name: selectedBrief.value?.name || 'Untitled Brief',
+    },
+    ...localHistoryVersions.value,
+  ].slice(0, 10)
+}
 
 const applyDraftToEditor = (draftHtml: string, source: 'agent', summary: string[] = []) => {
   briefEditMode.value = true
@@ -1306,27 +1376,8 @@ const handleIncomingDraft = (draftMarkdown: string, source: 'agent') => {
   pushDraftDebug(`handleIncomingDraft source=${source} selectedBrief=${selectedBrief.value?.id || 'none'} dirty=${String(isDirty.value)}`)
   const draftHtml = normalizeBriefContent(draftMarkdown)
   const diff = computeDraftDiff(briefEditContent.value, draftHtml)
-  const receivedAt = new Date().toISOString()
-  if (isDirty.value) {
-    pushDraftDebug('incoming draft stored as pendingDraft')
-    pendingDraft.value = { markdown: draftMarkdown, html: diff.decoratedHtml, receivedAt }
-    changeSummary.value = diff.changedTitles
-    return
-  }
-  pendingDraft.value = null
   applyDraftToEditor(diff.decoratedHtml, source, diff.changedTitles)
   pushDraftDebug(`editor mode enabled summary=${diff.changedTitles.length}`)
-}
-
-const applyPendingDraft = () => {
-  if (!pendingDraft.value) return
-  applyDraftToEditor(pendingDraft.value.html, 'agent', changeSummary.value)
-  pendingDraft.value = null
-}
-
-const discardPendingDraft = () => {
-  pendingDraft.value = null
-  changeSummary.value = []
 }
 
 const confirmDiscardUnsaved = () => {
@@ -1362,7 +1413,70 @@ const processIncomingBriefDraft = async (draft: { briefId: string; markdown: str
     await nextTick()
   }
 
+  if (briefEditContent.value.trim()) {
+    pushLocalHistorySnapshot(briefEditContent.value, isDirty.value ? 'local-overwrite' : 'pre-draft')
+  }
+
   handleIncomingDraft(draft.markdown, 'agent')
+}
+
+const loadBriefVersions = async (briefId: string) => {
+  try {
+    const response = await fetch(`/api/briefs/${briefId}/versions`, {
+      headers: { 'x-user-email': userEmail.value },
+    })
+    const data = await response.json()
+    if (response.ok && data.success) {
+      briefVersions.value = data.data || []
+    }
+  } catch (error) {
+    console.error('[Brief Versions] Failed to load versions:', error)
+  }
+}
+
+const viewHistoryVersion = (version: BriefVersionItem) => {
+  viewedVersionId.value = version.id
+  compareVersionId.value = null
+  briefEditMode.value = false
+  selectedBrief.value = {
+    ...selectedBrief.value,
+    content: version.markdown_content,
+  }
+}
+
+const exitHistoryView = () => {
+  viewedVersionId.value = null
+  compareVersionId.value = null
+  if (selectedBrief.value) {
+    selectedBrief.value = {
+      ...selectedBrief.value,
+      content: lastSavedContent.value,
+    }
+  }
+}
+
+const restoreHistoryVersion = (version: BriefVersionItem) => {
+  const restoredHtml = normalizeBriefContent(version.markdown_content)
+  pushLocalHistorySnapshot(briefEditContent.value || lastSavedContent.value, 'restore-backup')
+  briefEditMode.value = true
+  briefEditContent.value = restoredHtml
+  changeSummary.value = computeDraftDiff(lastSavedContent.value, restoredHtml).changedTitles
+  lastDraftSource.value = null
+  viewedVersionId.value = null
+  compareVersionId.value = null
+}
+
+const toggleCompareVersion = (version: BriefVersionItem) => {
+  compareVersionId.value = compareVersionId.value === version.id ? null : version.id
+}
+
+const navigateHistory = (direction: -1 | 1) => {
+  if (!viewedVersion.value) return
+  const index = historyItems.value.findIndex((item) => item.id === viewedVersion.value?.id)
+  if (index === -1) return
+  const target = historyItems.value[index + direction]
+  if (!target) return
+  viewHistoryVersion(target)
 }
 
 const generateDesignSpec = async () => {
@@ -1931,11 +2045,15 @@ const openBriefEditor = (brief: any) => {
   lastSavedAt.value = brief.updated_at || brief.created_at || null
   saveError.value = ''
   lastDraftSource.value = null
-  pendingDraft.value = null
   changeSummary.value = []
+  localHistoryVersions.value = []
+  viewedVersionId.value = null
+  compareVersionId.value = null
+  showHistoryMenu.value = false
   briefEditName.value = brief.name || ''
   // Restore saved design spec if exists
   designSpec.value = brief.design_spec_json || null
+  loadBriefVersions(brief.id)
 
   // Open chat drawer in post-brief mode so AI can assist with this brief
   if (brief.content) {
@@ -1971,7 +2089,7 @@ const saveBriefEdit = async () => {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', 'x-user-email': userEmail.value },
       // We persist the editor HTML into markdown_content to preserve rich formatting.
-      body: JSON.stringify({ content: cleanHtml, name: briefEditName.value }),
+      body: JSON.stringify({ content: cleanHtml, name: briefEditName.value, source: lastDraftSource.value === 'agent' ? 'agent-save' : 'user-save' }),
     })
     const d = await r.json()
     if (r.ok && d.success) {
@@ -1979,11 +2097,11 @@ const saveBriefEdit = async () => {
       lastSavedContent.value = cleanHtml
       lastSavedAt.value = d.data?.updated_at || new Date().toISOString()
       lastDraftSource.value = null
-      pendingDraft.value = null
       changeSummary.value = []
       briefEditContent.value = cleanHtml
       briefEditMode.value = false
       await loadBriefs()
+      await loadBriefVersions(selectedBrief.value.id)
     } else {
       console.error('Save brief failed:', d.error)
       saveError.value = d.error || 'Failed to save brief'

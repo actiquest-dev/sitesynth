@@ -42,6 +42,15 @@ export default defineEventHandler(async (event) => {
       const body = await readBody(event)
       const { content, name, description, briefData } = body
 
+      const { data: currentBrief, error: currentBriefError } = await supabase
+        .from('briefs')
+        .select('*')
+        .eq('id', id)
+        .eq('user_email', userEmail)
+        .single()
+
+      if (currentBriefError || !currentBrief) throw currentBriefError || new Error('Brief not found')
+
       // Map to correct DB columns
       const updates: any = { updated_at: new Date().toISOString() }
       if (content !== undefined) updates.markdown_content = content
@@ -57,6 +66,30 @@ export default defineEventHandler(async (event) => {
         .single()
 
       if (error) throw error
+
+      const { data: latestVersion } = await supabase
+        .from('brief_versions')
+        .select('version')
+        .eq('brief_id', id)
+        .eq('user_email', userEmail)
+        .order('version', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+
+      const nextVersion = (latestVersion?.version || 0) + 1
+
+      await supabase
+        .from('brief_versions')
+        .insert([{
+          brief_id: id,
+          user_email: userEmail,
+          name: data.name || currentBrief.name || null,
+          brief_data: data.brief_data || currentBrief.brief_data || {},
+          markdown_content: data.markdown_content || currentBrief.markdown_content || '',
+          version: nextVersion,
+          source: body?.source || 'user-save',
+          created_at: new Date().toISOString(),
+        }])
 
       // Update conversation title if name provided
       if (name && data?.conversation_id) {
