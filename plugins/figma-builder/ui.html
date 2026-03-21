@@ -43,9 +43,7 @@
     <script>
       const statusEl = document.getElementById('status')
 
-      window.addEventListener('load', () => {
-        parent.postMessage({ pluginMessage: { type: 'fetch' } }, '*')
-      })
+      // UI is passive: it only renders status messages from the plugin.
 
       window.onmessage = (event) => {
         const msg = event.data.pluginMessage

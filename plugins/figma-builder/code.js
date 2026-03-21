@@ -310,3 +310,6 @@ const pollLoop = async () => {
 
 setInterval(pollLoop, POLL_INTERVAL)
 pollLoop()
+
+// no-op handler to prevent UI->plugin warnings
+figma.ui.onmessage = () => {}
