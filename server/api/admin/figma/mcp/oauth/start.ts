@@ -1,5 +1,5 @@
 import crypto from 'node:crypto'
-import { defineEventHandler, createError } from 'h3'
+import { defineEventHandler, createError, readBody } from 'h3'
 import { requireAdminSession } from '~~/server/utils/admin-session'
 import { encodeOAuthState, getDefaultAppBaseUrl } from '~~/server/utils/service-integrations'
 import { discoverMcpOAuth, generatePkce, registerMcpClient } from '~~/server/utils/figma-mcp-oauth'
@@ -9,7 +9,10 @@ export default defineEventHandler(async (event) => {
   const admin = await requireAdminSession(event)
 
   const mcpUrl = process.env.FIGMA_MCP_URL || 'https://mcp.figma.com/mcp'
-  const appBaseUrl = getDefaultAppBaseUrl()
+  const body = await readBody(event).catch(() => ({}))
+  const requestedBaseUrl = typeof body?.appBaseUrl === 'string' ? body.appBaseUrl.trim() : ''
+  const fallbackBaseUrl = getDefaultAppBaseUrl()
+  const appBaseUrl = requestedBaseUrl || fallbackBaseUrl
   const redirectUri = `${appBaseUrl.replace(/\/+$/, '')}/api/admin/figma/mcp/oauth/callback`
 
   let discovery

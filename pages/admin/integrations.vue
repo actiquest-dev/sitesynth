@@ -32,24 +32,7 @@
             </span>
           </div>
 
-          <div class="space-y-2">
-            <label class="block text-xs uppercase tracking-[0.16em] text-slate-400">Admin Base URL</label>
-            <div class="flex gap-3">
-              <input
-                v-model="figma.appBaseUrl"
-                class="flex-1 px-4 py-3 bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-violet-500"
-                placeholder="https://sitesynth-eight.vercel.app"
-              />
-              <button
-                @click="saveAppBaseUrl"
-                :disabled="loading"
-                class="px-4 py-3 border border-slate-700 text-slate-200 hover:bg-slate-800 transition disabled:opacity-50"
-              >
-                Save URL
-              </button>
-            </div>
-            <p class="text-xs text-slate-500">Callback URL: {{ figma.redirectUri || '—' }}</p>
-          </div>
+          <p class="text-xs text-slate-500">Callback URL: {{ figma.redirectUri || '—' }}</p>
 
           <div class="flex items-center gap-3 flex-wrap">
             <button
@@ -104,7 +87,6 @@ const isAdmin = computed(() => currentUserEmail.value.toLowerCase() === 'hello@s
 const figma = reactive({
   connected: false,
   status: 'disconnected',
-  appBaseUrl: '',
   redirectUri: '',
   connectedAt: '' as string | null,
 })
@@ -134,39 +116,19 @@ const loadStatus = async () => {
     const response = await fetch('/api/admin/figma/mcp/oauth/status', {
       headers: { 'x-google-id-token': getGoogleIdToken() || '' },
     })
+    if (response.status === 401 || response.status === 403) {
+      await navigateTo('/admin/login')
+      return
+    }
     const data = await response.json()
     if (!response.ok || !data?.success) throw new Error(data?.statusMessage || data?.error || 'Failed to load integration status')
     figma.connected = !!data.data.connected
     figma.status = data.data.status || 'disconnected'
-    figma.appBaseUrl = data.data.appBaseUrl || ''
     figma.redirectUri = data.data.redirectUri || ''
     figma.connectedAt = data.data.connectedAt || null
   } catch (error: any) {
     hasError.value = true
     message.value = error.message || 'Failed to load integration status'
-  } finally {
-    loading.value = false
-  }
-}
-
-const saveAppBaseUrl = async () => {
-  if (!isAdmin.value) return
-  loading.value = true
-  message.value = ''
-  hasError.value = false
-  try {
-    const response = await fetch('/api/admin/figma/mcp/oauth/status', {
-      method: 'PUT',
-      headers: adminHeaders(),
-      body: JSON.stringify({ appBaseUrl: figma.appBaseUrl }),
-    })
-    const data = await response.json()
-    if (!response.ok || !data?.success) throw new Error(data?.statusMessage || data?.error || 'Failed to save app URL')
-    figma.redirectUri = data.data.redirectUri || ''
-    message.value = 'App URL saved'
-  } catch (error: any) {
-    hasError.value = true
-    message.value = error.message || 'Failed to save app URL'
   } finally {
     loading.value = false
   }
@@ -180,8 +142,14 @@ const startFigmaOAuth = async () => {
     return
   }
   const response = await fetch('/api/admin/figma/mcp/oauth/start', {
-    headers: { 'x-google-id-token': getGoogleIdToken() || '' },
+    method: 'POST',
+    headers: adminHeaders(),
+    body: JSON.stringify({ appBaseUrl: window.location.origin }),
   })
+  if (response.status === 401 || response.status === 403) {
+    await navigateTo('/admin/login')
+    return
+  }
   const data = await response.json().catch(() => ({}))
   if (response.ok && data?.success && data?.data?.authUrl) {
     window.location.href = data.data.authUrl
@@ -201,6 +169,10 @@ const probeMcp = async () => {
     const response = await fetch('/api/admin/figma/mcp/probe', {
       headers: { 'x-google-id-token': getGoogleIdToken() || '' },
     })
+    if (response.status === 401 || response.status === 403) {
+      await navigateTo('/admin/login')
+      return
+    }
     const data = await response.json()
     if (!response.ok) throw new Error(data?.statusMessage || data?.error || 'Failed to probe Figma MCP')
     probe.value = data.data
