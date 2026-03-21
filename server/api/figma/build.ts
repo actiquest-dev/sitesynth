@@ -96,9 +96,26 @@ export default defineEventHandler(async (event) => {
       handoff_notes: z.array(z.string()),
     })
 
+    const commandTemplates = [
+      { op: 'create_page', name: 'Design System' },
+      { op: 'create_page', name: 'Wireframes' },
+      { op: 'create_page', name: 'Mockups' },
+      { op: 'create_frame', name: 'DS/Color Tokens', parent: 'Design System', props: { x: 40, y: 80, width: 1120, height: 300 } },
+      { op: 'create_frame', name: 'DS/Components', parent: 'Design System', props: { x: 40, y: 420, width: 1120, height: 300 } },
+      { op: 'create_component_set', name: 'Button/Variants', parent: 'DS/Components', props: { x: 24, y: 24 } },
+      { op: 'create_component', name: 'Button/Primary', parent: 'Button/Variants', props: { x: 0, y: 0, width: 160, height: 44 } },
+      { op: 'set_variant_props', name: 'Button/Primary', props: { Variant: 'Primary' } },
+      { op: 'create_component', name: 'Button/Secondary', parent: 'Button/Variants', props: { x: 180, y: 0, width: 160, height: 44 } },
+      { op: 'set_variant_props', name: 'Button/Secondary', props: { Variant: 'Secondary' } },
+      { op: 'insert_svg', name: 'Icon/Plus', parent: 'DS/Components', props: { x: 24, y: 90, svg: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 2V14M2 8H14" stroke="#9A9A9A" stroke-width="2" stroke-linecap="round"/></svg>' } }
+    ]
+
     const agentPrompt = `
 Design spec:
 ${JSON.stringify(brief.design_spec_json, null, 2)}
+
+Command templates (extend/modify, keep names stable):
+${JSON.stringify(commandTemplates, null, 2)}
     `.trim()
 
     const agentResponse = await figmaBuilderAgent.execute(agentPrompt)
@@ -110,14 +127,22 @@ ${JSON.stringify(brief.design_spec_json, null, 2)}
     }
 
     const candidatePlan = parsedAgent?.plan || null
-    const hasComponents = Array.isArray(candidatePlan?.commands)
-      && candidatePlan.commands.some((cmd: any) => cmd?.op === 'create_component')
-    const hasComponentSet = Array.isArray(candidatePlan?.commands)
-      && candidatePlan.commands.some((cmd: any) => cmd?.op === 'create_component_set')
+    const validatePlan = (plan: any) => {
+      try {
+        buildPlanSchema.parse(plan)
+      } catch {
+        return false
+      }
+      const hasComponents = Array.isArray(plan?.commands)
+        && plan.commands.some((cmd: any) => cmd?.op === 'create_component')
+      const hasComponentSet = Array.isArray(plan?.commands)
+        && plan.commands.some((cmd: any) => cmd?.op === 'create_component_set')
+      return hasComponents && hasComponentSet
+    }
 
-    const { object: buildPlan } = candidatePlan && hasComponents && hasComponentSet
-      ? { object: parsedAgent.plan }
-      : await generateObject({
+    let finalPlan = candidatePlan
+    if (!validatePlan(finalPlan)) {
+      const regeneration = await generateObject({
         model: google('gemini-2.5-pro'),
         schema: buildPlanSchema,
         prompt: `
@@ -127,11 +152,20 @@ Be concrete: name pages, frames, component groups, and flows.
 Include a minimal Design System with color tokens and core components (buttons, inputs, cards, badges).
 Also output a command list for the plugin to execute (create pages/frames/text and apply styles). 
 Use stable node names and parent references by name.
+Include at least one component set and two variants.
 
 Design spec:
 ${JSON.stringify(brief.design_spec_json, null, 2)}
         `.trim(),
       })
+      finalPlan = regeneration.object
+    }
+
+    if (!validatePlan(finalPlan)) {
+      throw new Error('Figma build plan failed validation')
+    }
+
+    const buildPlan = finalPlan
 
     const { data: job, error: jobError } = await db
       .from('figma_build_jobs')
@@ -162,6 +196,6 @@ ${JSON.stringify(brief.design_spec_json, null, 2)}
     }
   } catch (error: any) {
     console.error('[FigmaBuild] Error:', error)
-    return { success: false, error: 'Failed to queue Figma build' }
+    return { success: false, error: error?.message || 'Failed to queue Figma build' }
   }
 })
