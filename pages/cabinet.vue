@@ -394,6 +394,16 @@
                 >
                   {{ isGeneratingSpec ? 'Generating Spec...' : (designSpec ? 'Re-generate' : 'Generate Design Spec') }}
                 </button>
+                <button
+                  @click="queueFigmaBuild"
+                  :disabled="isBuildingFigma || !designSpec"
+                  class="px-6 py-3 border border-[#2f2f2f] text-white rounded-none hover:bg-[#1f1f1f] transition disabled:opacity-50 text-sm"
+                >
+                  {{ isBuildingFigma ? 'Queuing Build...' : 'Build in Figma' }}
+                </button>
+              </div>
+              <div v-if="figmaBuildStatus" class="mt-2 text-xs text-[#8b8b8b]">
+                {{ figmaBuildStatus }}
               </div>
 
               <!-- Preview generated spec (visible in both modes) -->
@@ -1418,6 +1428,9 @@ const briefEditContent = ref('')
 const briefEditName = ref('')
 const isSavingBrief = ref(false)
 const isGeneratingSpec = ref(false)
+const isBuildingFigma = ref(false)
+const figmaBuildStatus = ref<string | null>(null)
+const lastFigmaJobId = ref<string | null>(null)
 const designSpec = ref<any>(null)
 const lastSavedContent = ref('')
 const lastSavedAt = ref<string | null>(null)
@@ -1790,6 +1803,35 @@ const generateDesignSpec = async () => {
     console.error(e)
   } finally {
     isGeneratingSpec.value = false
+  }
+}
+
+const queueFigmaBuild = async () => {
+  if (!selectedBrief.value) return
+  if (!designSpec.value) {
+    showToast('Generate a design spec first', 'error')
+    return
+  }
+  isBuildingFigma.value = true
+  figmaBuildStatus.value = 'Submitting build job...'
+  try {
+    const res = await fetch('/api/figma/build', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-user-email': userEmail.value },
+      body: JSON.stringify({ briefId: selectedBrief.value.id }),
+    })
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok || !data?.success) {
+      throw new Error(data?.error || 'Failed to queue Figma build')
+    }
+    lastFigmaJobId.value = data.data?.jobId || null
+    figmaBuildStatus.value = `Build queued${lastFigmaJobId.value ? ` (job ${lastFigmaJobId.value})` : ''}`
+    showToast('Figma build queued', 'success')
+  } catch (error: any) {
+    figmaBuildStatus.value = error.message || 'Failed to queue build'
+    showToast(figmaBuildStatus.value, 'error')
+  } finally {
+    isBuildingFigma.value = false
   }
 }
 
