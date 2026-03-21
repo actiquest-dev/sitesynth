@@ -40,6 +40,15 @@ export default defineEventHandler(async (event) => {
           colors: z.array(z.string()),
           typography: z.array(z.string()),
           components: z.array(z.string()),
+          tokens: z.object({
+            brand_primary: z.string(),
+            brand_secondary: z.string(),
+            background: z.string(),
+            surface: z.string(),
+            text_primary: z.string(),
+            text_secondary: z.string(),
+            accent: z.string(),
+          }),
           spacing: z.array(z.string()),
         }),
         wireframes: z.array(z.object({
@@ -64,6 +73,7 @@ export default defineEventHandler(async (event) => {
 You are preparing a precise Figma build plan for a design system, wireframes, and mockups.
 Use the design spec below and expand it into a step-by-step build plan.
 Be concrete: name pages, frames, component groups, and flows.
+Include a minimal Design System with color tokens and core components (buttons, inputs, cards, badges).
 
 Design spec:
 ${JSON.stringify(brief.design_spec_json, null, 2)}
