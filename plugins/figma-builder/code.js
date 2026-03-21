@@ -48,18 +48,23 @@ const createBulletList = (parent, lines, x, y) => {
 }
 
 const buildDesignSystem = (page, plan) => {
+  const designSystem = plan && plan.design_system ? plan.design_system : {}
+  const colors = Array.isArray(designSystem.colors) ? designSystem.colors : []
+  const typography = Array.isArray(designSystem.typography) ? designSystem.typography : []
+  const components = Array.isArray(designSystem.components) ? designSystem.components : []
+  const spacing = Array.isArray(designSystem.spacing) ? designSystem.spacing : []
   const frame = createFrame(page, 'Design System', 40, 80, 960, 520)
   createTitle(frame, 'Design System', 24, 24)
   createBulletList(frame, [
-    `Colors: ${(plan?.design_system?.colors || []).join(', ')}`,
-    `Typography: ${(plan?.design_system?.typography || []).join(', ')}`,
-    `Components: ${(plan?.design_system?.components || []).join(', ')}`,
-    `Spacing: ${(plan?.design_system?.spacing || []).join(', ')}`,
+    `Colors: ${colors.join(', ')}`,
+    `Typography: ${typography.join(', ')}`,
+    `Components: ${components.join(', ')}`,
+    `Spacing: ${spacing.join(', ')}`,
   ], 24, 72)
 }
 
 const buildWireframes = (page, plan) => {
-  const wireframes = plan?.wireframes || []
+  const wireframes = plan && Array.isArray(plan.wireframes) ? plan.wireframes : []
   let offsetX = 40
   let offsetY = 80
   const maxWidth = 1200
@@ -79,7 +84,7 @@ const buildWireframes = (page, plan) => {
 }
 
 const buildMockups = (page, plan) => {
-  const mockups = plan?.mockups || []
+  const mockups = plan && Array.isArray(plan.mockups) ? plan.mockups : []
   let offsetX = 40
   let offsetY = 80
   const maxWidth = 1200
@@ -99,7 +104,7 @@ const buildMockups = (page, plan) => {
 }
 
 const buildPageMap = (page, plan) => {
-  const maps = plan?.page_map || []
+  const maps = plan && Array.isArray(plan.page_map) ? plan.page_map : []
   let offsetY = 80
   maps.forEach((entry) => {
     const frame = createFrame(page, entry.page, 40, offsetY, 900, 260)
