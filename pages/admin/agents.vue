@@ -195,6 +195,10 @@ onMounted(async () => {
   loadStoredAuth()
   const user = getCurrentUser()
   currentUserEmail.value = user?.email || ''
+  if (!currentUserEmail.value) {
+    navigateTo('/login')
+    return
+  }
   if (!isAdmin.value) {
     errorBriefing.value = 'Admin access required'
     loading.value = false
