@@ -321,8 +321,8 @@
               <div v-if="compareVersion" class="mb-4 border border-[#333] bg-[#161616]">
                 <div class="border-b border-[#333] px-4 py-3 flex items-center justify-between gap-4">
                   <div>
-                    <div class="font-medium text-white">Comparing {{ compareVersion.version > 0 ? `Version ${compareVersion.version}` : 'Local snapshot' }} vs current</div>
-                    <div class="text-[#8b8b8b] text-xs mt-1">Left = older version. Right = current draft.</div>
+                    <div class="font-medium text-white">Comparing {{ compareVersion.version > 0 ? `Version ${compareVersion.version}` : 'Local snapshot' }} vs current draft</div>
+                    <div class="text-[#8b8b8b] text-xs mt-1">Left = selected history version. Right = current draft.</div>
                   </div>
                   <div class="flex items-center gap-2 text-xs">
                     <span class="px-2 py-1 border border-emerald-500/30 bg-emerald-500/10 text-emerald-300">Added {{ compareCounts.added }}</span>
