@@ -748,88 +748,6 @@
                 </div>
               </div>
 
-              <div v-if="isSitesynthAdmin" class="border border-[#333] rounded-none overflow-hidden bg-[#1a1a1a]">
-                <div class="px-5 py-4 border-b border-[#333]">
-                  <p class="text-sm font-medium text-white">Figma Integration</p>
-                </div>
-                <div class="px-5 py-4 space-y-4">
-                  <div class="flex items-center justify-between gap-4">
-                    <div>
-                      <p class="text-sm text-white">
-                        {{ figmaIntegration.connected ? 'Connected' : 'Not connected' }}
-                      </p>
-                      <p class="text-xs text-[#666] mt-1">
-                        {{ figmaIntegration.connected
-                          ? `Shared Sitesynth Figma is ready${figmaIntegration.connectedAt ? ' · connected ' + formatDateTime(figmaIntegration.connectedAt) : ''}`
-                          : 'Connect the shared Sitesynth Figma account once and builder jobs can use it automatically.' }}
-                      </p>
-                    </div>
-                    <span :class="[
-                      'px-2 py-1 text-xs border rounded-none',
-                      figmaIntegration.connected
-                        ? 'border-green-500/30 bg-green-500/10 text-green-400'
-                        : 'border-yellow-500/30 bg-yellow-500/10 text-yellow-300'
-                    ]">
-                      {{ figmaIntegration.connected ? 'Connected' : 'Disconnected' }}
-                    </span>
-                  </div>
-
-                  <div class="space-y-2">
-                    <label class="block text-xs uppercase tracking-[0.16em] text-[#777]">App Base URL</label>
-                    <div class="flex gap-3">
-                      <input
-                        v-model="figmaIntegration.appBaseUrl"
-                        class="flex-1 px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-none text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none transition"
-                        placeholder="https://sitesynth-eight.vercel.app"
-                      />
-                      <button
-                        @click="saveFigmaAppBaseUrl"
-                        :disabled="figmaIntegrationLoading"
-                        class="px-4 py-3 border border-[#333] text-[#bbb] rounded-none hover:bg-[#1a1a1a] transition text-sm disabled:opacity-50"
-                      >
-                        Save URL
-                      </button>
-                    </div>
-                    <p class="text-xs text-[#666]">Callback URL: {{ figmaIntegration.redirectUri || '—' }}</p>
-                  </div>
-
-                  <div class="flex items-center gap-3">
-                    <button
-                      @click="startFigmaOAuth"
-                      :disabled="figmaIntegrationLoading"
-                      class="px-4 py-3 bg-[#8D35FF] text-white rounded-none hover:bg-[#7B2AE8] transition text-sm disabled:opacity-50"
-                    >
-                      {{ figmaIntegration.connected ? 'Reconnect Figma' : 'Connect Figma' }}
-                    </button>
-                    <button
-                      @click="loadFigmaIntegrationStatus"
-                      :disabled="figmaIntegrationLoading"
-                      class="px-4 py-3 border border-[#333] text-[#bbb] rounded-none hover:bg-[#1a1a1a] transition text-sm disabled:opacity-50"
-                    >
-                      Refresh status
-                    </button>
-                    <button
-                      @click="probeFigmaMcp"
-                      :disabled="figmaIntegrationLoading || !figmaIntegration.connected"
-                      class="px-4 py-3 border border-[#333] text-[#bbb] rounded-none hover:bg-[#1a1a1a] transition text-sm disabled:opacity-50"
-                    >
-                      MCP probe
-                    </button>
-                  </div>
-
-                  <div v-if="figmaIntegrationMessage" class="text-xs" :class="figmaIntegrationError ? 'text-red-400' : 'text-[#8D35FF]'">
-                    {{ figmaIntegrationMessage }}
-                  </div>
-                  <div v-if="figmaProbeResult" class="border border-[#262626] bg-[#111] p-3 text-xs text-[#9d9d9d] space-y-1">
-                    <div>Status: {{ figmaProbeResult.status }}</div>
-                    <div>Refreshed token: {{ figmaProbeResult.refreshed ? 'yes' : 'no' }}</div>
-                    <div>Expires at: {{ figmaProbeResult.expiresAt || '—' }}</div>
-                    <div>Body preview: {{ figmaProbeResult.bodyPreview || '—' }}</div>
-                    <div class="text-[#666]">Full probe payload is logged in the browser console as `[Figma MCP Probe]`.</div>
-                  </div>
-                </div>
-              </div>
-
               <!-- Danger Zone -->
               <div class="border border-red-500/20 rounded-none overflow-hidden bg-[#1a1a1a]">
                 <div class="px-5 py-4 border-b border-red-500/20">
@@ -1424,7 +1342,7 @@ const activeTab = ref('overview')
 const currentTab = computed(() => tabs.find(t => t.id === activeTab.value))
 
 // ── Auth ──
-const { logout, getCurrentUser, getToken, getGoogleIdToken } = useGoogleAuth()
+const { logout, getCurrentUser, getToken } = useGoogleAuth()
 const { openPostBrief, briefDraft, briefEditorIntent, clearBriefDraft, clearBriefEditorIntent } = useChatDrawer()
 
 const userEmail = ref('')
@@ -1440,19 +1358,6 @@ const userName = computed(() => {
   return email.split('@')[0]
 })
 const userInitial = computed(() => (userEmail.value?.[0] || 'U').toUpperCase())
-const isSitesynthAdmin = computed(() => userEmail.value.toLowerCase() === 'hello@sitesynth.com')
-
-const figmaIntegration = reactive({
-  connected: false,
-  status: 'disconnected',
-  appBaseUrl: '',
-  redirectUri: '',
-  connectedAt: '' as string | null,
-})
-const figmaIntegrationLoading = ref(false)
-const figmaIntegrationMessage = ref('')
-const figmaIntegrationError = ref(false)
-const figmaProbeResult = ref<any | null>(null)
 const normalizeBriefContent = (raw: string) => (raw.startsWith('<') ? raw : marked(raw) as string)
 const isHtmlContent = (raw: string) => raw.trim().startsWith('<')
 const formatDateTime = (dateString: string | Date): string => {
@@ -2087,116 +1992,6 @@ const closeOrderDetails = () => {
   selectedOrder.value = null
 }
 
-const getAdminHeaders = () => {
-  const googleIdToken = getGoogleIdToken()
-  return {
-    'Content-Type': 'application/json',
-    'x-google-id-token': googleIdToken || '',
-  }
-}
-
-const loadFigmaIntegrationStatus = async () => {
-  if (!isSitesynthAdmin.value) return
-  figmaIntegrationLoading.value = true
-  figmaIntegrationMessage.value = ''
-  figmaIntegrationError.value = false
-  try {
-    const response = await fetch('/api/admin/figma/oauth/status', {
-      headers: {
-        'x-google-id-token': getGoogleIdToken() || '',
-      },
-    })
-    const data = await response.json()
-    if (!response.ok || !data?.success) throw new Error(data?.statusMessage || data?.error || 'Failed to load Figma status')
-    figmaIntegration.connected = !!data.data.connected
-    figmaIntegration.status = data.data.status || 'disconnected'
-    figmaIntegration.appBaseUrl = data.data.appBaseUrl || ''
-    figmaIntegration.redirectUri = data.data.redirectUri || ''
-    figmaIntegration.connectedAt = data.data.connectedAt || null
-  } catch (error: any) {
-    figmaIntegrationError.value = true
-    figmaIntegrationMessage.value = error.message || 'Failed to load Figma integration status'
-  } finally {
-    figmaIntegrationLoading.value = false
-  }
-}
-
-const saveFigmaAppBaseUrl = async () => {
-  if (!isSitesynthAdmin.value) return
-  figmaIntegrationLoading.value = true
-  figmaIntegrationMessage.value = ''
-  figmaIntegrationError.value = false
-  try {
-    const response = await fetch('/api/admin/figma/oauth/status', {
-      method: 'PUT',
-      headers: getAdminHeaders(),
-      body: JSON.stringify({ appBaseUrl: figmaIntegration.appBaseUrl }),
-    })
-    const data = await response.json()
-    if (!response.ok || !data?.success) throw new Error(data?.statusMessage || data?.error || 'Failed to save app URL')
-    figmaIntegration.redirectUri = data.data.redirectUri || ''
-    figmaIntegrationMessage.value = 'App URL saved'
-  } catch (error: any) {
-    figmaIntegrationError.value = true
-    figmaIntegrationMessage.value = error.message || 'Failed to save app URL'
-  } finally {
-    figmaIntegrationLoading.value = false
-  }
-}
-
-const startFigmaOAuth = async () => {
-  if (!isSitesynthAdmin.value) return
-  const googleIdToken = getGoogleIdToken()
-  if (!googleIdToken) {
-    figmaIntegrationError.value = true
-    figmaIntegrationMessage.value = 'Admin Google session is required. Please sign in again.'
-    return
-  }
-  const response = await fetch('/api/admin/figma/oauth/start', {
-    method: 'GET',
-    headers: {
-      'x-google-id-token': googleIdToken,
-    },
-  })
-
-  const data = await response.json().catch(() => ({}))
-  if (response.ok && data?.success && data?.data?.authUrl) {
-    window.location.href = data.data.authUrl
-    return
-  }
-
-  figmaIntegrationError.value = true
-  figmaIntegrationMessage.value = data?.statusMessage || data?.error || 'Failed to start Figma OAuth'
-}
-
-const probeFigmaMcp = async () => {
-  if (!isSitesynthAdmin.value) return
-  figmaIntegrationLoading.value = true
-  figmaIntegrationMessage.value = ''
-  figmaIntegrationError.value = false
-  figmaProbeResult.value = null
-  try {
-    const response = await fetch('/api/admin/figma/mcp/probe', {
-      headers: {
-        'x-google-id-token': getGoogleIdToken() || '',
-      },
-    })
-    const data = await response.json()
-    if (!response.ok) throw new Error(data?.statusMessage || data?.error || 'Failed to probe Figma MCP')
-    figmaProbeResult.value = data.data
-    console.log('[Figma MCP Probe]', data.data)
-    figmaIntegrationMessage.value = data.data?.ok
-      ? `MCP probe succeeded (${data.data.status})`
-      : `MCP probe responded with ${data.data.status}`
-  } catch (error: any) {
-    figmaIntegrationError.value = true
-    figmaIntegrationMessage.value = error.message || 'Failed to probe Figma MCP'
-    console.error('[Figma MCP Probe] Error', error)
-  } finally {
-    figmaIntegrationLoading.value = false
-  }
-}
-
 const handleBackToProjects = () => {
   if (!confirmDiscardUnsaved()) return
   selectedBrief.value = null
@@ -2231,15 +2026,6 @@ onMounted(async () => {
   await loadBriefs()
   await loadUserFiles()
   await loadOrders()
-  if (isSitesynthAdmin.value) {
-    await loadFigmaIntegrationStatus()
-    const params = new URLSearchParams(window.location.search)
-    if (params.get('tab') === 'settings') activeTab.value = 'settings'
-    if (params.get('figma') === 'connected') {
-      figmaIntegrationMessage.value = 'Figma connected successfully'
-      figmaIntegrationError.value = false
-    }
-  }
   
   // Update stats — briefs ARE the projects now
   stats.value.totalProjects = briefs.value.length
