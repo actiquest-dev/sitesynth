@@ -1860,22 +1860,7 @@ const queueFigmaBuild = async () => {
     await loadFigmaBuildStatus()
     const buildToken = data.data?.buildToken || null
     figmaBuildStatus.value = `Build queued${lastFigmaJobId.value ? ` (job ${lastFigmaJobId.value})` : ''}`
-    if (lastFigmaBuildPlan.value && buildToken) {
-      try {
-        const handoff = JSON.stringify({
-          jobId: lastFigmaJobId.value,
-          token: buildToken,
-          source: 'sitesynth',
-        })
-        await navigator.clipboard.writeText(handoff)
-        showToast('Figma build queued (handoff copied)', 'success')
-      } catch {
-        showToast('Figma build queued', 'success')
-        figmaBuildStatus.value += ' · Handoff token copy failed.'
-      }
-    } else {
-      showToast('Figma build queued', 'success')
-    }
+    showToast('Figma build queued', 'success')
   } catch (error: any) {
     figmaBuildStatus.value = error.message || 'Failed to queue build'
     showToast(figmaBuildStatus.value, 'error')

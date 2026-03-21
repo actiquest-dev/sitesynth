@@ -31,6 +31,7 @@ const setJobStatus = async (jobId, status, patch = {}) => {
 }
 
 const claimNextJob = async () => {
+  if (process.env.FIGMA_BUILDER_MODE === 'plugin') return null
   const { data, error } = await supabase
     .from('figma_build_jobs')
     .select('*')
