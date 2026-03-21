@@ -540,6 +540,50 @@ const buildFromPlan = async (jobId, plan) => {
           if (props.letterSpacing) node.letterSpacing = { value: props.letterSpacing, unit: 'PERCENT' }
         }
       }
+      if (cmd.op === 'create_component') {
+        const parent = getParent(cmd.parent)
+        const component = figma.createComponent()
+        component.name = cmd.name
+        component.x = props.x || 0
+        component.y = props.y || 0
+        if (props.width && props.height) {
+          component.resize(props.width, props.height)
+        }
+        parent.appendChild(component)
+        register(cmd.name, component)
+      }
+      if (cmd.op === 'create_component_set') {
+        const parent = getParent(cmd.parent)
+        const set = figma.createComponentSet()
+        set.name = cmd.name
+        set.x = props.x || 0
+        set.y = props.y || 0
+        parent.appendChild(set)
+        register(cmd.name, set)
+      }
+      if (cmd.op === 'set_variant_props') {
+        const node = registry.get(cmd.name)
+        if (node && node.type === 'COMPONENT') {
+          node.variantProperties = props
+        }
+      }
+      if (cmd.op === 'set_image_fill') {
+        const node = registry.get(cmd.name)
+        if (node && props.imageBytes) {
+          const image = figma.createImage(new Uint8Array(props.imageBytes))
+          node.fills = [{ type: 'IMAGE', imageHash: image.hash, scaleMode: 'FILL' }]
+        }
+      }
+      if (cmd.op === 'insert_svg') {
+        const parent = getParent(cmd.parent)
+        if (props.svg) {
+          const node = figma.createNodeFromSvg(props.svg)
+          node.x = props.x || 0
+          node.y = props.y || 0
+          parent.appendChild(node)
+          register(cmd.name, node)
+        }
+      }
     })
   } else {
     const designSystemPage = createPage(`Build ${pageSuffix} · Design System`)
