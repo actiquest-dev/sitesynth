@@ -74,6 +74,9 @@ export const useGoogleAuth = () => {
       localStorage.setItem('authToken', result.token)
       localStorage.setItem('user', JSON.stringify(result.user))
       localStorage.setItem('googleIdToken', idToken)
+      // Backward/parallel keys for admin-only flows
+      localStorage.setItem('admin_google_id_token', idToken)
+      localStorage.setItem('admin_google_user', JSON.stringify(result.user))
 
       console.log('✅ Google Sign-In successful:', result.user.email)
       return true
@@ -92,11 +95,20 @@ export const useGoogleAuth = () => {
       const storedToken = localStorage.getItem('authToken')
       const storedUser = localStorage.getItem('user')
       const storedGoogleIdToken = localStorage.getItem('googleIdToken')
+      const adminStoredUser = localStorage.getItem('admin_google_user')
+      const adminStoredGoogleIdToken = localStorage.getItem('admin_google_id_token')
 
       if (storedToken && storedUser) {
         token.value = storedToken
         user.value = JSON.parse(storedUser)
         googleIdToken.value = storedGoogleIdToken
+        return true
+      }
+
+      if (adminStoredUser && adminStoredGoogleIdToken) {
+        token.value = storedToken
+        user.value = JSON.parse(adminStoredUser)
+        googleIdToken.value = adminStoredGoogleIdToken
         return true
       }
 
@@ -119,6 +131,8 @@ export const useGoogleAuth = () => {
       localStorage.removeItem('authToken')
       localStorage.removeItem('user')
       localStorage.removeItem('googleIdToken')
+      localStorage.removeItem('admin_google_id_token')
+      localStorage.removeItem('admin_google_user')
 
       // Clear state
       user.value = null
