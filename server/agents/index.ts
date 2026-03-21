@@ -121,7 +121,20 @@ OUTPUT FORMAT (JSON ONLY):
 ALLOWED OPS:
 create_page, create_frame, create_text, set_fill, set_stroke, set_radius,
 resize, move, set_text, set_font_size,
-set_autolayout, set_padding, set_spacing, set_alignment, set_text_style
+set_autolayout, set_padding, set_spacing, set_alignment, set_text_style,
+create_component, create_component_set, set_variant_props,
+set_image_fill, insert_svg
+
+REQUIREMENTS:
+- Use at least one create_component and one create_component_set.
+- Define variants via set_variant_props (e.g. Button/Variant=Primary).
+- Use insert_svg for at least one icon placeholder (simple SVG).
+
+EXAMPLE:
+{ "op": "create_component_set", "name": "Button/Variants", "parent": "Design System", "props": { "x": 40, "y": 200 } }
+{ "op": "create_component", "name": "Button/Primary", "parent": "Button/Variants", "props": { "x": 0, "y": 0, "width": 160, "height": 44 } }
+{ "op": "set_variant_props", "name": "Button/Primary", "props": { "Variant": "Primary" } }
+{ "op": "insert_svg", "name": "Icon/Plus", "parent": "Design System", "props": { "x": 300, "y": 220, "svg": "<svg ...>...</svg>" } }
 
 RULES:
 - JSON only. No markdown.

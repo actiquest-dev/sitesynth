@@ -109,7 +109,13 @@ ${JSON.stringify(brief.design_spec_json, null, 2)}
       parsedAgent = null
     }
 
-    const { object: buildPlan } = parsedAgent?.plan
+    const candidatePlan = parsedAgent?.plan || null
+    const hasComponents = Array.isArray(candidatePlan?.commands)
+      && candidatePlan.commands.some((cmd: any) => cmd?.op === 'create_component')
+    const hasComponentSet = Array.isArray(candidatePlan?.commands)
+      && candidatePlan.commands.some((cmd: any) => cmd?.op === 'create_component_set')
+
+    const { object: buildPlan } = candidatePlan && hasComponents && hasComponentSet
       ? { object: parsedAgent.plan }
       : await generateObject({
         model: google('gemini-2.5-pro'),
