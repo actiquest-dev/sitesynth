@@ -132,6 +132,16 @@ const createButtonSample = (parent, label, x, y, fill) => {
   text.y = y + 13
   text.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }]
   parent.appendChild(text)
+
+  const component = figma.createComponent()
+  component.resize(160, 44)
+  component.x = x
+  component.y = y
+  component.name = `Button/${label}`
+  component.appendChild(button)
+  component.appendChild(text)
+  parent.appendChild(component)
+  return component
 }
 
 const createInputSample = (parent, label, x, y) => {
@@ -153,6 +163,16 @@ const createInputSample = (parent, label, x, y) => {
   text.y = y + 14
   text.fills = [{ type: 'SOLID', color: { r: 0.6, g: 0.6, b: 0.62 } }]
   parent.appendChild(text)
+
+  const component = figma.createComponent()
+  component.resize(220, 44)
+  component.x = x
+  component.y = y
+  component.name = `Input/${label}`
+  component.appendChild(input)
+  component.appendChild(text)
+  parent.appendChild(component)
+  return component
 }
 
 const createCardSample = (parent, title, x, y) => {
@@ -174,6 +194,16 @@ const createCardSample = (parent, title, x, y) => {
   label.y = y + 12
   label.fills = [{ type: 'SOLID', color: { r: 0.85, g: 0.85, b: 0.87 } }]
   parent.appendChild(label)
+
+  const component = figma.createComponent()
+  component.resize(240, 140)
+  component.x = x
+  component.y = y
+  component.name = `Card/${title}`
+  component.appendChild(card)
+  component.appendChild(label)
+  parent.appendChild(component)
+  return component
 }
 
 const createBulletList = (parent, lines, x, y) => {
