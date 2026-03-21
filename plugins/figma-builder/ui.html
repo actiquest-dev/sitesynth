@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        font-family: Inter, Arial, sans-serif;
+        margin: 16px;
+        color: #111;
+      }
+      h1 {
+        font-size: 14px;
+        margin: 0 0 12px;
+      }
+      textarea {
+        width: 100%;
+        height: 260px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 11px;
+        padding: 10px;
+        border: 1px solid #ddd;
+      }
+      button {
+        margin-top: 12px;
+        padding: 8px 12px;
+        background: #6d28d9;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+      }
+      .hint {
+        margin-top: 10px;
+        font-size: 11px;
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>SiteSynth Build Plan</h1>
+    <textarea id="plan" placeholder="Paste build plan JSON here"></textarea>
+    <button id="run">Build in Figma</button>
+    <div class="hint">Copy the build plan from SiteSynth cabinet and paste here.</div>
+
+    <script>
+      const planEl = document.getElementById('plan')
+      const runBtn = document.getElementById('run')
+
+      runBtn.onclick = () => {
+        let plan
+        try {
+          plan = JSON.parse(planEl.value)
+        } catch (e) {
+          alert('Invalid JSON')
+          return
+        }
+        parent.postMessage({ pluginMessage: { type: 'build', plan } }, '*')
+      }
+    </script>
+  </body>
+</html>

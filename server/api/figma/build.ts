@@ -92,6 +92,7 @@ ${JSON.stringify(brief.design_spec_json, null, 2)}
         jobId: job.id,
         status: job.status,
         createdAt: job.created_at,
+        buildPlan,
       },
     }
   } catch (error: any) {
