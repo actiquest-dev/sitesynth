@@ -134,7 +134,7 @@ const props = defineProps({
     default: false
   },
   briefContext: {
-    type: Object as () => { id: string; name: string; content: string; files?: string[] } | null,
+    type: Object as () => { id: string; name: string; content: string; files?: string[]; fileIds?: string[] } | null,
     default: null
   }
 })

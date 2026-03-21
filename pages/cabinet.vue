@@ -1750,6 +1750,7 @@ const uploadFiles = async (files: File[]) => {
   if (!files.length) return
   uploading.value = true
   uploadProgress.value = 0
+  const existingIds = new Set(userFiles.value.map((file: any) => file.id))
   try {
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
@@ -1784,6 +1785,16 @@ const uploadFiles = async (files: File[]) => {
       uploadProgress.value = Math.round(((i + 1) / files.length) * 100)
     }
     await loadUserFiles()
+    const newIds = userFiles.value
+      .map((file: any) => file.id)
+      .filter((id: string) => id && !existingIds.has(id))
+    if (newIds.length > 0) {
+      fetch('/api/files/ingest', {
+        method: 'POST',
+        headers: { 'x-user-email': userEmail.value, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fileIds: newIds }),
+      }).catch((error) => console.error('[Files] Ingest error:', error))
+    }
   } catch (e) { console.error('[Files] Error:', e) }
   finally { uploading.value = false; uploadProgress.value = 0 }
 }
@@ -2095,7 +2106,8 @@ const openBriefEditor = (brief: any) => {
       name: brief.name || 'Untitled Brief',
       content: brief.content,
       conversationId: brief.conversation_id,
-      files: userFiles.value.map((f: any) => f.name).filter(Boolean)
+      files: userFiles.value.map((f: any) => f.name).filter(Boolean),
+      fileIds: userFiles.value.map((f: any) => f.id).filter(Boolean),
     })
   }
 }
@@ -2228,6 +2240,13 @@ const uploadWizardFiles = async () => {
     }
     brevityData.value.uploadedFileIds = uploadedIds
     console.log('[Brief] Files uploaded:', uploadedIds)
+    if (uploadedIds.length > 0) {
+      fetch('/api/files/ingest', {
+        method: 'POST',
+        headers: { 'x-user-email': userEmail.value, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fileIds: uploadedIds }),
+      }).catch((error) => console.error('[Brief] Ingest error:', error))
+    }
   } catch (error) {
     console.error('Error uploading files:', error)
   }
@@ -2516,7 +2535,8 @@ const finishWizard = async () => {
       name: newlySavedBrief.value.name || 'Untitled Brief',
       content: newlySavedBrief.value.content || '',
       conversationId: newlySavedBrief.value.conversation_id,
-      files: uploadedFiles.value.map((f: any) => f.name)
+      files: uploadedFiles.value.map((f: any) => f.name),
+      fileIds: uploadedFiles.value.map((f: any) => f.id).filter(Boolean),
     })
   }
 }

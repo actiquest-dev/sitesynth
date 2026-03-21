@@ -6,6 +6,7 @@ import { z } from 'zod'
 import { briefingAgent, consultantAgent, architectAgent, criticAgent } from '../../agents'
 import { getAgentConfig } from '~~/server/utils/agent-config'
 import { getActiveWorkflow, getCurrentStepPrompt, buildWorkflowSystemPrompt } from '~~/server/utils/workflow-helper'
+import { retrieveRelevantFileChunks } from '~~/server/utils/file-rag'
 
 const supabaseUrl = process.env.SUPABASE_URL
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -163,6 +164,17 @@ Be concise, professional, proactive. Respond in the same language as the brief c
         if (b.files?.length) {
           systemPrompt += `\n\nAttached Google Drive files: ${b.files.join(', ')}`
           systemPrompt += `\nUse these attached Google Drive files as source context when proposing strategy, Figma structure, screens, deliverables, and refinements. If a useful point comes from the files, reflect it in the brief draft.`
+        }
+        if (Array.isArray(b.fileIds) && b.fileIds.length > 0) {
+          const retrievedChunks = await retrieveRelevantFileChunks({
+            fileIds: b.fileIds,
+            userEmail: String(userEmail),
+            query: String(message),
+            limit: 4,
+          })
+          if (retrievedChunks.length > 0) {
+            systemPrompt += `\n\nRETRIEVED FILE CONTEXT:\n${retrievedChunks.map((chunk, index) => `File ${index + 1}: ${chunk.file_name}\n${chunk.content}`).join('\n\n')}`
+          }
         }
         systemPrompt += `\n\nIf the user requests edits, refinements, or proposes Figma structure, screens, wireframes, mockups, or design deliverables, YOU MUST CALL draft_brief_update with the full updated markdown. Add those planning details into a dedicated brief section named "## Planned Figma Structure" or "## Design Deliverables". Create the section if it does not exist. Do not claim changes are saved. Do not say you will do work later. Tell the user to review and click Save.`
       } else if (isPostBrief) {

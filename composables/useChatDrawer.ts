@@ -7,6 +7,7 @@ export interface BriefContext {
   content: string
   conversationId: string   // brief's own conversation_id — reuse it in chat
   files?: string[]
+  fileIds?: string[]
 }
 
 export interface BriefDraft {
