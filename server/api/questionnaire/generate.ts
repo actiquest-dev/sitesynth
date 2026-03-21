@@ -19,7 +19,7 @@ export interface DynamicQuestion {
 export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event)
-    const { productDescription } = body
+    const { productDescription, projectType } = body
 
     if (!productDescription || productDescription.trim().length < 20) {
       return {
@@ -43,10 +43,11 @@ CRITICAL: You MUST output ONLY valid, parseable JSON. Do NOT:
 Start your response with { and end with }
 
 Analyze the product description and:
-1. Classify: product type, business model, stage, complexity
-2. Generate 12-15 questions mixing core + domain-specific + stage-specific
-3. Include hints and branching logic where relevant
-4. Adapt wording to the product context
+1. Use the explicit project type if provided. Only infer it from text if the explicit type is missing.
+2. Classify: product type, business model, stage, complexity
+3. Generate 12-15 questions mixing core + domain-specific + stage-specific
+4. Include hints and branching logic where relevant
+5. Adapt wording to the product context
 
 JSON Schema:
 {
@@ -95,6 +96,9 @@ Domain branches (add only if relevant):
 - AI product: quality, hallucination, explainability, privacy
 - Dashboard: metrics, drill-down, alerts, exports
 - Mobile: context, offline, notifications
+- Website: sitemap, page goals, conversion points, content hierarchy
+- Web app: navigation model, roles, workflows, states, data views
+- Catalog: taxonomy, filters, cards, detail pages, comparison
 - Branding: positioning, tone, differentiation
 
 Output valid JSON ONLY.`
@@ -110,7 +114,7 @@ Output valid JSON ONLY.`
               role: 'user',
               parts: [
                 {
-                  text: `${systemPrompt}\n\nGenerate a questionnaire for this product:\n\n${productDescription}`,
+                  text: `${systemPrompt}\n\nExplicit project type: ${projectType || 'not provided'}\n\nGenerate a questionnaire for this product:\n\n${productDescription}`,
                 },
               ],
             },

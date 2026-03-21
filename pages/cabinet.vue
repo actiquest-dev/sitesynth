@@ -995,13 +995,34 @@
             <div v-if="wizardPhase === 'description'" class="space-y-4">
               <h3 class="text-white font-semibold">Describe Your Product</h3>
               <p class="text-[#999] text-sm">Tell us about your product or company. Based on this, we'll generate a custom questionnaire tailored to your needs.</p>
+              <div class="space-y-2">
+                <p class="text-xs uppercase tracking-[0.16em] text-[#777]">What are we designing?</p>
+                <div class="flex flex-wrap gap-2">
+                  <button
+                    v-for="option in projectTypeOptions"
+                    :key="option.value"
+                    @click="selectProjectType(option.value)"
+                    :class="[
+                      'px-3 py-2 text-sm border rounded-none transition',
+                      briefData.projectType === option.value
+                        ? 'border-[#8D35FF]/50 bg-[#8D35FF]/10 text-white'
+                        : 'border-[#333] bg-[#141414] text-[#b3b3b3] hover:bg-[#1a1a1a] hover:text-white'
+                    ]"
+                  >
+                    {{ option.label }}
+                  </button>
+                </div>
+              </div>
               <textarea
                 v-model="productDescription"
-                placeholder="E.g., 'We're building a SaaS project management tool for remote teams. It helps teams collaborate on tasks, set deadlines, and track progress. We're in MVP stage and targeting small startups...'"
+                :placeholder="productDescriptionPlaceholder"
                 rows="6"
                 class="w-full px-4 py-3 bg-[#0f0f0f] border border-[#333] rounded-none text-white placeholder-[#666] focus:border-[#8D35FF] focus:outline-none transition resize-none"
               ></textarea>
-              <p class="text-[#666] text-xs">At least 20 characters. The more detail, the better the questions.</p>
+              <p class="text-[#666] text-xs">
+                At least 20 characters. The more detail, the better the questions.
+                <span v-if="briefData.projectType" class="text-[#8D35FF]">Current type: {{ projectTypeLabel }}</span>
+              </p>
             </div>
 
             <!-- Phase: Questions Error -->
@@ -1843,6 +1864,34 @@ const briefData = ref<Record<string, any>>({
   technicalRequirements: '',
 })
 
+const projectTypeOptions = [
+  { value: 'website', label: 'Website' },
+  { value: 'mobile_app', label: 'Mobile App' },
+  { value: 'web_app', label: 'Web App' },
+  { value: 'catalog', label: 'Catalog' },
+  { value: 'landing', label: 'Landing' },
+]
+
+const projectTypeLabel = computed(() =>
+  projectTypeOptions.find((option) => option.value === briefData.value.projectType)?.label || ''
+)
+
+const productDescriptionPlaceholder = computed(() => {
+  if (briefData.value.projectType === 'mobile_app') {
+    return "E.g., 'We're building a mobile app for people managing recurring subscriptions. Users need quick onboarding, a clear dashboard, push reminders, and simple cancellation flows...'"
+  }
+  if (briefData.value.projectType === 'catalog') {
+    return "E.g., 'We're building a searchable catalog where users browse items, filter by category, compare options, and open detailed item pages before contacting sales...'"
+  }
+  if (briefData.value.projectType === 'web_app') {
+    return "E.g., 'We're building a web app for teams to manage tasks, monitor progress, and collaborate across projects. It needs dashboards, permissions, filters, and detailed views...'"
+  }
+  if (briefData.value.projectType === 'landing') {
+    return "E.g., 'We're building a landing page to explain the product, build trust, and convert visitors into demo requests or signups...'"
+  }
+  return "E.g., 'We're building a SaaS project management tool for remote teams. It helps teams collaborate on tasks, set deadlines, and track progress. We're in MVP stage and targeting small startups...'"
+})
+
 // ── Helpers ──
 const timeAgo = (dateString: string | Date): string => {
   if (!dateString) return '—'
@@ -2489,6 +2538,10 @@ const startDescription = async () => {
   productDescription.value = ''
 }
 
+const selectProjectType = (type: string) => {
+  briefData.value.projectType = type
+}
+
 const generateDynamicQuestions = async () => {
   if (!productDescription.value.trim() || productDescription.value.length < 20) {
     alert('Please provide a detailed product description (at least 20 characters)')
@@ -2500,7 +2553,10 @@ const generateDynamicQuestions = async () => {
     const response = await fetch('/api/questionnaire/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ productDescription: productDescription.value }),
+      body: JSON.stringify({
+        productDescription: productDescription.value,
+        projectType: briefData.value.projectType || null,
+      }),
     })
 
     const data = await response.json()
@@ -2526,6 +2582,9 @@ const generateDynamicQuestions = async () => {
 
     currentQuestionIndex.value = 0
     answeredQuestions.value = []
+    if (data.data?.productType && !briefData.value.projectType) {
+      briefData.value.projectType = String(data.data.productType).toLowerCase().replace(/\s+/g, '_')
+    }
     wizardPhase.value = 'questions'
   } catch (error) {
     console.error('[Questionnaire] Error:', error)
