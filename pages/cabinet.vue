@@ -273,11 +273,6 @@
               <h2 v-else class="text-xl font-semibold text-white mb-1">{{ selectedBrief.name || 'Untitled Brief' }}</h2>
               <p class="text-xs text-[#666] mb-6">Created {{ formatDate(selectedBrief.created_at) }}{{ selectedBrief.updated_at ? ' · Updated ' + formatDate(selectedBrief.updated_at) : '' }}</p>
 
-              <div v-if="draftDebug.length > 0" class="mb-4 border border-[#2d5bff]/30 bg-[#2d5bff]/8 px-4 py-3 text-xs text-[#b8c8ff]">
-                <div class="mb-2 font-medium text-white">Draft Debug</div>
-                <div v-for="entry in draftDebug" :key="entry">{{ entry }}</div>
-              </div>
-
               <div v-if="pendingDraft" class="mb-4 border border-[#8D35FF]/40 bg-[#8D35FF]/10 px-4 py-3 text-sm text-[#ddd] flex items-center justify-between">
                 <div>
                   <div class="font-medium text-white">Draft prepared (not saved)</div>
