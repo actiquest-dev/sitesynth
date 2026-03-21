@@ -1,5 +1,5 @@
 import { defineEventHandler, getQuery, sendRedirect, createError } from 'h3'
-import { decodeOAuthState, upsertSharedFigmaIntegration } from '~~/server/utils/service-integrations'
+import { decodeOAuthState, exchangeFigmaOAuthCode, upsertSharedFigmaIntegration } from '~~/server/utils/service-integrations'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
@@ -18,30 +18,11 @@ export default defineEventHandler(async (event) => {
   const decodedState = decodeOAuthState(state)
   const appBaseUrl = String(decodedState.appBaseUrl || '').replace(/\/+$/, '')
   const redirectUri = `${appBaseUrl}/api/admin/figma/oauth/callback`
-  const clientId = process.env.FIGMA_OAUTH_CLIENT_ID
-  const clientSecret = process.env.FIGMA_OAUTH_CLIENT_SECRET
-
-  if (!clientId || !clientSecret) {
-    throw createError({ statusCode: 500, statusMessage: 'Figma OAuth credentials are not configured' })
-  }
-
-  const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
-  const tokenRes = await fetch('https://api.figma.com/v1/oauth/token', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Authorization: `Basic ${basicAuth}`,
-    },
-    body: new URLSearchParams({
-      redirect_uri: redirectUri,
-      code,
-      grant_type: 'authorization_code',
-    }),
-  })
-
-  const tokenJson = await tokenRes.json().catch(() => ({}))
-  if (!tokenRes.ok) {
-    throw createError({ statusCode: 500, statusMessage: tokenJson?.message || 'Failed to exchange Figma OAuth token' })
+  let tokenJson
+  try {
+    tokenJson = await exchangeFigmaOAuthCode(code, redirectUri)
+  } catch (error: any) {
+    throw createError({ statusCode: 500, statusMessage: error.message || 'Failed to exchange Figma OAuth token' })
   }
 
   const expiresAt = tokenJson.expires_in

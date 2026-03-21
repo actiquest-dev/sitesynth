@@ -808,10 +808,24 @@
                     >
                       Refresh status
                     </button>
+                    <button
+                      @click="probeFigmaMcp"
+                      :disabled="figmaIntegrationLoading || !figmaIntegration.connected"
+                      class="px-4 py-3 border border-[#333] text-[#bbb] rounded-none hover:bg-[#1a1a1a] transition text-sm disabled:opacity-50"
+                    >
+                      MCP probe
+                    </button>
                   </div>
 
                   <div v-if="figmaIntegrationMessage" class="text-xs" :class="figmaIntegrationError ? 'text-red-400' : 'text-[#8D35FF]'">
                     {{ figmaIntegrationMessage }}
+                  </div>
+                  <div v-if="figmaProbeResult" class="border border-[#262626] bg-[#111] p-3 text-xs text-[#9d9d9d] space-y-1">
+                    <div>Status: {{ figmaProbeResult.status }}</div>
+                    <div>Refreshed token: {{ figmaProbeResult.refreshed ? 'yes' : 'no' }}</div>
+                    <div>Expires at: {{ figmaProbeResult.expiresAt || '—' }}</div>
+                    <div>Body preview: {{ figmaProbeResult.bodyPreview || '—' }}</div>
+                    <div class="text-[#666]">Full probe payload is logged in the browser console as `[Figma MCP Probe]`.</div>
                   </div>
                 </div>
               </div>
@@ -1438,6 +1452,7 @@ const figmaIntegration = reactive({
 const figmaIntegrationLoading = ref(false)
 const figmaIntegrationMessage = ref('')
 const figmaIntegrationError = ref(false)
+const figmaProbeResult = ref<any | null>(null)
 const normalizeBriefContent = (raw: string) => (raw.startsWith('<') ? raw : marked(raw) as string)
 const isHtmlContent = (raw: string) => raw.trim().startsWith('<')
 const formatDateTime = (dateString: string | Date): string => {
@@ -2152,6 +2167,34 @@ const startFigmaOAuth = async () => {
 
   figmaIntegrationError.value = true
   figmaIntegrationMessage.value = data?.statusMessage || data?.error || 'Failed to start Figma OAuth'
+}
+
+const probeFigmaMcp = async () => {
+  if (!isSitesynthAdmin.value) return
+  figmaIntegrationLoading.value = true
+  figmaIntegrationMessage.value = ''
+  figmaIntegrationError.value = false
+  figmaProbeResult.value = null
+  try {
+    const response = await fetch('/api/admin/figma/mcp/probe', {
+      headers: {
+        'x-google-id-token': getGoogleIdToken() || '',
+      },
+    })
+    const data = await response.json()
+    if (!response.ok) throw new Error(data?.statusMessage || data?.error || 'Failed to probe Figma MCP')
+    figmaProbeResult.value = data.data
+    console.log('[Figma MCP Probe]', data.data)
+    figmaIntegrationMessage.value = data.data?.ok
+      ? `MCP probe succeeded (${data.data.status})`
+      : `MCP probe responded with ${data.data.status}`
+  } catch (error: any) {
+    figmaIntegrationError.value = true
+    figmaIntegrationMessage.value = error.message || 'Failed to probe Figma MCP'
+    console.error('[Figma MCP Probe] Error', error)
+  } finally {
+    figmaIntegrationLoading.value = false
+  }
 }
 
 const handleBackToProjects = () => {
