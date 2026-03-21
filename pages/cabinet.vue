@@ -2095,7 +2095,7 @@ const openBriefEditor = (brief: any) => {
       name: brief.name || 'Untitled Brief',
       content: brief.content,
       conversationId: brief.conversation_id,
-      files: []
+      files: userFiles.value.map((f: any) => f.name).filter(Boolean)
     })
   }
 }

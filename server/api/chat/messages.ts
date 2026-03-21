@@ -16,6 +16,26 @@ if (!supabaseUrl || !supabaseServiceKey) {
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
+const ensurePlanningSections = (draft: string, userRequest: string) => {
+  if (!draft) return draft
+
+  const mentionsPlanning =
+    /(figma|wireframe|wireframes|mockup|mockups|design system|дизайн-систем|вайрфрейм|макет|мокап|структур|спек|специфик|экран|страниц|страница)/i.test(userRequest)
+
+  if (!mentionsPlanning) return draft
+
+  const hasPlannedFigmaStructure = /^##\s+Planned Figma Structure\b/im.test(draft)
+  const hasDesignDeliverables = /^##\s+Design Deliverables\b/im.test(draft)
+
+  if (hasPlannedFigmaStructure || hasDesignDeliverables) {
+    return draft
+  }
+
+  const appendedSection = `\n\n## Planned Figma Structure\n- Define the Figma file structure and key pages.\n- Specify expected wireframes, mockups, and supporting design artifacts.\n- Clarify how these deliverables support the approved brief.\n`
+
+  return `${draft.trimEnd()}${appendedSection}`
+}
+
 export default defineEventHandler(async (event) => {
   const method = event.node.req.method
 
@@ -141,7 +161,8 @@ Be concise, professional, proactive. Respond in the same language as the brief c
         currentBriefContent = b.content || ''
         systemPrompt += `\n\nPROJECT BRIEF:\nTitle: ${b.name}\n\n${b.content}`
         if (b.files?.length) {
-          systemPrompt += `\n\nAttached files: ${b.files.join(', ')}`
+          systemPrompt += `\n\nAttached Google Drive files: ${b.files.join(', ')}`
+          systemPrompt += `\nUse these attached Google Drive files as source context when proposing strategy, Figma structure, screens, deliverables, and refinements. If a useful point comes from the files, reflect it in the brief draft.`
         }
         systemPrompt += `\n\nIf the user requests edits, refinements, or proposes Figma structure, screens, wireframes, mockups, or design deliverables, YOU MUST CALL draft_brief_update with the full updated markdown. Add those planning details into a dedicated brief section named "## Planned Figma Structure" or "## Design Deliverables". Create the section if it does not exist. Do not claim changes are saved. Do not say you will do work later. Tell the user to review and click Save.`
       } else if (isPostBrief) {
@@ -217,8 +238,12 @@ Never promise future work. Fold the plan into the brief now.`,
           maxTokens: 4096,
         })
 
-        briefDraft = (draftResult.text || '').trim()
+        briefDraft = ensurePlanningSections((draftResult.text || '').trim(), String(message))
         response = 'Draft prepared. Review changes and press Save to persist (not saved yet).'
+      }
+
+      if (briefDraft) {
+        briefDraft = ensurePlanningSections(briefDraft, String(message))
       }
 
       // 6. Save assistant response
