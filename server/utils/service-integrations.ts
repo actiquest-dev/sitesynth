@@ -11,6 +11,7 @@ if (!supabaseUrl || !supabaseServiceKey) {
 export const serviceIntegrations = createClient(supabaseUrl, supabaseServiceKey)
 
 export const FIGMA_PROVIDER = 'figma'
+export const FIGMA_MCP_PROVIDER = 'figma_mcp'
 export const SHARED_ACCOUNT_TYPE = 'sitesynth_internal'
 
 export const getDefaultAppBaseUrl = () =>
@@ -48,6 +49,44 @@ export const getSharedFigmaIntegration = async () => {
 
   if (error) throw error
   return data
+}
+
+export const getSharedFigmaMcpIntegration = async () => {
+  const { data, error } = await serviceIntegrations
+    .from('service_integrations')
+    .select('*')
+    .eq('provider', FIGMA_MCP_PROVIDER)
+    .eq('account_type', SHARED_ACCOUNT_TYPE)
+    .maybeSingle()
+
+  if (error) throw error
+  return data
+}
+
+export const upsertSharedFigmaMcpIntegration = async (patch: Record<string, any>) => {
+  const payload = {
+    provider: FIGMA_MCP_PROVIDER,
+    account_type: SHARED_ACCOUNT_TYPE,
+    updated_at: new Date().toISOString(),
+    ...patch,
+  }
+
+  const { data, error } = await serviceIntegrations
+    .from('service_integrations')
+    .upsert(payload, { onConflict: 'provider,account_type' })
+    .select()
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+export const getFigmaMcpAccessToken = async () => {
+  const integration = await getSharedFigmaMcpIntegration()
+  if (!integration?.access_token) {
+    throw new Error('Figma MCP token is not configured')
+  }
+  return integration
 }
 
 export const upsertSharedFigmaIntegration = async (patch: Record<string, any>) => {

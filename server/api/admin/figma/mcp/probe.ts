@@ -1,12 +1,13 @@
 import { defineEventHandler, createError } from 'h3'
 import { requireAdminSession } from '~~/server/utils/admin-session'
-import { getValidSharedFigmaAccessToken } from '~~/server/utils/service-integrations'
+import { getFigmaMcpAccessToken } from '~~/server/utils/service-integrations'
 
 export default defineEventHandler(async (event) => {
   await requireAdminSession(event)
 
   try {
-    const { accessToken, refreshed, integration } = await getValidSharedFigmaAccessToken()
+    const integration = await getFigmaMcpAccessToken()
+    const accessToken = integration.access_token
     const probePayload = {
       jsonrpc: '2.0',
       id: 1,
@@ -21,7 +22,8 @@ export default defineEventHandler(async (event) => {
       },
     }
 
-    const response = await fetch('https://mcp.figma.com/mcp', {
+    const mcpUrl = process.env.FIGMA_MCP_URL || 'https://mcp.figma.com/mcp'
+    const response = await fetch(mcpUrl, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -36,7 +38,6 @@ export default defineEventHandler(async (event) => {
     return {
       success: response.ok,
       data: {
-        refreshed,
         status: response.status,
         ok: response.ok,
         responseHeaders: Object.fromEntries(response.headers.entries()),

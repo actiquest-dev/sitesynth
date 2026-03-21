@@ -9,7 +9,7 @@
       <div class="border border-slate-800 bg-slate-900">
         <div class="px-6 py-4 border-b border-slate-800">
           <h2 class="text-lg font-semibold">Figma</h2>
-          <p class="text-sm text-slate-400 mt-1">Shared Sitesynth Figma connection for MCP-driven builder jobs.</p>
+          <p class="text-sm text-slate-400 mt-1">MCP OAuth connection for Sitesynth Figma builder jobs.</p>
         </div>
 
         <div class="px-6 py-6 space-y-6">
@@ -33,7 +33,7 @@
           </div>
 
           <div class="space-y-2">
-            <label class="block text-xs uppercase tracking-[0.16em] text-slate-400">App Base URL</label>
+            <label class="block text-xs uppercase tracking-[0.16em] text-slate-400">Admin Base URL</label>
             <div class="flex gap-3">
               <input
                 v-model="figma.appBaseUrl"
@@ -57,7 +57,7 @@
               :disabled="loading"
               class="px-4 py-3 bg-violet-600 text-white hover:bg-violet-700 transition disabled:opacity-50"
             >
-              {{ figma.connected ? 'Reconnect Figma' : 'Connect Figma' }}
+              {{ figma.connected ? 'Reconnect MCP' : 'Authorize MCP' }}
             </button>
             <button
               @click="loadStatus"
@@ -131,7 +131,7 @@ const loadStatus = async () => {
   message.value = ''
   hasError.value = false
   try {
-    const response = await fetch('/api/admin/figma/oauth/status', {
+    const response = await fetch('/api/admin/figma/mcp/oauth/status', {
       headers: { 'x-google-id-token': getGoogleIdToken() || '' },
     })
     const data = await response.json()
@@ -155,7 +155,7 @@ const saveAppBaseUrl = async () => {
   message.value = ''
   hasError.value = false
   try {
-    const response = await fetch('/api/admin/figma/oauth/status', {
+    const response = await fetch('/api/admin/figma/mcp/oauth/status', {
       method: 'PUT',
       headers: adminHeaders(),
       body: JSON.stringify({ appBaseUrl: figma.appBaseUrl }),
@@ -179,7 +179,7 @@ const startFigmaOAuth = async () => {
     message.value = 'Admin Google session is required. Please sign in again.'
     return
   }
-  const response = await fetch('/api/admin/figma/oauth/start', {
+  const response = await fetch('/api/admin/figma/mcp/oauth/start', {
     headers: { 'x-google-id-token': getGoogleIdToken() || '' },
   })
   const data = await response.json().catch(() => ({}))
@@ -226,8 +226,8 @@ onMounted(async () => {
   }
 
   const params = new URLSearchParams(window.location.search)
-  if (params.get('figma') === 'connected') {
-    message.value = 'Figma connected successfully'
+  if (params.get('figma_mcp') === 'connected') {
+    message.value = 'Figma MCP connected successfully'
     hasError.value = false
   }
 

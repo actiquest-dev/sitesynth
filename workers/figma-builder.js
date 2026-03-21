@@ -46,24 +46,39 @@ const claimNextJob = async () => {
   return data
 }
 
-const isMcpConfigured = () => {
-  return Boolean(process.env.FIGMA_MCP_URL && process.env.FIGMA_MCP_ACCESS_TOKEN)
+const getFigmaMcpToken = async () => {
+  if (process.env.FIGMA_MCP_ACCESS_TOKEN) {
+    return process.env.FIGMA_MCP_ACCESS_TOKEN
+  }
+  const { data, error } = await supabase
+    .from('service_integrations')
+    .select('access_token')
+    .eq('provider', 'figma_mcp')
+    .eq('account_type', 'sitesynth_internal')
+    .maybeSingle()
+  if (error) throw error
+  if (!data?.access_token) return null
+  return data.access_token
 }
+
+const getMcpUrl = () => process.env.FIGMA_MCP_URL || 'https://mcp.figma.com/mcp'
 
 const runJob = async (job) => {
   await logEvent(job.id, 'Job claimed by worker')
 
-  if (!isMcpConfigured()) {
-    await logEvent(job.id, 'MCP is not configured. Set FIGMA_MCP_URL and FIGMA_MCP_ACCESS_TOKEN.', 'error')
+  const accessToken = await getFigmaMcpToken()
+  const mcpUrl = getMcpUrl()
+  if (!accessToken) {
+    await logEvent(job.id, 'Figma MCP token is not configured.', 'error')
     await setJobStatus(job.id, 'blocked', {
-      error_message: 'MCP not configured',
+      error_message: 'Figma MCP token not configured',
       finished_at: new Date().toISOString(),
     })
     return
   }
 
   // TODO: Implement MCP build flow here.
-  await logEvent(job.id, 'MCP build not implemented yet', 'error')
+  await logEvent(job.id, `MCP build not implemented yet. Ready to call ${mcpUrl}`, 'error')
   await setJobStatus(job.id, 'failed', {
     error_message: 'MCP build not implemented',
     finished_at: new Date().toISOString(),
