@@ -59,6 +59,7 @@ export default defineEventHandler(async (event) => {
       const response = await fetch(`${config.url}/figma/health`, {
         headers: {
           Authorization: `Bearer ${config.token}`,
+          Accept: 'text/event-stream',
         },
       })
       const rawBody = await response.text()
