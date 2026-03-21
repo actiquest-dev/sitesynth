@@ -250,12 +250,12 @@
                       <p class="text-white text-sm font-medium">Version history</p>
                       <button v-if="isViewingHistory" @click="exitHistoryView" class="text-xs text-[#999] hover:text-white">Back to current</button>
                     </div>
-                    <div v-if="historyItems.length === 0" class="text-xs text-[#666]">No saved versions yet.</div>
-                    <div v-for="version in historyItems" :key="version.id" class="border border-[#2a2a2a] p-3">
+                    <div v-if="visibleHistoryItems.length === 0" class="text-xs text-[#666]">No saved versions yet.</div>
+                    <div v-for="version in visibleHistoryItems" :key="version.id" class="border border-[#2a2a2a] p-3">
                       <div class="flex items-center justify-between gap-3">
                         <div>
                           <p class="text-sm text-white">
-                            {{ version.is_current ? 'Current' : (version.version > 0 ? `Version ${version.version}` : 'Local snapshot') }}
+                            {{ version.source === 'current-local-draft' ? 'Current local draft' : (version.source === 'initial-version' ? 'Initial version' : (version.is_current ? 'Current' : (version.version > 0 ? `Version ${version.version}` : 'Local snapshot'))) }}
                           </p>
                           <p class="text-xs text-[#777]">{{ formatDateTime(version.created_at) }} · {{ version.source }}</p>
                         </div>
@@ -1240,6 +1240,39 @@ const isViewingHistory = computed(() => !!viewedVersion.value)
 const compareSummary = computed(() => {
   if (!compareVersion.value) return [] as string[]
   return computeDraftDiff(lastSavedContent.value, normalizeBriefContent(compareVersion.value.markdown_content)).changedTitles
+})
+const initialVersionItem = computed<BriefVersionItem | null>(() => {
+  if (!selectedBrief.value || briefVersions.value.length > 0) return null
+  const initialContent = selectedBrief.value.content || lastSavedContent.value
+  if (!initialContent) return null
+  return {
+    id: `initial-${selectedBrief.value.id}`,
+    version: 1,
+    markdown_content: initialContent,
+    created_at: selectedBrief.value.created_at || new Date().toISOString(),
+    source: 'initial-version',
+    is_current: false,
+    name: selectedBrief.value.name || 'Untitled Brief',
+  }
+})
+const currentLocalDraftItem = computed<BriefVersionItem | null>(() => {
+  if (!isDirty.value || !briefEditContent.value.trim()) return null
+  return {
+    id: `current-local-${selectedBrief.value?.id || 'unknown'}`,
+    version: 0,
+    markdown_content: stripDraftDecorations(briefEditContent.value),
+    created_at: new Date().toISOString(),
+    source: 'current-local-draft',
+    is_current: false,
+    name: selectedBrief.value?.name || 'Untitled Brief',
+  }
+})
+const visibleHistoryItems = computed(() => {
+  const items: BriefVersionItem[] = []
+  if (currentLocalDraftItem.value) items.push(currentLocalDraftItem.value)
+  if (initialVersionItem.value) items.push(initialVersionItem.value)
+  items.push(...historyItems.value)
+  return items
 })
 
 const pushLocalHistorySnapshot = (html: string, source: string) => {
