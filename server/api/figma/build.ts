@@ -4,7 +4,7 @@ import { google } from '@ai-sdk/google'
 import { z } from 'zod'
 import { useDatabaseClient } from '~~/server/utils/supabase'
 import { issueBuildToken } from '~~/server/utils/figma-build-token'
-import { getAgent } from '~~/server/voltagent'
+import { getVoltAgentInstance } from '~~/server/voltagent'
 
 export default defineEventHandler(async (event) => {
   const userEmail = getHeader(event, 'x-user-email')
@@ -118,9 +118,11 @@ Command templates (extend/modify, keep names stable):
 ${JSON.stringify(commandTemplates, null, 2)}
     `.trim()
 
-    const figmaBuilderAgent = getAgent('figmaBuilderAgent')
+    const registry = getVoltAgentInstance()
+    const figmaBuilderAgent = registry.agents?.figmaBuilderAgent
     if (!figmaBuilderAgent || typeof (figmaBuilderAgent as any).execute !== 'function') {
-      throw new Error('Figma builder agent is not initialized')
+      const available = registry?.agents ? Object.keys(registry.agents).join(', ') : 'none'
+      throw new Error(`Figma builder agent is not initialized (available: ${available})`)
     }
     const agentResponse = await (figmaBuilderAgent as any).execute(agentPrompt)
     let parsedAgent: any = null
