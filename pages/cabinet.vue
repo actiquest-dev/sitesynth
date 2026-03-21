@@ -273,6 +273,11 @@
               <h2 v-else class="text-xl font-semibold text-white mb-1">{{ selectedBrief.name || 'Untitled Brief' }}</h2>
               <p class="text-xs text-[#666] mb-6">Created {{ formatDate(selectedBrief.created_at) }}{{ selectedBrief.updated_at ? ' · Updated ' + formatDate(selectedBrief.updated_at) : '' }}</p>
 
+              <div v-if="draftDebug.length > 0" class="mb-4 border border-[#2d5bff]/30 bg-[#2d5bff]/8 px-4 py-3 text-xs text-[#b8c8ff]">
+                <div class="mb-2 font-medium text-white">Draft Debug</div>
+                <div v-for="entry in draftDebug" :key="entry">{{ entry }}</div>
+              </div>
+
               <div v-if="pendingDraft" class="mb-4 border border-[#8D35FF]/40 bg-[#8D35FF]/10 px-4 py-3 text-sm text-[#ddd] flex items-center justify-between">
                 <div>
                   <div class="font-medium text-white">Draft prepared (not saved)</div>
@@ -1161,6 +1166,13 @@ const pendingDraft = ref<{ markdown: string; html: string; receivedAt: string } 
 const saveError = ref('')
 const changeSummary = ref<string[]>([])
 const queuedDraft = ref<{ briefId: string; markdown: string } | null>(null)
+const draftDebug = ref<string[]>([])
+
+const pushDraftDebug = (message: string) => {
+  const line = `${new Date().toLocaleTimeString('en-US', { hour12: false })} ${message}`
+  draftDebug.value = [line, ...draftDebug.value].slice(0, 6)
+  console.log('[Cabinet Draft Debug]', line)
+}
 
 const isDirty = computed(() => {
   if (!briefEditMode.value) return false
@@ -1296,16 +1308,19 @@ const computeDraftDiff = (prevHtml: string, nextHtml: string) => {
 }
 
 const handleIncomingDraft = (draftMarkdown: string, source: 'agent') => {
+  pushDraftDebug(`handleIncomingDraft source=${source} selectedBrief=${selectedBrief.value?.id || 'none'} dirty=${String(isDirty.value)}`)
   const draftHtml = normalizeBriefContent(draftMarkdown)
   const diff = computeDraftDiff(briefEditContent.value, draftHtml)
   const receivedAt = new Date().toISOString()
   if (isDirty.value) {
+    pushDraftDebug('incoming draft stored as pendingDraft')
     pendingDraft.value = { markdown: draftMarkdown, html: diff.decoratedHtml, receivedAt }
     changeSummary.value = diff.changedTitles
     return
   }
   pendingDraft.value = null
   applyDraftToEditor(diff.decoratedHtml, source, diff.changedTitles)
+  pushDraftDebug(`editor mode enabled summary=${diff.changedTitles.length}`)
 }
 
 const applyPendingDraft = () => {
@@ -1326,16 +1341,20 @@ const confirmDiscardUnsaved = () => {
 
 const processIncomingBriefDraft = async (draft: { briefId: string; markdown: string }) => {
   if (!draft) return
+  pushDraftDebug(`processIncomingBriefDraft briefId=${draft.briefId}`)
   if (!selectedBrief.value) {
     if (briefs.value.length === 0) {
+      pushDraftDebug('brief list not loaded yet, queueing draft')
       queuedDraft.value = { briefId: draft.briefId, markdown: draft.markdown }
       return
     }
     const match = briefs.value.find((b: any) => b.id === draft.briefId)
     if (!match) {
+      pushDraftDebug('target brief not found in loaded briefs')
       toast.value = { message: 'Draft prepared, but the brief could not be found.', type: 'error' }
       return
     }
+    pushDraftDebug(`opening brief ${match.id} from draft`)
     openBriefEditor(match)
     await nextTick()
   }
@@ -1343,6 +1362,7 @@ const processIncomingBriefDraft = async (draft: { briefId: string; markdown: str
   if (draft.briefId !== selectedBrief.value?.id) {
     const match = briefs.value.find((b: any) => b.id === draft.briefId)
     if (!match) return
+    pushDraftDebug(`switching selected brief to ${match.id}`)
     openBriefEditor(match)
     await nextTick()
   }
@@ -1534,6 +1554,7 @@ const handleBeforeUnload = (e: BeforeUnloadEvent) => {
 const handleBrowserDraftEvent = (event: Event) => {
   const customEvent = event as CustomEvent<{ briefId: string; markdown: string }>
   if (!customEvent.detail) return
+  pushDraftDebug(`browser event received briefId=${customEvent.detail.briefId}`)
   processIncomingBriefDraft(customEvent.detail)
 }
 
@@ -1554,12 +1575,14 @@ onBeforeRouteLeave(() => {
 
 watch(briefDraft, async (draft) => {
   if (!draft) return
+  pushDraftDebug(`watch briefDraft briefId=${draft.briefId}`)
   await processIncomingBriefDraft(draft)
   clearBriefDraft()
 })
 
 watch(briefEditorIntent, async (intent) => {
   if (!intent) return
+  pushDraftDebug(`watch briefEditorIntent briefId=${intent.briefId} nonce=${intent.nonce}`)
   await processIncomingBriefDraft({ briefId: intent.briefId, markdown: intent.markdown })
   clearBriefEditorIntent()
 })

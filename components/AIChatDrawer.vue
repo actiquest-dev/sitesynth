@@ -436,11 +436,23 @@ const sendMessage = async () => {
       await scrollToBottom()
       if (data.briefDraft && props.briefContext?.id) {
         const draftPayload = { briefId: props.briefContext.id, markdown: data.briefDraft }
+        console.log('[AIChatDrawer Draft Debug] briefDraft received', {
+          briefId: draftPayload.briefId,
+          agentType: props.agentType,
+          conversationId: selectedConversationId.value,
+          length: data.briefDraft.length,
+        })
         setBriefDraft(draftPayload)
         requestBriefDraftApply(draftPayload)
         if (typeof window !== 'undefined') {
           window.dispatchEvent(new CustomEvent('sitesynth:brief-draft-ready', { detail: draftPayload }))
         }
+      } else {
+        console.log('[AIChatDrawer Draft Debug] no briefDraft in response', {
+          hasBriefDraft: Boolean(data.briefDraft),
+          hasBriefContextId: Boolean(props.briefContext?.id),
+          agentType: props.agentType,
+        })
       }
     } else {
       error.value = data.error || 'Failed to send message'
