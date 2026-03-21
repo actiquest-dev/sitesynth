@@ -44,35 +44,56 @@ export default defineEventHandler(async (event) => {
     // Create new brief
     try {
       const body = await readBody(event)
-      const { name, briefData, content } = body
+      const { name, briefData, content, conversationId } = body
 
       console.log(`[Briefs] Creating brief for ${userEmail}, name: "${name}", content length: ${content?.length || 0}`)
 
-      // 1. Create a new conversation for this brief first (since conversation_id is required)
-      const { data: convData, error: convError } = await supabase
-        .from('conversations')
-        .insert([{
-          user_email: userEmail,
-          agent_type: 'briefing',
-          title: name || 'Untitled Brief',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        }])
-        .select()
+      let resolvedConversationId = conversationId
 
-      if (convError || !convData?.[0]) {
-        console.error('[Briefs] Error creating conversation for brief:', convError)
-        throw new Error(`Failed to create conversation: ${convError?.message || 'Unknown error'}`)
+      if (resolvedConversationId) {
+        const { data: existingConversation, error: existingConversationError } = await supabase
+          .from('conversations')
+          .select('id')
+          .eq('id', resolvedConversationId)
+          .eq('user_email', userEmail)
+          .single()
+
+        if (existingConversationError || !existingConversation) {
+          throw new Error('Provided conversation not found')
+        }
+
+        await supabase
+          .from('conversations')
+          .update({ title: name || 'Untitled Brief', updated_at: new Date().toISOString() })
+          .eq('id', resolvedConversationId)
+      } else {
+        // 1. Create a new conversation for this brief first (since conversation_id is required)
+        const { data: convData, error: convError } = await supabase
+          .from('conversations')
+          .insert([{
+            user_email: userEmail,
+            agent_type: 'briefing',
+            title: name || 'Untitled Brief',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          }])
+          .select()
+
+        if (convError || !convData?.[0]) {
+          console.error('[Briefs] Error creating conversation for brief:', convError)
+          throw new Error(`Failed to create conversation: ${convError?.message || 'Unknown error'}`)
+        }
+
+        resolvedConversationId = convData[0].id
+        console.log(`[Briefs] Conversation created: ${resolvedConversationId}`)
       }
-
-      console.log(`[Briefs] Conversation created: ${convData[0].id}`)
 
       // 2. Insert the brief using the correct schema fields
       const { data, error } = await supabase
         .from('briefs')
         .insert([{
           user_email: userEmail,
-          conversation_id: convData[0].id,
+          conversation_id: resolvedConversationId,
           agent_type: 'briefing',
           brief_data: briefData || {},
           markdown_content: content || '',

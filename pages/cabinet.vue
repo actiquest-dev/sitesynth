@@ -1864,6 +1864,64 @@ const briefData = ref<Record<string, any>>({
   technicalRequirements: '',
 })
 
+const formatSummaryLabel = (key: string) =>
+  key
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (char) => char.toUpperCase())
+
+const flattenSummaryLines = (value: any, path = ''): string[] => {
+  if (value === null || value === undefined || value === '') return []
+  if (Array.isArray(value)) {
+    if (value.length === 0) return []
+    if (value.every((item) => typeof item !== 'object')) {
+      return [`- ${formatSummaryLabel(path || 'Items')}: ${value.join(', ')}`]
+    }
+    return value.flatMap((item, index) => flattenSummaryLines(item, path ? `${path} ${index + 1}` : `Item ${index + 1}`))
+  }
+  if (typeof value === 'object') {
+    return Object.entries(value).flatMap(([key, nested]) => flattenSummaryLines(nested, path ? `${path} ${formatSummaryLabel(key)}` : formatSummaryLabel(key)))
+  }
+  return [`- ${path || 'Value'}: ${String(value)}`]
+}
+
+const latestIntakePayload = computed(() => {
+  const sourceOrder = orders.value.find((order: any) => order?.form_data)
+  if (!sourceOrder) return null
+  try {
+    const raw = typeof sourceOrder.form_data === 'string' ? JSON.parse(sourceOrder.form_data) : sourceOrder.form_data
+    return raw || null
+  } catch {
+    return null
+  }
+})
+
+const intakeSummaryText = computed(() => {
+  const payload = latestIntakePayload.value
+  if (!payload) return ''
+
+  const sections: string[] = ['Client and project intake summary']
+  const intakeFormData = payload.intakeFormData || {}
+  const billingData = payload.billingData || {}
+
+  if (briefData.value.projectType) {
+    sections.push(`Product type: ${projectTypeLabel.value}`)
+  }
+
+  const lines = [
+    ...flattenSummaryLines(intakeFormData, 'Project'),
+    ...flattenSummaryLines(billingData, 'Billing'),
+    ...flattenSummaryLines({ email: payload.email, amount: payload.amount }, 'Order'),
+  ]
+
+  if (lines.length > 0) {
+    sections.push('', 'Known intake details:', ...lines)
+  }
+
+  sections.push('', 'Expand this into a fuller project description: what is being built, for whom, what outcomes matter, what constraints exist, and what should shape the design work.')
+  return sections.join('\n')
+})
+
 const projectTypeOptions = [
   { value: 'website', label: 'Website' },
   { value: 'mobile_app', label: 'Mobile App' },
@@ -2445,6 +2503,10 @@ const openBriefWizard = async () => {
   resetWizard()
   await loadUserFiles() // Load available files from storage
   selectedStorageFileIds.value = userFiles.value.map((f: any) => f.id)
+  if (intakeSummaryText.value) {
+    productDescription.value = intakeSummaryText.value
+    briefData.value.projectDescription = intakeSummaryText.value
+  }
 }
 
 const resetWizard = () => {
@@ -2458,6 +2520,7 @@ const resetWizard = () => {
   answeredQuestions.value = []
   generatedBrief.value = ''
   productDescription.value = ''
+  wizardConversationId.value = null
   dynamicQuestions.value = []
   brevityData.value.uploadedFileIds = []
   lastOriginalMessage.value = ''
@@ -2535,7 +2598,41 @@ const uploadWizardFiles = async () => {
 
 const startDescription = async () => {
   wizardPhase.value = 'description'
-  productDescription.value = ''
+  if (!productDescription.value.trim()) {
+    productDescription.value = intakeSummaryText.value || ''
+  }
+  briefData.value.projectDescription = productDescription.value
+}
+
+const ensureWizardConversation = async () => {
+  if (wizardConversationId.value) return wizardConversationId.value
+  const response = await fetch('/api/chat/conversations', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-user-email': userEmail.value },
+    body: JSON.stringify({
+      agentType: 'briefing',
+      title: briefData.value.projectName || 'Brief Intake',
+    }),
+  })
+  const data = await response.json()
+  if (response.ok && data?.data?.id) {
+    wizardConversationId.value = data.data.id
+    return wizardConversationId.value
+  }
+  throw new Error(data?.statusMessage || 'Failed to create intake conversation')
+}
+
+const persistIntakeSummaryToConversation = async () => {
+  if (!intakeSummaryText.value.trim()) return
+  const conversationId = await ensureWizardConversation()
+  await fetch('/api/chat/conversations/intake-summary', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-user-email': userEmail.value },
+    body: JSON.stringify({
+      conversationId,
+      summary: intakeSummaryText.value,
+    }),
+  })
 }
 
 const selectProjectType = (type: string) => {
@@ -2550,6 +2647,8 @@ const generateDynamicQuestions = async () => {
 
   isGeneratingQuestions.value = true
   try {
+    briefData.value.projectDescription = productDescription.value
+    await persistIntakeSummaryToConversation()
     const response = await fetch('/api/questionnaire/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -2786,6 +2885,7 @@ const newlySavedBrief = ref<any>(null)
 
 const saveBrief = async () => {
   try {
+    briefData.value.projectDescription = productDescription.value
     const response = await fetch('/api/briefs', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-user-email': userEmail.value },
@@ -2793,6 +2893,7 @@ const saveBrief = async () => {
         name: briefData.value.projectName || 'Untitled Brief',
         briefData: briefData.value,
         content: generatedBrief.value,
+        conversationId: wizardConversationId.value,
       }),
     })
     

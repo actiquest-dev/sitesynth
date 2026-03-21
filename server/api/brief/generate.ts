@@ -85,37 +85,41 @@ IMPORTANT RULES:
 
 Generate the brief with these sections (use ## for headers):
 
-## 1. Project Overview
+## 1. Product Type & Platform
+State clearly whether this is a website, mobile app, web app, catalog, landing page, or another product type. Name the primary platform(s), core surfaces, and the product format assumptions.
+
+## 2. Project Overview
 Brief project summary, name, and type. One paragraph.
 
-## 2. Business Context & Goals
+## 3. Business Context & Goals
 Primary goals, business objectives, KPIs. What success looks like.
 
-## 3. Target Audience
+## 4. Target Audience
 Who the users are, demographics, behaviors, needs.
 
-## 4. Problem Statement
+## 5. Problem Statement
 Key challenges and pain points to solve. What's not working today.
 
-## 5. Scope & Deliverables
+## 6. Scope & Deliverables
 What will be delivered. List each deliverable clearly.
 
-## 6. Brand & Visual Direction
+## 7. Brand & Visual Direction
 Colors, typography preferences, style direction, existing brand guidelines.
 
-## 7. Technical Requirements
+## 8. Technical Requirements
 Platforms, integrations, performance needs, accessibility standards.
 
-## 8. Timeline & Budget
+## 9. Timeline & Budget
 Project timeline, milestones, budget range.
 
-## 9. Success Metrics
+## 10. Success Metrics
 How to measure if the project achieved its goals.`
 
     // Prepare context from briefData
     const briefContext = `
 BRIEF DATA:
 - Project Name: ${briefData?.projectName || 'Not provided'}
+- Project Type: ${briefData?.projectType || 'Not provided'}
 - Description: ${briefData?.projectDescription || 'Not provided'}
 - Category: ${briefData?.projectCategory || 'Not provided'}
 - Industry: ${briefData?.industry || 'Not provided'}
@@ -176,7 +180,7 @@ BRIEF DATA:
       console.log(`[Brief] 💬 Generating response to user question...`)
     } else {
       // Generate complete brief
-      prompt = `${briefContext}\n\nBased on the above information, generate a comprehensive 8-section design brief. Format it clearly with headers for each section. If the user provided any reference files, use them as additional context.`
+      prompt = `${briefContext}\n\nBased on the above information, generate a comprehensive 10-section design brief. The first section must explicitly define Product Type & Platform. Format it clearly with headers for each section. If the user provided any reference files, use them as additional context.`
       console.log(`[Brief] 🚀 Generating comprehensive brief...`)
       console.log(`[Brief] 📋 Prompt length: ${prompt.length} characters, Files included: ${totalFiles}, Data fields: ${Object.keys(briefData || {}).length}`)
     }
