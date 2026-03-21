@@ -290,7 +290,7 @@
                   :disabled="isGeneratingSpec"
                   class="px-6 py-3 border border-[#8D35FF] text-white rounded-none hover:bg-[#8D35FF]/20 transition disabled:opacity-50 text-sm"
                 >
-                  {{ isGeneratingSpec ? 'Generating Spec...' : 'Generate Design Spec' }}
+                  {{ isGeneratingSpec ? 'Generating Spec...' : (designSpec ? 'Re-generate' : 'Generate Design Spec') }}
                 </button>
               </div>
 
