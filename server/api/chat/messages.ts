@@ -102,14 +102,11 @@ Be concise, professional, proactive. Respond in the same language as the brief c
 
       // 3. Define Tools
       const tools = isBriefMode ? {
-        update_brief_content: tool({
-          description: 'Update the project brief content.',
+        draft_brief_update: tool({
+          description: 'Prepare an updated draft of the project brief without saving it.',
           parameters: z.object({ new_markdown_content: z.string() }),
           execute: async ({ new_markdown_content }) => {
-            const { data: brief } = await supabase.from('briefs').select('id').eq('conversation_id', conversationId).single()
-            if (!brief) return 'Error: Brief not found'
-            await supabase.from('briefs').update({ markdown_content: new_markdown_content, updated_at: new Date().toISOString() }).eq('id', brief.id)
-            return 'Success: Brief updated.'
+            return { draft_markdown: new_markdown_content }
           }
         }),
         evaluate_design_quality: tool({
@@ -134,11 +131,17 @@ Be concise, professional, proactive. Respond in the same language as the brief c
         if (b.files?.length) {
           systemPrompt += `\n\nAttached files: ${b.files.join(', ')}`
         }
+        systemPrompt += `\n\nIf the user requests edits or refinements to the brief, CALL draft_brief_update with the full updated markdown and tell the user to review and click Save.`
+      } else if (isPostBrief) {
+        const { data: brief } = await supabase.from('briefs').select('markdown_content').eq('conversation_id', conversationId).single()
+        if (brief?.markdown_content) {
+          systemPrompt += `\n\nCURRENT BRIEF CONTENT:\n${brief.markdown_content}\n\nUSE TOOL draft_brief_update TO PREPARE CHANGES.`
+        }
       } else if (agentType === 'briefing') {
         // Load brief from DB by conversation_id (briefing mode)
         const { data: brief } = await supabase.from('briefs').select('markdown_content').eq('conversation_id', conversationId).single()
         if (brief?.markdown_content) {
-          systemPrompt += `\n\nCURRENT BRIEF CONTENT:\n${brief.markdown_content}\n\nUSE TOOL update_brief_content TO UPDATE.`
+          systemPrompt += `\n\nCURRENT BRIEF CONTENT:\n${brief.markdown_content}\n\nUSE TOOL draft_brief_update TO PREPARE CHANGES.`
         }
       }
 
@@ -157,8 +160,22 @@ Be concise, professional, proactive. Respond in the same language as the brief c
       })
 
       let response = result.text || ''
-      if (!response && result.toolResults && result.toolResults.length > 0) {
-        response = 'Brief updated successfully based on your request.'
+      let briefDraft: string | null = null
+      if (result.toolResults && result.toolResults.length > 0) {
+        for (const tr of result.toolResults) {
+          if (tr.toolName === 'draft_brief_update') {
+            if (typeof tr.result === 'string') {
+              briefDraft = tr.result
+            } else if (tr.result && typeof tr.result === 'object' && 'draft_markdown' in tr.result) {
+              briefDraft = String((tr.result as any).draft_markdown || '')
+            }
+          }
+        }
+      }
+      if (!response && briefDraft) {
+        response = 'Draft prepared. Review changes and press Save to persist (not saved yet).'
+      } else if (!response && result.toolResults && result.toolResults.length > 0) {
+        response = 'Draft prepared. Review changes and press Save to persist (not saved yet).'
       }
 
       // 6. Save assistant response
@@ -167,7 +184,7 @@ Be concise, professional, proactive. Respond in the same language as the brief c
 
       const { data: allMessages } = await supabase.from('messages').select('*').eq('conversation_id', conversationId).order('created_at', { ascending: true })
 
-      return { status: 'success', message: response, messages: allMessages || [] }
+      return { status: 'success', message: response, messages: allMessages || [], briefDraft: briefDraft || undefined }
     } catch (error: any) {
       console.error('Chat error:', error)
       return createError({ statusCode: 500, statusMessage: error.message })

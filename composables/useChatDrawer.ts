@@ -9,10 +9,16 @@ export interface BriefContext {
   files?: string[]
 }
 
+export interface BriefDraft {
+  briefId: string
+  markdown: string
+}
+
 export const useChatDrawer = () => {
   const isOpen = useState<boolean>('chatIsOpen', () => false)
   const agentMode = useState<'presale' | 'briefing' | 'post-brief'>('chatAgentMode', () => 'presale')
   const briefContext = useState<BriefContext | null>('chatBriefContext', () => null)
+  const briefDraft = useState<BriefDraft | null>('chatBriefDraft', () => null)
 
   const open = () => { isOpen.value = true }
   const close = () => { isOpen.value = false }
@@ -31,5 +37,8 @@ export const useChatDrawer = () => {
     agentMode.value = 'briefing'
   }
 
-  return { isOpen, agentMode, briefContext, open, close, openPostBrief, resetToDefault }
+  const setBriefDraft = (draft: BriefDraft) => { briefDraft.value = draft }
+  const clearBriefDraft = () => { briefDraft.value = null }
+
+  return { isOpen, agentMode, briefContext, briefDraft, open, close, openPostBrief, resetToDefault, setBriefDraft, clearBriefDraft }
 }

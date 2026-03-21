@@ -111,6 +111,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick, watch } from 'vue'
+import { useChatDrawer } from '@/composables/useChatDrawer'
 
 interface Message {
   id: string
@@ -139,6 +140,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:isOpen'])
+const { setBriefDraft } = useChatDrawer()
 
 const messages = ref<Message[]>([])
 const messageInput = ref('')
@@ -432,6 +434,9 @@ const sendMessage = async () => {
     if (response.ok && data.messages) {
       messages.value = data.messages
       await scrollToBottom()
+      if (data.briefDraft && props.briefContext?.id) {
+        setBriefDraft({ briefId: props.briefContext.id, markdown: data.briefDraft })
+      }
     } else {
       error.value = data.error || 'Failed to send message'
       // Remove temporary user message on error

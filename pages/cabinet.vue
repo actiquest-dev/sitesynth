@@ -225,10 +225,18 @@
             <!-- Brief Editor (inline, no modal) -->
             <div v-if="selectedBrief" class="mb-8">
               <div class="flex items-center justify-between mb-4">
-                <button @click="selectedBrief = null" class="text-[#999] hover:text-white text-sm flex items-center gap-1 transition">
+                <button @click="handleBackToProjects" class="text-[#999] hover:text-white text-sm flex items-center gap-1 transition">
                   ← Back to projects
                 </button>
-              <div class="flex gap-2">
+              <div class="flex gap-3 items-center flex-wrap">
+                <div class="flex items-center gap-2">
+                  <span :class="['px-2 py-1 rounded-none text-xs font-medium', statusClass]">{{ statusLabel }}</span>
+                  <span v-if="lastDraftSource === 'agent' && isDirty" class="px-2 py-1 rounded-none text-xs font-medium bg-[#8D35FF]/10 text-[#C9A7FF] border border-[#8D35FF]/40">Updated by agent</span>
+                  <span v-if="!isDirty && lastSavedAt" class="text-xs text-[#666]">Last saved {{ formatDateTime(lastSavedAt) }}</span>
+                </div>
+                <span v-if="changeSummary.length > 0" class="text-xs text-[#b7b7b7]">
+                  Updated sections: {{ changeSummary.slice(0, 3).join(', ') }}<span v-if="changeSummary.length > 3"> +{{ changeSummary.length - 3 }}</span>
+                </span>
                 <!-- Edit/Save Button (toggles based on mode) -->
                 <button
                   v-if="briefEditMode"
@@ -264,6 +272,17 @@
               />
               <h2 v-else class="text-xl font-semibold text-white mb-1">{{ selectedBrief.name || 'Untitled Brief' }}</h2>
               <p class="text-xs text-[#666] mb-6">Created {{ formatDate(selectedBrief.created_at) }}{{ selectedBrief.updated_at ? ' · Updated ' + formatDate(selectedBrief.updated_at) : '' }}</p>
+
+              <div v-if="pendingDraft" class="mb-4 border border-[#8D35FF]/40 bg-[#8D35FF]/10 px-4 py-3 text-sm text-[#ddd] flex items-center justify-between">
+                <div>
+                  <div class="font-medium text-white">Draft prepared (not saved)</div>
+                  <div class="text-[#b7b7b7] text-xs">A new agent draft is ready. Apply it to replace your current edits.</div>
+                </div>
+                <div class="flex gap-2">
+                  <button @click="applyPendingDraft" class="px-3 py-1.5 bg-[#8D35FF] text-white text-xs rounded-none">Apply draft</button>
+                  <button @click="discardPendingDraft" class="px-3 py-1.5 border border-[#444] text-[#bbb] text-xs rounded-none">Keep current</button>
+                </div>
+              </div>
 
               <!-- Edit mode: TipTap WYSIWYG editor, no tabs needed -->
               <div v-if="briefEditMode" class="space-y-4">
@@ -1019,7 +1038,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, nextTick, watch } from 'vue'
+import { ref, computed, onMounted, nextTick, watch, onBeforeUnmount } from 'vue'
+import { onBeforeRouteLeave } from 'vue-router'
 import { marked } from 'marked'
 import FormDataDisplay from '@/components/FormDataDisplay.vue'
 import { useGoogleAuth } from '@/composables/useGoogleAuth'
@@ -1068,7 +1088,7 @@ const currentTab = computed(() => tabs.find(t => t.id === activeTab.value))
 
 // ── Auth ──
 const { logout, getCurrentUser, getToken } = useGoogleAuth()
-const { openPostBrief } = useChatDrawer()
+const { openPostBrief, briefDraft, clearBriefDraft } = useChatDrawer()
 
 const userEmail = ref('')
 const greeting = computed(() => {
@@ -1083,6 +1103,13 @@ const userName = computed(() => {
   return email.split('@')[0]
 })
 const userInitial = computed(() => (userEmail.value?.[0] || 'U').toUpperCase())
+const normalizeBriefContent = (raw: string) => (raw.startsWith('<') ? raw : marked(raw) as string)
+const isHtmlContent = (raw: string) => raw.trim().startsWith('<')
+const formatDateTime = (dateString: string | Date): string => {
+  if (!dateString) return '—'
+  const date = typeof dateString === 'string' ? new Date(dateString) : dateString
+  return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(date)
+}
 
 type Conversation = {
   id: string
@@ -1127,6 +1154,174 @@ const briefEditName = ref('')
 const isSavingBrief = ref(false)
 const isGeneratingSpec = ref(false)
 const designSpec = ref<any>(null)
+const lastSavedContent = ref('')
+const lastSavedAt = ref<string | null>(null)
+const lastDraftSource = ref<'agent' | null>(null)
+const pendingDraft = ref<{ markdown: string; html: string; receivedAt: string } | null>(null)
+const saveError = ref('')
+const changeSummary = ref<string[]>([])
+
+const isDirty = computed(() => {
+  if (!briefEditMode.value) return false
+  return briefEditContent.value !== lastSavedContent.value
+})
+
+const statusLabel = computed(() => {
+  if (isSavingBrief.value) return 'Saving...'
+  if (saveError.value) return 'Save failed'
+  if (isDirty.value) return 'Unsaved changes'
+  return 'Saved'
+})
+
+const statusClass = computed(() => {
+  if (isSavingBrief.value) return 'bg-blue-500/10 text-blue-300 border border-blue-500/30'
+  if (saveError.value) return 'bg-red-500/10 text-red-400 border border-red-500/30'
+  if (isDirty.value) return 'bg-yellow-500/10 text-yellow-300 border border-yellow-500/30'
+  return 'bg-green-500/10 text-green-400 border border-green-500/30'
+})
+
+const applyDraftToEditor = (draftHtml: string, source: 'agent', summary: string[] = []) => {
+  briefEditMode.value = true
+  briefEditContent.value = draftHtml
+  lastDraftSource.value = source
+  saveError.value = ''
+  changeSummary.value = summary
+}
+
+const extractSections = (html: string): Array<{ title: string; html: string }> => {
+  if (!html) return []
+  if (typeof DOMParser === 'undefined') return []
+  const doc = new DOMParser().parseFromString(html, 'text/html')
+  const nodes = Array.from(doc.body.childNodes)
+  const sections: Array<{ title: string; html: string }> = []
+  let buffer: Node[] = []
+  let currentTitle = 'Intro'
+
+  const flush = () => {
+    if (buffer.length === 0) return
+    const container = doc.createElement('div')
+    buffer.forEach((n) => container.appendChild(n.cloneNode(true)))
+    sections.push({ title: currentTitle, html: container.innerHTML })
+    buffer = []
+  }
+
+  for (const node of nodes) {
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      const el = node as HTMLElement
+      if (['H1', 'H2', 'H3'].includes(el.tagName)) {
+        flush()
+        currentTitle = el.textContent?.trim() || 'Untitled'
+      }
+    }
+    buffer.push(node)
+  }
+  flush()
+  return sections
+}
+
+const buildSectionMap = (html: string): Map<string, string> => {
+  const map = new Map<string, string>()
+  for (const s of extractSections(html)) {
+    map.set(s.title, s.html.replace(/\s+/g, ' ').trim())
+  }
+  return map
+}
+
+const decorateChangedSections = (html: string, changedTitles: Set<string>) => {
+  if (!html || typeof DOMParser === 'undefined' || changedTitles.size === 0) return html
+  const doc = new DOMParser().parseFromString(html, 'text/html')
+  const nodes = Array.from(doc.body.childNodes)
+  const out = doc.createElement('div')
+  let buffer: Node[] = []
+  let currentTitle = 'Intro'
+
+  const flush = () => {
+    if (buffer.length === 0) return
+    const section = doc.createElement('section')
+    section.setAttribute('data-brief-section', 'true')
+    if (changedTitles.has(currentTitle)) {
+      section.setAttribute('data-changed', 'true')
+    }
+    buffer.forEach((n) => section.appendChild(n.cloneNode(true)))
+    out.appendChild(section)
+    buffer = []
+  }
+
+  for (const node of nodes) {
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      const el = node as HTMLElement
+      if (['H1', 'H2', 'H3'].includes(el.tagName)) {
+        flush()
+        currentTitle = el.textContent?.trim() || 'Untitled'
+      }
+    }
+    buffer.push(node)
+  }
+  flush()
+  return out.innerHTML
+}
+
+const stripDraftDecorations = (html: string) => {
+  if (!html || typeof DOMParser === 'undefined') return html
+  const doc = new DOMParser().parseFromString(html, 'text/html')
+  const sections = Array.from(doc.querySelectorAll('section[data-brief-section]'))
+  for (const section of sections) {
+    section.removeAttribute('data-brief-section')
+    section.removeAttribute('data-changed')
+    const parent = section.parentNode
+    if (!parent) continue
+    while (section.firstChild) {
+      parent.insertBefore(section.firstChild, section)
+    }
+    parent.removeChild(section)
+  }
+  return doc.body.innerHTML
+}
+
+const computeDraftDiff = (prevHtml: string, nextHtml: string) => {
+  const cleanPrev = stripDraftDecorations(prevHtml)
+  const cleanNext = stripDraftDecorations(nextHtml)
+  const prevMap = buildSectionMap(cleanPrev)
+  const nextMap = buildSectionMap(cleanNext)
+  const changed = new Set<string>()
+  for (const [title, nextContent] of nextMap.entries()) {
+    const prevContent = prevMap.get(title)
+    if (!prevContent || prevContent !== nextContent) changed.add(title)
+  }
+  return {
+    changedTitles: Array.from(changed),
+    decoratedHtml: decorateChangedSections(cleanNext, changed),
+  }
+}
+
+const handleIncomingDraft = (draftMarkdown: string, source: 'agent') => {
+  const draftHtml = normalizeBriefContent(draftMarkdown)
+  const diff = computeDraftDiff(briefEditContent.value, draftHtml)
+  const receivedAt = new Date().toISOString()
+  if (isDirty.value) {
+    pendingDraft.value = { markdown: draftMarkdown, html: diff.decoratedHtml, receivedAt }
+    changeSummary.value = diff.changedTitles
+    return
+  }
+  pendingDraft.value = null
+  applyDraftToEditor(diff.decoratedHtml, source, diff.changedTitles)
+}
+
+const applyPendingDraft = () => {
+  if (!pendingDraft.value) return
+  applyDraftToEditor(pendingDraft.value.html, 'agent', changeSummary.value)
+  pendingDraft.value = null
+}
+
+const discardPendingDraft = () => {
+  pendingDraft.value = null
+  changeSummary.value = []
+}
+
+const confirmDiscardUnsaved = () => {
+  if (!isDirty.value) return true
+  return confirm('You have unsaved changes. Discard them and continue?')
+}
 
 const generateDesignSpec = async () => {
   if (!selectedBrief.value) return
@@ -1262,6 +1457,12 @@ const closeOrderDetails = () => {
   selectedOrder.value = null
 }
 
+const handleBackToProjects = () => {
+  if (!confirmDiscardUnsaved()) return
+  selectedBrief.value = null
+  briefEditMode.value = false
+}
+
 const getEmailFromToken = (rawToken: string | null): string => {
   if (!rawToken) return ''
   try { return atob(rawToken).split(':')[0] || '' } catch { return '' }
@@ -1295,6 +1496,32 @@ onMounted(async () => {
   stats.value.totalProjects = briefs.value.length
   stats.value.totalSpent = orders.value.reduce((s: number, o: any) => s + (o.amount || 0), 0)
   stats.value.activeWebsites = projects.value.filter((p: any) => p.status === 'in_progress').length
+})
+
+const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+  if (!isDirty.value) return
+  e.preventDefault()
+  e.returnValue = ''
+}
+
+onMounted(() => {
+  window.addEventListener('beforeunload', handleBeforeUnload)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('beforeunload', handleBeforeUnload)
+})
+
+onBeforeRouteLeave(() => {
+  if (!isDirty.value) return true
+  return confirm('You have unsaved changes. Leave this page and discard them?')
+})
+
+watch(briefDraft, (draft) => {
+  if (!draft || !selectedBrief.value) return
+  if (draft.briefId !== selectedBrief.value.id) return
+  handleIncomingDraft(draft.markdown, 'agent')
+  clearBriefDraft()
 })
 
 const loadUserFiles = async () => {
@@ -1568,6 +1795,10 @@ const sendChatMessage = async () => {
     chatMessages.value = data.messages || []
     await loadConversations()
 
+    if (data.briefDraft && selectedBrief.value) {
+      handleIncomingDraft(data.briefDraft, 'agent')
+    }
+
     // If we have a brief open that is tied to this conversation, fetch the latest brief content
     // because the AI might have updated it via tool call during this request!
     if (selectedBrief.value && selectedBrief.value.conversation_id === selectedConversationId.value) {
@@ -1580,7 +1811,10 @@ const sendChatMessage = async () => {
             selectedBrief.value.content = briefData.data.markdown_content
             selectedBrief.value.markdown_content = briefData.data.markdown_content
             if (!briefEditMode.value) {
-              briefEditContent.value = briefData.data.markdown_content
+              const normalized = normalizeBriefContent(briefData.data.markdown_content)
+              briefEditContent.value = normalized
+              lastSavedContent.value = normalized
+              lastSavedAt.value = briefData.data.updated_at || lastSavedAt.value
             }
           }
         }
@@ -1626,7 +1860,14 @@ const openBriefEditor = (brief: any) => {
   briefEditMode.value = false
   // Convert markdown to HTML for TipTap (handles both old markdown and new HTML content)
   const raw = brief.content || ''
-  briefEditContent.value = raw.startsWith('<') ? raw : marked(raw) as string
+  const normalized = normalizeBriefContent(raw)
+  briefEditContent.value = normalized
+  lastSavedContent.value = normalized
+  lastSavedAt.value = brief.updated_at || brief.created_at || null
+  saveError.value = ''
+  lastDraftSource.value = null
+  pendingDraft.value = null
+  changeSummary.value = []
   briefEditName.value = brief.name || ''
   // Restore saved design spec if exists
   designSpec.value = brief.design_spec_json || null
@@ -1658,21 +1899,34 @@ const deleteBrief = async (brief: any) => {
 const saveBriefEdit = async () => {
   if (!selectedBrief.value?.id) return
   isSavingBrief.value = true
+  saveError.value = ''
   try {
+    const cleanHtml = stripDraftDecorations(briefEditContent.value)
     const r = await fetch(`/api/briefs/${selectedBrief.value.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', 'x-user-email': userEmail.value },
-      body: JSON.stringify({ content: briefEditContent.value, name: briefEditName.value }),
+      // We persist the editor HTML into markdown_content to preserve rich formatting.
+      body: JSON.stringify({ content: cleanHtml, name: briefEditName.value }),
     })
     const d = await r.json()
     if (r.ok && d.success) {
-      selectedBrief.value = { ...selectedBrief.value, ...d.data, content: d.data?.content ?? briefEditContent.value, name: briefEditName.value }
+      selectedBrief.value = { ...selectedBrief.value, ...d.data, content: d.data?.content ?? cleanHtml, name: briefEditName.value }
+      lastSavedContent.value = cleanHtml
+      lastSavedAt.value = d.data?.updated_at || new Date().toISOString()
+      lastDraftSource.value = null
+      pendingDraft.value = null
+      changeSummary.value = []
+      briefEditContent.value = cleanHtml
       briefEditMode.value = false
       await loadBriefs()
     } else {
       console.error('Save brief failed:', d.error)
+      saveError.value = d.error || 'Failed to save brief'
     }
-  } catch (e) { console.error('Error saving brief:', e) }
+  } catch (e) {
+    console.error('Error saving brief:', e)
+    saveError.value = 'Failed to save brief'
+  }
   finally { isSavingBrief.value = false }
 }
 
@@ -1966,6 +2220,7 @@ const stripHtmlPreview = (html: string): string => {
 
 const formatBriefHtml = (text: string): string => {
   if (!text) return ''
+  if (isHtmlContent(text)) return text
   return text
     .replace(/^### (.+)$/gm, '<h3 class="text-lg font-bold text-[#8D35FF] mt-6 mb-2">$1</h3>')
     .replace(/^## (.+)$/gm, '<h2 class="text-xl font-bold text-white mt-8 mb-3">$1</h2>')
@@ -2069,5 +2324,20 @@ useSeoMeta({
 
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
+}
+
+:deep([data-brief-section][data-changed]) {
+  border-left: 2px solid rgba(141, 53, 255, 0.6);
+  background: rgba(141, 53, 255, 0.08);
+  padding-left: 12px;
+  margin-left: -12px;
+}
+
+:deep([data-brief-section][data-changed] h1),
+:deep([data-brief-section][data-changed] h2),
+:deep([data-brief-section][data-changed] h3) {
+  background: rgba(141, 53, 255, 0.12);
+  padding: 4px 6px;
+  display: inline-block;
 }
 </style>
