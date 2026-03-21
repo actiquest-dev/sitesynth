@@ -128,10 +128,13 @@ Be concise, professional, proactive. Respond in the same language as the brief c
         typeof message === 'string' &&
         /(внеси|внести|измен|обнов|исправ|перепиш|доработ|refine|update|edit|revise|change|adjust)/i.test(message)
 
+      let currentBriefContent = ''
+
       // 4. Load Current Brief Context
       if (isPostBrief && body.briefContext) {
         // Brief content passed directly from client (post-brief mode)
         const b = body.briefContext
+        currentBriefContent = b.content || ''
         systemPrompt += `\n\nPROJECT BRIEF:\nTitle: ${b.name}\n\n${b.content}`
         if (b.files?.length) {
           systemPrompt += `\n\nAttached files: ${b.files.join(', ')}`
@@ -140,12 +143,14 @@ Be concise, professional, proactive. Respond in the same language as the brief c
       } else if (isPostBrief) {
         const { data: brief } = await supabase.from('briefs').select('markdown_content').eq('conversation_id', conversationId).single()
         if (brief?.markdown_content) {
+          currentBriefContent = brief.markdown_content
           systemPrompt += `\n\nCURRENT BRIEF CONTENT:\n${brief.markdown_content}\n\nYOU MUST USE TOOL draft_brief_update TO PREPARE CHANGES.`
         }
       } else if (agentType === 'briefing') {
         // Load brief from DB by conversation_id (briefing mode)
         const { data: brief } = await supabase.from('briefs').select('markdown_content').eq('conversation_id', conversationId).single()
         if (brief?.markdown_content) {
+          currentBriefContent = brief.markdown_content
           systemPrompt += `\n\nCURRENT BRIEF CONTENT:\n${brief.markdown_content}\n\nYOU MUST USE TOOL draft_brief_update TO PREPARE CHANGES.`
         }
       }
@@ -181,6 +186,32 @@ Be concise, professional, proactive. Respond in the same language as the brief c
       if (!response && briefDraft) {
         response = 'Draft prepared. Review changes and press Save to persist (not saved yet).'
       } else if (!response && result.toolResults && result.toolResults.length > 0) {
+        response = 'Draft prepared. Review changes and press Save to persist (not saved yet).'
+      }
+
+      // Deterministic fallback: if the model answered without producing a draft,
+      // generate the updated brief directly and return it to the client.
+      if (shouldDraftUpdate && !briefDraft && currentBriefContent) {
+        const draftResult = await generateText({
+          model: agent.model,
+          system: `You rewrite project briefs.
+
+Return the FULL updated brief as markdown only.
+Do not explain what you changed.
+Do not add preamble or code fences.
+Preserve useful structure and headings.
+Apply the user's requested edits directly to the existing brief.`,
+          messages: [
+            {
+              role: 'user',
+              content: `Current brief:\n\n${currentBriefContent}\n\nUser request:\n${message}\n\nReturn the full updated brief in markdown only.`,
+            },
+          ],
+          temperature: 0.4,
+          maxTokens: 4096,
+        })
+
+        briefDraft = (draftResult.text || '').trim()
         response = 'Draft prepared. Review changes and press Save to persist (not saved yet).'
       }
 
