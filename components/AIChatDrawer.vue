@@ -357,24 +357,36 @@ onMounted(async () => {
   }
 })
 
-// Initialize conversation when drawer opens or switches to post-brief mode
+// Initialize conversation when drawer opens
 watch(() => props.isOpen, async (newVal) => {
-  if (newVal) {
-    await initializeConversation()
-    if (props.agentType === 'post-brief' && props.briefContext && messages.value.length === 0) {
+  if (!newVal) return
+  // If post-brief with a known conversation — just load messages, don't create new
+  if (props.agentType === 'post-brief' && props.briefContext?.conversationId) {
+    selectedConversationId.value = props.briefContext.conversationId
+    await loadConversationMessages(props.briefContext.conversationId)
+    if (messages.value.length === 0) {
       await sendProactiveGreeting()
     }
+  } else if (!selectedConversationId.value) {
+    await initializeConversation()
   }
 })
 
-// Re-initialize when agent type changes (e.g. presale → post-brief)
+// When switching to post-brief mode — reuse brief's conversation (same lifecycle thread)
 watch(() => props.agentType, async (newVal, oldVal) => {
   if (newVal !== oldVal && props.isOpen) {
-    selectedConversationId.value = ''
-    messages.value = []
-    await initializeConversation()
-    if (newVal === 'post-brief' && props.briefContext && messages.value.length === 0) {
-      await sendProactiveGreeting()
+    if (newVal === 'post-brief' && props.briefContext?.conversationId) {
+      // Use the brief's conversation_id — this is the SAME conversation from presale
+      selectedConversationId.value = props.briefContext.conversationId
+      await loadConversationMessages(props.briefContext.conversationId)
+      // Only greet if no AI messages exist yet in this conversation for post-brief
+      const hasPostBriefMessages = messages.value.some((m: Message) => m.role === 'assistant' && m.content?.includes('brief'))
+      if (!hasPostBriefMessages) {
+        await sendProactiveGreeting()
+      }
+    } else {
+      // For other mode switches, reinitialize normally
+      await initializeConversation()
     }
   }
 })
