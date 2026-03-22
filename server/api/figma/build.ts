@@ -136,18 +136,32 @@ ${JSON.stringify(commandTemplates, null, 2)}
     const validatePlan = (plan: any) => {
       try {
         buildPlanSchema.parse(plan)
-      } catch {
-        return false
+      } catch (validationError: any) {
+        return {
+          valid: false,
+          reason: validationError?.issues?.[0]?.message || validationError?.message || 'Schema validation failed',
+        }
       }
       const hasComponents = Array.isArray(plan?.commands)
         && plan.commands.some((cmd: any) => cmd?.op === 'create_component')
       const hasComponentSet = Array.isArray(plan?.commands)
         && plan.commands.some((cmd: any) => cmd?.op === 'create_component_set')
-      return hasComponents && hasComponentSet
+      if (!hasComponents) {
+        return { valid: false, reason: 'Missing create_component command' }
+      }
+      if (!hasComponentSet) {
+        return { valid: false, reason: 'Missing create_component_set command' }
+      }
+      return { valid: true, reason: null }
     }
 
-    if (!validatePlan(candidatePlan)) {
-      throw new Error('Figma build plan failed validation')
+    const validation = validatePlan(candidatePlan)
+    if (!validation.valid) {
+      console.error('[FigmaBuild] Invalid agent plan:', {
+        reason: validation.reason,
+        agentOutput: agentResult?.object,
+      })
+      throw new Error(`Figma build plan failed validation: ${validation.reason}`)
     }
 
     const buildPlan = candidatePlan
