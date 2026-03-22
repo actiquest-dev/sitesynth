@@ -414,8 +414,18 @@
                   <a :href="figmaJob.figma_file_url" target="_blank" rel="noopener">Open Figma file</a>
                 </div>
                 <div v-if="figmaEvents.length" class="space-y-1 text-[#8b8b8b]">
-                  <div v-for="event in figmaEvents" :key="event.id">
-                    {{ formatDateTime(event.created_at) }} — {{ event.message }}
+                  <div v-for="event in figmaEvents" :key="event.id" class="border-b border-[#1f1f1f] pb-2 last:border-b-0">
+                    <div>{{ formatDateTime(event.created_at) }} — {{ event.message }}</div>
+                    <div v-if="event.payload?.name" class="mt-1 text-[11px] text-[#9a9a9a]">
+                      node: {{ event.payload.name }}
+                    </div>
+                    <div v-if="event.payload?.error" class="mt-1 text-[11px] text-red-400 break-words">
+                      error: {{ event.payload.error }}
+                    </div>
+                    <pre
+                      v-if="event.payload?.props"
+                      class="mt-1 overflow-x-auto whitespace-pre-wrap break-words bg-[#090909] border border-[#1f1f1f] p-2 text-[10px] text-[#7f7f7f]"
+                    >{{ formatFigmaEventPayload(event.payload.props) }}</pre>
                   </div>
                 </div>
                 <div v-else class="text-[#777]">No build events yet.</div>
@@ -1968,6 +1978,14 @@ const formatSummaryLabel = (key: string) =>
     .replace(/([a-z])([A-Z])/g, '$1 $2')
     .replace(/_/g, ' ')
     .replace(/\b\w/g, (char) => char.toUpperCase())
+
+const formatFigmaEventPayload = (payload: any) => {
+  try {
+    return JSON.stringify(payload, null, 2)
+  } catch {
+    return String(payload || '')
+  }
+}
 
 const flattenSummaryLines = (value: any, path = ''): string[] => {
   if (value === null || value === undefined || value === '') return []
