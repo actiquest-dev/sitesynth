@@ -528,7 +528,14 @@ const buildFromPlan = async (jobId, plan) => {
   const getParent = (parentName) => {
     if (!parentName) return figma.currentPage
     const entry = registry.get(parentName)
-    return (entry && entry.node) || figma.currentPage
+    let node = (entry && entry.node) || null
+    while (node) {
+      if (typeof node.appendChild === 'function') {
+        return node
+      }
+      node = node.parent || null
+    }
+    return figma.currentPage
   }
 
   const getNode = (name) => {
@@ -869,9 +876,11 @@ const buildFromPlan = async (jobId, plan) => {
         setNodeGrid(getNode(cmd.name), props.layoutGrids)
       }
       } catch (error) {
+        const parentNode = cmd.parent ? getNode(cmd.parent) : null
         await logEvent(jobId, 'error', `op_failed:${cmd.op}`, {
           name: cmd.name,
           parent: cmd.parent || null,
+          parentType: parentNode && parentNode.type ? parentNode.type : null,
           props,
           error: error && error.message ? error.message : String(error),
         })
