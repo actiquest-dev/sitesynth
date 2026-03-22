@@ -35,6 +35,59 @@ const createFrame = (parent, name, x, y, width = 800, height = 520) => {
   return frame
 }
 
+const createRectangle = (parent, name, x, y, width, height) => {
+  const node = figma.createRectangle()
+  node.name = name
+  node.x = x
+  node.y = y
+  node.resize(width || 100, height || 100)
+  parent.appendChild(node)
+  return node
+}
+
+const createEllipse = (parent, name, x, y, width, height) => {
+  const node = figma.createEllipse()
+  node.name = name
+  node.x = x
+  node.y = y
+  node.resize(width || 100, height || 100)
+  parent.appendChild(node)
+  return node
+}
+
+const createLine = (parent, name, x, y, width, height) => {
+  const node = figma.createLine()
+  node.name = name
+  node.x = x
+  node.y = y
+  node.resize(width || 100, height || 0)
+  parent.appendChild(node)
+  return node
+}
+
+const createPolygon = (parent, name, x, y, width, height, pointCount) => {
+  const node = figma.createPolygon()
+  node.name = name
+  node.x = x
+  node.y = y
+  if (typeof pointCount === 'number') {
+    node.pointCount = pointCount
+  }
+  node.resize(width || 100, height || 100)
+  parent.appendChild(node)
+  return node
+}
+
+const createSection = (parent, name, x, y, width, height) => {
+  const node = figma.createSection()
+  node.name = name
+  node.x = x
+  node.y = y
+  node.resize(width || 1200, height || 800)
+  parent.appendChild(node)
+  return node
+}
+
 const hexToRgb = (hex) => {
   if (!hex) return { r: 0.5, g: 0.5, b: 0.5 }
   const clean = hex.replace('#', '')
@@ -444,6 +497,24 @@ const applyFixes = (page, fixes) => {
   })
 }
 
+const setNodeOpacity = (node, value) => {
+  if (node && typeof value === 'number' && 'opacity' in node) {
+    node.opacity = value
+  }
+}
+
+const setNodeEffects = (node, effects) => {
+  if (node && effects && Array.isArray(effects) && 'effects' in node) {
+    node.effects = effects
+  }
+}
+
+const setNodeGrid = (node, layoutGrids) => {
+  if (node && Array.isArray(layoutGrids) && 'layoutGrids' in node) {
+    node.layoutGrids = layoutGrids
+  }
+}
+
 const buildFromPlan = async (jobId, plan) => {
   await ensureFont()
   const pageSuffix = `${formatTimestamp(new Date())} (${jobId})`
@@ -524,6 +595,31 @@ const buildFromPlan = async (jobId, plan) => {
         const frame = createFrame(parent, cmd.name, props.x || 40, props.y || 40, props.width || 800, props.height || 520)
         register(cmd.name, frame, { kind: 'frame' })
       }
+      if (cmd.op === 'create_rectangle') {
+        const parent = getParent(cmd.parent)
+        const node = createRectangle(parent, cmd.name, props.x || 0, props.y || 0, props.width, props.height)
+        register(cmd.name, node, { kind: 'rectangle' })
+      }
+      if (cmd.op === 'create_line') {
+        const parent = getParent(cmd.parent)
+        const node = createLine(parent, cmd.name, props.x || 0, props.y || 0, props.width, props.height)
+        register(cmd.name, node, { kind: 'line' })
+      }
+      if (cmd.op === 'create_ellipse') {
+        const parent = getParent(cmd.parent)
+        const node = createEllipse(parent, cmd.name, props.x || 0, props.y || 0, props.width, props.height)
+        register(cmd.name, node, { kind: 'ellipse' })
+      }
+      if (cmd.op === 'create_polygon') {
+        const parent = getParent(cmd.parent)
+        const node = createPolygon(parent, cmd.name, props.x || 0, props.y || 0, props.width, props.height, props.pointCount)
+        register(cmd.name, node, { kind: 'polygon' })
+      }
+      if (cmd.op === 'create_section') {
+        const parent = getParent(cmd.parent)
+        const node = createSection(parent, cmd.name, props.x || 0, props.y || 0, props.width, props.height)
+        register(cmd.name, node, { kind: 'section' })
+      }
       if (cmd.op === 'create_text') {
         const parent = getParent(cmd.parent)
         const node = figma.createText()
@@ -537,13 +633,13 @@ const buildFromPlan = async (jobId, plan) => {
       }
       if (cmd.op === 'set_fill') {
         const node = getNode(cmd.name)
-        if (node && props.color) {
+        if (node && props.color && 'fills' in node) {
           node.fills = [{ type: 'SOLID', color: hexToRgb(props.color) }]
         }
       }
       if (cmd.op === 'set_stroke') {
         const node = getNode(cmd.name)
-        if (node && props.color) {
+        if (node && props.color && 'strokes' in node) {
           node.strokes = [{ type: 'SOLID', color: hexToRgb(props.color) }]
         }
       }
@@ -551,6 +647,15 @@ const buildFromPlan = async (jobId, plan) => {
         const node = getNode(cmd.name)
         if (node && typeof props.radius === 'number') {
           node.cornerRadius = props.radius
+        }
+      }
+      if (cmd.op === 'set_corner_radius_individual') {
+        const node = getNode(cmd.name)
+        if (node && 'topLeftRadius' in node) {
+          if (typeof props.topLeft === 'number') node.topLeftRadius = props.topLeft
+          if (typeof props.topRight === 'number') node.topRightRadius = props.topRight
+          if (typeof props.bottomRight === 'number') node.bottomRightRadius = props.bottomRight
+          if (typeof props.bottomLeft === 'number') node.bottomLeftRadius = props.bottomLeft
         }
       }
       if (cmd.op === 'resize') {
@@ -582,6 +687,8 @@ const buildFromPlan = async (jobId, plan) => {
         const node = getNode(cmd.name)
         if (node && node.type !== 'TEXT') {
           node.layoutMode = props.layoutMode || 'VERTICAL'
+          if (props.primaryAxisSizingMode) node.primaryAxisSizingMode = props.primaryAxisSizingMode
+          if (props.counterAxisSizingMode) node.counterAxisSizingMode = props.counterAxisSizingMode
         }
       }
       if (cmd.op === 'set_padding') {
@@ -606,12 +713,69 @@ const buildFromPlan = async (jobId, plan) => {
           if (props.counterAxisAlign) node.counterAxisAlignItems = props.counterAxisAlign
         }
       }
+      if (cmd.op === 'set_layout_align') {
+        const node = getNode(cmd.name)
+        if (node && node.parent && 'layoutAlign' in node) {
+          if (props.layoutAlign) node.layoutAlign = props.layoutAlign
+          if (typeof props.layoutGrow === 'number') node.layoutGrow = props.layoutGrow
+          if (props.layoutPositioning) node.layoutPositioning = props.layoutPositioning
+        }
+      }
+      if (cmd.op === 'set_size_constraints') {
+        const node = getNode(cmd.name)
+        if (node) {
+          if (props.constraints) node.constraints = props.constraints
+          if (props.layoutSizingHorizontal && 'layoutSizingHorizontal' in node) node.layoutSizingHorizontal = props.layoutSizingHorizontal
+          if (props.layoutSizingVertical && 'layoutSizingVertical' in node) node.layoutSizingVertical = props.layoutSizingVertical
+        }
+      }
+      if (cmd.op === 'set_clip_content') {
+        const node = getNode(cmd.name)
+        if (node && 'clipsContent' in node) {
+          node.clipsContent = !!props.value
+        }
+      }
+      if (cmd.op === 'set_opacity') {
+        setNodeOpacity(getNode(cmd.name), props.value)
+      }
+      if (cmd.op === 'set_stroke_weight') {
+        const node = getNode(cmd.name)
+        if (node && typeof props.value === 'number' && 'strokeWeight' in node) {
+          node.strokeWeight = props.value
+        }
+      }
       if (cmd.op === 'set_text_style') {
         const node = getNode(cmd.name)
         if (node && node.type === 'TEXT') {
           if (props.fontSize) node.fontSize = props.fontSize
           if (props.lineHeight) node.lineHeight = { value: props.lineHeight, unit: 'PIXELS' }
           if (props.letterSpacing) node.letterSpacing = { value: props.letterSpacing, unit: 'PERCENT' }
+        }
+      }
+      if (cmd.op === 'set_text_font') {
+        const node = getNode(cmd.name)
+        if (node && node.type === 'TEXT' && props.family && props.style) {
+          await figma.loadFontAsync({ family: props.family, style: props.style })
+          node.fontName = { family: props.family, style: props.style }
+        }
+      }
+      if (cmd.op === 'set_text_align') {
+        const node = getNode(cmd.name)
+        if (node && node.type === 'TEXT') {
+          if (props.horizontal) node.textAlignHorizontal = props.horizontal
+          if (props.vertical) node.textAlignVertical = props.vertical
+        }
+      }
+      if (cmd.op === 'set_line_height') {
+        const node = getNode(cmd.name)
+        if (node && node.type === 'TEXT' && typeof props.value === 'number') {
+          node.lineHeight = { value: props.value, unit: props.unit || 'PIXELS' }
+        }
+      }
+      if (cmd.op === 'set_letter_spacing') {
+        const node = getNode(cmd.name)
+        if (node && node.type === 'TEXT' && typeof props.value === 'number') {
+          node.letterSpacing = { value: props.value, unit: props.unit || 'PERCENT' }
         }
       }
       if (cmd.op === 'create_component') {
@@ -648,9 +812,42 @@ const buildFromPlan = async (jobId, plan) => {
           setMeta(cmd.name, { variantProps: props })
         }
       }
+      if (cmd.op === 'create_instance') {
+        const source = getNode(props.component || props.source)
+        const parent = getParent(cmd.parent)
+        if (source && source.type === 'COMPONENT') {
+          const instance = source.createInstance()
+          instance.name = cmd.name
+          instance.x = props.x || 0
+          instance.y = props.y || 0
+          parent.appendChild(instance)
+          register(cmd.name, instance, { kind: 'instance', source: source.name })
+        }
+      }
+      if (cmd.op === 'detach_instance') {
+        const node = getNode(cmd.name)
+        if (node && node.type === 'INSTANCE') {
+          const detached = node.detachInstance()
+          detached.name = cmd.name
+          registry.set(cmd.name, { node: detached, meta: { kind: 'detached' } })
+        }
+      }
+      if (cmd.op === 'set_component_properties') {
+        const node = getNode(cmd.name)
+        if (node && node.type === 'INSTANCE' && props) {
+          node.setProperties(props)
+        }
+      }
+      if (cmd.op === 'append_child') {
+        const parent = getParent(cmd.parent)
+        const node = getNode(cmd.name)
+        if (parent && node && parent.id !== node.parent.id) {
+          parent.appendChild(node)
+        }
+      }
       if (cmd.op === 'set_image_fill') {
         const node = getNode(cmd.name)
-        if (node && props.imageBytes) {
+        if (node && props.imageBytes && 'fills' in node) {
           const image = figma.createImage(new Uint8Array(props.imageBytes))
           node.fills = [{ type: 'IMAGE', imageHash: image.hash, scaleMode: 'FILL' }]
         }
@@ -664,6 +861,12 @@ const buildFromPlan = async (jobId, plan) => {
           parent.appendChild(node)
           register(cmd.name, node, { kind: 'svg' })
         }
+      }
+      if (cmd.op === 'set_effects') {
+        setNodeEffects(getNode(cmd.name), props.effects)
+      }
+      if (cmd.op === 'set_grid') {
+        setNodeGrid(getNode(cmd.name), props.layoutGrids)
       }
       } catch (error) {
         await logEvent(jobId, 'error', `op_failed:${cmd.op}`, {

@@ -123,12 +123,20 @@ create_page, create_frame, create_text, set_fill, set_stroke, set_radius,
 resize, move, set_text, set_font_size,
 set_autolayout, set_padding, set_spacing, set_alignment, set_text_style,
 create_component, create_component_set, set_variant_props,
-set_image_fill, insert_svg
+set_image_fill, insert_svg,
+append_child, create_instance, detach_instance, set_component_properties,
+set_size_constraints, set_layout_align, set_clip_content, set_opacity,
+set_stroke_weight, set_corner_radius_individual, set_text_font,
+set_text_align, set_line_height, set_letter_spacing,
+create_rectangle, create_line, create_ellipse, create_polygon, create_section,
+set_effects, set_grid
 
 REQUIREMENTS:
 - Use at least one create_component and one create_component_set.
 - Define variants via set_variant_props (e.g. Button/Variant=Primary).
 - Use insert_svg for at least one icon placeholder (simple SVG).
+- Prefer create_instance for repeated UI parts after defining components.
+- Prefer append_child and layout commands instead of absolute positioning when building structured UI.
 
 EXAMPLE:
 { "op": "create_component_set", "name": "Button/Variants", "parent": "Design System", "props": { "x": 40, "y": 200 } }
