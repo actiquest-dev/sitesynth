@@ -1,0 +1,13 @@
+{
+  "name": "sitesynth-reference-capture",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "puppeteer-core": "^24.7.1",
+    "slugify": "^1.6.6"
+  }
+}
