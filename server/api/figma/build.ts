@@ -90,7 +90,7 @@ export default defineEventHandler(async (event) => {
           ]),
         name: z.string(),
         parent: z.string().optional(),
-        props: z.record(z.any()).optional(),
+        props: z.record(z.string(), z.any()).optional(),
       })),
       layout_rules: z.array(z.string()),
       handoff_notes: z.array(z.string()),
