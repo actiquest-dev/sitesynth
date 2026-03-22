@@ -125,14 +125,16 @@ ${JSON.stringify(commandTemplates, null, 2)}
       throw new Error(`Figma builder agent is unavailable (available: ${available})`)
     }
 
-    const agentResult = await figmaBuilderAgent.generateObject(
-      agentPrompt,
-      z.object({
-        plan: buildPlanSchema,
-      })
-    )
+    const agentSchema = z.object({
+      plan: buildPlanSchema,
+    })
 
-    const candidatePlan = agentResult?.object?.plan || null
+    const runBuilderAgent = async (prompt: string) => {
+      const result = await figmaBuilderAgent.generateObject(prompt, agentSchema)
+      return result?.object?.plan || null
+    }
+
+    let candidatePlan = await runBuilderAgent(agentPrompt)
     const validatePlan = (plan: any) => {
       try {
         buildPlanSchema.parse(plan)
@@ -157,11 +159,63 @@ ${JSON.stringify(commandTemplates, null, 2)}
 
     const validation = validatePlan(candidatePlan)
     if (!validation.valid) {
+      const repairPrompt = `
+The previous Figma build plan failed validation.
+
+Validation error:
+${validation.reason}
+
+You must regenerate the FULL JSON from scratch.
+
+Hard requirements:
+- Include at least one command with op="create_component"
+- Include at least one command with op="create_component_set"
+- Keep output STRICT JSON only
+- Keep the same overall build plan structure
+
+Original task:
+${agentPrompt}
+      `.trim()
+
+      candidatePlan = await runBuilderAgent(repairPrompt)
+      const repairedValidation = validatePlan(candidatePlan)
+      if (repairedValidation.valid) {
+        const buildPlan = candidatePlan
+
+        const { data: job, error: jobError } = await db
+          .from('figma_build_jobs')
+          .insert({
+            brief_id: briefId,
+            requested_by: userEmail,
+            source: 'cabinet',
+            spec_snapshot: {
+              spec: brief.design_spec_json,
+              build_plan: buildPlan,
+            },
+            status: 'queued',
+          })
+          .select('id, status, created_at')
+          .single()
+
+        if (jobError) throw jobError
+
+        return {
+          success: true,
+          data: {
+            jobId: job.id,
+            status: job.status,
+            createdAt: job.created_at,
+            buildPlan,
+            buildToken: issueBuildToken(job.id),
+          },
+        }
+      }
+
       console.error('[FigmaBuild] Invalid agent plan:', {
-        reason: validation.reason,
-        agentOutput: agentResult?.object,
+        reason: repairedValidation.reason,
+        agentOutput: candidatePlan,
       })
-      throw new Error(`Figma build plan failed validation: ${validation.reason}`)
+      throw new Error(`Figma build plan failed validation: ${repairedValidation.reason}`)
     }
 
     const buildPlan = candidatePlan
