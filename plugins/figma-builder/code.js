@@ -327,6 +327,7 @@ const PLUGIN_TOKEN = '268cc61590a8f2e541fa99e322722364c528bbc57c97efcaf8eb21b7ee
 const POLL_INTERVAL = 8000
 
 let isBusy = false
+let currentJobId = null
 
 const formatTimestamp = (date) => {
   const pad = (value) => String(value).padStart(2, '0')
@@ -335,6 +336,25 @@ const formatTimestamp = (date) => {
 
 const postStatus = (text) => {
   figma.ui.postMessage({ type: 'status', text })
+}
+
+const logEvent = async (jobId, level, message, payload) => {
+  const url = `${API_BASE}/api/figma/build/event`
+  try {
+    await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        token: PLUGIN_TOKEN,
+        jobId,
+        level,
+        message,
+        payload: payload || null,
+      }),
+    })
+  } catch (error) {
+    // Keep plugin running even if event logging fails.
+  }
 }
 
 const fetchNextJob = async () => {
@@ -428,27 +448,81 @@ const buildFromPlan = async (jobId, plan) => {
   await ensureFont()
   const pageSuffix = `${formatTimestamp(new Date())} (${jobId})`
   const registry = new Map()
+  const pendingVariantSets = new Map()
 
-  const register = (name, node) => {
-    if (name && node) registry.set(name, node)
+  const register = (name, node, meta) => {
+    if (name && node) registry.set(name, { node, meta: meta || {} })
   }
 
   const getParent = (parentName) => {
     if (!parentName) return figma.currentPage
-    return registry.get(parentName) || figma.currentPage
+    const entry = registry.get(parentName)
+    return (entry && entry.node) || figma.currentPage
+  }
+
+  const getNode = (name) => {
+    const entry = registry.get(name)
+    return entry && entry.node ? entry.node : null
+  }
+
+  const getMeta = (name) => {
+    const entry = registry.get(name)
+    return entry && entry.meta ? entry.meta : {}
+  }
+
+  const setMeta = (name, meta) => {
+    const entry = registry.get(name)
+    if (entry) {
+      entry.meta = Object.assign({}, entry.meta || {}, meta || {})
+    }
+  }
+
+  const finalizeVariantSets = () => {
+    pendingVariantSets.forEach((setInfo, setName) => {
+      if (!setInfo.components.length) return
+
+      setInfo.components.forEach((component) => {
+        const componentName = component.name
+        const meta = getMeta(componentName)
+        const variantProps = meta.variantProps || null
+        if (variantProps) {
+          const pairs = Object.keys(variantProps).map((key) => `${key}=${variantProps[key]}`)
+          component.name = pairs.join(', ')
+        }
+      })
+
+      let componentSet = null
+      if (setInfo.components.length === 1) {
+        componentSet = setInfo.components[0]
+        componentSet.name = setName
+        componentSet.x = setInfo.x
+        componentSet.y = setInfo.y
+      } else {
+        componentSet = figma.combineAsVariants(setInfo.components, setInfo.parent)
+        componentSet.name = setName
+        componentSet.x = setInfo.x
+        componentSet.y = setInfo.y
+      }
+      registry.set(setName, { node: componentSet, meta: { kind: 'component_set' } })
+    })
   }
 
   if (Array.isArray(plan.commands) && plan.commands.length) {
-    plan.commands.forEach((cmd) => {
+    await logEvent(jobId, 'info', 'Executing command plan', { commandCount: plan.commands.length })
+
+    for (const cmd of plan.commands) {
       const props = cmd.props || {}
+      await logEvent(jobId, 'info', `op:${cmd.op}`, { name: cmd.name, parent: cmd.parent || null, props })
+
+      try {
       if (cmd.op === 'create_page') {
         const page = createPage(cmd.name)
-        register(cmd.name, page)
+        register(cmd.name, page, { kind: 'page' })
       }
       if (cmd.op === 'create_frame') {
         const parent = getParent(cmd.parent)
         const frame = createFrame(parent, cmd.name, props.x || 40, props.y || 40, props.width || 800, props.height || 520)
-        register(cmd.name, frame)
+        register(cmd.name, frame, { kind: 'frame' })
       }
       if (cmd.op === 'create_text') {
         const parent = getParent(cmd.parent)
@@ -459,59 +533,59 @@ const buildFromPlan = async (jobId, plan) => {
         node.x = props.x || 0
         node.y = props.y || 0
         parent.appendChild(node)
-        register(cmd.name, node)
+        register(cmd.name, node, { kind: 'text' })
       }
       if (cmd.op === 'set_fill') {
-        const node = registry.get(cmd.name)
+        const node = getNode(cmd.name)
         if (node && props.color) {
           node.fills = [{ type: 'SOLID', color: hexToRgb(props.color) }]
         }
       }
       if (cmd.op === 'set_stroke') {
-        const node = registry.get(cmd.name)
+        const node = getNode(cmd.name)
         if (node && props.color) {
           node.strokes = [{ type: 'SOLID', color: hexToRgb(props.color) }]
         }
       }
       if (cmd.op === 'set_radius') {
-        const node = registry.get(cmd.name)
+        const node = getNode(cmd.name)
         if (node && typeof props.radius === 'number') {
           node.cornerRadius = props.radius
         }
       }
       if (cmd.op === 'resize') {
-        const node = registry.get(cmd.name)
+        const node = getNode(cmd.name)
         if (node && typeof props.width === 'number' && typeof props.height === 'number') {
           node.resize(props.width, props.height)
         }
       }
       if (cmd.op === 'move') {
-        const node = registry.get(cmd.name)
+        const node = getNode(cmd.name)
         if (node && typeof props.x === 'number' && typeof props.y === 'number') {
           node.x = props.x
           node.y = props.y
         }
       }
       if (cmd.op === 'set_text') {
-        const node = registry.get(cmd.name)
+        const node = getNode(cmd.name)
         if (node && node.type === 'TEXT' && typeof props.text === 'string') {
           node.characters = props.text
         }
       }
       if (cmd.op === 'set_font_size') {
-        const node = registry.get(cmd.name)
+        const node = getNode(cmd.name)
         if (node && node.type === 'TEXT' && typeof props.size === 'number') {
           node.fontSize = props.size
         }
       }
       if (cmd.op === 'set_autolayout') {
-        const node = registry.get(cmd.name)
+        const node = getNode(cmd.name)
         if (node && node.type !== 'TEXT') {
           node.layoutMode = props.layoutMode || 'VERTICAL'
         }
       }
       if (cmd.op === 'set_padding') {
-        const node = registry.get(cmd.name)
+        const node = getNode(cmd.name)
         if (node && node.type !== 'TEXT') {
           node.paddingTop = props.top || 0
           node.paddingRight = props.right || 0
@@ -520,20 +594,20 @@ const buildFromPlan = async (jobId, plan) => {
         }
       }
       if (cmd.op === 'set_spacing') {
-        const node = registry.get(cmd.name)
+        const node = getNode(cmd.name)
         if (node && node.type !== 'TEXT') {
           node.itemSpacing = props.value || 0
         }
       }
       if (cmd.op === 'set_alignment') {
-        const node = registry.get(cmd.name)
+        const node = getNode(cmd.name)
         if (node && node.type !== 'TEXT') {
           if (props.primaryAxisAlign) node.primaryAxisAlignItems = props.primaryAxisAlign
           if (props.counterAxisAlign) node.counterAxisAlignItems = props.counterAxisAlign
         }
       }
       if (cmd.op === 'set_text_style') {
-        const node = registry.get(cmd.name)
+        const node = getNode(cmd.name)
         if (node && node.type === 'TEXT') {
           if (props.fontSize) node.fontSize = props.fontSize
           if (props.lineHeight) node.lineHeight = { value: props.lineHeight, unit: 'PIXELS' }
@@ -541,7 +615,10 @@ const buildFromPlan = async (jobId, plan) => {
         }
       }
       if (cmd.op === 'create_component') {
-        const parent = getParent(cmd.parent)
+        let parent = getParent(cmd.parent)
+        if (cmd.parent && pendingVariantSets.has(cmd.parent)) {
+          parent = pendingVariantSets.get(cmd.parent).parent
+        }
         const component = figma.createComponent()
         component.name = cmd.name
         component.x = props.x || 0
@@ -550,25 +627,29 @@ const buildFromPlan = async (jobId, plan) => {
           component.resize(props.width, props.height)
         }
         parent.appendChild(component)
-        register(cmd.name, component)
+        register(cmd.name, component, { kind: 'component' })
+        if (cmd.parent && pendingVariantSets.has(cmd.parent)) {
+          pendingVariantSets.get(cmd.parent).components.push(component)
+        }
       }
       if (cmd.op === 'create_component_set') {
         const parent = getParent(cmd.parent)
-        const set = figma.createComponentSet()
-        set.name = cmd.name
-        set.x = props.x || 0
-        set.y = props.y || 0
-        parent.appendChild(set)
-        register(cmd.name, set)
+        pendingVariantSets.set(cmd.name, {
+          name: cmd.name,
+          parent,
+          x: props.x || 0,
+          y: props.y || 0,
+          components: [],
+        })
       }
       if (cmd.op === 'set_variant_props') {
-        const node = registry.get(cmd.name)
+        const node = getNode(cmd.name)
         if (node && node.type === 'COMPONENT') {
-          node.variantProperties = props
+          setMeta(cmd.name, { variantProps: props })
         }
       }
       if (cmd.op === 'set_image_fill') {
-        const node = registry.get(cmd.name)
+        const node = getNode(cmd.name)
         if (node && props.imageBytes) {
           const image = figma.createImage(new Uint8Array(props.imageBytes))
           node.fills = [{ type: 'IMAGE', imageHash: image.hash, scaleMode: 'FILL' }]
@@ -581,10 +662,22 @@ const buildFromPlan = async (jobId, plan) => {
           node.x = props.x || 0
           node.y = props.y || 0
           parent.appendChild(node)
-          register(cmd.name, node)
+          register(cmd.name, node, { kind: 'svg' })
         }
       }
-    })
+      } catch (error) {
+        await logEvent(jobId, 'error', `op_failed:${cmd.op}`, {
+          name: cmd.name,
+          parent: cmd.parent || null,
+          props,
+          error: error && error.message ? error.message : String(error),
+        })
+        throw error
+      }
+    }
+
+    finalizeVariantSets()
+    await logEvent(jobId, 'info', 'Command plan executed', { registeredNodes: registry.size, variantSets: pendingVariantSets.size })
   } else {
     const designSystemPage = createPage(`Build ${pageSuffix} · Design System`)
     const wireframesPage = createPage(`Build ${pageSuffix} · Wireframes`)
@@ -616,14 +709,20 @@ const pollLoop = async () => {
       postStatus('Idle. Waiting for new build jobs...')
       return
     }
+    currentJobId = job.jobId
     postStatus(`Building job ${job.jobId}...`)
+    await logEvent(job.jobId, 'info', 'Plugin started build', { mode: Array.isArray(job.buildPlan && job.buildPlan.commands) && job.buildPlan.commands.length ? 'commands' : 'plan' })
     await buildFromPlan(job.jobId, job.buildPlan)
     await markComplete(job.jobId, figma.fileKey)
     postStatus(`Job ${job.jobId} completed.`)
   } catch (error) {
+    if (currentJobId) {
+      await logEvent(currentJobId, 'error', 'Plugin build failed', { error: error && error.message ? error.message : String(error) })
+    }
     postStatus(`Build failed: ${error.message || error}`)
   } finally {
     isBusy = false
+    currentJobId = null
   }
 }
 
