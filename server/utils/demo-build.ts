@@ -50,7 +50,7 @@ const inferAssetRequirements = (brief: any, designSpec: any, projectName: string
       purpose: 'Primary hero visual for the landing section',
       aspect_ratio: '4:3',
       min_width: 1600,
-      model: 'nano-banana-pro-preview',
+      model: 'nano-banana-pro-preview', // Google image generation model (supports image generation despite name)
       style_prompt: `Editorial product hero image for ${projectName}, a ${productType}. High-end web design aesthetic, strong composition, clean background, premium lighting, detailed UI-inspired forms, modern brand campaign quality.`,
       alt: `${projectName} hero visual`,
       output_path: 'assets/hero-primary.webp',
@@ -61,7 +61,7 @@ const inferAssetRequirements = (brief: any, designSpec: any, projectName: string
       purpose: 'Supporting product/feature visual for a mid-page section',
       aspect_ratio: '1:1',
       min_width: 1200,
-      model: 'nano-banana-pro-preview',
+      model: 'nano-banana-pro-preview', // Google image generation model
       style_prompt: `Square feature illustration for ${projectName}. Modern product marketing image with clean geometry, interface motifs, soft depth, and premium editorial composition.`,
       alt: `${projectName} feature visual`,
       output_path: 'assets/feature-visual-1.webp',
@@ -111,7 +111,10 @@ export const buildDemoContract = (brief: any, slug: string) => {
         mode: 'act',
       },
       critic: {
-        enabled: false,
+        enabled: true,
+        mode: 'critique-and-fix',
+        maxIterations: 2,
+        passThreshold: 4.2,
       },
       assetGeneration: {
         enabled: assetRequirements.length > 0,

@@ -32,43 +32,41 @@ export default defineEventHandler(async (event) => {
     notes: z.array(z.string()).optional(),
   })
 
+  const artDirection = job.spec_snapshot?.art_direction || {}
+  const buildContract = job.build_contract || job.spec_snapshot?.build_contract || {}
+
   const prompt = `
-🎨 ART DIRECTION CONTRACT (primary source of truth):
-${JSON.stringify(job.spec_snapshot?.art_direction || {}, null, 2)}
+🎨 ART DIRECTION CONTRACT (ONLY source of truth for design implementation):
+${JSON.stringify(artDirection, null, 2)}
 
-📋 Build contract (JSON):
-${JSON.stringify(job.build_contract || job.spec_snapshot?.build_contract || {}, null, 2)}
-
-📊 Design spec (JSON):
-${JSON.stringify(job.spec_snapshot?.design_spec || job.spec_snapshot?.spec || {}, null, 2)}
-
-📝 Brief (markdown):
-${job.spec_snapshot?.brief_markdown || ''}
-
-🔍 Project context (brief JSON):
-${JSON.stringify(job.spec_snapshot?.brief || {}, null, 2)}
+🧱 BUILD ENVELOPE (non-design metadata only):
+${JSON.stringify({
+    project: buildContract?.project || {},
+    implementation: buildContract?.implementation || {},
+    rules: buildContract?.rules || [],
+    assetManifest: buildContract?.assetManifest || {},
+  }, null, 2)}
 
 ═══════════════════════════════════════════════════════════════════════════
 
 🚀 TASK:
 Generate a polished, production-grade static site (HTML + CSS).
 
-✨ USE THE ART DIRECTION CONTRACT AS YOUR PRIMARY SOURCE:
-- Extract exact colors from color_system (use these hex values, not variations)
-- Use typography scale verbatim (sizes, weights, line-heights, fonts)
-- Follow section_blueprints: these define exact copy and layout
-- Implement component_recipes exactly as specified
-- EXPLICITLY AVOID all anti_patterns listed
-- Translate reference insights into specific CSS choices
-- Use spacing variables from the art direction contract
+MANDATORY RULES:
+- Use the art direction contract as the single source of truth for layout, typography, copy, spacing, color, and component styling
+- Do not invent a different visual direction from brief text or design spec fragments
+- Use section_blueprints verbatim for section order, copy, and composition
+- Use color_system exact values with no substitutions
+- Use typography and spacing values exactly as provided
+- Implement component_recipes if present
+- Explicitly avoid every anti_pattern listed
+- Use assetManifest if assets are provided
 
-🎯 BUILD WITH:
-- Exact colors, fonts, sizes from art direction (not approximations)
-- Semantic HTML structure
-- CSS custom properties driven by art direction values
-- Responsive design using clamp() from the spec
-- Professional hover states and transitions
-- Proper spacing hierarchy matching the art direction
+BUILD WITH:
+- semantic HTML
+- CSS custom properties derived from the art direction contract
+- responsive layout driven by the provided section_blueprints and spacing values
+- exact copy from the contract instead of generic marketing filler
 
 Return STRICT JSON with title, slug, html, and css strings only.
   `.trim()

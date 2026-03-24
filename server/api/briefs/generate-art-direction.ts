@@ -250,7 +250,36 @@ The output must be valid JSON matching the Art Direction Contract schema.`
       temperature: 0.7,
     })
 
-    // Save art direction contract to database
+    const { data: latestVersionRow, error: versionLookupError } = await db
+      .from('brief_art_direction_versions')
+      .select('version')
+      .eq('brief_id', briefId)
+      .order('version', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+
+    if (versionLookupError) {
+      console.error('Failed to lookup art direction versions:', versionLookupError)
+      return { success: false, error: 'Failed to version art direction' }
+    }
+
+    const nextVersion = Number(latestVersionRow?.version || 0) + 1
+
+    const { error: versionInsertError } = await db
+      .from('brief_art_direction_versions')
+      .insert({
+        brief_id: briefId,
+        user_email: userEmail,
+        version: nextVersion,
+        art_direction_json: artDirection,
+        source: 'generate-art-direction',
+      })
+
+    if (versionInsertError) {
+      console.error('Failed to store art direction version:', versionInsertError)
+      return { success: false, error: 'Failed to version art direction' }
+    }
+
     const { error: updateError } = await db
       .from('briefs')
       .update({
@@ -268,6 +297,7 @@ The output must be valid JSON matching the Art Direction Contract schema.`
       success: true,
       data: {
         briefId,
+        version: nextVersion,
         artDirection,
         summary: {
           mood: artDirection.mood,

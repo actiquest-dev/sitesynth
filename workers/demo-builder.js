@@ -143,6 +143,50 @@ const runCommand = (command, args, options = {}) => new Promise((resolve, reject
   })
 })
 
+const extractFirstJsonObject = (value) => {
+  const text = String(value || '').trim()
+  const start = text.indexOf('{')
+  if (start === -1) return null
+
+  let depth = 0
+  let inString = false
+  let escaped = false
+
+  for (let i = start; i < text.length; i += 1) {
+    const char = text[i]
+    if (inString) {
+      if (escaped) {
+        escaped = false
+      } else if (char === '\\') {
+        escaped = true
+      } else if (char === '"') {
+        inString = false
+      }
+      continue
+    }
+
+    if (char === '"') {
+      inString = true
+      continue
+    }
+
+    if (char === '{') depth += 1
+    if (char === '}') {
+      depth -= 1
+      if (depth === 0) {
+        const candidate = text.slice(start, i + 1)
+        try {
+          return JSON.parse(candidate)
+        } catch {
+          return null
+        }
+      }
+    }
+  }
+
+  return null
+}
+
 const listWorkspaceFiles = async (targetDir) => {
   const results = []
   const walk = async (dir) => {
@@ -185,6 +229,65 @@ Target URL: ${payload?.targetUrl || payload?.buildContract?.project?.targetUrl |
 Executor mode: ${EXECUTOR_MODE}
 `.trim()
 
+const buildCriticPrompt = (payload) => `You are reviewing a generated website implementation in the current workspace.
+
+Read these files first:
+- build_job.json
+- design_contract.json
+- asset_manifest.json
+- index.html
+- styles.css
+
+Return STRICT JSON only:
+{
+  "score": number,
+  "passed": boolean,
+  "strengths": string[],
+  "issues": string[],
+  "fixInstructions": string[]
+}
+
+Scoring rubric:
+- 5.0 = strongly matches art direction contract
+- 4.0 = acceptable but still needs polish
+- below 4.0 = clear mismatch
+
+Review criteria:
+- fidelity to color_system, typography, spacing, section_blueprints
+- quality of composition and hierarchy
+- use of exact copy from the contract
+- avoidance of anti_patterns
+- responsiveness and implementation quality
+
+If the site is weak, produce concrete fixInstructions the builder can apply immediately.
+
+Project slug: ${payload?.slug || 'demo-site'}
+`.trim()
+
+const buildFixPrompt = (payload, critique) => `You are improving the generated website in the current workspace.
+
+Read these files first:
+- build_job.json
+- design_contract.json
+- asset_manifest.json
+- index.html
+- styles.css
+
+Apply these fixes exactly:
+${JSON.stringify(critique?.fixInstructions || [], null, 2)}
+
+Also address these issues:
+${JSON.stringify(critique?.issues || [], null, 2)}
+
+Requirements:
+- keep the site runnable
+- preserve valid HTML and CSS
+- move the implementation closer to the art direction contract
+- do not add generic filler sections
+
+When finished, print a short summary.
+`.trim()
+
 const runClineBuild = async (payload) => {
   const targetDir = payload.workspacePath
   const promptPath = path.join(targetDir, '.sitesynth-cline-prompt.txt')
@@ -209,6 +312,34 @@ const runClineBuild = async (payload) => {
     htmlPath,
     cssPath,
     files,
+  }
+}
+
+const runClineCritic = async (payload) => {
+  const targetDir = payload.workspacePath
+  const prompt = buildCriticPrompt(payload)
+  const result = await runCommand(CLINE_BIN, ['-y', prompt], { cwd: targetDir })
+  const critique = extractFirstJsonObject(result.stdout) || extractFirstJsonObject(result.stderr)
+
+  if (!critique || typeof critique.score !== 'number') {
+    throw new Error(`Failed to parse critic output\n${(result.stdout || result.stderr || '').slice(0, 4000)}`)
+  }
+
+  return {
+    critique,
+    stdout: result.stdout,
+    stderr: result.stderr,
+  }
+}
+
+const runClineFixPass = async (payload, critique) => {
+  const targetDir = payload.workspacePath
+  const prompt = buildFixPrompt(payload, critique)
+  const result = await runCommand(CLINE_BIN, ['-y', prompt], { cwd: targetDir })
+  return {
+    summary: result.stdout.trim().slice(0, 4000),
+    stdout: result.stdout,
+    stderr: result.stderr,
   }
 }
 
@@ -271,13 +402,67 @@ const runLoop = async () => {
 
         try {
           const result = await runClineBuild(next.data)
+          const criticConfig = next?.data?.buildContract?.executor?.critic || {}
+          const criticEnabled = Boolean(criticConfig?.enabled)
+          const maxIterations = Math.max(0, Number(criticConfig?.maxIterations || 0))
+          const passThreshold = Number(criticConfig?.passThreshold || 4.2)
+
+          let critiqueSummary = null
+          let fixSummaries = []
+
+          if (criticEnabled) {
+            for (let iteration = 1; iteration <= maxIterations; iteration += 1) {
+              await logEvent(jobId, 'Running critic pass', 'info', {
+                stage: 'critic',
+                status: 'running',
+                iteration,
+                passThreshold,
+              })
+
+              const critiqueResult = await runClineCritic(next.data)
+              const critique = critiqueResult.critique || {}
+              const passed = Boolean(critique?.passed) || Number(critique?.score || 0) >= passThreshold
+              critiqueSummary = critique
+
+              await logEvent(jobId, passed ? 'Critic passed' : 'Critic requested fixes', passed ? 'info' : 'warn', {
+                stage: 'critic',
+                status: passed ? 'passed' : 'needs_revision',
+                iteration,
+                score: critique?.score || null,
+                issues: critique?.issues || [],
+                fixInstructions: critique?.fixInstructions || [],
+              })
+
+              if (passed || !Array.isArray(critique?.fixInstructions) || critique.fixInstructions.length === 0) {
+                break
+              }
+
+              const fixResult = await runClineFixPass(next.data, critique)
+              fixSummaries.push({
+                iteration,
+                summary: fixResult.summary,
+              })
+
+              await logEvent(jobId, 'Applied critic fixes', 'info', {
+                stage: 'critic',
+                status: 'running',
+                iteration,
+                summary: fixResult.summary,
+              })
+            }
+          }
+
+          const finalFiles = await listWorkspaceFiles(workspacePath)
+          const finalHtmlPath = finalFiles.find((file) => file.endsWith('index.html')) || result.htmlPath
+          const finalCssPath = finalFiles.find((file) => file.endsWith('styles.css')) || result.cssPath
           const url = `https://demo.sitesynth.com/${slug}/`
           await logEvent(jobId, 'Cline executor finished', 'info', {
             stage: 'verify',
             status: 'running',
             summary: result.summary,
-            htmlPath: result.htmlPath,
-            cssPath: result.cssPath,
+            htmlPath: finalHtmlPath,
+            cssPath: finalCssPath,
+            critique: critiqueSummary,
           })
 
           await apiPost('/demo/build/complete', {
@@ -287,24 +472,26 @@ const runLoop = async () => {
             stage: 'publish',
             targetUrl: url,
             summary: result.summary,
-            changedFiles: result.files.map((file) => path.relative(workspacePath, file)),
+            changedFiles: finalFiles.map((file) => path.relative(workspacePath, file)),
             output: {
               url,
-              htmlPath: result.htmlPath,
-              cssPath: result.cssPath,
+              htmlPath: finalHtmlPath,
+              cssPath: finalCssPath,
               executor: 'cline',
+              critique: critiqueSummary,
+              fixSummaries,
             },
             artifacts: [
-              ...(result.htmlPath ? [{
+              ...(finalHtmlPath ? [{
                 type: 'html',
-                path: result.htmlPath,
-                publicUrl: `${url}${path.basename(result.htmlPath)}`,
+                path: finalHtmlPath,
+                publicUrl: `${url}${path.basename(finalHtmlPath)}`,
                 metadata: { slug },
               }] : []),
-              ...(result.cssPath ? [{
+              ...(finalCssPath ? [{
                 type: 'css',
-                path: result.cssPath,
-                publicUrl: `${url}${path.basename(result.cssPath)}`,
+                path: finalCssPath,
+                publicUrl: `${url}${path.basename(finalCssPath)}`,
                 metadata: { slug },
               }] : []),
               {
