@@ -818,74 +818,779 @@ NUXT_PUBLIC_SITE_URL=https://www.sitesynth.com
 
 ---
 
-## 9. Linux сервисы (отдельный сервер)
+## 9. Oracle Linux сервер — полная инфраструктура
 
-**Зачем отдельный сервер существует параллельно с Vercel:**
-Vercel — это serverless платформа, идеальна для API и SSR. Но у неё есть
-архитектурное ограничение: нельзя писать файлы на диск, нет постоянных процессов,
-максимум 60 секунд на выполнение. Задачи типа "собери Figma макет из 30 компонентов"
-или "построй demo сайт и задеплой" занимают минуты. Linux сервер — это
-обычный VPS (например Hetzner) где крутятся два Node.js воркера (PM2),
-Nginx отдаёт demo сайты, и нет ограничений по времени выполнения.
-Коммуникация: воркеры polling'уют Vercel API — Vercel не знает о существовании
-Linux сервера, просто принимает HTTP запросы.
+**Зачем отдельный сервер, а не только Vercel:**
+Vercel — serverless платформа: максимум 60 секунд на функцию, нельзя писать
+файлы на диск, нет постоянных процессов. Задачи типа "собери Figma макет",
+"сделай скриншоты 10 конкурентов", "собери demo-сайт и задеплой" занимают
+минуты и требуют файловой системы. Oracle ARM сервер (aarch64, Ubuntu 22.04)
+решает это: постоянные systemd-сервисы, файловая система, Node.js без лимитов.
+Vercel не знает о сервере — воркеры сами polling'уют Vercel API.
 
 ```
+Хост:  ubuntu@138.2.134.17  (Oracle Cloud, ARM aarch64)
+OS:    Ubuntu 22.04 LTS
+SSH:   .ssh/codex_sitesynth  (ключ в репо, не в git)
+```
+
+### Запущенные сервисы (systemd)
+
+```
+demo-builder.service       — Node.js, polling Vercel API, пишет demo сайты
+  ExecStart: /usr/bin/node /home/ubuntu/sitesynth/workers/demo-builder.js
+  EnvironmentFile: /etc/sitesynth/demo-builder.env
+  Status: active ✅
+
+figma-builder.service      — Node.js, polling Vercel API, запускает Figma Build
+  ExecStart: /usr/bin/node /home/ubuntu/sitesynth/workers/figma-builder.js
+  EnvironmentFile: /etc/sitesynth/figma-builder.env
+
+reference-capture.service  — Node.js, скриншоты через headless Chromium, порт 8890
+  ExecStart: npm start → node server.js  (в /home/ubuntu/reference-capture/)
+  EnvironmentFile: /etc/sitesynth/reference-capture.env
+  Status: active ✅
+
+mcp-front.service          — Go-бинарник, прокси Figma MCP, порт 8888
+  ExecStart: /home/ubuntu/mcp-front/mcp-front-linux -config /etc/sitesynth/mcp-front.json
+  EnvironmentFile: /etc/sitesynth/mcp-front.env
+  Status: active ✅
+
+xvfb.service               — виртуальный X11 дисплей (для GUI Chrome если нужен)
+x11vnc.service             — VNC сервер поверх Xvfb, порт 5900
+novnc.service              — noVNC web интерфейс, порт 6080
+  → https://mcp.sitesynth.com/vnc/  (браузер к VNC)
+
+nginx.service              — веб-сервер, 80/443
+```
+
+### Директории на сервере
+
+```
+/home/ubuntu/
+├── sitesynth/                   — клон репозитория (Mar 21, workers обновляются вручную)
+│   └── workers/
+│       ├── demo-builder.js      — основной воркер Demo Build
+│       └── figma-builder.js     — воркер Figma Build
+│
+├── reference-capture/           — сервис скриншотов (отдельный проект)
+│   ├── server.js                — HTTP сервер на Puppeteer + headless Chromium
+│   ├── package.json
+│   └── storage/                 — временные файлы (до загрузки в Drive)
+│
+├── mcp-front/                   — MCP-Front прокси (Go)
+│   ├── mcp-front                — Linux ARM64 бинарник (рабочий)
+│   ├── mcp-front-linux          — симлинк → mcp-front (нужен для systemd)
+│   └── bin/mcp-front            — macOS бинарник (не работает на Linux!)
+│
+├── design-references/           — хранилище скриншотов для Nginx
+│   └── {briefId}/{competitor}/  — PNG файлы по структуре
+│
+└── .claude/                     — Claude Code (установлен на сервере)
+    └── .credentials.json
+
 /var/www/sitesynth/
-├── demo.sitesynth.com/     — папка для demo сайтов
-│   └── {slug}/             — каждый demo в своей папке
-│       ├── index.html
-│       ├── styles.css
-│       └── assets/
-│
-workers/
-├── figma-builder.js        — Node.js воркер Figma Build
-│   └── Polling: GET /api/figma/build/next каждые N секунд
-│   └── Выполняет: шаги сборки Figma через Plugin API
-│   └── Логирует: POST /api/figma/build/event
-│
-└── demo-builder.js         — Node.js воркер Demo Build
-    └── Polling: GET /api/demo/build/next
-    └── Генерирует: HTML/CSS/JS через AI
-    └── Записывает: в DEMO_SITE_ROOT/{slug}/
-    └── Финализирует: POST /api/demo/build/complete
+└── demo.sitesynth.com/          — папка для demo сайтов (создана Mar 24)
+    └── {slug}/
+        ├── index.html
+        ├── styles.css
+        └── assets/
 
-Nginx (или Apache):
-  demo.sitesynth.com → /var/www/sitesynth/demo.sitesynth.com/
+/etc/sitesynth/                  — конфиги сервисов (root-owned)
+├── demo-builder.env
+├── figma-builder.env
+├── reference-capture.env
+├── mcp-front.env
+└── mcp-front.json               — конфиг MCP-Front (серверы, OAuth)
+```
 
-PM2 / systemd:
-  node workers/figma-builder.js  — daemon
-  node workers/demo-builder.js   — daemon
+### Nginx — сайты
+
+```
+demo.sitesynth.com (443 HTTPS):
+  root → /var/www/sitesynth/demo.sitesynth.com/
+  try_files $uri $uri/ $uri/index.html =404
+  SSL: /etc/nginx/ssl-certificates/demo.sitesynth.com.{crt,key}
+
+mcp.sitesynth.com (443 HTTPS):
+  / → proxy_pass http://127.0.0.1:8888     (mcp-front)
+  /vnc/ → proxy_pass http://127.0.0.1:6080  (noVNC WebSocket)
+  /design_references/ → alias /home/ubuntu/design-references/  (CDN для скриншотов)
+  /reference_capture/ → proxy_pass http://127.0.0.1:8890      (capture API)
+  SSL: /etc/nginx/ssl-certificates/mcp.sitesynth.com.{crt,key}
+```
+
+### Конфиги сервисов (/etc/sitesynth/)
+
+```bash
+# demo-builder.env
+DEMO_BUILD_API_URL=https://sitesynth-eight.vercel.app/api
+DEMO_BUILD_TOKEN=c4964e0d...                     # авторизация воркера в Vercel API
+DEMO_SITE_ROOT=/var/www/sitesynth/demo.sitesynth.com
+
+# reference-capture.env
+REFERENCE_CAPTURE_PORT=8890
+REFERENCE_CAPTURE_HOST=127.0.0.1
+REFERENCE_CAPTURE_TOKEN=7b7a8583...
+REFERENCE_CAPTURE_STORAGE_ROOT=/home/ubuntu/design-references
+REFERENCE_CAPTURE_PUBLIC_BASE_URL=https://mcp.sitesynth.com/design_references
+CHROMIUM_PATH=/usr/bin/chromium-browser
+
+# mcp-front.env (без секретов)
+MCP_FRONT_ADDR=:8888
+MCP_FRONT_BASE_URL=http://138.2.134.17:8888
+MCP_FRONT_LOG_LEVEL=info
+OAUTH_ISSUER=https://mcp.sitesynth.com
+GITHUB_CLIENT_ID=Ov23lioVOX9kvR3l8gYE
+GITHUB_REDIRECT_URI=https://mcp.sitesynth.com/oauth/callback
+SUPABASE_URL=https://wkxwjasgyulakiyclipb.supabase.co
+FIGMA_MCP_URL=http://127.0.0.1:8888/figma/sse
+```
+
+### MCP-Front — конфиг серверов (mcp-front.json)
+
+```json
+{
+  "mcpServers": {
+    "figma": {
+      "transportType": "streamable-http",
+      "url": "https://mcp.figma.com/mcp",
+      "headers": { "Authorization": "$env:FIGMA_MCP_ACCESS_TOKEN" },
+      "serviceAuths": [{ "type": "bearer", "tokens": ["WFxMEMS..."] }]
+    },
+    "anthropic": {
+      "requiresUserToken": true,
+      "userAuthentication": { "type": "manual", "displayName": "Claude" }
+    },
+    "openai": {
+      "requiresUserToken": true,
+      "userAuthentication": { "type": "manual", "displayName": "OpenAI" }
+    }
+  }
+}
+```
+
+**Зачем MCP-Front:**
+Figma MCP (`mcp.figma.com/mcp`) требует OAuth токен. MCP-Front — это Go-прокси
+который хранит токены и добавляет их к запросам. Агент не знает токен,
+он просто говорит с MCP-Front который уже авторизован в Figma.
+MCP-Front поддерживает OAuth через GitHub для аутентификации пользователей
+(если нужен web-интерфейс управления интеграциями).
+
+### Reference Capture Service (порт 8890)
+
+```javascript
+// /home/ubuntu/reference-capture/server.js
+// Node.js HTTP сервер на Puppeteer + headless Chromium
+
+POST /capture
+  body: { briefId, competitor, pages: [{url, kind, label, viewport?}] }
+  → launchBrowser() — headless Chromium (CHROMIUM_PATH=/usr/bin/chromium-browser)
+  → для каждой страницы:
+      page.goto(url, { waitUntil: 'networkidle2', timeout: 45000 })
+      page.screenshot({ fullPage: true, type: 'png' })
+      viewports: desktop (1440×2200) + mobile (430×1800)
+  → файлы: /home/ubuntu/design-references/{briefId}/{competitor}/{slug}-{suffix}.png
+  → publicUrl: https://mcp.sitesynth.com/design_references/{briefId}/{competitor}/...
+  → response: { success: true, data: { assets: [...] } }
+
+GET /health → { status: 'ok' }
+
+Авторизация: Bearer token из REFERENCE_CAPTURE_TOKEN
+```
+
+**Зачем headless Chromium а не обычный fetch:**
+Многие сайты-конкуренты используют JavaScript-рендеринг, lazy loading,
+CSS анимации. Простой HTTP запрос получит пустую страницу. Chromium
+полностью рендерит страницу включая JS, ждёт networkidle2 (нет сетевой
+активности 500мс) — скриншот соответствует тому что видит реальный пользователь.
+
+### Обновление кода на сервере
+
+```bash
+# Воркеры обновляются копированием через scp (не git pull — разные версии)
+scp -i .ssh/codex_sitesynth workers/demo-builder.js ubuntu@138.2.134.17:/home/ubuntu/sitesynth/workers/
+scp -i .ssh/codex_sitesynth workers/figma-builder.js ubuntu@138.2.134.17:/home/ubuntu/sitesynth/workers/
+
+# После обновления воркера — перезапуск
+ssh -i .ssh/codex_sitesynth ubuntu@138.2.134.17 "sudo systemctl restart demo-builder"
 ```
 
 ---
 
-## 10. Deployment
+## 10. Две ветки производства — Figma vs Demo Site
+
+**Зачем две ветки:**
+После создания брифа и дизайн-спека система расходится на два независимых потока.
+Figma-ветка — для клиентов которым нужны профессиональные исходники для дизайнера.
+Demo-ветка — живой HTML/CSS/JS сайт который можно открыть в браузере прямо сейчас.
+Оба потока работают через job queues в Supabase, выполняются на Oracle сервере,
+не мешают друг другу.
+
+```
+Brief + Design Spec (design_spec_json)
+        │
+        ├──────────────────────────────────────────────────────────┐
+        │                                                          │
+        ▼                                                          ▼
+[ВЕТКА 1 — FIGMA]                                    [ВЕТКА 2 — DEMO SITE]
+        │                                                          │
+POST /api/figma/build                          POST /api/demo/build
+  → INSERT figma_build_jobs                     → INSERT demo_build_jobs
+    status='queued'                               status='queued'
+    spec_snapshot={designSpec, buildPlan}         spec_snapshot={designSpec}
+        │                                                          │
+        ▼                                                          ▼
+figma-builder.js                               demo-builder.js
+  polling GET /api/figma/build/next              polling GET /api/demo/build/next
+        │                                                          │
+        ▼                                                          ▼
+architectAgent (VoltAgent)                     POST /api/demo/build/plan
+  → UX структура: страницы, секции               → demoBuilderAgent (VoltAgent)
+        │                                         → generateObject: {title,slug,html,css,notes}
+        ▼                                                          │
+figmaBuilderAgent (VoltAgent)                                      ▼
+  → JSON список команд Figma:                  writeBuildFiles(slug, html, css)
+    create_page, create_frame,                 → /var/www/sitesynth/demo.sitesynth.com/{slug}/
+    create_component, set_fill...                    index.html + styles.css + assets/
+        │                                                          │
+        ├── FIGMA_BUILDER_MODE=plugin                              ▼
+        │       → Figma Desktop Plugin API         POST /api/demo/build/complete
+        │                                          → demo_build_jobs.status='done'
+        └── FIGMA_BUILDER_MODE=api                 → demo_build_jobs.result_url
+                → MCP-Front (:8888)           https://demo.sitesynth.com/{slug}/
+                → mcp.figma.com/mcp                     (Nginx → папка на диске)
+                → generate_figma_design tool
+                → Figma file URL
+        │
+        ▼
+criticAgent (VoltAgent)
+  → анализирует результат 0-5
+  → если < 3 → итерация (следующий шаг)
+  → если ≥ 3 → figma_build_jobs.status='done'
+```
+
+### Ветка Demo — детали demoBuilderAgent
+
+```typescript
+// server/api/demo/build/plan.ts
+// Вызывается воркером: POST /api/demo/build/plan { token, jobId }
+
+const job = await db.from('demo_build_jobs').select(...).eq('id', jobId).single()
+const spec = job.spec_snapshot  // design_spec_json + brief content
+
+const result = await demoBuilderAgent.generateObject(prompt, schema)
+// Агент возвращает строго:
+// { title, slug, html: '<!DOCTYPE html>...', css: '...', notes: '...' }
+
+await db.from('demo_build_jobs').update({ output: result }).eq('id', jobId)
+// → воркер читает output.html и output.css → пишет файлы на диск
+```
+
+### Ветка Figma — MCP-Front схема
+
+```
+figma-builder.js на Oracle
+        │
+        └── callMcpFront('figma', { method: 'tools/call',
+              params: { name: 'generate_figma_design', arguments: { commands } }
+            })
+                │
+                ▼
+        http://127.0.0.1:8888   (mcp-front, localhost)
+                │   добавляет Authorization: Bearer <FIGMA_MCP_ACCESS_TOKEN>
+                ▼
+        https://mcp.figma.com/mcp
+                │
+                ▼
+        Figma File (создаётся/редактируется)
+```
+
+---
+
+## 11. Reference Research Pipeline
+
+**Зачем анализ референсов перед дизайном:**
+Если AI генерирует дизайн-спек без изучения конкурентов — результат усреднённый.
+Если до генерации спека AI изучил 5-10 реальных конкурентов (скриншоты homepage,
+pricing, about), увидел их navigation patterns, CTA-treatments, color palettes —
+итоговый дизайн конкурентно обоснован. Результат встраивается прямо в бриф
+как раздел "Competitive Landscape".
+
+```
+Бриф (markdown_content)
+        │
+POST /api/briefs/references/run    [server/api/briefs/references/run.post.ts]
+  header: x-user-email
+  body:   { briefId }
+        │
+        ▼
+runReferenceAnalysisPipeline()     [server/utils/reference-research.ts]
+        │
+        ├─ 1. discoverReferences(markdownContent)
+        │      │
+        │      ├─ Gemini generateObject → competitorSchema
+        │      │    → product_type, surface_type
+        │      │    → market_tags[], style_tags[]
+        │      │    → search_queries[], competitor_names[]
+        │      │
+        │      ├─ selectCuratedReferenceShortlist()
+        │      │    [server/utils/curated-reference-library.ts]
+        │      │    → векторный поиск по кураторской библиотеке
+        │      │    → релевантные референсы с оценкой совпадения
+        │      │
+        │      └─ searchDuckDuckGo(query) × N запросов
+        │           → парсинг HTML (result__a links)
+        │           → дедупликация → топ 10 URL
+        │
+        ├─ 2. callCaptureService({ briefId, competitor, pages })
+        │      │
+        │      │  POST http://127.0.0.1:8890/capture   (Oracle сервер)
+        │      │  Bearer: REFERENCE_CAPTURE_TOKEN
+        │      │
+        │      ▼
+        │   reference-capture (Node.js + headless Chromium)
+        │      → page.goto(url, { waitUntil: 'networkidle2' })
+        │      → screenshot desktop (1440px) + mobile (430px)
+        │      → PNG → /home/ubuntu/design-references/{briefId}/{competitor}/
+        │      → publicUrl: https://mcp.sitesynth.com/design_references/...
+        │
+        ├─ 3. uploadScreenshotToDrive({ userEmail, briefId, competitor, asset })
+        │      → Google Drive: UserRoot / Brief_{id} / Competitor_References / {name} /
+        │      → driveFileId + driveUrl (для клиента)
+        │
+        ├─ 4. analyzeAsset(asset)
+        │      → Gemini Vision (gemini-2.5-pro) смотрит на PNG:
+        │        page purpose, section order, nav pattern, card layout,
+        │        CTA treatment, typography mood, density, strengths, weaknesses
+        │      → analysis_json → brief_reference_assets.analysis_json
+        │
+        ├─ 5. buildReferenceSummary(markdownContent, assets)
+        │      → referenceStrategistAgent (VoltAgent) или Gemini fallback
+        │      → referenceSummarySchema:
+        │        recommended_direction, style_keywords[], market_patterns[],
+        │        opportunities_to_differentiate[], recommended_references[],
+        │        do[], avoid[]
+        │
+        └─ 6. mergeReferenceSectionIntoBrief(content, summary, assets)
+               → вставляет <!-- REFERENCE_ANALYSIS_START/END --> в markdown
+               ## Competitive Landscape
+               ### Selected References     (ссылки на сайты конкурентов)
+               ### Reference Screenshots   (publicUrl скриншотов)
+               ### Recommended Visual Direction  (do / avoid)
+               → UPDATE briefs SET markdown_content, reference_analysis_json,
+                   reference_status='completed', reference_completed_at=now()
+```
+
+### Таблица brief_reference_assets
+
+```sql
+CREATE TABLE brief_reference_assets (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  brief_id        UUID REFERENCES briefs(id),
+  source_url      TEXT,       -- исходный URL конкурента
+  final_url       TEXT,       -- после редиректов
+  competitor      TEXT,       -- hostname (напр. 'stripe')
+  page_kind       TEXT,       -- 'homepage' | 'pricing' | 'about'
+  viewport        TEXT,       -- 'desktop' | 'mobile'
+  title           TEXT,       -- заголовок страницы
+  public_url      TEXT,       -- https://mcp.sitesynth.com/design_references/...
+  local_path      TEXT,       -- имя PNG файла
+  drive_file_id   TEXT,       -- Google Drive file ID
+  drive_url       TEXT,       -- Google Drive view link
+  analysis_json   JSONB,      -- Gemini Vision анализ
+  selected        BOOLEAN,    -- включён в финальный отчёт
+  updated_at      TIMESTAMPTZ
+);
+```
+
+---
+
+## 12. Целевой Production Pipeline (полная цепочка)
+
+**Концепция: разделение "думать" и "делать"**
+VoltAgents думают — анализируют, планируют, формируют контракты.
+Executor (Cline или воркер) делает — берёт контракт, пишет файлы,
+запускает сборку, исправляет ошибки. Это разделение важно:
+Gemini хорош в мультимодальном дизайн-анализе, плох в итеративной
+починке кода. Cline наоборот — идеальный исполнитель.
+
+```
+Стадия 1: BRIEFING AGENT
+  briefingAgent (VoltAgent) ведёт клиента в кабинете
+  → структурирует: цели, аудиторию, pages, jobs-to-be-done, constraints
+  → результат: briefs.markdown_content (Markdown/HTML)
+             + briefs.brief_data (JSONB: projectName, answers, files)
+
+Стадия 2: REFERENCE STRATEGIST AGENT
+  referenceStrategistAgent (VoltAgent) + reference-capture (Oracle)
+  → берёт бриф → анализирует competitor URLs → скриншоты
+  → формирует: UX-паттерны, визуальные паттерны, anti-patterns
+  → результат: briefs.reference_analysis_json
+             + brief_reference_assets (скриншоты + Gemini Vision анализ)
+             + раздел "Competitive Landscape" в бриф
+
+Стадия 3: DESIGN AGENT (Gemini Multimodal)
+  Gemini (gemini-2.5-pro) в /api/briefs/generate-spec
+  → получает: бриф + reference_analysis_json + клиентские файлы (Drive)
+  → делает: layout logic, visual direction, token system,
+            component inventory, image needs
+  → результат: briefs.design_spec_json
+    {
+      pages: [{ title, path, sections: [{ type, blocks: [...] }] }],
+      design_tokens: { colors, typography, spacing, radius },
+      components: [...],
+      asset_requirements: [...]
+    }
+
+Стадия 4: ASSET AGENT  [планируется]
+  → читает design_spec_json.asset_requirements
+  → генерит или подбирает изображения
+  → прогоняет через resize/format pipeline
+  → результат: asset_manifest.json (path → publicUrl)
+
+Стадия 5: BUILD ORCHESTRATOR
+  /api/demo/build → INSERT demo_build_jobs
+  → собирает единый build package (spec_snapshot):
+    { brief, reference_report, design_spec, asset_manifest, slug, target_path }
+
+Стадия 6: EXECUTOR на Oracle
+  demo-builder.js (сейчас) — простой воркер: берёт html/css → пишет файлы
+  Cline headless (целевое) — итеративный исполнитель:
+    → читает build_job.json (жёсткий контракт)
+    → scaffold project в workspace
+    → пишет/правит файлы
+    → npm install && npm run build
+    → исправляет ошибки в 1-N итерациях
+    → committed files summary
+
+Стадия 7: VERIFICATION  [планируется]
+  → smoke checks (статус 200)
+  → link checks (нет битых ссылок)
+  → visual screenshot checks (Chromium)
+  → если критично сломано → executor ещё итерация
+
+Стадия 8: PUBLISH
+  → файлы в /var/www/sitesynth/demo.sitesynth.com/{slug}/
+  → POST /api/demo/build/complete { token, jobId, url }
+  → cabinet показывает: status='done', url, preview screenshot
+  → https://demo.sitesynth.com/{slug}/
+```
+
+### Build Job Contract (build_job.json)
+
+```json
+{
+  "project": {
+    "name": "Acme SaaS",
+    "slug": "acme-saas",
+    "target_url": "https://demo.sitesynth.com/acme-saas/"
+  },
+  "implementation_mode": {
+    "framework": "static-html",
+    "workspace": "/var/www/sitesynth/demo.sitesynth.com/acme-saas"
+  },
+  "pages": [
+    {
+      "id": "home",
+      "path": "/",
+      "sections": ["hero", "logos", "features", "pricing", "faq", "cta"]
+    }
+  ],
+  "design_tokens": {
+    "colors": { "primary": "#0F0F0F", "accent": "#7C3AED" },
+    "typography": { "heading": "Inter", "body": "Inter" },
+    "spacing": { "section": "120px", "card-gap": "24px" },
+    "radius": { "card": "12px", "button": "8px" }
+  },
+  "components": [
+    { "id": "hero", "type": "hero-centered", "headline": "...", "cta": "..." }
+  ],
+  "assets": [
+    { "id": "hero-bg", "type": "image", "url": "https://mcp.sitesynth.com/design_references/..." }
+  ],
+  "rules": [
+    "Responsive first — mobile breakpoint 430px",
+    "No lorem ipsum — use real content from brief",
+    "Semantic HTML5",
+    "Use provided design tokens exactly",
+    "No external CDN dependencies — inline or bundle"
+  ]
+}
+```
+
+**Почему Cline получает контракт, а не сырой бриф:**
+Cline хорош в реализации и итеративной починке кода. Плохой вход для него —
+10 скриншотов мудбордов и размытые пожелания. Поэтому мультимодальный анализ
+(стадии 2-3) и дизайн-стратегия должны быть ДО Cline. Cline получает точный
+JSON-контракт — ему не нужно думать о дизайне, только реализовывать.
+
+### Минимальный production pipeline (сейчас работает)
+
+```
+Briefing Agent    ✅ — briefingAgent, TipTap editor
+Reference Agent   ✅ — referenceStrategistAgent + reference-capture на Oracle
+Design Spec       ✅ — Gemini /api/briefs/generate-spec → design_spec_json
+Demo Builder      ✅ — demoBuilderAgent + demo-builder.js + nginx + demo.sitesynth.com
+```
+
+### Что планируется добавить
+
+```
+Asset Agent           — генерация/подбор изображений под design_contract
+build_job.json        — стандартизированный контракт между агентами
+Cline Executor        — headless Cline на Oracle вместо простого воркера
+Verification Layer    — smoke + link + visual checks
+Critique Loop         — criticAgent по скриншоту demo → итерация
+Figma Build           — figma-builder.js + MCP-Front → Figma file
+```
+
+---
+
+## 13. Deployment
 
 **Зачем Vercel, а не собственный сервер для Nuxt:**
-Vercel даёт автодеплой из git, CDN, edge network, preview deployments для
-каждого PR — всё бесплатно для начала. Nuxt 3 имеет first-class поддержку
-Vercel через `@nuxtjs/vercel` пресет. Единственное ограничение — serverless
-функции, что решается Linux воркерами для длинных задач.
+Vercel даёт автодеплой из git, CDN, edge network, preview deployments —
+всё без настройки. Nuxt 3 имеет first-class поддержку Vercel через Nitro preset.
+Ограничения Vercel решаются Oracle воркерами для длинных задач.
 
 ```
 Платформа: Vercel
 Framework: Nuxt 3 (SSR + Nitro serverless)
 Branch: main → auto-deploy Production
 Node.js: v22.x
-Region: Frankfurt (eu-central-1, близко к Supabase)
+Region: Frankfurt (eu-central-1)
 
 Лимиты Vercel и обходы:
-  Body 4.5MB      → Resumable Upload URLs для файлов (прямо в Drive)
-  Timeout 10-60s  → VoltOps fire-and-forget, длинные задачи в воркерах
-  Cold start      → singleton VoltAgent instance
+  Body 4.5MB      → Resumable Upload URLs → напрямую в Google Drive
+  Timeout 10-60s  → fire-and-forget VoltOps, длинные задачи в воркерах Oracle
+  Нет файловой системы → Oracle: /var/www/sitesynth/demo.sitesynth.com/
+  Cold start      → singleton VoltAgent instance (getVoltAgentInstance)
 
-Linux сервер (отдельно от Vercel):
-  Figma Builder Worker
-  Demo Builder Worker
-  Nginx для demo.sitesynth.com
+Oracle Linux сервер (138.2.134.17):
+  demo-builder.service     — Demo Build Worker
+  figma-builder.service    — Figma Build Worker
+  reference-capture        — Screenshot Service (headless Chromium :8890)
+  mcp-front                — MCP Proxy для Figma (:8888)
+  nginx                    — demo.sitesynth.com + mcp.sitesynth.com
+```
+воркерами, и не блокируют друг друга.
+
+```
+Brief + Design Spec
+        │
+        ├───────────────────────────────────────────────┐
+        │                                               │
+        ▼                                               ▼
+[ВЕТКА 1 — FIGMA]                          [ВЕТКА 2 — DEMO SITE]
+        │                                               │
+POST /api/figma/build               POST /api/demo/build
+        │                                               │
+INSERT figma_build_jobs             INSERT demo_build_jobs
+  status: 'pending'                   status: 'pending'
+  spec_snapshot: {...}                spec_snapshot: {...}
+        │                                               │
+        ▼                                               ▼
+figma-builder.js (Linux)            demo-builder.js (Linux)
+  polling /api/figma/build/next       polling /api/demo/build/next
+        │                                               │
+        ▼                                               ▼
+architectAgent                      demoBuilderAgent (Gemini)
+  → UX структура страниц              → HTML + CSS + JS
+        │                                               │
+        ▼                                               ▼
+figmaBuilderAgent                   POST /api/demo/build/plan
+  → JSON команды Figma                     │
+  (create_page, create_frame,              ▼
+   create_component, set_fill...)   writeBuildFiles(slug, html, css)
+        │                                               │
+        ├── plugin mode                                 ▼
+        │   Figma Desktop App        /var/www/sitesynth/
+        │   (Plugin API)             demo.sitesynth.com/{slug}/
+        │                                               │
+        └── api mode                                    ▼
+            MCP-Front (Linux)       https://demo.sitesynth.com/{slug}/
+            → mcp.figma.com/mcp     (Nginx на Linux сервере)
+            → Figma File URL
+```
+
+### Ветка 1 — Figma: детали
+
+**Зачем через MCP, а не напрямую через Figma REST API:**
+Figma REST API позволяет только читать файлы. Для создания и редактирования
+нужен либо Figma Desktop Plugin (через Plugin API), либо официальный MCP сервер
+Figma (`mcp.figma.com`) — он даёт AI-контроль над Figma через JSON-RPC
+с OAuth авторизацией. **MCP-Front работает на Linux сервере** — это прокси
+который добавляет OAuth токен из таблицы `service_integrations` и проксирует
+запросы к `mcp.figma.com/mcp`.
+
+```typescript
+// workers/figma-builder.js
+
+// 1. Получаем задание
+const next = await apiGet(`/api/figma/build/next?token=${TOKEN}`)
+// → { jobId, specSnapshot: { designSpec, buildPlan } }
+
+// 2. architectAgent → UX структура страниц
+
+// 3. figmaBuilderAgent → JSON команды:
+// [
+//   { command: "create_page", name: "Home" },
+//   { command: "create_frame", page: "Home", name: "Hero", w: 1440, h: 900 },
+//   { command: "create_component", frame: "Hero", type: "heading", text: "..." },
+//   { command: "set_fill", target: "Hero", color: "#0F0F0F" },
+// ]
+
+// 4a. FIGMA_BUILDER_MODE=plugin → Figma Desktop Plugin
+// 4b. FIGMA_BUILDER_MODE=api   → MCP-Front (Linux) → mcp.figma.com
+async function callMcpFront(service, body) {
+  return fetch(`${MCP_FRONT_URL}/${service}`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${MCP_FRONT_TOKEN}` },
+    body: JSON.stringify(body),
+  }).then(r => r.json())
+}
+
+await callMcpFront('figma', {
+  method: 'tools/call',
+  params: { name: 'generate_figma_design', arguments: { commands } }
+})
+
+// 5. criticAgent (0-5) — если < 3, итерация
+// 6. Figma URL → figma_build_jobs.result_url
+```
+
+### Ветка 2 — Demo Site: детали
+
+**Зачем demo, если есть Figma:**
+Demo — это живой сайт в браузере прямо сейчас. Figma — исходник для дизайнера.
+Demo показывает клиенту "вот твой сайт" до финальной разработки.
+
+```typescript
+// workers/demo-builder.js
+
+const next = await apiGet(`/api/demo/build/next?token=${TOKEN}`)
+// → { jobId, slug }
+
+const plan = await apiPost('/api/demo/build/plan', { token: TOKEN, jobId })
+// → { html, css, assets: [{ path, data_base64 }] }
+
+// Пишем файлы на диск Linux сервера
+const targetDir = path.join(SITE_ROOT, slug)  // /var/www/sitesynth/demo.../slug/
+await fs.writeFile(path.join(targetDir, 'index.html'), html)
+await fs.writeFile(path.join(targetDir, 'styles.css'), css)
+// assets: base64 → Buffer → бинарные файлы
+
+// Nginx автоматически раздаёт папку → https://demo.sitesynth.com/{slug}/
 ```
 
 ---
 
-*Обновлено: Март 2026*
+## 11. Reference Research Pipeline — Референсы и скриншоты
+
+**Зачем это нужно:**
+Перед генерацией дизайн-спека AI изучает реальных конкурентов клиента —
+скриншоты их сайтов, навигацию, цветовые схемы, CTA. Это делает итоговый
+дизайн конкурентно обоснованным, а не усреднённым. Раздел "Competitive Landscape"
+встраивается прямо в текст брифа и используется при генерации дизайн-спека.
+
+```
+POST /api/briefs/references/run
+        │
+runReferenceAnalysisPipeline()        [server/utils/reference-research.ts]
+        │
+        ├─ 1. discoverReferences()    — кто конкуренты?
+        │      │
+        │      ├─ Gemini generateObject → competitorSchema
+        │      │    product_type, surface_type, market_tags, style_tags,
+        │      │    search_queries, competitor_names
+        │      │
+        │      ├─ selectCuratedReferenceShortlist()
+        │      │    [server/utils/curated-reference-library.ts]
+        │      │    Кураторская библиотека в БД → топ-5 по совпадению тегов
+        │      │
+        │      └─ searchDuckDuckGo(query) × N запросов
+        │           DuckDuckGo HTML → парсинг result__a ссылок → топ 10 URL
+        │
+        ├─ 2. callCaptureService()    — делаем скриншоты
+        │
+        │      POST http://127.0.0.1:8890/capture
+        │      { briefId, competitor, pages: [{url, kind, label}] }
+        │
+        │      Reference Capture Service (Linux, порт 8890):
+        │        РЕАЛЬНЫЙ Chrome в виртуальной ОС, управляемый нашей системой.
+        │        Не headless/Puppeteer — полноценный браузер в изолированной среде.
+        │        Зачем реальный Chrome: обход anti-bot защит, точный CSS-рендеринг,
+        │        webfonts, lazy-loaded контент, JavaScript-анимации.
+        │        На том же Linux сервере работает MCP-Front.
+        │
+        │      → { assets: [{ publicUrl, fileName, kind, viewport }] }
+        │
+        ├─ 3. uploadScreenshotToDrive()
+        │      Google Drive: UserRoot / Brief_{id} / Competitor_References / {name}/
+        │      → driveFileId, driveUrl
+        │
+        ├─ 4. analyzeAsset()          — Gemini смотрит на скриншот
+        │      Gemini Vision (gemini-2.5-pro) + изображение:
+        │      page purpose, section order, nav pattern, card layout,
+        │      CTA, typography mood, density, strengths, weaknesses
+        │      → brief_reference_assets.analysis_json
+        │
+        ├─ 5. buildReferenceSummary() — стратегия дизайна
+        │      referenceStrategistAgent (VoltAgent) или Gemini fallback
+        │      → recommended_direction, style_keywords, market_patterns,
+        │         opportunities_to_differentiate, do[], avoid[],
+        │         recommended_references[]
+        │
+        └─ 6. mergeReferenceSectionIntoBrief()
+               Вставляет <!-- REFERENCE_ANALYSIS_START/END --> в бриф:
+                 ## Competitive Landscape
+                 ### Selected References
+                 ### Reference Screenshots
+                 ### Recommended Visual Direction (do / avoid)
+               → UPDATE briefs SET markdown_content, reference_analysis_json,
+                   reference_status='completed'
+```
+
+### Таблица: brief_reference_assets
+
+```sql
+CREATE TABLE brief_reference_assets (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  brief_id      UUID REFERENCES briefs(id),
+  source_url    TEXT,       -- исходный URL конкурента
+  final_url     TEXT,       -- после редиректов
+  competitor    TEXT,       -- hostname (напр. 'stripe')
+  page_kind     TEXT,       -- 'homepage', 'pricing', 'about'
+  viewport      TEXT,       -- 'desktop', 'mobile'
+  title         TEXT,
+  public_url    TEXT,       -- URL скриншота (CDN/nginx)
+  local_path    TEXT,
+  drive_file_id TEXT,
+  drive_url     TEXT,
+  analysis_json JSONB,      -- Gemini Vision анализ
+  selected      BOOLEAN,
+  updated_at    TIMESTAMPTZ
+);
+```
+
+### Переменные окружения
+
+```bash
+REFERENCE_CAPTURE_SERVICE_URL=http://127.0.0.1:8890   # сервис на Linux
+REFERENCE_CAPTURE_TOKEN=secret                         # Bearer-токен
+```
+
+### Сервисы на Linux сервере (полный список)
+
+```
+порт 8890  — Reference Capture Service (Chrome в виртуальной ОС)
+порт ???   — MCP-Front (прокси Figma MCP → mcp.figma.com)
+PM2 daemon — workers/figma-builder.js
+PM2 daemon — workers/demo-builder.js
+Nginx      — demo.sitesynth.com → /var/www/sitesynth/demo.sitesynth.com/
+```
+
+---
+
+## 12. Deployment

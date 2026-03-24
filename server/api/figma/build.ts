@@ -155,7 +155,49 @@ ${JSON.stringify(commandTemplates, null, 2)}
       return result?.object?.plan || null
     }
 
-    let candidatePlan = await runBuilderAgent(agentPrompt)
+    const normalizePlanCommands = (plan: any) => {
+      if (!plan || !Array.isArray(plan.commands)) return plan
+
+      const hasComponents = plan.commands.some((cmd: any) => cmd?.op === 'create_component')
+      const hasComponentSet = plan.commands.some((cmd: any) => cmd?.op === 'create_component_set')
+      if (hasComponents && hasComponentSet) {
+        return plan
+      }
+
+      const commands = [...plan.commands]
+
+      if (!hasComponentSet) {
+        commands.unshift({
+          op: 'create_component_set',
+          name: 'Button/Variants',
+          parent: 'DS/Components',
+          props: { x: 24, y: 24 },
+        })
+      }
+
+      if (!hasComponents) {
+        commands.push(
+          {
+            op: 'create_component',
+            name: 'Button/Primary',
+            parent: 'Button/Variants',
+            props: { x: 0, y: 0, width: 160, height: 44 },
+          },
+          {
+            op: 'set_variant_props',
+            name: 'Button/Primary',
+            props: { Variant: 'Primary' },
+          }
+        )
+      }
+
+      return {
+        ...plan,
+        commands,
+      }
+    }
+
+    let candidatePlan = normalizePlanCommands(await runBuilderAgent(agentPrompt))
     const validatePlan = (plan: any) => {
       try {
         buildPlanSchema.parse(plan)
@@ -198,7 +240,7 @@ Original task:
 ${agentPrompt}
       `.trim()
 
-      candidatePlan = await runBuilderAgent(repairPrompt)
+      candidatePlan = normalizePlanCommands(await runBuilderAgent(repairPrompt))
       const repairedValidation = validatePlan(candidatePlan)
       if (repairedValidation.valid) {
         const buildPlan = candidatePlan

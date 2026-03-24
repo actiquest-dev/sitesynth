@@ -5,7 +5,7 @@
  */
 
 import { createPinoLogger } from '@voltagent/logger'
-import { briefingAgent, consultantAgent, figmaBuilderAgent, architectAgent, criticAgent } from '../agents'
+import { briefingAgent, consultantAgent, figmaBuilderAgent, architectAgent, criticAgent, referenceStrategistAgent, demoBuilderAgent } from '../agents'
 
 // Initialize logger for VoltOps integration
 export const logger = createPinoLogger({
@@ -58,8 +58,10 @@ export function initializeVoltAgent() {
     briefingAgent,
     consultantAgent,
     figmaBuilderAgent,
+    demoBuilderAgent,
     architectAgent,
     criticAgent,
+    referenceStrategistAgent,
   }
 
   logger.info(`✅ Registered ${Object.keys(agents).length} agents`, {
@@ -100,7 +102,7 @@ export function getVoltAgentInstance() {
 /**
  * Get agent by name
  */
-export function getAgent(name: 'briefingAgent' | 'consultantAgent' | 'figmaBuilderAgent' | 'architectAgent' | 'criticAgent') {
+export function getAgent(name: 'briefingAgent' | 'consultantAgent' | 'figmaBuilderAgent' | 'demoBuilderAgent' | 'architectAgent' | 'criticAgent' | 'referenceStrategistAgent') {
   const instance = getVoltAgentInstance()
   return instance.agents[name]
 }

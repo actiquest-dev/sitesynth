@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { generateObject } from 'ai'
 import { google } from '@ai-sdk/google'
 import { useDatabaseClient } from '~~/server/utils/supabase'
+import { runReferenceAnalysisPipeline } from '~~/server/utils/reference-research'
 
 export default defineEventHandler(async (event) => {
   const userEmail = getHeader(event, 'x-user-email')
@@ -15,6 +16,29 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
+    const db = useDatabaseClient()
+    const { data: brief } = await db
+      .from('briefs')
+      .select('id, reference_analysis_json, reference_status')
+      .eq('id', briefId)
+      .eq('user_email', userEmail)
+      .maybeSingle()
+
+    let referenceAnalysis = brief?.reference_analysis_json || null
+    if (!referenceAnalysis) {
+      const referenceResult = await runReferenceAnalysisPipeline({
+        briefId,
+        userEmail,
+        markdownContent,
+      })
+      referenceAnalysis = {
+        search_queries: referenceResult.discovered.searchQueries,
+        competitor_names: referenceResult.discovered.competitorNames,
+        rationale: referenceResult.discovered.rationale,
+        summary: referenceResult.summary,
+      }
+    }
+
     // Generate a richer design spec so the result can directly guide wireframes and Figma production.
     const { object } = await generateObject({
       model: google('gemini-2.5-pro'),
@@ -88,14 +112,17 @@ Rules:
 - Every ui_block must include content, interactions, and states.
 - Figma structure must describe how the file should be organized for actual delivery.
 - If the brief is missing specifics, make reasonable design assumptions grounded in the brief.
+- Use the competitive landscape and visual direction analysis as mandatory input.
 
 Brief:
 ${markdownContent}
+
+Competitive interface analysis:
+${JSON.stringify(referenceAnalysis, null, 2)}
       `.trim()
     })
 
     // Save/Update the spec in the database
-    const db = useDatabaseClient()
     const { error } = await db
       .from('briefs')
       .update({ design_spec_json: object, updated_at: new Date().toISOString() })
