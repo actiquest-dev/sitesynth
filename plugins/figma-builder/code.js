@@ -375,12 +375,47 @@ const buildPageMap = (page, plan) => {
 
 figma.showUI(__html__, { width: 420, height: 200 })
 
-const API_BASE = 'https://sitesynth-eight.vercel.app'
-const PLUGIN_TOKEN = '268cc61590a8f2e541fa99e322722364c528bbc57c97efcaf8eb21b7eece1461'
+// Configuration fetched from server at runtime — no hardcoded domains
+let API_BASE = null
+let PLUGIN_TOKEN = null
 const POLL_INTERVAL = 8000
+const CONFIG_FETCH_TIMEOUT = 5000
 
 let isBusy = false
 let currentJobId = null
+
+// Fetch plugin configuration from server
+const fetchPluginConfig = async () => {
+  try {
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), CONFIG_FETCH_TIMEOUT)
+
+    const response = await fetch('/api/figma/plugin-config', {
+      signal: controller.signal,
+    })
+    clearTimeout(timeoutId)
+
+    const data = await response.json()
+    if (data?.apiBase && data?.pluginToken) {
+      API_BASE = data.apiBase
+      PLUGIN_TOKEN = data.pluginToken
+      return true
+    }
+  } catch (error) {
+    console.error('Failed to fetch plugin config:', error)
+  }
+  return false
+}
+
+// Initialize config before starting polling
+const initializeConfig = async () => {
+  const success = await fetchPluginConfig()
+  if (!success || !API_BASE || !PLUGIN_TOKEN) {
+    postStatus('⚠️ Failed to initialize plugin. Please reload Figma.')
+    return false
+  }
+  return true
+}
 
 const formatTimestamp = (date) => {
   const pad = (value) => String(value).padStart(2, '0')
@@ -938,8 +973,15 @@ const pollLoop = async () => {
   }
 }
 
-setInterval(pollLoop, POLL_INTERVAL)
-pollLoop()
+// Initialize config and start polling
+(async () => {
+  const initialized = await initializeConfig()
+  if (initialized) {
+    postStatus('Ready. Polling for build jobs...')
+    setInterval(pollLoop, POLL_INTERVAL)
+    pollLoop()
+  }
+})()
 
 // no-op handler to prevent UI->plugin warnings
 figma.ui.onmessage = () => {}

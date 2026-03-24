@@ -14,8 +14,16 @@ export const FIGMA_PROVIDER = 'figma'
 export const FIGMA_MCP_PROVIDER = 'figma_mcp'
 export const SHARED_ACCOUNT_TYPE = 'sitesynth_internal'
 
-export const getDefaultAppBaseUrl = () =>
-  process.env.PUBLIC_APP_URL || process.env.SITE_URL || 'https://sitesynth-eight.vercel.app'
+export const getDefaultAppBaseUrl = () => {
+  const url = process.env.PUBLIC_APP_URL || process.env.SITE_URL
+  if (!url) {
+    throw new Error(
+      'Missing SITE_URL or PUBLIC_APP_URL environment variable. ' +
+      'Configure one of these on your deployment platform.'
+    )
+  }
+  return url
+}
 
 export const getFigmaRedirectUri = (appBaseUrl?: string | null) => {
   const base = (appBaseUrl || getDefaultAppBaseUrl()).replace(/\/+$/, '')

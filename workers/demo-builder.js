@@ -4,8 +4,12 @@ import { spawn } from 'node:child_process'
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
-const API_BASE = (process.env.DEMO_BUILD_API_URL || 'https://sitesynth-eight.vercel.app/api').replace(/\/+$/, '')
+const API_BASE = (process.env.DEMO_BUILD_API_URL || '').replace(/\/+$/, '')
 const BUILD_TOKEN = process.env.DEMO_BUILD_TOKEN
+
+if (!API_BASE) {
+  throw new Error('Missing DEMO_BUILD_API_URL environment variable. Set it on the Linux worker.')
+}
 const SITE_ROOT = process.env.DEMO_SITE_ROOT || '/var/www/sitesynth/demo.sitesynth.com'
 const EXECUTOR_MODE = process.env.DEMO_BUILD_EXECUTOR || 'plan'
 const CLINE_BIN = process.env.CLINE_BIN || 'cline'
