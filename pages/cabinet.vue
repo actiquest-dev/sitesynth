@@ -365,74 +365,233 @@
               </div>
 
               <template v-if="!compareVersion">
-              <!-- Edit mode: TipTap WYSIWYG editor, no tabs needed -->
-              <div v-if="briefEditMode" class="space-y-4">
-                <ClientOnly>
-                  <RichTextEditor v-model="briefEditContent" />
-                  <template #fallback>
-                    <textarea
-                      v-model="briefEditContent"
-                      class="w-full min-h-[400px] px-4 py-3 bg-[#0f0f0f] border border-[#333] text-white text-sm leading-relaxed focus:border-[#8D35FF] focus:outline-none resize-y"
-                    />
-                  </template>
-                </ClientOnly>
-              </div>
-
-              <!-- View mode -->
-              <div v-else class="bg-[#0f0f0f] border border-[#333] rounded-none p-6">
-                <div class="text-white text-sm whitespace-pre-wrap leading-relaxed" v-html="formatBriefHtml(selectedBrief.content || '')"></div>
-              </div>
-
-              </template>
-
-              <!-- Design Spec Actions (visible in both modes) -->
-              <div class="flex gap-3 mt-6">
-                <button
-                  @click="generateDesignSpec"
-                  :disabled="isGeneratingSpec"
-                  class="px-6 py-3 border border-[#8D35FF] text-white rounded-none hover:bg-[#8D35FF]/20 transition disabled:opacity-50 text-sm"
-                >
-                  {{ isGeneratingSpec ? 'Generating Spec...' : (designSpec ? 'Re-generate' : 'Generate Design Spec') }}
-                </button>
-                <button
-                  @click="queueFigmaBuild"
-                  :disabled="isBuildingFigma || !designSpec"
-                  class="px-6 py-3 border border-[#2f2f2f] text-white rounded-none hover:bg-[#1f1f1f] transition disabled:opacity-50 text-sm"
-                >
-                  {{ isBuildingFigma ? 'Queuing Build...' : 'Build in Figma' }}
-                </button>
-              </div>
-              <div v-if="figmaBuildStatus" class="mt-2 text-xs text-[#8b8b8b]">
-                {{ figmaBuildStatus }}
-              </div>
-              <div v-if="figmaJob" class="mt-4 border border-[#2f2f2f] bg-[#0f0f0f] p-4 text-xs text-[#cfcfcf] space-y-2">
-                <div class="flex items-center justify-between">
-                  <span class="text-[#9a9a9a]">Figma build status</span>
-                  <span class="uppercase tracking-[0.2em] text-[10px] text-[#8b8b8b]">{{ figmaJob.status }}</span>
-                </div>
-                <div v-if="figmaJob.figma_file_url" class="text-[#8D35FF]">
-                  <a :href="figmaJob.figma_file_url" target="_blank" rel="noopener">Open Figma file</a>
-                </div>
-                <div v-if="figmaEvents.length" class="space-y-1 text-[#8b8b8b]">
-                  <div v-for="event in figmaEvents" :key="event.id" class="border-b border-[#1f1f1f] pb-2 last:border-b-0">
-                    <div>{{ formatDateTime(event.created_at) }} — {{ event.message }}</div>
-                    <div v-if="event.payload?.name" class="mt-1 text-[11px] text-[#9a9a9a]">
-                      node: {{ event.payload.name }}
+                <div class="mt-8 space-y-8">
+                  <section class="space-y-4">
+                    <div>
+                      <h3 class="text-white font-semibold text-lg">Brief</h3>
+                      <p class="text-xs text-[#777] mt-1">Core product context, goals, scope, and constraints.</p>
                     </div>
-                    <div v-if="event.payload?.error" class="mt-1 text-[11px] text-red-400 break-words">
-                      error: {{ event.payload.error }}
-                    </div>
-                    <pre
-                      v-if="event.payload?.props"
-                      class="mt-1 overflow-x-auto whitespace-pre-wrap break-words bg-[#090909] border border-[#1f1f1f] p-2 text-[10px] text-[#7f7f7f]"
-                    >{{ formatFigmaEventPayload(event.payload.props) }}</pre>
-                  </div>
-                </div>
-                <div v-else class="text-[#777]">No build events yet.</div>
-              </div>
 
-              <!-- Preview generated spec (visible in both modes) -->
-              <div v-if="designSpec" class="mt-8 border-t border-[#333] pt-6 space-y-4">
+                    <div v-if="briefEditMode" class="space-y-4">
+                      <ClientOnly>
+                        <RichTextEditor v-model="briefEditContent" />
+                        <template #fallback>
+                          <textarea
+                            v-model="briefEditContent"
+                            class="w-full min-h-[400px] px-4 py-3 bg-[#0f0f0f] border border-[#333] text-white text-sm leading-relaxed focus:border-[#8D35FF] focus:outline-none resize-y"
+                          ></textarea>
+                        </template>
+                      </ClientOnly>
+                    </div>
+
+                    <div v-else class="bg-[#0f0f0f] border border-[#333] rounded-none p-6">
+                      <div
+                        class="text-white text-sm whitespace-pre-wrap leading-relaxed"
+                        @click="handleBriefContentClick"
+                        v-html="formatBriefHtml(selectedBrief.content || '')"
+                      ></div>
+                    </div>
+                  </section>
+
+                  <section class="space-y-4">
+                    <div class="flex items-center justify-between gap-4 flex-wrap">
+                      <div>
+                        <h3 class="text-white font-semibold text-lg">References</h3>
+                        <p class="text-xs text-[#777] mt-1">Competitive landscape, screenshots, and recommended visual direction based on the brief.</p>
+                      </div>
+                      <div class="flex gap-3 flex-wrap">
+                        <button
+                          @click="openMediaLibrary('references')"
+                          class="px-6 py-3 border border-[#2f2f2f] text-white rounded-none hover:bg-[#1f1f1f] transition text-sm"
+                        >
+                          Media Library
+                        </button>
+                        <button
+                          @click="analyzeReferences"
+                          :disabled="isAnalyzingReferences"
+                          class="px-6 py-3 border border-[#2f2f2f] text-white rounded-none hover:bg-[#1f1f1f] transition disabled:opacity-50 text-sm"
+                        >
+                          {{ isAnalyzingReferences ? 'Analyzing References...' : ((referenceStatus === 'completed' || referenceAnalysis) ? 'Re-analyze References' : 'Analyze References') }}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="text-xs text-[#8b8b8b] space-y-1">
+                      <div>
+                        Reference analysis status:
+                        <span class="uppercase tracking-[0.18em] text-[10px] text-[#bdbdbd]">{{ referenceStatus }}</span>
+                      </div>
+                      <div v-if="referenceAnalysis?.summary?.recommended_direction" class="text-[#cfcfcf]">
+                        Recommended direction: {{ referenceAnalysis.summary.recommended_direction }}
+                      </div>
+                    </div>
+
+                    <div v-if="referenceAnalysis || referenceAssets.length" class="border border-[#2f2f2f] bg-[#0f0f0f] p-4 space-y-4">
+                      <div class="flex items-center justify-between">
+                        <span class="text-[#9a9a9a] text-xs uppercase tracking-[0.18em]">Reference Analysis</span>
+                        <span class="text-[10px] uppercase tracking-[0.18em] text-[#8b8b8b]">{{ referenceStatus }}</span>
+                      </div>
+                      <div v-if="referenceAnalysis?.curated_shortlist?.length" class="space-y-2">
+                        <p class="text-xs uppercase tracking-[0.18em] text-[#777]">Curated shortlist</p>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                          <div v-for="item in referenceAnalysis.curated_shortlist" :key="item.id" class="border border-[#262626] p-3 text-xs space-y-1">
+                            <div class="flex items-center justify-between gap-3">
+                              <a :href="item.url" target="_blank" rel="noopener" class="text-white hover:text-[#8D35FF]">{{ item.title }}</a>
+                              <span class="text-[#8b8b8b]">{{ item.score }}</span>
+                            </div>
+                            <div class="text-[#8b8b8b]">{{ item.source_type }}</div>
+                            <div v-if="item.notes" class="text-[#bdbdbd]">{{ item.notes }}</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div v-if="referenceAnalysis?.summary" class="grid grid-cols-1 lg:grid-cols-2 gap-4 text-sm">
+                        <div class="border border-[#262626] p-3">
+                          <p class="text-xs uppercase tracking-[0.18em] text-[#777] mb-2">Visual direction</p>
+                          <p class="text-white">{{ referenceAnalysis.summary.recommended_direction }}</p>
+                          <div v-if="referenceAnalysis.summary.style_keywords?.length" class="mt-3 flex flex-wrap gap-2">
+                            <span v-for="item in referenceAnalysis.summary.style_keywords" :key="item" class="px-2 py-1 text-[11px] border border-[#333] text-[#cfcfcf]">{{ item }}</span>
+                          </div>
+                        </div>
+                        <div class="border border-[#262626] p-3 space-y-3">
+                          <div v-if="referenceAnalysis.summary.do?.length">
+                            <p class="text-xs uppercase tracking-[0.18em] text-[#777] mb-2">Do</p>
+                            <ul class="text-[#d0d0d0] text-xs list-disc ml-4 space-y-1">
+                              <li v-for="item in referenceAnalysis.summary.do" :key="item">{{ item }}</li>
+                            </ul>
+                          </div>
+                          <div v-if="referenceAnalysis.summary.avoid?.length">
+                            <p class="text-xs uppercase tracking-[0.18em] text-[#777] mb-2">Avoid</p>
+                            <ul class="text-[#d0d0d0] text-xs list-disc ml-4 space-y-1">
+                              <li v-for="item in referenceAnalysis.summary.avoid" :key="item">{{ item }}</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <div v-if="referenceAssets.length" class="space-y-2">
+                        <p class="text-xs uppercase tracking-[0.18em] text-[#777]">Captured reference assets</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+                          <button
+                            v-for="asset in referenceAssets"
+                            :key="asset.id"
+                            type="button"
+                            @click="openMediaLibrary('references', asset.public_url)"
+                            class="border border-[#262626] p-3 hover:border-[#444] transition space-y-2"
+                          >
+                            <img :src="asset.public_url" :alt="asset.title || asset.competitor || 'Reference asset'" class="w-full h-40 object-cover border border-[#1f1f1f] bg-[#090909]" />
+                            <div class="text-xs text-white truncate">{{ asset.title || asset.competitor || asset.source_url }}</div>
+                            <div class="text-[11px] text-[#8b8b8b]">{{ asset.page_kind }} · {{ asset.viewport }}</div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section class="space-y-4">
+                    <div class="flex items-center justify-between gap-4 flex-wrap">
+                      <div>
+                        <h3 class="text-white font-semibold text-lg">Design Specification Structure</h3>
+                        <p class="text-xs text-[#777] mt-1">Generated from the brief and approved reference analysis.</p>
+                      </div>
+                      <div class="flex gap-3 flex-wrap">
+                        <button
+                          @click="generateDesignSpec"
+                          :disabled="isGeneratingSpec || referenceStatus === 'processing'"
+                          class="px-6 py-3 border border-[#8D35FF] text-white rounded-none hover:bg-[#8D35FF]/20 transition disabled:opacity-50 text-sm"
+                        >
+                          {{ isGeneratingSpec ? 'Generating Spec...' : (designSpec ? 'Re-generate' : 'Generate Design Spec') }}
+                        </button>
+                        <button
+                          @click="queueFigmaBuild"
+                          :disabled="isBuildingFigma || !designSpec"
+                          class="px-6 py-3 border border-[#2f2f2f] text-white rounded-none hover:bg-[#1f1f1f] transition disabled:opacity-50 text-sm"
+                        >
+                          {{ isBuildingFigma ? 'Queuing Build...' : 'Build in Figma' }}
+                        </button>
+                        <button
+                          @click="queueDemoBuild"
+                          :disabled="isBuildingDemo || !designSpec"
+                          class="px-6 py-3 border border-[#2f2f2f] text-white rounded-none hover:bg-[#1f1f1f] transition disabled:opacity-50 text-sm"
+                        >
+                          {{ isBuildingDemo ? 'Queuing Demo...' : 'Generate Demo Site' }}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div v-if="figmaBuildStatus" class="text-xs text-[#8b8b8b]">
+                      {{ figmaBuildStatus }}
+                    </div>
+                    <div v-if="figmaJob" class="border border-[#2f2f2f] bg-[#0f0f0f] p-4 text-xs text-[#cfcfcf] space-y-2">
+                      <div class="flex items-center justify-between">
+                        <span class="text-[#9a9a9a]">Figma build status</span>
+                        <span class="uppercase tracking-[0.2em] text-[10px] text-[#8b8b8b]">{{ figmaJob.status }}</span>
+                      </div>
+                      <div v-if="figmaJob.figma_file_url" class="text-[#8D35FF]">
+                        <a :href="figmaJob.figma_file_url" target="_blank" rel="noopener">Open Figma file</a>
+                      </div>
+                      <div v-if="figmaEvents.length" class="space-y-1 text-[#8b8b8b]">
+                        <div v-for="event in figmaEvents" :key="event.id" class="border-b border-[#1f1f1f] pb-2 last:border-b-0">
+                          <div>{{ formatDateTime(event.created_at) }} — {{ event.message }}</div>
+                          <div v-if="event.payload?.name" class="mt-1 text-[11px] text-[#9a9a9a]">
+                            node: {{ event.payload.name }}
+                          </div>
+                          <div v-if="event.payload?.error" class="mt-1 text-[11px] text-red-400 break-words">
+                            error: {{ event.payload.error }}
+                          </div>
+                          <pre
+                            v-if="event.payload?.props"
+                            class="mt-1 overflow-x-auto whitespace-pre-wrap break-words bg-[#090909] border border-[#1f1f1f] p-2 text-[10px] text-[#7f7f7f]"
+                          >{{ formatFigmaEventPayload(event.payload.props) }}</pre>
+                        </div>
+                      </div>
+                      <div v-else class="text-[#777]">No build events yet.</div>
+                    </div>
+
+                    <div v-if="demoBuildStatus" class="text-xs text-[#8b8b8b]">
+                      {{ demoBuildStatus }}
+                    </div>
+                    <div v-if="demoJob" class="border border-[#2f2f2f] bg-[#0f0f0f] p-4 text-xs text-[#cfcfcf] space-y-2">
+                      <div class="flex items-center justify-between">
+                        <span class="text-[#9a9a9a]">Demo build status</span>
+                        <span class="uppercase tracking-[0.2em] text-[10px] text-[#8b8b8b]">{{ demoJob.status }}</span>
+                      </div>
+                      <div v-if="demoJob.current_stage" class="text-[#8b8b8b]">
+                        stage: {{ demoJob.current_stage }}
+                      </div>
+                      <div v-if="demoJob.target_url || demoJob.slug" class="text-[#8D35FF]">
+                        <a :href="demoJob.target_url || `https://demo.sitesynth.com/${demoJob.slug}/`" target="_blank" rel="noopener">Open demo site</a>
+                      </div>
+                      <div v-if="demoJob.error" class="text-red-400">
+                        {{ demoJob.error }}
+                      </div>
+                      <div v-if="demoJob.provider || demoJob.model_provider" class="text-[#8b8b8b]">
+                        executor: {{ demoJob.provider || '—' }} / model: {{ demoJob.model_provider || '—' }}
+                      </div>
+                      <div v-if="demoArtifacts.length" class="space-y-1">
+                        <div class="text-[#9a9a9a]">Artifacts</div>
+                        <div v-for="artifact in demoArtifacts" :key="artifact.id" class="border border-[#1f1f1f] bg-[#090909] p-2">
+                          <div class="uppercase tracking-[0.14em] text-[10px] text-[#777]">{{ artifact.type }}</div>
+                          <a v-if="artifact.public_url" :href="artifact.public_url" target="_blank" rel="noopener" class="text-[#8D35FF] break-all">
+                            {{ artifact.public_url }}
+                          </a>
+                          <div v-else-if="artifact.path" class="text-[#8b8b8b] break-all">{{ artifact.path }}</div>
+                        </div>
+                      </div>
+                      <div v-if="demoEvents.length" class="space-y-1 text-[#8b8b8b]">
+                        <div v-for="event in demoEvents" :key="event.id" class="border-b border-[#1f1f1f] pb-2 last:border-b-0">
+                          <div>{{ formatDateTime(event.created_at) }} — <span v-if="event.stage" class="uppercase tracking-[0.14em] text-[10px] text-[#777] mr-1">{{ event.stage }}</span>{{ event.message }}</div>
+                          <div v-if="event.payload?.error" class="mt-1 text-[11px] text-red-400 break-words">
+                            error: {{ event.payload.error }}
+                          </div>
+                          <pre
+                            v-if="event.payload"
+                            class="mt-1 overflow-x-auto whitespace-pre-wrap break-words bg-[#090909] border border-[#1f1f1f] p-2 text-[10px] text-[#7f7f7f]"
+                          >{{ formatFigmaEventPayload(event.payload) }}</pre>
+                        </div>
+                      </div>
+                      <div v-else class="text-[#777]">No demo events yet.</div>
+                    </div>
+
+                    <div v-if="designSpec" class="border-t border-[#333] pt-6 space-y-4">
                 <h3 class="text-white font-semibold text-lg">Design Specification Structure</h3>
                 <div v-if="designSpec.product_summary" class="grid grid-cols-1 lg:grid-cols-3 gap-4">
                   <div class="p-4 border border-[#333] bg-[#0f0f0f]">
@@ -562,7 +721,7 @@
                   </div>
                 </div>
 
-                <div v-if="designSpec.figma_structure || designSpec.open_questions?.length" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+	                <div v-if="designSpec.figma_structure || designSpec.open_questions?.length" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   <div v-if="designSpec.figma_structure" class="p-4 border border-[#333] bg-[#0f0f0f]">
                     <p class="text-xs uppercase tracking-[0.18em] text-[#777] mb-3">Figma File Structure</p>
                     <div class="space-y-3">
@@ -591,7 +750,10 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </section>
+          </div>
+        </template>
+      </div>
 
             <!-- Brief list (when no brief is selected) -->
             <div v-else>
@@ -1311,6 +1473,90 @@
       </div>
     </Teleport>
 
+    <Teleport to="body">
+      <div
+        v-if="showMediaLibrary"
+        class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        @click.self="closeMediaLibrary"
+      >
+        <div class="bg-[#111] border border-[#333] w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-none flex flex-col">
+          <div class="flex items-center justify-between px-6 py-4 border-b border-[#333]">
+            <div class="flex items-center gap-3">
+              <h3 class="text-white text-sm font-semibold">Media Library</h3>
+              <div class="flex border border-[#333]">
+                <button
+                  @click="mediaLibraryTab = 'references'; selectedMediaIndex = 0"
+                  :class="mediaLibraryTab === 'references' ? 'bg-[#8D35FF] text-white' : 'text-[#999] hover:bg-white/5'"
+                  class="px-3 py-1.5 text-xs transition"
+                >
+                  References
+                </button>
+                <button
+                  @click="mediaLibraryTab = 'files'; selectedMediaIndex = 0"
+                  :class="mediaLibraryTab === 'files' ? 'bg-[#8D35FF] text-white' : 'text-[#999] hover:bg-white/5'"
+                  class="px-3 py-1.5 text-xs transition border-l border-[#333]"
+                >
+                  Client Files
+                </button>
+              </div>
+            </div>
+            <button @click="closeMediaLibrary" class="p-1.5 text-[#555] hover:text-white transition-colors">
+              <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4"><path :d="iconPaths.x" /></svg>
+            </button>
+          </div>
+          <div class="grid grid-cols-[minmax(0,1fr)_320px] flex-1 min-h-0">
+            <div class="bg-[#090909] flex items-center justify-center p-6 min-h-[420px]">
+              <div v-if="activeMediaItem" class="w-full h-full flex flex-col gap-4">
+                <img
+                  v-if="activeMediaItem.kind === 'image'"
+                  :src="activeMediaItem.url"
+                  :alt="activeMediaItem.title"
+                  class="max-h-[65vh] w-full object-contain bg-[#050505] border border-[#1f1f1f]"
+                />
+                <div v-else class="border border-[#262626] p-6 bg-[#0f0f0f]">
+                  <p class="text-white text-sm font-medium">{{ activeMediaItem.title }}</p>
+                  <p class="text-[#888] text-xs mt-2">{{ activeMediaItem.meta }}</p>
+                  <a :href="activeMediaItem.url" target="_blank" rel="noopener" class="inline-block mt-4 text-[#8D35FF] text-sm">Open file</a>
+                </div>
+                <div class="flex items-center justify-between gap-4">
+                  <div>
+                    <p class="text-white text-sm">{{ activeMediaItem.title }}</p>
+                    <p class="text-[#777] text-xs mt-1">{{ activeMediaItem.meta }}</p>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <button @click="selectPrevMedia" class="px-3 py-2 border border-[#333] text-[#bbb] text-xs hover:bg-white/5">Prev</button>
+                    <button @click="selectNextMedia" class="px-3 py-2 border border-[#333] text-[#bbb] text-xs hover:bg-white/5">Next</button>
+                    <a :href="activeMediaItem.url" target="_blank" rel="noopener" class="px-3 py-2 border border-[#333] text-[#bbb] text-xs hover:bg-white/5">Open</a>
+                  </div>
+                </div>
+              </div>
+              <div v-else class="text-[#666] text-sm">No media yet.</div>
+            </div>
+            <div class="border-l border-[#333] bg-[#0f0f0f] overflow-y-auto">
+              <div class="p-4 space-y-3">
+                <button
+                  v-for="(item, index) in visibleMediaItems"
+                  :key="`${mediaLibraryTab}-${item.id || item.url}`"
+                  @click="selectedMediaIndex = index"
+                  :class="selectedMediaIndex === index ? 'border-[#8D35FF] bg-[#8D35FF]/10' : 'border-[#262626] hover:border-[#444]'"
+                  class="w-full text-left border p-3 transition"
+                >
+                  <div class="flex gap-3">
+                    <img v-if="item.kind === 'image'" :src="item.url" :alt="item.title" class="w-16 h-16 object-cover border border-[#1f1f1f] bg-[#090909] flex-shrink-0" />
+                    <div v-else class="w-16 h-16 border border-[#1f1f1f] bg-[#090909] flex items-center justify-center text-[#666] text-xs flex-shrink-0">FILE</div>
+                    <div class="min-w-0">
+                      <p class="text-white text-xs truncate">{{ item.title }}</p>
+                      <p class="text-[#777] text-[11px] mt-1 break-words">{{ item.meta }}</p>
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Teleport>
+
     <!-- Toast Notification -->
     <Transition name="fade">
       <div v-if="toast" class="fixed bottom-6 right-6 z-50">
@@ -1451,8 +1697,16 @@ const selectedBrief = ref<any>(null)
 const briefEditMode = ref(false)
 const briefEditContent = ref('')
 const briefEditName = ref('')
+const showMediaLibrary = ref(false)
+const mediaLibraryTab = ref<'references' | 'files'>('references')
+const selectedMediaIndex = ref(0)
 const isSavingBrief = ref(false)
 const isGeneratingSpec = ref(false)
+const isAnalyzingReferences = ref(false)
+const referenceStatus = ref<'pending' | 'processing' | 'completed' | 'failed'>('pending')
+const referenceAnalysis = ref<any | null>(null)
+const referenceAssets = ref<any[]>([])
+const isLoadingReferenceStatus = ref(false)
 const isBuildingFigma = ref(false)
 const figmaBuildStatus = ref<string | null>(null)
 const lastFigmaJobId = ref<string | null>(null)
@@ -1461,6 +1715,14 @@ const figmaJob = ref<any | null>(null)
 const figmaEvents = ref<any[]>([])
 const isLoadingFigmaStatus = ref(false)
 let figmaStatusTimer: number | null = null
+const isBuildingDemo = ref(false)
+const demoBuildStatus = ref<string | null>(null)
+const lastDemoJobId = ref<string | null>(null)
+const demoJob = ref<any | null>(null)
+const demoEvents = ref<any[]>([])
+const demoArtifacts = ref<any[]>([])
+const isLoadingDemoStatus = ref(false)
+let demoStatusTimer: number | null = null
 const designSpec = ref<any>(null)
 const lastSavedContent = ref('')
 const lastSavedAt = ref<string | null>(null)
@@ -1508,6 +1770,26 @@ const compareSummary = computed(() => {
   if (!compareVersion.value) return [] as string[]
   return computeDraftDiff(lastSavedContent.value, normalizeBriefContent(compareVersion.value.markdown_content)).changedTitles
 })
+const referenceMediaItems = computed(() => (
+  referenceAssets.value || []
+).map((asset: any) => ({
+  id: asset.id,
+  kind: 'image',
+  url: asset.public_url,
+  title: asset.title || asset.competitor || asset.source_url || 'Reference',
+  meta: `${asset.page_kind || 'page'} · ${asset.viewport || 'view'} · ${asset.competitor || 'reference'}`,
+})))
+const clientMediaItems = computed(() => (
+  userFiles.value || []
+).map((file: any) => ({
+  id: file.id,
+  kind: String(file.mimeType || '').startsWith('image/') ? 'image' : 'file',
+  url: file.url,
+  title: file.name || 'Client file',
+  meta: `${file.mimeType || 'file'}${file.size ? ` · ${formatFileSize(file.size)}` : ''}`,
+})).filter((item: any) => item.url))
+const visibleMediaItems = computed(() => mediaLibraryTab.value === 'references' ? referenceMediaItems.value : clientMediaItems.value)
+const activeMediaItem = computed(() => visibleMediaItems.value[selectedMediaIndex.value] || null)
 const currentCompareHtml = computed(() => {
   if (isDirty.value && briefEditContent.value.trim()) return stripDraftDecorations(briefEditContent.value)
   return stripDraftDecorations(lastSavedContent.value || selectedBrief.value?.content || '')
@@ -1811,6 +2093,111 @@ const navigateHistory = (direction: -1 | 1) => {
   viewHistoryVersion(target)
 }
 
+const openMediaLibrary = (tab: 'references' | 'files', initialUrl?: string | null) => {
+  mediaLibraryTab.value = tab
+  const items = tab === 'references' ? referenceMediaItems.value : clientMediaItems.value
+  const index = initialUrl ? items.findIndex((item: any) => item.url === initialUrl) : 0
+  selectedMediaIndex.value = index >= 0 ? index : 0
+  showMediaLibrary.value = true
+}
+
+const closeMediaLibrary = () => {
+  showMediaLibrary.value = false
+}
+
+const selectPrevMedia = () => {
+  const items = visibleMediaItems.value
+  if (!items.length) return
+  selectedMediaIndex.value = (selectedMediaIndex.value - 1 + items.length) % items.length
+}
+
+const selectNextMedia = () => {
+  const items = visibleMediaItems.value
+  if (!items.length) return
+  selectedMediaIndex.value = (selectedMediaIndex.value + 1) % items.length
+}
+
+const handleBriefContentClick = (event: MouseEvent) => {
+  const target = event.target as HTMLElement | null
+  const link = target?.closest?.('a') as HTMLAnchorElement | null
+  if (!link?.href) return
+  if (link.href.includes('/design_references/')) {
+    event.preventDefault()
+    openMediaLibrary('references', link.href)
+  }
+}
+
+const handleMediaLibraryKeydown = (event: KeyboardEvent) => {
+  if (!showMediaLibrary.value) return
+  if (event.key === 'ArrowLeft') {
+    event.preventDefault()
+    selectPrevMedia()
+  } else if (event.key === 'ArrowRight') {
+    event.preventDefault()
+    selectNextMedia()
+  } else if (event.key === 'Escape') {
+    event.preventDefault()
+    closeMediaLibrary()
+  }
+}
+
+const loadReferenceStatus = async () => {
+  if (!selectedBrief.value) return
+  isLoadingReferenceStatus.value = true
+  try {
+    const res = await fetch(`/api/briefs/references/status?briefId=${encodeURIComponent(selectedBrief.value.id)}`, {
+      headers: { 'x-user-email': userEmail.value },
+    })
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok || !data?.success) return
+    referenceStatus.value = data.data?.status || 'pending'
+    referenceAnalysis.value = data.data?.analysis || null
+    referenceAssets.value = data.data?.assets || []
+  } finally {
+    isLoadingReferenceStatus.value = false
+  }
+}
+
+const analyzeReferences = async () => {
+  if (!selectedBrief.value) return
+  isAnalyzingReferences.value = true
+  referenceStatus.value = 'processing'
+  try {
+    const res = await fetch('/api/briefs/references/run', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-user-email': userEmail.value },
+      body: JSON.stringify({ briefId: selectedBrief.value.id }),
+    })
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok || !data?.success) {
+      throw new Error(data?.error || 'Reference analysis failed')
+    }
+    const briefRes = await fetch(`/api/briefs/${selectedBrief.value.id}`, {
+      headers: { 'x-user-email': userEmail.value },
+    })
+    const briefData = await briefRes.json().catch(() => ({}))
+    if (briefRes.ok && briefData?.success && briefData?.data?.markdown_content) {
+      selectedBrief.value = {
+        ...selectedBrief.value,
+        ...briefData.data,
+        content: briefData.data.markdown_content,
+        markdown_content: briefData.data.markdown_content,
+      }
+      const normalized = normalizeBriefContent(briefData.data.markdown_content)
+      briefEditContent.value = normalized
+      lastSavedContent.value = normalized
+      lastSavedAt.value = briefData.data.updated_at || new Date().toISOString()
+    }
+    await loadReferenceStatus()
+    showToast('Reference analysis completed', 'success')
+  } catch (error: any) {
+    referenceStatus.value = 'failed'
+    showToast(error?.message || 'Reference analysis failed', 'error')
+  } finally {
+    isAnalyzingReferences.value = false
+  }
+}
+
 const generateDesignSpec = async () => {
   if (!selectedBrief.value) return
   isGeneratingSpec.value = true
@@ -1826,6 +2213,7 @@ const generateDesignSpec = async () => {
     const data = await res.json()
     if (data.success) {
       designSpec.value = data.data
+      await loadReferenceStatus()
     } else {
       alert('Failed to generate spec: ' + data.error)
     }
@@ -1838,13 +2226,22 @@ const generateDesignSpec = async () => {
 
 watch(selectedBrief, async (value) => {
   if (!value) return
+  await loadReferenceStatus()
   await loadFigmaBuildStatus()
+  await loadDemoBuildStatus()
   if (figmaStatusTimer) window.clearInterval(figmaStatusTimer)
+  if (demoStatusTimer) window.clearInterval(demoStatusTimer)
   figmaStatusTimer = window.setInterval(loadFigmaBuildStatus, 8000)
+  demoStatusTimer = window.setInterval(loadDemoBuildStatus, 8000)
+})
+
+watch(mediaLibraryTab, () => {
+  selectedMediaIndex.value = 0
 })
 
 onBeforeUnmount(() => {
   if (figmaStatusTimer) window.clearInterval(figmaStatusTimer)
+  if (demoStatusTimer) window.clearInterval(demoStatusTimer)
 })
 
 const queueFigmaBuild = async () => {
@@ -1894,6 +2291,55 @@ const loadFigmaBuildStatus = async () => {
     figmaEvents.value = data.data?.events || []
   } finally {
     isLoadingFigmaStatus.value = false
+  }
+}
+
+const queueDemoBuild = async () => {
+  if (!selectedBrief.value) return
+  if (!designSpec.value) {
+    showToast('Generate a design spec first', 'error')
+    return
+  }
+  isBuildingDemo.value = true
+  demoBuildStatus.value = 'Submitting demo build job...'
+  try {
+    const res = await fetch('/api/demo/build', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-user-email': userEmail.value },
+      body: JSON.stringify({ briefId: selectedBrief.value.id }),
+    })
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok || !data?.success) {
+      throw new Error(data?.error || 'Failed to queue demo build')
+    }
+    lastDemoJobId.value = data.data?.jobId || null
+    await loadDemoBuildStatus()
+    demoBuildStatus.value = `Demo build queued${lastDemoJobId.value ? ` (job ${lastDemoJobId.value})` : ''}`
+    showToast('Demo build queued', 'success')
+  } catch (error: any) {
+    demoBuildStatus.value = error.message || 'Failed to queue demo build'
+    showToast(demoBuildStatus.value, 'error')
+  } finally {
+    isBuildingDemo.value = false
+  }
+}
+
+const loadDemoBuildStatus = async () => {
+  if (!selectedBrief.value) return
+  isLoadingDemoStatus.value = true
+  try {
+    const res = await fetch(`/api/demo/build/status?briefId=${encodeURIComponent(selectedBrief.value.id)}`, {
+      headers: { 'x-user-email': userEmail.value },
+    })
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok || !data?.success) {
+      return
+    }
+    demoJob.value = data.data?.job || null
+    demoEvents.value = data.data?.events || []
+    demoArtifacts.value = data.data?.artifacts || []
+  } finally {
+    isLoadingDemoStatus.value = false
   }
 }
 
@@ -2161,11 +2607,13 @@ const handleBrowserDraftEvent = (event: Event) => {
 onMounted(() => {
   window.addEventListener('beforeunload', handleBeforeUnload)
   window.addEventListener('sitesynth:brief-draft-ready', handleBrowserDraftEvent as EventListener)
+  window.addEventListener('keydown', handleMediaLibraryKeydown)
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('beforeunload', handleBeforeUnload)
   window.removeEventListener('sitesynth:brief-draft-ready', handleBrowserDraftEvent as EventListener)
+  window.removeEventListener('keydown', handleMediaLibraryKeydown)
 })
 
 onBeforeRouteLeave(() => {
@@ -2555,6 +3003,9 @@ const openBriefEditor = (brief: any) => {
   briefEditName.value = brief.name || ''
   // Restore saved design spec if exists
   designSpec.value = brief.design_spec_json || null
+  referenceStatus.value = brief.reference_status || 'pending'
+  referenceAnalysis.value = brief.reference_analysis_json || null
+  referenceAssets.value = []
   loadBriefVersions(brief.id)
 
   // Open chat drawer in post-brief mode so AI can assist with this brief
