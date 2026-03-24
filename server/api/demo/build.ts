@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
   const db = useDatabaseClient()
   const { data: brief, error: briefError } = await db
     .from('briefs')
-    .select('id, user_email, brief_data, markdown_content, design_spec_json')
+    .select('id, user_email, brief_data, markdown_content, design_spec_json, art_direction_json, reference_analysis_json')
     .eq('id', briefId)
     .eq('user_email', userEmail)
     .maybeSingle()
@@ -26,6 +26,9 @@ export default defineEventHandler(async (event) => {
   if (!brief) return { success: false, error: 'Brief not found' }
   if (!brief.design_spec_json) {
     return { success: false, error: 'Design spec not found. Generate it first.' }
+  }
+  if (!brief.art_direction_json) {
+    return { success: false, error: 'Art direction not found. Generate it first.' }
   }
 
   const projectName =
@@ -41,7 +44,8 @@ export default defineEventHandler(async (event) => {
     brief: brief.brief_data,
     brief_markdown: brief.markdown_content,
     design_spec: brief.design_spec_json,
-    reference_analysis: (brief as any).reference_analysis || brief.brief_data?.reference_analysis || null,
+    art_direction: brief.art_direction_json,
+    reference_analysis: brief.reference_analysis_json || brief.brief_data?.reference_analysis || null,
     build_contract: buildContract,
   }
 

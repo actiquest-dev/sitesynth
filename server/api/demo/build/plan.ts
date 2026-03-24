@@ -33,22 +33,44 @@ export default defineEventHandler(async (event) => {
   })
 
   const prompt = `
-Build contract (JSON):
+🎨 ART DIRECTION CONTRACT (primary source of truth):
+${JSON.stringify(job.spec_snapshot?.art_direction || {}, null, 2)}
+
+📋 Build contract (JSON):
 ${JSON.stringify(job.build_contract || job.spec_snapshot?.build_contract || {}, null, 2)}
 
-Design spec (JSON):
-${JSON.stringify(job.spec_snapshot?.design_spec || job.spec_snapshot?.spec || job.spec_snapshot || {}, null, 2)}
+📊 Design spec (JSON):
+${JSON.stringify(job.spec_snapshot?.design_spec || job.spec_snapshot?.spec || {}, null, 2)}
 
-Brief (markdown):
+📝 Brief (markdown):
 ${job.spec_snapshot?.brief_markdown || ''}
 
-Project context (brief JSON):
+🔍 Project context (brief JSON):
 ${JSON.stringify(job.spec_snapshot?.brief || {}, null, 2)}
 
-Task:
+═══════════════════════════════════════════════════════════════════════════
+
+🚀 TASK:
 Generate a polished, production-grade static site (HTML + CSS).
-Use the design system and visual direction from the spec.
-Return STRICT JSON with html and css strings only.
+
+✨ USE THE ART DIRECTION CONTRACT AS YOUR PRIMARY SOURCE:
+- Extract exact colors from color_system (use these hex values, not variations)
+- Use typography scale verbatim (sizes, weights, line-heights, fonts)
+- Follow section_blueprints: these define exact copy and layout
+- Implement component_recipes exactly as specified
+- EXPLICITLY AVOID all anti_patterns listed
+- Translate reference insights into specific CSS choices
+- Use spacing variables from the art direction contract
+
+🎯 BUILD WITH:
+- Exact colors, fonts, sizes from art direction (not approximations)
+- Semantic HTML structure
+- CSS custom properties driven by art direction values
+- Responsive design using clamp() from the spec
+- Professional hover states and transitions
+- Proper spacing hierarchy matching the art direction
+
+Return STRICT JSON with title, slug, html, and css strings only.
   `.trim()
 
   const registry = getVoltAgentInstance()
