@@ -15,6 +15,7 @@
 
 import { defineEventHandler, readBody, getHeader } from 'h3'
 import { generateObject } from 'ai'
+import { google } from '@ai-sdk/google'
 import { z } from 'zod'
 import { useDatabaseClient } from '~~/server/utils/supabase'
 import { artDirectorAgent } from '~~/server/agents'
