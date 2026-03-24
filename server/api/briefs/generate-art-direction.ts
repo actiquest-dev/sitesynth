@@ -15,7 +15,6 @@
 
 import { defineEventHandler, readBody, getHeader } from 'h3'
 import { generateObject } from 'ai'
-import { google } from '@ai-sdk/google'
 import { z } from 'zod'
 import { useDatabaseClient } from '~~/server/utils/supabase'
 import { artDirectorAgent } from '~~/server/agents'
@@ -45,8 +44,7 @@ export default defineEventHandler(async (event) => {
          brief_data,
          markdown_content,
          design_spec_json,
-         reference_analysis_json,
-         reference_analysis_full
+         reference_analysis_json
         `
       )
       .eq('id', briefId)
@@ -68,7 +66,7 @@ export default defineEventHandler(async (event) => {
     // Build comprehensive context for art direction
     const designSpec = brief.design_spec_json
     const briefData = brief.brief_data || {}
-    const referenceAnalysis = brief.reference_analysis_full || brief.reference_analysis_json || {}
+    const referenceAnalysis = brief.reference_analysis_json || {}
     const briefMarkdown = brief.markdown_content || ''
 
     // Build the prompt for artDirectorAgent
