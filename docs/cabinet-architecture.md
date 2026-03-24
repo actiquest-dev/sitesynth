@@ -7,6 +7,14 @@
 
 ## 1. Полный путь клиента (User Journey)
 
+**Зачем это так устроено:**
+SiteSynth — это не просто сайт-визитка, а сервис где AI ведёт клиента от первого
+вопроса до готового сайта. Ключевая идея: клиент не заполняет скучные формы,
+а разговаривает с AI. Разговор начинается анонимно ещё до регистрации, и мы
+не должны терять этот контекст когда клиент платит и регистрируется.
+Вся история одного клиента живёт в одном "разговоре" (conversation) — AI всегда
+знает с кем говорит и что уже обсуждалось.
+
 ```
 Landing Page (анонимный)
     │  AIChatDrawer — Consultant Agent (presale)
@@ -50,6 +58,14 @@ Cabinet (/cabinet)
 ---
 
 ## 2. Сквозной Conversation ID — реализация
+
+**Зачем это нужно:**
+Самая сложная проблема в AI-сервисах с регистрацией — разрыв контекста.
+Клиент поговорил с AI на сайте, потом заплатил и зарегистрировался — и AI
+уже не помнит о чём был разговор. Мы решили это через "claim" механизм:
+разговор создаётся анонимно, conversation_id сохраняется в localStorage,
+а после регистрации привязывается к реальному email. В итоге AI в кабинете
+видит с кем разговаривал ещё на presale — что хотел, какой бюджет, какие боли.
 
 Единый conversation_id создаётся на presale и живёт через все этапы.
 
@@ -174,6 +190,14 @@ watch(() => props.agentType, async (newVal) => {
 
 ## 3. Схема компонентов
 
+**Зачем такая структура:**
+Кабинет построен как SPA внутри Nuxt. `AIChatDrawer` всегда доступен справа —
+клиент может в любой момент уточнить что-то у AI, не прерывая работу с брифом.
+`useChatDrawer` — это глобальный state-composable (через `useState` Nuxt),
+он позволяет любому компоненту открыть чат и передать контекст без пробрасывания
+пропсов через дерево. `RichTextEditor` завёрнут в `<ClientOnly>` потому что
+TipTap/ProseMirror работает только в браузере — нет DOM на сервере (SSR).
+
 ```
 app.vue
 ├── <NuxtPage />          — текущая страница
@@ -253,6 +277,13 @@ composables/useGoogleAuth.ts
 ---
 
 ## 4. API — полный список
+
+**Зачем REST, а не GraphQL или tRPC:**
+Nuxt 3 / Nitro из коробки поддерживает file-based routing для API.
+Каждый файл в `server/api/` — это endpoint. Это просто и не требует
+дополнительной настройки. Авторизация передаётся через `x-user-email` заголовок
+(не JWT сессия) — намеренное упрощение: Supabase Auth используется только
+для создания аккаунта после оплаты, а не для каждого API вызова.
 
 ### Chat
 | Метод | Путь | Описание |
@@ -357,6 +388,19 @@ composables/useGoogleAuth.ts
 
 ## 5. AI — Агенты и LLM
 
+**Зачем VoltAgent, а не прямые вызовы Gemini:**
+VoltAgent даёт observability — видно что агент "думает", какие шаги делает,
+где ошибается. Это критично при отладке сложных сценариев (Figma Build с
+несколькими итерациями). Также VoltAgent управляет fallback между моделями:
+если Gemini 2.5-pro недоступен (quota 503) — автоматически пробует 2.0-pro,
+потом 1.5-pro. Клиент не видит ошибок.
+
+**Зачем несколько агентов, а не один:**
+Разные задачи требуют разных system prompt'ов. Consultant убеждает купить,
+Briefing помогает сформулировать требования, Design Strategist знает что
+нужно для дизайн-спеков, Figma Builder знает Plugin API. Один агент со всем
+этим контекстом будет "размытым" и менее точным.
+
 ### VoltAgent Runtime (`server/voltagent/index.ts`)
 
 ```
@@ -421,6 +465,17 @@ const response = await callVoltAgent(agent, messages, systemPrompt, relevantChun
 
 ## 6. Внешние сервисы — детали
 
+**Общий принцип выбора сервисов:**
+- **Supabase** — Postgres + Auth в одном, бесплатный tier достаточен для старта,
+  SQL напрямую без ORM (меньше абстракций = проще дебажить)
+- **Google Drive** — клиенты уже используют Google, файлы привычны, Shared Drive
+  решает проблему storage quota у service account
+- **Stripe** — стандарт для SaaS платежей, excellent webhooks
+- **Brevo** — дешевле SendGrid, простой API для транзакционных писем
+- **VoltOps** — часть VoltAgent экосистемы, zero config для observability
+- **Linux воркеры** — Vercel serverless имеет лимит 60s на функцию, длинные
+  AI задачи (Figma build, demo build) требуют постоянного процесса
+
 ### Supabase (база данных + auth)
 
 ```
@@ -435,6 +490,13 @@ Project ID: wkxwjasgyulakiyclipb
 ```
 
 ### Google Drive (файловое хранилище)
+
+**Зачем Drive, а не S3 или Supabase Storage:**
+Клиенты загружают референсы, логотипы, брендбуки — это файлы которые они
+хотят видеть в привычном интерфейсе, не в "бакете". Google Drive даёт
+им доступ к своим файлам напрямую. Shared Drive решает главную проблему
+Service Account — у него нет personal storage quota, только Shared Drive
+даёт реальное место для хранения.
 
 ```
 Тип: Google Shared Drive (не personal — нет storage quota проблемы)
@@ -502,6 +564,14 @@ components/auth/GoogleSignInButton.vue
 
 ### Figma — два режима интеграции
 
+**Зачем два режима (Plugin API и MCP):**
+Figma Plugin API — это "старый" способ: плагин запускается в Figma Desktop
+и выполняет команды локально. Надёжно, но требует Figma Desktop на Linux сервере.
+Figma MCP — новый официальный протокол (2025), даёт AI-агентам прямой
+доступ к файлам через стандартный Model Context Protocol. MCP позволяет агентам
+"читать" и "писать" в Figma без плагина. Мы поддерживаем оба режима пока
+MCP не стал стабильным.
+
 **Режим 1: Figma Plugin API (основной для build)**
 ```
 workers/figma-builder.js — Node.js воркер на Linux сервере
@@ -534,6 +604,13 @@ Figma MCP даёт агентам:
 ```
 
 ### Demo Builder — Linux воркер
+
+**Зачем отдельный Linux сервер, а не Vercel:**
+Demo Build — это длинная задача: AI генерирует код, записывает файлы на диск,
+поднимает preview. Vercel serverless функция живёт максимум 60 секунд.
+Linux воркер — постоянный Node.js процесс (PM2/systemd) который polling'ует
+задания из Supabase, выполняет их без ограничений по времени и пишет файлы
+в `/var/www/demo.sitesynth.com/{slug}/` который Nginx отдаёт клиенту.
 
 ```
 workers/demo-builder.js — Node.js воркер на Linux сервере
@@ -580,6 +657,14 @@ server/voltagent/index.ts:
 ---
 
 ## 7. Supabase — полная схема таблиц
+
+**Зачем такая структура:**
+`conversations` — центральная таблица, один тред = один клиентский путь.
+`briefs` — привязан к conversation, хранит markdown (редактируемый) и
+design_spec_json (генерируемый). `brief_versions` — история изменений,
+позволяет откатиться если AI "улучшил" не так. `orders` — данные из intake
+form, независимы от briefs (заказ может быть без брифа на начальном этапе).
+`figma_build_jobs/events` — job queue + event log для асинхронного Figma Build.
 
 ```sql
 conversations
@@ -667,6 +752,13 @@ claim_tokens
 
 ## 8. Все переменные окружения (Vercel)
 
+**Как работает конфигурация:**
+Vercel читает env vars из Dashboard → Settings → Environment Variables.
+Nuxt 3 разделяет их на две группы: `runtimeConfig` (только server) и
+`runtimeConfig.public` (доступны на клиенте). Переменные с префиксом
+`NUXT_PUBLIC_` автоматически попадают в public. Всё остальное — server-only.
+`.env.local` используется только для локальной разработки, никогда не коммитится.
+
 ```env
 # ── Supabase ──────────────────────────────────────
 SUPABASE_URL=https://wkxwjasgyulakiyclipb.supabase.co
@@ -728,6 +820,16 @@ NUXT_PUBLIC_SITE_URL=https://www.sitesynth.com
 
 ## 9. Linux сервисы (отдельный сервер)
 
+**Зачем отдельный сервер существует параллельно с Vercel:**
+Vercel — это serverless платформа, идеальна для API и SSR. Но у неё есть
+архитектурное ограничение: нельзя писать файлы на диск, нет постоянных процессов,
+максимум 60 секунд на выполнение. Задачи типа "собери Figma макет из 30 компонентов"
+или "построй demo сайт и задеплой" занимают минуты. Linux сервер — это
+обычный VPS (например Hetzner) где крутятся два Node.js воркера (PM2),
+Nginx отдаёт demo сайты, и нет ограничений по времени выполнения.
+Коммуникация: воркеры polling'уют Vercel API — Vercel не знает о существовании
+Linux сервера, просто принимает HTTP запросы.
+
 ```
 /var/www/sitesynth/
 ├── demo.sitesynth.com/     — папка для demo сайтов
@@ -759,6 +861,12 @@ PM2 / systemd:
 ---
 
 ## 10. Deployment
+
+**Зачем Vercel, а не собственный сервер для Nuxt:**
+Vercel даёт автодеплой из git, CDN, edge network, preview deployments для
+каждого PR — всё бесплатно для начала. Nuxt 3 имеет first-class поддержку
+Vercel через `@nuxtjs/vercel` пресет. Единственное ограничение — serverless
+функции, что решается Linux воркерами для длинных задач.
 
 ```
 Платформа: Vercel
