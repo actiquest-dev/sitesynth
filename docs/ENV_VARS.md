@@ -26,21 +26,21 @@ DEMO_BUILD_API_URL=https://www.sitesynth.com/api
 
 ---
 
-## Figma Plugin (hardcoded issue)
+## Figma Plugin Configuration
 
-**Current code (bad):**
-```typescript
-const API_BASE = 'https://sitesynth-eight.vercel.app'
+**Set on Vercel:**
+```bash
+FIGMA_PLUGIN_TOKEN=268cc61590a8f2e541fa99e322722364c528bbc57c97efcaf8eb21b7eece1461
 ```
 
-**Should be:**
-The Figma plugin runs in Figma's context, not on Vercel. It can't directly access Vercel env vars.
-Instead, the plugin reads the Figma file's `sharedPluginData` which is set by the server during Figma auth flow.
+**How it works:**
+1. Plugin runs in Figma's context, can't access Vercel env vars directly
+2. Plugin calls `/api/figma/plugin-config` at startup (not hardcoded)
+3. Server endpoint reads `SITE_URL`/`PUBLIC_APP_URL` + `FIGMA_PLUGIN_TOKEN` env vars
+4. Server returns `{ apiBase, pluginToken }` to plugin
+5. Plugin uses these for all API calls
 
-**Fix (future):**
-1. During Figma OAuth callback, store the app URL in the Figma file as shared metadata
-2. Plugin reads it from there instead of hardcoding
-3. This makes the plugin domain-agnostic
+**Result:** Change domain in one place (Vercel env), plugin auto-updates on next reload. No code changes needed.
 
 ---
 
