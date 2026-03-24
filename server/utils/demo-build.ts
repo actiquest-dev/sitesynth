@@ -28,15 +28,61 @@ export const normalizeJobStatus = (status?: string | null) => {
   return aliases[value] || value
 }
 
+const inferAssetRequirements = (brief: any, designSpec: any, projectName: string) => {
+  const existing = Array.isArray(designSpec?.asset_requirements)
+    ? designSpec.asset_requirements
+    : []
+
+  if (existing.length > 0) {
+    return existing
+  }
+
+  const productType =
+    brief?.brief_data?.project_type
+    || brief?.brief_data?.product_type
+    || brief?.brief_data?.company_type
+    || 'digital product'
+
+  return [
+    {
+      id: 'hero_primary',
+      kind: 'generated_image',
+      purpose: 'Primary hero visual for the landing section',
+      aspect_ratio: '4:3',
+      min_width: 1600,
+      model: 'nano-banana-pro-preview',
+      style_prompt: `Editorial product hero image for ${projectName}, a ${productType}. High-end web design aesthetic, strong composition, clean background, premium lighting, detailed UI-inspired forms, modern brand campaign quality.`,
+      alt: `${projectName} hero visual`,
+      output_path: 'assets/hero-primary.webp',
+    },
+    {
+      id: 'feature_visual_1',
+      kind: 'generated_image',
+      purpose: 'Supporting product/feature visual for a mid-page section',
+      aspect_ratio: '1:1',
+      min_width: 1200,
+      model: 'nano-banana-pro-preview',
+      style_prompt: `Square feature illustration for ${projectName}. Modern product marketing image with clean geometry, interface motifs, soft depth, and premium editorial composition.`,
+      alt: `${projectName} feature visual`,
+      output_path: 'assets/feature-visual-1.webp',
+    },
+  ]
+}
+
 export const buildDemoContract = (brief: any, slug: string) => {
   const references = brief?.reference_analysis || brief?.brief_data?.reference_analysis || null
-  const designSpec = brief?.design_spec_json || null
+  const rawDesignSpec = brief?.design_spec_json || {}
   const projectName =
     brief?.brief_data?.project_name
     || brief?.brief_data?.project_title
     || brief?.brief_data?.brand_name
     || brief?.brief_data?.company_name
     || 'SiteSynth Demo'
+  const assetRequirements = inferAssetRequirements(brief, rawDesignSpec, projectName)
+  const designSpec = {
+    ...rawDesignSpec,
+    asset_requirements: assetRequirements,
+  }
 
   return {
     project: {
@@ -56,6 +102,22 @@ export const buildDemoContract = (brief: any, slug: string) => {
       outputMode: 'html-css',
       workspacePath: buildDemoWorkspacePath(slug),
       targetUrl: buildDemoTargetUrl(slug),
+    },
+    executor: {
+      builder: {
+        tool: 'cline',
+        provider: 'claude',
+        model: 'claude',
+        mode: 'act',
+      },
+      critic: {
+        enabled: false,
+      },
+      assetGeneration: {
+        enabled: assetRequirements.length > 0,
+        provider: 'google',
+        model: 'nano-banana-pro-preview',
+      },
     },
     rules: [
       'Responsive first',

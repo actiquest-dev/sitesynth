@@ -48,6 +48,7 @@ const logEvent = async (jobId, message, level = 'info', payload = null) => {
 }
 
 const writeContractFiles = async (targetDir, payload) => {
+  await fs.mkdir(targetDir, { recursive: true })
   const files = {
     'build_job.json': payload,
     'design_contract.json': payload?.buildContract?.designContract || {},
@@ -58,6 +59,30 @@ const writeContractFiles = async (targetDir, payload) => {
 
   for (const [filename, contents] of Object.entries(files)) {
     await fs.writeFile(path.join(targetDir, filename), JSON.stringify(contents, null, 2), 'utf8')
+  }
+}
+
+const generateAssets = async (payload) => {
+  const response = await apiPost('/demo/build/assets', {
+    token: BUILD_TOKEN,
+    jobId: payload?.jobId,
+    slug: payload?.slug,
+    buildContract: payload?.buildContract || {},
+  })
+
+  if (!response?.success) {
+    throw new Error(response?.error || 'Asset generation failed')
+  }
+
+  return response.data || { assetManifest: { assets: [] }, generatedAssets: [] }
+}
+
+const writeGeneratedAssets = async (targetDir, generatedAssets = []) => {
+  for (const asset of generatedAssets) {
+    if (!asset?.path || !asset?.data_base64) continue
+    const assetPath = path.join(targetDir, asset.path)
+    await fs.mkdir(path.dirname(assetPath), { recursive: true })
+    await fs.writeFile(assetPath, Buffer.from(asset.data_base64, 'base64'))
   }
 }
 
@@ -211,6 +236,30 @@ const runLoop = async () => {
         targetUrl: next?.data?.targetUrl || null,
       })
       await writeContractFiles(workspacePath, next.data)
+
+      const assetRequirements = Array.isArray(next?.data?.buildContract?.designContract?.asset_requirements)
+        ? next.data.buildContract.designContract.asset_requirements
+        : []
+
+      if (assetRequirements.length > 0) {
+        await logEvent(jobId, 'Generating assets', 'info', {
+          stage: 'assets',
+          status: 'running',
+          count: assetRequirements.length,
+          model: next?.data?.buildContract?.executor?.assetGeneration?.model || null,
+        })
+
+        const assetResult = await generateAssets(next.data)
+        await writeGeneratedAssets(workspacePath, assetResult.generatedAssets || [])
+        next.data.buildContract.assetManifest = assetResult.assetManifest || { assets: [] }
+        await writeContractFiles(workspacePath, next.data)
+
+        await logEvent(jobId, 'Assets generated', 'info', {
+          stage: 'assets',
+          status: 'running',
+          count: Array.isArray(assetResult?.assetManifest?.assets) ? assetResult.assetManifest.assets.length : 0,
+        })
+      }
 
       if (EXECUTOR_MODE === 'cline') {
         await logEvent(jobId, 'Starting Cline executor', 'info', {
