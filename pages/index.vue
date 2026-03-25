@@ -274,7 +274,7 @@
           <div class="absolute top-0 left-1/2 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2"></div>
         </div>
         <div class="relative z-10">
-          <ChatInterface :agentType="'presale'" :userEmail="userEmail || 'anonymous'" />
+          <ChatInterface :agentType="'presale'" :userEmail="userEmail || null" />
         </div>
       </div>
     </div>

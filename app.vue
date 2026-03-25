@@ -41,7 +41,7 @@ const agentMode = computed(() => {
 
 // Get user email
 const userEmail = computed(() => {
-  return user?.value?.email || "guest@sitesynth.com";
+  return user?.value?.email || null;
 });
 
 const isCabinetRoute = computed(() => route.path.startsWith("/cabinet"));

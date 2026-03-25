@@ -23,19 +23,26 @@ function generateSecureToken(): string {
 export default defineEventHandler(async (event) => {
   const method = event.node.req.method
 
-  // GET /api/chat/conversations - Get conversations for authenticated user
+  // GET /api/chat/conversations - Get conversations for user (authenticated or anonymous)
   if (method === 'GET') {
-    const userEmail = getHeader(event, 'x-user-email')
+    const userEmail = getHeader(event, 'x-user-email') || null
+    const deviceId = getHeader(event, 'x-device-id') || null
     const agentType = getQuery(event).agentType as string
 
-    if (!userEmail) {
-      return createError({ statusCode: 401, statusMessage: 'User email required' })
+    if (!userEmail && !deviceId) {
+      return createError({ statusCode: 401, statusMessage: 'x-user-email or x-device-id required' })
     }
 
     let query = supabase
       .from('conversations')
       .select('*')
-      .eq('user_email', userEmail)
+
+    // Filter by ownership: email for authenticated, device_id for anonymous
+    if (userEmail) {
+      query = query.eq('user_email', userEmail)
+    } else {
+      query = query.eq('device_id', deviceId)
+    }
 
     if (agentType) {
       query = query.eq('agent_type', agentType)
