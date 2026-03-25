@@ -74,6 +74,7 @@ export default defineNuxtConfig({
     routeRules: {
       // Permanent redirects (301)
       "/privacy-policy": { redirect: "/privacy-and-policy", prerender: true },
+      "/website-pricing": { redirect: "/pricing", prerender: true },
     },
   },
 

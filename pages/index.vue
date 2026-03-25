@@ -6,8 +6,8 @@
     title="No silos. <span class='glow-text'>Just synthesis.</span>"
     subtitle="Where product, brand, and tech finally align"
     backgroundImage="/assets/new-assets/test/sitesynth-animated-gradient-v2.svg"
-    ctaText="Get started now"
-    ctaHref="/pricing"
+    ctaText="Make Your Site"
+    ctaHref="/pricing#pay-once-forever"
   />
 
   <Carousel

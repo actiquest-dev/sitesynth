@@ -213,7 +213,7 @@
   </section>
 
   <!-- HERO SECTION WITH EFFECTS -->
-  <section class="relative bg-[#161616] text-white overflow-hidden py-16 md:py-24 border-b border-[#333]">
+  <section id="pay-once-forever" class="relative bg-[#161616] text-white overflow-hidden py-16 md:py-24 border-b border-[#333]">
     <!-- Glow Effects -->
     <GlowBlue />
 
@@ -279,6 +279,7 @@
         <div
           v-for="(card, index) in pricingCards"
           :key="card.id"
+          :id="card.id"
           class="relative"
           :class="card.highlighted ? 'z-10' : 'z-0'"
         >
@@ -607,15 +608,72 @@ const faqItems = [
 const siteUrl = useRuntimeConfig().public?.siteUrl;
 
 useSeoMeta({
-  title: "Pricing | SiteSynth",
+  title: "Website Pricing | Pay once. Own it forever. - SiteSynth",
   description:
-    "Simple and transparent pricing for web design and development services. Choose from Starter, Growth, or Enterprise plans.",
-  ogTitle: "Pricing | SiteSynth",
+    "One-time pricing for website design and development. Choose Starter or Growth packages, or request a custom Enterprise quote.",
+  keywords: "website pricing, web design pricing, web development pricing, one-time payment website, pay once own forever, SiteSynth pricing",
+  ogTitle: "Website Pricing | SiteSynth",
   ogDescription:
-    "Simple and transparent pricing for web design and development services.",
+    "One-time pricing for website design and development. Pay once. Own it forever.",
   ogImage: `${siteUrl}/assets/shareimage.png`,
-  twitterTitle: "Pricing | SiteSynth",
-  twitterDescription: "Simple and transparent pricing for web services.",
+  twitterTitle: "Website Pricing | SiteSynth",
+  twitterDescription: "One-time pricing for website design and development. Pay once. Own it forever.",
+});
+
+// Pricing page structured data (helps search understand the packages)
+useHead({
+  meta: [
+    {
+      name: 'robots',
+      content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+    },
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: 'Website Pricing',
+        description:
+          'One-time pricing for website design and development. Choose Starter or Growth packages, or request a custom Enterprise quote.',
+        url: `${siteUrl}/pricing`,
+        isPartOf: {
+          '@type': 'WebSite',
+          name: 'SiteSynth',
+          url: siteUrl,
+        },
+        mainEntity: {
+          '@type': 'OfferCatalog',
+          name: 'SiteSynth Website Packages',
+          itemListElement: [
+            {
+              '@type': 'Offer',
+              name: 'Starter',
+              url: `${siteUrl}/pricing#starter`,
+              price: '500',
+              priceCurrency: 'EUR',
+              availability: 'https://schema.org/InStock',
+            },
+            {
+              '@type': 'Offer',
+              name: 'Growth',
+              url: `${siteUrl}/pricing#growth`,
+              price: '900',
+              priceCurrency: 'EUR',
+              availability: 'https://schema.org/InStock',
+            },
+            {
+              '@type': 'Offer',
+              name: 'Enterprise',
+              url: `${siteUrl}/pricing#enterprise`,
+              availability: 'https://schema.org/InStock',
+            },
+          ],
+        },
+      }),
+    },
+  ],
 });
 </script>
 

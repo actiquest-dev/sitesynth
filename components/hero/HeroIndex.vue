@@ -62,6 +62,13 @@ h1 :deep(.glow-text) {
       <p class="text-base sm:text-lg font-normal mb-8 text-[#d4d4d4]">
         {{ subtitle }}
       </p>
+      <NuxtLink
+        v-if="ctaText"
+        :to="ctaHref"
+        class="inline-block px-8 py-4 bg-[#8D35FF] text-white font-semibold text-base rounded-none hover:bg-[#7B2EF0] transition-colors duration-200 shadow-lg shadow-[#8D35FF]/30 hover:shadow-[#8D35FF]/50"
+      >
+        {{ ctaText }}
+      </NuxtLink>
     </div>
   </section>
 </template>
@@ -87,6 +94,14 @@ const props = defineProps({
   backgroundImage: {
     type: String,
     default: "",
+  },
+  ctaText: {
+    type: String,
+    default: "",
+  },
+  ctaHref: {
+    type: String,
+    default: "/",
   },
 });
 
