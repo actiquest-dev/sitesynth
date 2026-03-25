@@ -4,7 +4,7 @@ import { google } from '@ai-sdk/google'
 import { z } from 'zod'
 import { useDatabaseClient } from '~~/server/utils/supabase'
 import { issueBuildToken } from '~~/server/utils/figma-build-token'
-import { getAgent, getVoltAgentInstance } from '~~/server/voltagent'
+import { getAgent, getMastraInstance } from '~~/server/mastra'
 
 export default defineEventHandler(async (event) => {
   const userEmail = getHeader(event, 'x-user-email')
@@ -139,11 +139,9 @@ Command templates (extend/modify, keep names stable):
 ${JSON.stringify(commandTemplates, null, 2)}
     `.trim()
 
-    const registry = getVoltAgentInstance()
     const figmaBuilderAgent = getAgent('figmaBuilderAgent')
-    if (!figmaBuilderAgent || typeof (figmaBuilderAgent as any).generateObject !== 'function') {
-      const available = registry?.agents ? Object.keys(registry.agents).join(', ') : 'none'
-      throw new Error(`Figma builder agent is unavailable (available: ${available})`)
+    if (!figmaBuilderAgent) {
+      throw new Error('Figma builder agent is unavailable')
     }
 
     const agentSchema = z.object({
@@ -151,7 +149,7 @@ ${JSON.stringify(commandTemplates, null, 2)}
     })
 
     const runBuilderAgent = async (prompt: string) => {
-      const result = await figmaBuilderAgent.generateObject(prompt, agentSchema)
+      const result = await figmaBuilderAgent.generate(prompt, { output: agentSchema })
       return result?.object?.plan || null
     }
 

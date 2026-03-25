@@ -2,7 +2,7 @@ import { defineEventHandler, readBody } from 'h3'
 import { z } from 'zod'
 import { useDatabaseClient } from '~~/server/utils/supabase'
 import { getDemoBuildToken } from '~~/server/utils/demo-build-token'
-import { getAgent, getVoltAgentInstance } from '~~/server/voltagent'
+import { getAgent } from '~~/server/mastra'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
@@ -71,16 +71,14 @@ BUILD WITH:
 Return STRICT JSON with title, slug, html, and css strings only.
   `.trim()
 
-  const registry = getVoltAgentInstance()
   const demoBuilderAgent = getAgent('demoBuilderAgent')
-  if (!demoBuilderAgent || typeof (demoBuilderAgent as any).generateObject !== 'function') {
-    const available = registry?.agents ? Object.keys(registry.agents).join(', ') : 'none'
-    return { success: false, error: `Demo builder agent is unavailable (available: ${available})` }
+  if (!demoBuilderAgent) {
+    return { success: false, error: 'Demo builder agent is unavailable' }
   }
 
   let output
   try {
-    const result = await demoBuilderAgent.generateObject(prompt, buildSchema)
+    const result = await demoBuilderAgent.generate(prompt, { output: buildSchema })
     output = result?.object || null
   } catch (error: any) {
     return { success: false, error: error?.message || 'Agent failed to generate' }

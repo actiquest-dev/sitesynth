@@ -1,16 +1,12 @@
 /**
- * VoltAgent Agents for SiteSynth Chat
- * Two agents for two different modes
+ * Mastra Agents for SiteSynth
  */
 
-import { Agent } from '@voltagent/core'
+import { Agent } from '@mastra/core'
 import { google } from '@ai-sdk/google'
 
-/**
- * ACTIVE MODE AGENT - Cabinet Briefing Assistant
- * Proactively guides clients through project brief development
- * Used when client is logged into Cabinet
- */
+const gemini = google('gemini-2.5-pro')
+
 export const briefingAgent = new Agent({
   name: 'Viz - Briefing Specialist',
   instructions: `You are Viz, SiteSynth's AI consultant specializing in ACTIVE BRIEFING.
@@ -45,14 +41,9 @@ Your role is to proactively guide a logged-in client through developing their pr
 
 ## Success:
 Client feels understood, brief is documented, next steps are clear.`,
-  model: google('gemini-2.5-pro'),
+  model: gemini,
 })
 
-/**
- * PASSIVE MODE AGENT - General Consultant
- * Answers questions about SiteSynth services
- * Used on marketing site, default behavior
- */
 export const consultantAgent = new Agent({
   name: 'Viz - General Consultant',
   instructions: `You are Viz, an AI consultant at SiteSynth - a consultancy and product studio at the intersection of design, development, and AI.
@@ -84,22 +75,19 @@ export const consultantAgent = new Agent({
 
 ## Success:
 User feels educated, knows next steps, either books consultation or continues learning.`,
-  model: google('gemini-2.5-pro'),
+  model: gemini,
 })
 
-/**
- * Get appropriate agent based on mode
- */
 export const architectAgent = new Agent({
   name: 'Architect',
   instructions: 'Ты — Senior UX-архитектор. Твоя задача: перевести бизнес-бриф в структуру сайта (JSON).',
-  model: google('gemini-2.5-pro'),
+  model: gemini,
 })
 
 export const criticAgent = new Agent({
   name: 'Art Director',
   instructions: 'Ты — Senior UI/UX дизайнер с 10-летним опытом. Твоя задача: оценить дизайн по шкале 0-5. Будь безжалостен.',
-  model: google('gemini-2.5-pro'),
+  model: gemini,
 })
 
 export const figmaBuilderAgent = new Agent({
@@ -151,7 +139,7 @@ RULES:
 - Build pages in order: Design System, Wireframes, Mockups.
 - Keep commands minimal but sufficient.
   `.trim(),
-  model: google('gemini-2.5-pro'),
+  model: gemini,
 })
 
 export const artDirectorAgent = new Agent({
@@ -215,40 +203,11 @@ OUTPUT SCHEMA:
     "transition_default": "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
     "transition_bounce": "all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)"
   },
-  "section_blueprints": [
-    {
-      "id": "section-id",
-      "role": "hero | features | social_proof | pricing | cta | footer | ...",
-      "headline": "Exact headline text",
-      "subheadline": "Exact subheadline or null",
-      "composition": "full-bleed-centered | split-image-text | grid-cards | stacked-editorial | ...",
-      "visual_weight": "heavy | medium | light",
-      "background_treatment": "gradient | solid | image | pattern",
-      "content_density": "sparse | balanced | dense",
-      "key_elements": ["list of UI elements in this section"],
-      "interactions": ["hover effects, scroll animations, etc."],
-      "copy": {
-        "headline": "exact text",
-        "body": "exact body copy",
-        "cta_label": "exact CTA text or null",
-        "supporting_items": ["bullet points or feature names"]
-      }
-    }
-  ],
-  "component_recipes": {
-    "nav": { "style": "floating-glass | sticky-solid | minimal-inline", "items": ["Nav Item 1", "..."], "cta_label": "CTA text" },
-    "hero": { "layout": "centered-stack | split-visual | full-bleed-video", "has_image": true, "image_treatment": "gradient-overlay | masked | floating" },
-    "feature_card": { "style": "bordered | elevated | flat-icon", "icon_style": "emoji | svg-outline | filled-circle", "has_hover": true },
-    "cta_button": { "style": "solid | gradient | outline-glow", "size": "large | medium", "radius": "4px | 8px | full" },
-    "footer": { "style": "minimal-centered | multi-column | dark-branded" }
-  },
-  "anti_patterns": ["list of things to explicitly AVOID in this design"],
-  "reference_translation": [
-    { "reference": "competitor name or URL", "adopt": ["what to take from this reference"], "avoid": ["what NOT to take"] }
-  ],
-  "asset_direction": [
-    { "slot": "hero-image", "description": "what the image should show", "style": "photo-realistic | 3d-render | abstract-gradient | illustration", "mood": "description" }
-  ]
+  "section_blueprints": [...],
+  "component_recipes": {...},
+  "anti_patterns": [...],
+  "reference_translation": [...],
+  "asset_direction": [...]
 }
 
 RULES:
@@ -261,7 +220,7 @@ RULES:
 - anti_patterns must include at least 5 things to avoid
 - JSON only. No markdown. No commentary.
   `.trim(),
-  model: google('gemini-2.5-pro'),
+  model: gemini,
 })
 
 export const demoBuilderAgent = new Agent({
@@ -284,29 +243,6 @@ OUTPUT: STRICT JSON only.
 Your CSS MUST include these layers in order:
 
 1. CSS RESET + CUSTOM PROPERTIES
-\`\`\`css
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
-:root {
-  /* Colors from art direction */
-  --bg: #value; --surface: #value; --surface-elevated: #value;
-  --text-primary: #value; --text-secondary: #value; --text-muted: #value;
-  --accent: #value; --accent-hover: #value; --accent-subtle: #value;
-  --border: #value;
-  /* Typography */
-  --font-heading: 'Font', serif; --font-body: 'Font', sans-serif;
-  /* Spacing */
-  --section-gap: clamp(80px, 12vw, 160px);
-  --content-max: 1200px;
-  --content-pad: clamp(20px, 5vw, 80px);
-  /* Effects */
-  --radius-sm: 6px; --radius-md: 12px; --radius-lg: 20px;
-  --shadow-card: 0 1px 3px rgba(0,0,0,0.08), 0 8px 32px rgba(0,0,0,0.04);
-  --shadow-elevated: 0 4px 12px rgba(0,0,0,0.12), 0 24px 48px rgba(0,0,0,0.08);
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-\`\`\`
-
 2. TYPOGRAPHY SCALE (every heading level defined)
 3. LAYOUT PRIMITIVES (.container, .section, .grid, .stack, .split)
 4. COMPONENT STYLES (nav, hero, cards, buttons, footer)
@@ -321,8 +257,6 @@ html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
 - DO NOT inline CSS. Reference external styles.css file.
 - Use semantic elements: <header>, <nav>, <main>, <section>, <article>, <footer>
 - Every section gets: id, aria-label, role where appropriate
-- Images use <img> with alt text, or inline SVG for icons
-- Buttons use <button> or <a> with proper roles
 
 ## VISUAL QUALITY RULES
 
@@ -332,32 +266,10 @@ html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
 - Navigation: sticky/fixed with blur backdrop on scroll (CSS only)
 - CTAs: prominent size (min 48px height), clear contrast, hover state
 - Footer: structured with columns, muted palette, proper spacing
-- Use CSS gradients for visual richness (radial/linear on backgrounds)
-- Add subtle decorative elements: gradient orbs, grid patterns via CSS
-- Line heights: headings 1.05-1.2, body 1.6, never default
-- Letter spacing: tight on headings (-0.02em), normal on body
-
-## WHAT MAKES IT LOOK CHEAP (AVOID):
-- Uniform section heights with no visual rhythm
-- All text same size / weight
-- No hover effects on interactive elements
-- White background everywhere with no depth
-- Generic card grids with no personality
-- Missing micro-interactions
-- No gradient or color accent anywhere
-- Footer as an afterthought
-- No breathing room between sections
-- Using px only (must use clamp for responsive)
-
-## CONTENT RULES
-- Use REAL copy from the art direction contract, not Lorem ipsum
-- Headlines must be compelling and specific
-- Write actual feature descriptions, not placeholders
-- CTAs must be action-oriented ("Start Building", not "Learn More")
 
 JSON only. No markdown wrapping. No explanation outside JSON.
   `.trim(),
-  model: google('gemini-2.5-pro'),
+  model: gemini,
 })
 
 export const referenceStrategistAgent = new Agent({
@@ -377,35 +289,6 @@ WHAT YOU ANALYZE per reference:
 - Motion/interaction: scroll effects, hover behaviors, transitions
 - Negative space: how whitespace creates hierarchy
 
-WHAT YOU OUTPUT:
-{
-  "visual_direction": {
-    "manifesto": "2-3 sentences: the EXACT visual identity to build",
-    "mood": ["3-5 specific mood words"],
-    "palette_direction": "dark-editorial | light-minimal | vibrant-tech | muted-luxury | ...",
-    "typography_direction": "serif-editorial | geometric-sans | mono-tech | mixed-contrast",
-    "density": "sparse-luxury | balanced-product | dense-dashboard"
-  },
-  "layout_patterns": [
-    { "pattern": "pattern name", "used_by": "reference name", "adopt_because": "reason", "css_approach": "how to implement" }
-  ],
-  "motion_direction": {
-    "scroll_behavior": "none | subtle-fade | parallax | staggered-reveal",
-    "hover_treatment": "lift-shadow | color-shift | scale | underline-slide",
-    "transition_speed": "fast (200ms) | normal (300ms) | slow (500ms)"
-  },
-  "anti_patterns": [
-    { "pattern": "what to avoid", "seen_in": "reference name", "why_bad": "reason" }
-  ],
-  "reference_translations": [
-    { "reference": "name/URL", "adopt": ["specific things to take"], "avoid": ["specific things to skip"], "key_insight": "one sentence" }
-  ],
-  "recommended_references": [...existing schema...],
-  "style_keywords": [...],
-  "do": [...],
-  "avoid": [...]
-}
-
 RULES:
 - Never say "clean", "modern", "professional" without qualifying exactly what you mean
 - Every layout_pattern must include css_approach
@@ -414,22 +297,15 @@ RULES:
 - Be brutal: if a reference is mostly bad, say so
 - JSON only
   `.trim(),
-  model: google('gemini-2.5-pro'),
+  model: gemini,
 })
 
-/**
- * Get initial greeting based on mode
- */
-export function getInitialGreeting(
-  mode: 'active' | 'passive',
-  clientName?: string
-): string {
+export function getInitialGreeting(mode: 'active' | 'passive', clientName?: string): string {
   if (mode === 'active') {
     const greeting = clientName
       ? `Hi ${clientName}! 👋 Welcome back to Cabinet. Let's develop your next project vision.`
       : `Hi there! 👋 Welcome to your Cabinet. I'm here to help you define your next project.`
     return `${greeting} What would you like to build?`
   }
-
   return `Hello! 👋 I'm Viz, SiteSynth's AI consultant. Ask me about our services, project strategy, design, development, or AI solutions. How can I help?`
 }

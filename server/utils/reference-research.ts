@@ -5,7 +5,7 @@ import { z } from 'zod'
 import { useDatabaseClient } from '~~/server/utils/supabase'
 import { getDriveClient, getOrCreateChildFolder, getOrCreateUserRootFolder } from '~~/server/utils/google-drive'
 import { selectCuratedReferenceShortlist } from '~~/server/utils/curated-reference-library'
-import { getAgent } from '~~/server/voltagent'
+import { getAgent } from '~~/server/mastra'
 
 const competitorSchema = z.object({
   product_type: z.string(),
@@ -350,8 +350,8 @@ ${context}
 
   const agent = getAgent('referenceStrategistAgent')
   let object: any
-  if (agent && typeof (agent as any).generateObject === 'function') {
-    const result = await agent.generateObject(prompt, referenceSummarySchema)
+  if (agent) {
+    const result = await agent.generate(prompt, { output: referenceSummarySchema })
     object = result.object
   } else {
     const fallback = await generateObject({
