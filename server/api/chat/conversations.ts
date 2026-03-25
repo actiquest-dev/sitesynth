@@ -10,6 +10,16 @@ if (!supabaseUrl || !supabaseServiceKey) {
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
+/**
+ * Generate cryptographically secure token for conversation claims
+ * Used to link anonymous conversations to authenticated users
+ */
+function generateSecureToken(): string {
+  const array = new Uint8Array(32)
+  crypto.getRandomValues(array)
+  return Array.from(array).map(b => b.toString(16).padStart(2, '0')).join('')
+}
+
 export default defineEventHandler(async (event) => {
   const method = event.node.req.method
 
@@ -149,14 +159,4 @@ export default defineEventHandler(async (event) => {
   }
 
   return createError({ statusCode: 405, statusMessage: 'Method not allowed' })
-}
-
-/**
- * Generate cryptographically secure token for conversation claims
- * Used to link anonymous conversations to authenticated users
- */
-function generateSecureToken(): string {
-  const array = new Uint8Array(32)
-  crypto.getRandomValues(array)
-  return Array.from(array).map(b => b.toString(16).padStart(2, '0')).join('')
 }
