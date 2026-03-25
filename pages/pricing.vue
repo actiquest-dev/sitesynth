@@ -2,7 +2,7 @@
   <HeaderSection />
 
   <!-- CABINET SHOWCASE SECTION -->
-  <section class="relative bg-[#161616] text-white overflow-hidden pt-32 md:pt-40 pb-20 md:pb-28 border-b border-[#333]">
+  <section id="cabinet" class="relative bg-[#161616] text-white overflow-hidden pt-32 md:pt-40 pb-20 md:pb-28 border-b border-[#333] scroll-mt-24">
     <ParticleEffect />
     <div class="relative max-w-[1248px] mx-auto px-6 md:px-12">
 
@@ -227,6 +227,18 @@
           Choose the plan that fits your project. Scale up anytime as your
           needs grow.
         </p>
+        <a
+          href="#cabinet"
+          class="text-[#8CB0FF] font-semibold text-[14px] mt-4 inline-flex items-center gap-2 relative group/link py-2 transition-colors duration-300"
+        >
+          <span>How it works?</span>
+          <font-awesome
+            :icon="['fas', 'chevron-up']"
+            class="text-sm relative top-[1px] transition-transform duration-300 group-hover/link:-translate-y-0.5"
+            aria-hidden="true"
+          />
+          <div class="absolute bottom-0 left-0 h-[2px] bg-[#8CB0FF] w-0 group-hover/link:w-full transition-all duration-300"></div>
+        </a>
       </div>
 
       <!-- Trust Icons (replacing pills) -->
