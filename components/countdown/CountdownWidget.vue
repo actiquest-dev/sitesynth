@@ -5,12 +5,11 @@
 
     <!-- App window (like macOS) -->
     <div class="app-window">
-      <!-- macOS-style header with dots and clock -->
+      <!-- Header with brand and clock -->
       <div class="app-header">
-        <div class="window-controls">
-          <div class="dot dot-active"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
+        <div class="brand-header">
+          <img src="/assets/Vector.svg" alt="SiteSynth" class="brand-logo" />
+          <span class="brand-name">SiteSynth Studio</span>
         </div>
         <div class="mini-clock">
           <span>{{ hh }}</span>
@@ -137,8 +136,8 @@ const daysFormatted = computed(() => days.value.toString().padStart(2, '0'))
 
 .glow-border {
   position: absolute;
-  inset: 4px;
-  border-radius: 14px;
+  inset: 0;
+  border-radius: 0;
   background: conic-gradient(
     from var(--gangle),
     transparent 0%,
@@ -169,7 +168,7 @@ const daysFormatted = computed(() => days.value.toString().padStart(2, '0'))
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
+  border-radius: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -184,26 +183,32 @@ const daysFormatted = computed(() => days.value.toString().padStart(2, '0'))
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.window-controls {
+.brand-header {
   display: flex;
-  gap: 7px;
+  align-items: center;
+  gap: 8px;
 }
 
-.dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
+.brand-logo {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  opacity: 0.8;
 }
 
-.dot-active {
-  background: #9747ff;
+.brand-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #aaa;
+  letter-spacing: 0.02em;
 }
 
 .mini-clock {
   font-family: 'Share Tech Mono', monospace;
   font-size: 13px;
-  color: #999;
+  color: #ccc;
   display: flex;
   gap: 2px;
 }
@@ -230,7 +235,7 @@ const daysFormatted = computed(() => days.value.toString().padStart(2, '0'))
   flex: 1;
   background: rgba(255, 255, 255, 0.015);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 8px;
+  border-radius: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -245,7 +250,7 @@ const daysFormatted = computed(() => days.value.toString().padStart(2, '0'))
 }
 
 .dialog-title {
-  color: #666;
+  color: #888;
   text-transform: uppercase;
   font-family: 'Inter', sans-serif;
   font-size: 11px;

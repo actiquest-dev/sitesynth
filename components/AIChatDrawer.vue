@@ -2,104 +2,101 @@
   <Transition name="slide-in-right">
     <div
       v-if="isOpen"
-      class="chat-widget fixed right-0 top-0 h-screen w-full max-w-md border-l border-gray-700 shadow-2xl z-50 flex flex-col bg-[#1a1a1a]"
+      class="chat-widget fixed right-0 top-0 h-screen w-full max-w-[400px] border-l border-[#2a2a2a] z-50 flex flex-col bg-[#111]"
     >
       <!-- Header -->
-      <div class="bg-[#8b5cf6] p-4 flex items-center justify-between">
+      <div class="px-5 py-4 flex items-center justify-between border-b border-[#222]">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-lg">
-            <svg class="w-6 h-6 text-[#8b5cf6]" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
-            </svg>
+          <div class="w-8 h-8 rounded-full bg-[#8D35FF] flex items-center justify-center flex-shrink-0 p-1.5">
+            <img src="/assets/Vector.svg" alt="SiteSynth" class="w-full h-full object-contain brightness-0 invert" />
           </div>
           <div>
-            <h3 class="text-white font-semibold">{{ agentLabel }}</h3>
+            <h3 class="text-white text-sm font-semibold leading-tight">{{ agentLabel }}</h3>
+            <span class="flex items-center gap-1.5">
+              <span class="relative flex h-1.5 w-1.5">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e] opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#22c55e]"></span>
+              </span>
+              <span class="text-[10px] text-[#666] tracking-wide">Online</span>
+            </span>
           </div>
         </div>
         <button
           @click="handleClose"
-          class="text-white hover:bg-blue-700 p-2 rounded transition-colors"
+          class="text-[#666] hover:text-white p-1.5 transition-colors"
           aria-label="Close chat"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
 
       <!-- Messages Area -->
-      <div ref="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-4">
-        <div v-if="messages.length === 0" class="text-center py-8">
-          <div class="text-sm space-y-4">
-            <div class="flex justify-center">
-              <div class="w-12 h-12 rounded-full bg-[#8b5cf6] flex items-center justify-center">
-                <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
-                </svg>
-              </div>
-            </div>
-            <p class="text-lg font-semibold text-[#d4d4d4]">Welcome!</p>
-            <p class="text-[#999999]">Start a conversation with our AI.</p>
+      <div ref="messagesContainer" class="flex-1 overflow-y-auto p-5 space-y-4">
+        <div v-if="messages.length === 0" class="flex flex-col items-center justify-center h-full gap-4 text-center py-10">
+          <div class="w-12 h-12 rounded-full bg-[#8D35FF]/15 border border-[#8D35FF]/30 flex items-center justify-center p-2.5">
+            <img src="/assets/Vector.svg" alt="SiteSynth" class="w-full h-full object-contain brightness-0 invert" />
+          </div>
+          <div>
+            <p class="text-white font-semibold text-sm mb-1">How can we help?</p>
+            <p class="text-[#666] text-xs leading-relaxed">Ask anything about SiteSynth,<br>pricing, or your project.</p>
           </div>
         </div>
 
         <!-- Messages -->
-        <div v-for="msg in messages" :key="msg.id" :class="['flex gap-3', msg.role === 'user' ? 'justify-end' : 'justify-start']">
-          <div v-if="msg.role !== 'user'" class="w-8 h-8 rounded-full bg-[#8b5cf6] flex items-center justify-center flex-shrink-0">
-            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
-            </svg>
+        <div v-for="msg in messages" :key="msg.id" :class="['flex gap-2.5', msg.role === 'user' ? 'justify-end' : 'justify-start']">
+          <div v-if="msg.role !== 'user'" class="w-6 h-6 rounded-full bg-[#8D35FF] flex items-center justify-center flex-shrink-0 mt-0.5 p-1">
+            <img src="/assets/Vector.svg" alt="SS" class="w-full h-full object-contain brightness-0 invert" />
           </div>
 
-          <div :class="['px-4 py-2 rounded-lg max-w-xs break-words', msg.role === 'user' ? 'bg-[#8b5cf6] text-white' : 'bg-[#2a2a2a] text-[#d4d4d4] border border-[#333]']">      
-            <div class="text-sm prose prose-sm dark:prose-invert max-w-none" v-html="parseMarkdown(msg.content)"></div>
-            <span class="text-xs text-opacity-70 opacity-70 mt-1 block">{{ formatTime(msg.created_at) }}</span>
+          <div :class="['px-3.5 py-2.5 max-w-[78%] break-words', msg.role === 'user' ? 'bg-[#8D35FF] text-white' : 'bg-[#1e1e1e] text-[#d4d4d4] border border-[#2a2a2a]']">
+            <div class="text-sm leading-relaxed" v-html="parseMarkdown(msg.content)"></div>
+            <span class="text-[10px] opacity-50 mt-1.5 block">{{ formatTime(msg.created_at) }}</span>
           </div>
 
-          <div v-if="msg.role === 'user'" class="w-8 h-8 rounded-full bg-[#636363] flex items-center justify-center flex-shrink-0">
-            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+          <div v-if="msg.role === 'user'" class="w-6 h-6 rounded-full bg-[#333] flex items-center justify-center flex-shrink-0 mt-0.5">
+            <svg class="w-3.5 h-3.5 text-[#888]" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
             </svg>
           </div>
         </div>
 
         <!-- Loading Indicator -->
-        <div v-if="loading" class="flex gap-3">
-          <div class="w-8 h-8 rounded-full bg-[#8b5cf6] flex items-center justify-center">
-            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
-            </svg>
+        <div v-if="loading" class="flex gap-2.5">
+          <div class="w-6 h-6 rounded-full bg-[#8D35FF] flex items-center justify-center flex-shrink-0 mt-0.5 p-1">
+            <img src="/assets/Vector.svg" alt="SS" class="w-full h-full object-contain brightness-0 invert" />
           </div>
-          <div class="bg-[#2a2a2a] px-4 py-2 rounded-lg border border-[#333]">
-            <div class="flex gap-1">
-              <div class="w-2 h-2 bg-[#8b5cf6] rounded-full animate-bounce"></div>
-              <div class="w-2 h-2 bg-[#8b5cf6] rounded-full animate-bounce delay-100"></div>
-              <div class="w-2 h-2 bg-[#8b5cf6] rounded-full animate-bounce delay-200"></div>
+          <div class="bg-[#1e1e1e] px-3.5 py-3 border border-[#2a2a2a]">
+            <div class="flex gap-1 items-center">
+              <div class="w-1.5 h-1.5 bg-[#8D35FF] rounded-full animate-bounce"></div>
+              <div class="w-1.5 h-1.5 bg-[#8D35FF] rounded-full animate-bounce [animation-delay:150ms]"></div>
+              <div class="w-1.5 h-1.5 bg-[#8D35FF] rounded-full animate-bounce [animation-delay:300ms]"></div>
             </div>
           </div>
         </div>
 
         <!-- Error Message -->
-        <div v-if="error" class="mx-0 p-3 bg-red-900/30 text-red-400 border border-red-600/50 rounded-lg text-sm">
+        <div v-if="error" class="p-3 bg-red-900/20 text-red-400 border border-red-800/40 text-xs">
           {{ error }}
         </div>
       </div>
 
       <!-- Input Area -->
-      <div class="border-t border-[#333] p-4 bg-[#0f0f0f]">
+      <div class="border-t border-[#222] p-4 bg-[#0d0d0d]">
         <div class="flex gap-2">
           <input
             v-model="messageInput"
             @keyup.enter="sendMessage"
             type="text"
             placeholder="Type your message..."
-            class="flex-1 px-4 py-2 bg-[#2a2a2a] text-white rounded-lg border border-[#333] focus:outline-none focus:border-[#8b5cf6] placeholder-[#888] text-sm"
+            class="flex-1 px-3.5 py-2.5 bg-[#1a1a1a] text-white border border-[#2a2a2a] focus:outline-none focus:border-[#8D35FF] placeholder-[#555] text-sm transition-colors"
             :disabled="loading"
           />
           <button
             @click="sendMessage"
             :disabled="loading || !messageInput.trim()"
-            class="px-6 py-2 bg-[#8b5cf6] text-white rounded-lg font-semibold hover:bg-violet-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            class="px-5 py-2.5 bg-[#8D35FF] text-white text-sm font-semibold hover:bg-[#7B2EF0] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             Send
           </button>
@@ -490,6 +487,17 @@ const sendMessage = async () => {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+.chat-widget,
+.chat-widget input,
+.chat-widget button,
+.chat-widget h3,
+.chat-widget p,
+.chat-widget span {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
 .slide-in-right-enter-active,
 .slide-in-right-leave-active {
   transition: transform 0.3s ease-out;

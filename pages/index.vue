@@ -53,6 +53,12 @@
         alt: 'Tech Paw Logo',
         link: 'https://www.tech-paw.com/',
       },
+      {
+        src: '/assets/Haesaers logo.svg',
+        alt: 'Haesaers Logo',
+        link: '',
+        style: 'opacity: 0.6; height: 34px;',
+      },
     ]"
   />
 

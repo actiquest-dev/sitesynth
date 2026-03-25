@@ -69,7 +69,7 @@ h1 :deep(.glow-text) {
   inset: -1px;
   border-radius: 0;
   pointer-events: none;
-  opacity: 0;
+  opacity: 1;
   background: conic-gradient(
     from var(--hero-cta-angle),
     transparent 0%,
@@ -83,22 +83,17 @@ h1 :deep(.glow-text) {
     transparent 100%
   );
   animation: hero-cta-spin 3s linear infinite;
-  filter: drop-shadow(0 0 14px rgba(173, 80, 255, 0.55));
-  transition: opacity 180ms ease;
 }
 
 .hero-cta-bg {
   position: absolute;
   inset: 1px;
   border-radius: 0;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(205, 120, 255, 0.48);
+  background: rgba(22, 22, 22, 0.92);
+  border: 1px solid rgba(205, 120, 255, 0.25);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.22),
-    0 12px 36px rgba(0, 0, 0, 0.45);
-  transition: border-color 180ms ease, background 180ms ease, box-shadow 220ms ease;
+  transition: border-color 180ms ease, background 180ms ease;
 }
 
 .hero-cta-label {
@@ -112,10 +107,6 @@ h1 :deep(.glow-text) {
   color: #ffffff;
 }
 
-.hero-cta:hover .hero-cta-border,
-.hero-cta:focus-visible .hero-cta-border {
-  opacity: 1;
-}
 
 .hero-cta:hover .hero-cta-bg,
 .hero-cta:focus-visible .hero-cta-bg {

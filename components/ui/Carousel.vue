@@ -17,7 +17,7 @@
       <div class="swiper-wrapper">
         <div v-for="image in images" :key="image.src" class="swiper-slide">
           <a :href="image.link" target="_blank">
-            <img :src="image.src" :alt="image.alt" />
+            <img :src="image.src" :alt="image.alt" :style="image.style" />
           </a>
         </div>
       </div>
