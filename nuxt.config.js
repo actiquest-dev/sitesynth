@@ -97,7 +97,7 @@ export default defineNuxtConfig({
         {
           rel: "icon",
           type: "image/svg+xml",
-          href: "/favicongoogle.svg?v=20260317c",
+          href: "/favicongoogle.svg?v=20260324a",
         },
         // Main favicon (non-purple)
         {

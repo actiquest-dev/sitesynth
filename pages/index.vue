@@ -6,6 +6,8 @@
     title="No silos. <span class='glow-text'>Just synthesis.</span>"
     subtitle="Where product, brand, and tech finally align"
     backgroundImage="/assets/new-assets/test/sitesynth-animated-gradient-v2.svg"
+    ctaText="Get started now"
+    ctaHref="/pricing"
   />
 
   <Carousel
@@ -255,40 +257,11 @@
     class="pb-32 pt-32"
   />
 
-  <!-- AI Chat Section -->
-  <section class="relative bg-[#161616] border-t border-[#333] py-16 md:py-24">
-    <div class="relative max-w-7xl mx-auto px-6 md:px-12">
-      <!-- Section Header -->
-      <div class="text-center mb-12">
-        <h2 class="text-4xl sm:text-5xl font-extrabold leading-tight mb-4 text-white">
-          💬 AI Consultant
-        </h2>
-        <p class="text-base sm:text-lg text-[#d4d4d4] max-w-2xl mx-auto leading-relaxed">
-          Get instant answers to your questions about design, development, and digital strategy.
-        </p>
-      </div>
-
-      <!-- Chat Component -->
-      <div class="bg-[#1a1a1a] border border-[#333] rounded-lg p-8 overflow-hidden">
-        <div class="absolute inset-0 pointer-events-none opacity-30">
-          <div class="absolute top-0 left-1/2 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2"></div>
-        </div>
-        <div class="relative z-10">
-          <ChatInterface :agentType="'presale'" :userEmail="userEmail || null" />
-        </div>
-      </div>
-    </div>
-  </section>
-
   <FooterSection />
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import { seoConfig, structuredData } from "~/config/seo"
-import ChatInterface from '~/components/ChatInterface.vue'
-
-const userEmail = ref('')
 
 // SEO Configuration - using centralized config
 const siteUrl = useRuntimeConfig().public?.siteUrl;
