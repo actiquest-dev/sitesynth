@@ -112,6 +112,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import { useChatDrawer } from '@/composables/useChatDrawer'
+import { useAnonymousChat } from '@/composables/useAnonymousChat'
 
 interface Message {
   id: string
@@ -141,6 +142,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:isOpen'])
 const { setBriefDraft, requestBriefDraftApply } = useChatDrawer()
+const { deviceId, setConversationId, setClaimToken } = useAnonymousChat()
 
 const messages = ref<Message[]>([])
 const messageInput = ref('')
@@ -155,8 +157,16 @@ const agentLabel = computed(() => {
   return 'AI Consultant'
 })
 
-// Get user email for API calls
-const getUserEmail = () => props.userEmail || localStorage.getItem('user_email') || 'anonymous'
+// Determine authentication status and get headers for API calls
+const getAuthHeaders = () => {
+  if (props.userEmail) {
+    // Authenticated user: pass email
+    return { 'x-user-email': props.userEmail }
+  } else {
+    // Anonymous user: pass device_id
+    return { 'x-device-id': deviceId }
+  }
+}
 
 // Parse markdown to HTML (simple version without external deps)
 const parseMarkdown = (text: string): string => {
@@ -224,7 +234,8 @@ watch(messages, scrollToBottom, { deep: true })
 // Load or create conversation on mount
 const initializeConversation = async () => {
   try {
-    const email = getUserEmail()
+    const authHeaders = getAuthHeaders()
+    const isAuthenticated = !!props.userEmail
 
     // Post-brief mode: reuse the brief's own conversation_id directly
     if (props.agentType === 'post-brief' && props.briefContext?.conversationId) {
@@ -233,36 +244,36 @@ const initializeConversation = async () => {
       return
     }
 
-    // First, try to get existing conversations
-    const getResponse = await fetch(`/api/chat/conversations?agentType=${props.agentType}`, {
-      method: 'GET',
-      headers: {
-        'x-user-email': email
-      }
-    })
+    // For authenticated users, try to get existing conversations
+    if (isAuthenticated) {
+      const getResponse = await fetch(`/api/chat/conversations?agentType=${props.agentType}`, {
+        method: 'GET',
+        headers: authHeaders
+      })
 
-    if (getResponse.ok) {
-      const getResult = await getResponse.json()
-      const conversations = getResult.data || []
-      
-      if (conversations.length > 0) {
-        // Use the most recent conversation
-        const conversation = conversations[0]
-        selectedConversationId.value = conversation.id
-        console.log('Loaded existing conversation:', conversation.id)
-        
-        // Load messages for this conversation
-        await loadConversationMessages(conversation.id)
-        return
+      if (getResponse.ok) {
+        const getResult = await getResponse.json()
+        const conversations = getResult.data || []
+
+        if (conversations.length > 0) {
+          // Use the most recent conversation
+          const conversation = conversations[0]
+          selectedConversationId.value = conversation.id
+          console.log('Loaded existing conversation:', conversation.id)
+
+          // Load messages for this conversation
+          await loadConversationMessages(conversation.id)
+          return
+        }
       }
     }
-    
-    // No existing conversations, create a new one
+
+    // Create a new conversation (anonymous or authenticated)
     const createResponse = await fetch('/api/chat/conversations', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-user-email': email
+        ...authHeaders
       },
       body: JSON.stringify({
         title: `${props.agentType === 'briefing' ? 'Briefing' : 'Consultation'} - ${new Date().toLocaleDateString()}`,
@@ -272,12 +283,24 @@ const initializeConversation = async () => {
 
     if (createResponse.ok) {
       const data = await createResponse.json()
-      selectedConversationId.value = data.data?.id || data.conversation?.id
-      console.log('Created new conversation:', selectedConversationId.value)
+      const conversationId = data.data?.id || data.conversation?.id
+      selectedConversationId.value = conversationId
+
+      console.log('Created new conversation:', conversationId)
+
+      // ✅ For anonymous users: store conversation_id and claim_token in localStorage
+      if (!isAuthenticated && conversationId) {
+        setConversationId(conversationId)
+        if (data.data?.claim_token || data.claim_token) {
+          const claimToken = data.data?.claim_token || data.claim_token
+          setClaimToken(claimToken)
+          console.log('[AIChatDrawer] Stored claim_token for future registration')
+        }
+      }
 
       // Persist presale conversation_id so payment page can claim it after registration
-      if (props.agentType === 'presale' && selectedConversationId.value) {
-        try { localStorage.setItem('presale_conversation_id', selectedConversationId.value) } catch {}
+      if (props.agentType === 'presale' && conversationId) {
+        try { localStorage.setItem('presale_conversation_id', conversationId) } catch {}
       }
     } else {
       console.error('Failed to create conversation:', createResponse.status, createResponse.statusText)
@@ -292,12 +315,10 @@ const initializeConversation = async () => {
 // Load messages for a specific conversation
 const loadConversationMessages = async (conversationId: string) => {
   try {
-    const email = getUserEmail()
+    const authHeaders = getAuthHeaders()
     const response = await fetch(`/api/chat/messages?conversation_id=${conversationId}`, {
       method: 'GET',
-      headers: {
-        'x-user-email': email
-      }
+      headers: authHeaders
     })
 
     if (response.ok) {
@@ -317,7 +338,7 @@ const sendProactiveGreeting = async () => {
   error.value = ''
 
   try {
-    const email = getUserEmail()
+    const authHeaders = getAuthHeaders()
     const brief = props.briefContext
 
     // Short trigger — server builds the real system prompt with brief context
@@ -325,7 +346,7 @@ const sendProactiveGreeting = async () => {
 
     const response = await fetch('/api/chat/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-user-email': email },
+      headers: { 'Content-Type': 'application/json', ...authHeaders },
       body: JSON.stringify({
         conversation_id: selectedConversationId.value,
         message: triggerPrompt,
@@ -402,8 +423,8 @@ const sendMessage = async () => {
   error.value = ''
 
   try {
-    const email = getUserEmail()
-    
+    const authHeaders = getAuthHeaders()
+
     // Add user message to local state
     const userMessage: Message = {
       id: `temp-${Date.now()}`,
@@ -413,13 +434,13 @@ const sendMessage = async () => {
     }
     messages.value.push(userMessage)
     await scrollToBottom()
-    
+
     // Send message with full conversation history
     const response = await fetch('/api/chat/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-user-email': email
+        ...authHeaders
       },
       body: JSON.stringify({
         conversation_id: selectedConversationId.value,

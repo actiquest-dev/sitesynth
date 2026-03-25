@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
-  const { email, fullName, chargeId } = body
+  const { email, fullName, chargeId, claimToken } = body
 
   if (!email || !fullName) {
     setResponseStatus(event, 400)
@@ -49,8 +49,18 @@ export default defineEventHandler(async (event) => {
     const userExists = existingUsers?.users?.some((u) => u.email === email)
 
     if (userExists) {
-      // User already exists - just return success
+      // User already exists - try to claim conversation if token provided
       console.log(`User ${email} already exists in Supabase`)
+      if (claimToken) {
+        const claimResult = await claimConversation(supabase, claimToken, email)
+        return {
+          success: true,
+          message: 'User already registered',
+          userExists: true,
+          conversationClaimed: claimResult.success,
+          conversationId: claimResult.conversationId,
+        }
+      }
       return {
         success: true,
         message: 'User already registered',
@@ -85,11 +95,20 @@ export default defineEventHandler(async (event) => {
 
     console.log(`✅ User registered after payment: ${email}`)
 
+    // ✅ Claim anonymous conversation if claim_token provided
+    let claimResult = { success: false, conversationId: null }
+    if (claimToken) {
+      claimResult = await claimConversation(supabase, claimToken, email)
+      console.log(`[after-payment] Claim result: success=${claimResult.success}, conversationId=${claimResult.conversationId}`)
+    }
+
     return {
       success: true,
       message: 'User registered successfully after payment',
       userId: data.user?.id,
       email: data.user?.email,
+      conversationClaimed: claimResult.success,
+      conversationId: claimResult.conversationId,
     }
   } catch (error: any) {
     console.error('Auth after payment error:', error)
@@ -101,3 +120,61 @@ export default defineEventHandler(async (event) => {
     }
   }
 })
+
+/**
+ * Helper: Claim anonymous conversation
+ * Links an anonymous conversation to a newly registered user email
+ */
+async function claimConversation(supabase: any, claimToken: string, userEmail: string) {
+  try {
+    // Find conversation by claim_token
+    const { data: conversation, error: findError } = await supabase
+      .from('conversations')
+      .select('id, device_id, user_email, claim_token, claimed_at')
+      .eq('claim_token', claimToken)
+      .maybeSingle()
+
+    if (findError) {
+      console.error('[claim-conversation] Database error:', findError)
+      return { success: false, conversationId: null }
+    }
+
+    if (!conversation) {
+      console.log('[claim-conversation] Invalid or expired token:', claimToken)
+      return { success: false, conversationId: null }
+    }
+
+    // Check if already claimed
+    if (conversation.claimed_at) {
+      console.log('[claim-conversation] Already claimed:', conversation.id)
+      return { success: true, conversationId: conversation.id }
+    }
+
+    // Check if trying to claim with wrong email
+    if (conversation.user_email && conversation.user_email !== userEmail) {
+      console.log('[claim-conversation] Wrong email:', userEmail, 'expected:', conversation.user_email)
+      return { success: false, conversationId: null }
+    }
+
+    // Update conversation: bind to user_email, mark as claimed
+    const { error: updateError } = await supabase
+      .from('conversations')
+      .update({
+        user_email: userEmail,
+        claimed_at: new Date().toISOString(),
+        claim_token: null, // Invalidate token (single use)
+      })
+      .eq('id', conversation.id)
+
+    if (updateError) {
+      console.error('[claim-conversation] Update error:', updateError)
+      return { success: false, conversationId: null }
+    }
+
+    console.log(`[claim-conversation] Successfully claimed conversation ${conversation.id} for user ${userEmail}`)
+    return { success: true, conversationId: conversation.id }
+  } catch (error: any) {
+    console.error('[claim-conversation] Error:', error)
+    return { success: false, conversationId: null }
+  }
+}

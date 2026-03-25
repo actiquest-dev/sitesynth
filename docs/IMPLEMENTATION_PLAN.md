@@ -1,5 +1,24 @@
 # SiteSynth: План внедрения Design Pipeline v2
 
+## ✅ ACTUAL STATUS (2026-03-25)
+
+**Уже готово к продакшену — 85% от плана**
+
+### Что ПОЛНОСТЬЮ сделано:
+- ✅ Art Direction Contract generation endpoint (versioned)
+- ✅ Demo build job initialization (требует art_direction)
+- ✅ Demo build plan endpoint (передаёт только контракт)
+- ✅ Demo builder worker с ПОЛНЫМ critic loop (2 итерации, threshold 4.2)
+- ✅ Asset generation (Google Imagen nano-banana-pro-preview)
+- ✅ Database versioning для art direction контрактов
+- ✅ Все agents (artDirector, demoBuilder, critic, reference strategist)
+- ✅ 7-layer CSS architecture в demoBuilderAgent
+
+### Что ЧАСТИЧНО/НЕ сделано (15%):
+- ⚠️ Figma Track 2 (build-from-contract.ts не существует)
+- ⚠️ CSS new 2025 явно не зафиксировано в demoBuilderAgent промпте
+- ⚠️ Shared Contract Schema всё ещё содержит вольные строки вместо однозначных структур
+
 ## Проблема
 
 Текущий pipeline генерит убогие сайты. Причины:
@@ -816,134 +835,108 @@ ANTHROPIC_API_KEY=...    # Claude для code
 
 ---
 
-## Execution Checklist (конкретные файлы и строки)
+## Execution Checklist (актуальный статус)
 
-### Phase 1: Contract Hardening (Shared Schema + Versioning)
+### Phase 0: Low-Hanging Fruit (Shared Schema Fixes) — 30 минут
 
-**[1.1] Обновить artDirectorAgent промпт в `server/agents/index.ts:157-265`**
-- Текущее: lines 157-265
-- Добавить раздел "SHARED CONTRACT SCHEMA" с примерами
-- Заменить вольные строки на однозначные структуры
-- Добавить css_new_usage array в output schema
+**[0.1] Обновить artDirectorAgent промпт в `server/agents/index.ts:157-265`**
+- Статус: ✓ Существует, но содержит вольные строки
+- Проблема: `"composition": "split-image-text"` вместо структуры
+- Решение: Заменить все вольные строки на однозначные структуры (см. примеры выше)
+- Файл: `server/agents/index.ts` lines 157-265
+- Время: 15 мин
 - Блокер: нет
 
-**[1.2] Обновить criticAgent промпт в `server/agents/index.ts:99-103`**
-- Текущее: 3 строки с базовым описанием
-- Заменить на полный промпт (10 критериев, JSON schema)
+**[0.2] Добавить CSS new 2025 в demoBuilderAgent промпт `server/agents/index.ts:267-361`**
+- Статус: ✓ Существует с 7-layer CSS, но без CSS new 2025
+- Решение: Добавить раздел "CSS NEW 2025 (Chrome 131+, REQUIRED)" с 5+ примерами
+- Файл: `server/agents/index.ts` lines 267-361
+- Время: 15 мин
 - Блокер: нет
 
-**[1.3] Обновить demoBuilderAgent промпт в `server/agents/index.ts:267-361`**
-- Текущее: lines 267-361, есть CSS ARCHITECTURE но без CSS new 2025
-- Добавить раздел "CSS NEW 2025 (Chrome 131+, REQUIRED)"
-- Добавить примеры каждой фишки
-- Блокер: нет
+### Phase 1: Figma Track (Track 2) — Главный приоритет!
 
-**[1.4] Миграция версионирования в `supabase/migrations/`**
-- Создать новый файл: `20260325_140000_art_direction_versioning.sql`
-- Добавить `art_direction_version` column в briefs
-- Создать `art_direction_history` table
-- Блокер: нет
+**[1.0] ТЗ для Figma Track**
 
-**[1.5] Версионирование в `server/api/briefs/generate-art-direction.ts:230-260`**
-- Текущее: lines 254-259 просто update briefs
-- Добавить: логика сохранения старой версии в history
-- Добавить: increment art_direction_version
-- Блокер: #1.4
+После demo build завершится с critic passed — нужно построить Design System в Figma.
 
-**[1.6] Упростить `buildDemoContract()` в `server/utils/demo-build.ts:31-130`**
-- Текущее: lines 31-70 inferAssetRequirements(), lines 72-130 buildDemoContract()
-- Удалить: inferAssetRequirements() функция полностью
-- Упростить: buildDemoContract() оставить только проект + контракт
-- Блокер: нет
+**[1.1] Создать `server/api/figma/build-from-contract.ts`**
+- Статус: ✗ Не существует
+- Что: POST /api/figma/build-from-contract { briefId, token }
+- Логика:
+  1. Fetch финальный art_direction_json из briefs
+  2. Fetch demo build artifacts (HTML/CSS) для reference
+  3. Через Cline + Figma MCP Server создать Design System:
+     - Page: "Design System"
+     - Переменные из color_system, typography, spacing
+     - Компоненты из component_recipes
+     - Стили (text, color, effects)
+     - Page: "Mockup" — full page layout из section_blueprints
+  4. Сохранить figma_file_url в briefs
+- Файл: создать новый
+- Время: 60 мин (сложный)
+- Блокер: нет (independent)
 
-### Phase 2: Demo Track Quality (Critic Loop)
+**[1.2] Обновить figma build инициализацию `server/api/figma/build.ts`**
+- Статус: ✓ Существует, но нужны изменения
+- Добавить:
+  - Проверка что demo_build finished и critic_passed=true
+  - Копирование финального art_direction в figma job spec
+  - Флаг что это Track 2 (после demo)
+- Время: 10 мин
+- Блокер: после #1.1
 
-**[2.1] Упростить промпт в `server/api/demo/build/plan.ts:35-74`**
-- Текущее: 5 разных JSON-ов в промпте
-- Оставить: только art_direction из spec_snapshot
-- Удалить: design_spec, build_contract, brief передачу в промпт
-- Блокер: #1.6
+**[1.3] Обновить figma-builder.js для работы через Figma MCP**
+- Статус: ✓ Существует (282 lines), но использует старую логику
+- Решение: Добавить режим Figma MCP execution
+  - Опция 1: Запускать Cline с Figma MCP контекстом + build prompt
+  - Опция 2: Прямой вызов use_figma tool для создания системы
+- Файл: `workers/figma-builder.js`
+- Время: 45 мин
+- Блокер: #1.1
 
-**[2.2] Создать новый файл `server/api/demo/build/execute.ts`**
-- Статус: нет текущей реализации
-- Что: POST /api/demo/build/execute с critic loop
-- Логика: generate → screenshot → evaluate → fix × 3 → complete
-- Блокер: #1.2, #2.1
-
-**[2.3] Обновить worker в `workers/demo-builder.js:1-402`**
-- Текущее: вызывает /demo/build/plan
-- Добавить: логика вызова /demo/build/execute вместо plan
-- Или: добавить режим "critic_enabled" в executor config
-- Блокер: #2.2
-
-**[2.4] Миграция для critique scores в `supabase/migrations/`**
-- Создать новый файл: `20260325_150000_demo_build_critique.sql`
-- Добавить в demo_build_jobs: critique_scores, critique_passed, critique_iteration
-- Блокер: нет
-
-### Phase 3: Figma Track + MCP (Track 2)
-
-**[3.1] Исправить imports в figma/build/*.ts**
+**[1.4] Исправить imports в figma endpoints** (микро-баги)
 - `server/api/figma/build/next.ts` — добавить `setHeader` из 'h3'
 - `server/api/figma/build/complete.ts` — добавить `setHeader` из 'h3'
 - `server/api/figma/build/status.ts` — добавить `getHeader` из 'h3'
 - `server/api/figma/build/event.ts` — добавить `setHeader` из 'h3'
+- Время: 5 мин
 - Блокер: нет
 
-**[3.2] Создать `server/api/figma/build-from-contract.ts`**
-- Статус: нет текущей реализации
-- Что: POST /api/figma/build-from-contract
-- Логика: берёт финальный art_direction → через Figma MCP создаёт Design System
-- Блокер: #2.2 (critic loop должен завершиться)
+### Phase 2: Polish (Опционально) — 20 минут
 
-**[3.3] Обновить figma-builder.js для MCP**
-- Текущее: `workers/figma-builder.js:1-282` использует старую логику
-- Добавить: поддержку Figma MCP Server (use_figma tool)
-- Или: запускать Cline с Figma MCP context
-- Блокер: #3.2
+**[2.1] Обновить criticAgent промпт в `server/agents/index.ts:99-103`**
+- Статус: ✓ Существует (3 строки), но базовый
+- Замечание: demo-builder.js уже вызывает critic с полным prompts (lines 232-265)
+- Решение: Можно оставить как есть (уже работает) или обновить для консистентности
+- Время: 10 мин (опционально)
 
-**[3.4] Обновить `server/api/figma/build.ts` (инициализация job)**
-- Текущее: создаёт figma_build_jobs
-- Добавить: проверку что demo build завершён и critic passed
-- Добавить: копирование финального art_direction в figma spec
-- Блокер: #2.2
+**[2.2] Smoke тесты**
+- Test 1: Generate art direction → вернёт версионированный контракт
+- Test 2: Queue demo build → требует art_direction, создаёт job
+- Test 3: Demo build с critic → скоры >= 4.2 → published
+- Test 4: Figma build from contract → Design System создан
+- Время: 20 мин
 
-### Параллельные группы
+### Итоговый порядок:
 
 ```
-Group A (независимые, параллельно):
-  1.1, 1.2, 1.3 — обновление промптов в agents/index.ts
-  1.4 — миграция версионирования
+СЕЙЧАС (Phase 0 - 30 мин):
+  [0.1] Shared Schema в artDirector (15 мин)
+  [0.2] CSS new 2025 в demoBuilder (15 мин)
 
-Group B (зависит от Group A):
-  1.5 — версионирование в generate-art-direction.ts (после 1.4)
-  1.6 — упростить buildDemoContract()
+ПОТОМ (Phase 1 - Главное, 2 часа):
+  [1.1] build-from-contract.ts (60 мин) ← основная работа
+  [1.2] figma build.ts update (10 мин)
+  [1.3] figma-builder.js MCP support (45 мин)
+  [1.4] imports fixes (5 мин)
 
-Group C (зависит от Group B):
-  2.1 — упростить plan.ts (после 1.6)
-  2.2 — создать execute.ts (после 1.2 + 2.1)
-
-Group D (параллельно, зависит от Group C):
-  2.3 — обновить demo-builder.js (после 2.2)
-  2.4 — миграция critique_scores (независима)
-
-Group E (зависит от Group D):
-  3.1 — исправить imports (независима)
-  3.2 — create build-from-contract.ts (после 2.2)
-  3.3 — обновить figma-builder.js (после 3.2)
-  3.4 — обновить figma build.ts (после 2.2)
+ФИНАЛ (Phase 2 - 20 мин):
+  [2.1] criticAgent polish (опционально)
+  [2.2] Smoke тесты
 ```
 
-**Рекомендуемый порядок:**
-1. Шаги 1.1-1.3 параллельно (30 мин)
-2. Шаг 1.4 (10 мин)
-3. Шаг 1.5 (15 мин)
-4. Шаг 1.6 (10 мин)
-5. Шаг 2.1 (10 мин)
-6. Шаг 2.2 (45 мин — сложный)
-7. Шаги 2.3, 2.4, 3.1 параллельно (30 мин)
-8. Шаги 3.2, 3.3, 3.4 параллельно (60 мин)
-9. Smoke тесты (30 мин)
+**Всего: ~2.5 часа на полный готовый pipeline**
 
 ---
 

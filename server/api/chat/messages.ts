@@ -40,19 +40,43 @@ const ensurePlanningSections = (draft: string, userRequest: string) => {
 export default defineEventHandler(async (event) => {
   const method = event.node.req.method
 
-  // GET /api/chat/messages - Get conversation messages
+  // GET /api/chat/messages - Get conversation messages (anonymous or authenticated)
   if (method === 'GET') {
     let conversationId = getRouterParam(event, 'conversationId')
-    
+
     if (!conversationId) {
       const query = getQuery(event)
       conversationId = query.conversation_id as string
     }
-    
+
     if (!conversationId) {
       return createError({ statusCode: 400, statusMessage: 'Conversation ID required' })
     }
 
+    // ✅ Check conversation ownership (device_id OR user_email)
+    const userEmail = getHeader(event, 'x-user-email') || null
+    const deviceId = getHeader(event, 'x-device-id') || null
+
+    const { data: conversation, error: convError } = await supabase
+      .from('conversations')
+      .select('id, device_id, user_email')
+      .eq('id', conversationId)
+      .maybeSingle()
+
+    if (!conversation) {
+      return createError({ statusCode: 404, statusMessage: 'Conversation not found' })
+    }
+
+    // ✅ Verify ownership: conversation must belong to this user/device
+    const isOwner =
+      (conversation.device_id && conversation.device_id === deviceId) ||
+      (conversation.user_email && conversation.user_email === userEmail)
+
+    if (!isOwner) {
+      return createError({ statusCode: 403, statusMessage: 'Access denied' })
+    }
+
+    // ✅ Now safe to return messages
     const { data, error } = await supabase
       .from('messages')
       .select('*')
@@ -70,23 +94,47 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  // POST /api/chat/messages - Send message and get agent response
+  // POST /api/chat/messages - Send message and get agent response (anonymous or authenticated)
   if (method === 'POST') {
-    const userEmail = getHeader(event, 'x-user-email')
+    const userEmail = getHeader(event, 'x-user-email') || null
+    const deviceId = getHeader(event, 'x-device-id') || null
     const body = await readBody(event)
 
-    if (!userEmail) {
-      return createError({ statusCode: 401, statusMessage: 'User email required' })
+    // ✅ Must have either device_id (anonymous) OR user_email (authenticated)
+    if (!deviceId && !userEmail) {
+      return createError({
+        statusCode: 401,
+        statusMessage: 'Either x-device-id (anonymous) or x-user-email (authenticated) required',
+      })
     }
 
     const conversationId = body.conversation_id || body.conversationId
     const message = body.message || body.content
     const agentType = body.agent_type || 'presale'
     const history = body.history || []
-    const hiddenTrigger = body.hidden_trigger === true  // post-brief proactive greeting
+    const hiddenTrigger = body.hidden_trigger === true // post-brief proactive greeting
 
     if (!conversationId || !message) {
       return createError({ statusCode: 400, statusMessage: 'Conversation ID and message required' })
+    }
+
+    // ✅ Verify conversation ownership (device_id OR user_email)
+    const { data: conversation, error: convError } = await supabase
+      .from('conversations')
+      .select('id, device_id, user_email')
+      .eq('id', conversationId)
+      .maybeSingle()
+
+    if (!conversation) {
+      return createError({ statusCode: 404, statusMessage: 'Conversation not found' })
+    }
+
+    const isOwner =
+      (conversation.device_id && conversation.device_id === deviceId) ||
+      (conversation.user_email && conversation.user_email === userEmail)
+
+    if (!isOwner) {
+      return createError({ statusCode: 403, statusMessage: 'Access denied' })
     }
 
     const isPostBrief = agentType === 'post-brief'

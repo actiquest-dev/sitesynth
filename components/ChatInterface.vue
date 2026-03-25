@@ -126,6 +126,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from 'vue'
+import { useAnonymousChat } from '@/composables/useAnonymousChat'
 
 interface Message {
   id: string
@@ -154,12 +155,25 @@ const props = defineProps({
   }
 })
 
+const { deviceId, setConversationId, setClaimToken } = useAnonymousChat()
+
 const conversations = ref<Conversation[]>([])
 const selectedConversationId = ref<string | null>(null)
 const messages = ref<Message[]>([])
 const messageInput = ref('')
 const loading = ref(false)
 const error = ref('')
+
+// Determine authentication status and get headers for API calls
+const getAuthHeaders = () => {
+  if (props.userEmail) {
+    // Authenticated user: pass email
+    return { 'x-user-email': props.userEmail }
+  } else {
+    // Anonymous user: pass device_id
+    return { 'x-device-id': deviceId }
+  }
+}
 
 // Computed properties
 const currentMessages = computed(() => {
@@ -175,15 +189,16 @@ onMounted(async () => {
 // Fetch all conversations for this agent
 async function fetchConversations() {
   try {
-    const email = props.userEmail || localStorage.getItem('user_email') || 'anonymous'
+    // For authenticated users only - anonymous users don't have pre-existing conversations
+    if (!props.userEmail) return
+
+    const authHeaders = getAuthHeaders()
     const response = await $fetch('/api/chat/conversations', {
       method: 'GET',
-      headers: {
-        'x-user-email': email
-      }
+      headers: authHeaders
     })
-    
-    conversations.value = response.conversations || []
+
+    conversations.value = response.conversations || response.data || []
     if (conversations.value.length > 0 && !selectedConversationId.value) {
       selectConversation(conversations.value[0].id)
     }
@@ -202,18 +217,16 @@ async function selectConversation(conversationId: string) {
 // Fetch messages for a specific conversation
 async function fetchMessages(conversationId: string) {
   try {
-    const email = props.userEmail || localStorage.getItem('user_email') || 'anonymous'
+    const authHeaders = getAuthHeaders()
     const response = await $fetch(`/api/chat/messages`, {
       method: 'GET',
       query: {
         conversation_id: conversationId
       },
-      headers: {
-        'x-user-email': email
-      }
+      headers: authHeaders
     })
-    
-    messages.value = response.messages || []
+
+    messages.value = response.messages || response.data || []
     await nextTick()
     scrollToBottom()
   } catch (err) {
@@ -224,21 +237,33 @@ async function fetchMessages(conversationId: string) {
 
 // Start a new chat
 async function startNewChat() {
-  const email = props.userEmail || localStorage.getItem('user_email') || 'anonymous'
-  
+  const authHeaders = getAuthHeaders()
+  const isAuthenticated = !!props.userEmail
+
   try {
     const response = await $fetch('/api/chat/conversations', {
       method: 'POST',
       body: {
         title: `Chat - ${new Date().toLocaleDateString()}`,
-        user_email: email,
-        agent_type: props.agentType
-      }
+        agentType: props.agentType
+      },
+      headers: authHeaders
     })
-    
-    if (response.conversation) {
-      conversations.value.push(response.conversation)
-      selectConversation(response.conversation.id)
+
+    const conversation = response.conversation || response.data
+    if (conversation) {
+      conversations.value.push(conversation)
+
+      // ✅ For anonymous users: store conversation_id and claim_token in localStorage
+      if (!isAuthenticated) {
+        setConversationId(conversation.id)
+        if (conversation.claim_token) {
+          setClaimToken(conversation.claim_token)
+          console.log('[ChatInterface] Stored claim_token for future registration')
+        }
+      }
+
+      selectConversation(conversation.id)
     }
   } catch (err) {
     console.error('Failed to create conversation:', err)
@@ -258,19 +283,16 @@ async function sendMessage() {
   error.value = ''
 
   try {
-    const email = props.userEmail || localStorage.getItem('user_email') || 'anonymous'
-    
+    const authHeaders = getAuthHeaders()
+
     const response = await $fetch('/api/chat/messages', {
       method: 'POST',
       body: {
         conversation_id: selectedConversationId.value,
-        content,
-        role: 'user',
+        message: content,
         agent_type: props.agentType
       },
-      headers: {
-        'x-user-email': email
-      }
+      headers: authHeaders
     })
 
     if (response.messages) {

@@ -347,15 +347,30 @@ const handleVerifyCode = async () => {
   isLoading.value = true;
 
   try {
+    // ✅ Get claim token from localStorage if available (for anonymous chat linking)
+    let claimToken = null;
+    try {
+      claimToken = localStorage.getItem('sitesynth_claim_token');
+    } catch (e) {
+      // localStorage might not be available
+    }
+
+    const requestBody: any = {
+      email: emailInput.value.trim().toLowerCase(),
+      code: codeInput.value.trim()
+    };
+
+    // ✅ Include claim token if available
+    if (claimToken) {
+      requestBody.claimToken = claimToken;
+    }
+
     const response = await fetch('/api/auth/verify-code', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ 
-        email: emailInput.value.trim().toLowerCase(),
-        code: codeInput.value.trim() 
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     const result = await response.json();
@@ -364,6 +379,11 @@ const handleVerifyCode = async () => {
       errorMessage.value = result.error || 'Invalid or expired code. Please try again.';
       console.error('❌ Verify code error:', result);
       return;
+    }
+
+    // ✅ Log conversation claiming result if applicable
+    if (result.conversationClaimed) {
+      console.log(`✅ Anonymous conversation claimed: ${result.conversationId}`);
     }
 
     // Store auth data
