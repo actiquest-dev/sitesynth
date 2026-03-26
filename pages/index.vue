@@ -66,7 +66,7 @@
     <CountdownSection />
   </ClientOnly>
 
-  <BannerSection id="banner-what-we-offer" tag="h2" text="What We Offer" />
+  <BannerSection id="banner-what-we-offer" tag="h2" text="Our Expertise" />
 
   <WhatWeOfferSection
     id="what-we-offer"
@@ -77,7 +77,7 @@
         imageAlt: 'Brand Thinking',
         title: 'Brand-Led Product Thinking',
         description:
-          'We help you build digital products aligned with your brand voice and vision.',
+          'AI-curated product direction aligned with your brand voice, market context, and business goals.',
         link: '/brand-driven-product-strategy',
       },
       {
@@ -86,7 +86,7 @@
         imageAlt: 'Design Systems',
         title: 'Design Systems & UX Architecture',
         description:
-          'We craft scalable design systems and UX flows that bridge user needs and developer logic.',
+          'Curated UX flows and scalable design systems shaped by real usage data and team workflows.',
         link: '/ux-and-design-system',
       },
       {
@@ -95,7 +95,7 @@
         imageAlt: 'Implementation Support',
         title: 'Full-Stack Implementation Support',
         description:
-          'From prototypes to production, we collaborate closely with your dev team — or bring our own.',
+          'From prototype to production, we integrate the best-fit stack and build with clear technical ownership.',
         link: '/full-stack-implementation',
       },
       {
@@ -104,7 +104,7 @@
         imageAlt: 'AI Innovation',
         title: 'AI-Infused Innovation & R&D',
         description:
-          'We bring forward-thinking, AI-powered tooling into the design and development process.',
+          'We curate and operationalize AI tools that create measurable speed, quality, and product leverage.',
         link: '/ai-innovation',
       },
     ]"
@@ -199,13 +199,13 @@
   id="why-sitesynth"
   sectionClass="bg-[#161616] py-0"
   title="Why SiteSynth?"
-  description="Most teams lose time when work gets passed around: strategy becomes design, design becomes code, and the final result drifts from the original intent. We keep it in one loop, so what you ship matches what you planned — and what users experience matches what you meant. No handoff gaps. No “almost right” execution."
+  description="Most consultancies resell the same tools at enterprise prices. We don't. We curate the right stack for your stage, integrate it cleanly, and stay accountable for outcomes — not slide decks."
   :leftTextElements="[
-    { tag: 'h4', content: 'No handoffs. No “almost right”' },
+    { tag: 'h4', content: 'Curated, not repackaged' },
     {
       tag: 'p',
       content:
-        'We’re a small senior team that values craft and shipping. If you prefer clear ownership over agency chaos, you’ll feel at home with us.',
+        'We combine proven technologies, custom logic, and clear ownership. You get a system that fits your product, your team, and your budget — without vendor theater.',
     },
   ]"
   :leftLink="{ href: '/about-us', text: 'Meet the team' }"
@@ -216,37 +216,34 @@
     {
       iconSrc: '/assets/icons/other/info-circle.svg',
       title: 'One-Size-Fits-All',
-      description: 'Rigid, prepackaged solutions applied to everyone.',
+      description: 'Same playbook, same stack, regardless of context.',
     },
     {
       iconSrc: '/assets/icons/other/info-circle.svg',
-      title: 'Siloed & Fragmented',
-      description: 'Tech, design, and marketing handled in isolation.',
+      title: 'Markup Over Value',
+      description: 'Expensive tooling wrapped in process-heavy delivery.',
     },
     {
       iconSrc: '/assets/icons/other/info-circle.svg',
-      title: 'Slow & Overcomplicated',
-      description:
-        'Manual workflows, outdated tools, and complexity that wastes time — and your budget.',
+      title: 'Handoff Gaps',
+      description: 'Strategy, design, and engineering disconnected across teams.',
     },
   ]"
   :siteSynthCards="[
     {
       iconSrc: '/assets/icons/other/tick-circle.svg',
-      title: 'Custom by Design',
-      description: 'Tailored strategies designed for your unique context.',
+      title: 'Curated Stack',
+      description: 'Best-fit tools selected for your exact use case and growth stage.',
     },
     {
       iconSrc: '/assets/icons/other/tick-circle.svg',
-      title: 'Seamless Collaboration',
-      description:
-        'We unify strategy, development, and branding — no silos, no handoff gaps.',
+      title: 'Value-First Delivery',
+      description: 'Spend goes into execution and outcomes, not overhead.',
     },
     {
       iconSrc: '/assets/icons/other/tick-circle.svg',
-      title: 'Agile & AI-Powered',
-      description:
-        'We use AI-powered tools to accelerate delivery, reduce cost, and stay ahead.',
+      title: 'One Loop Ownership',
+      description: 'Strategy, design, and build stay aligned from day one.',
     },
   ]"
 />

@@ -172,7 +172,7 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, nextTick } from "vue";
 
-const AUTO_INTERVAL = 5000; // ms per tab
+const AUTO_INTERVAL = 8000; // ms per tab
 
 const props = defineProps({
   id: { type: String, default: "" },
