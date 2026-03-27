@@ -2,7 +2,7 @@
  * Mastra Agents for SiteSynth
  */
 
-import { Agent } from '@mastra/core'
+import { Agent } from '@mastra/core/agent'
 import { google } from '@ai-sdk/google'
 
 const gemini = google('gemini-2.5-pro')
