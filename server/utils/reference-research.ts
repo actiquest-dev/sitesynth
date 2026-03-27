@@ -3,7 +3,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 import { z } from 'zod'
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || '')
-const GEMINI_MODELS = ['gemini-2.5-pro']
+const GEMINI_MODELS = ['gemini-2.5-pro', 'gemini-2.5-flash', 'gemini-pro-latest']
 
 async function geminiJson<T>(prompt: string): Promise<T> {
   let lastError: any
