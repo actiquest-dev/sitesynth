@@ -163,6 +163,7 @@ export default defineNuxtConfig({
   vite: {
     ssr: {
       external: ['react', 'react-dom'],
+      noExternal: ['vue-tel-input'],
     },
   },
 });

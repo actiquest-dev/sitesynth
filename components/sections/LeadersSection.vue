@@ -5,11 +5,14 @@
   >
     <div class="max-w-[1248px] mx-auto px-6">
       <!-- Заголовок секции -->
-      <div class="text-center max-w-3xl mx-auto mb-14">
-        <h2 class="text-white text-3xl sm:text-4xl font-bold mb-4">
-          {{ title }}
-        </h2>
-        <p class="text-[#bbbbbb] text-sm sm:text-base leading-relaxed">
+      <div class="mb-14 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+        <div>
+          <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#555] mb-4">Our Team</p>
+          <h2 class="text-white text-3xl sm:text-4xl font-bold">
+            {{ title }}
+          </h2>
+        </div>
+        <p class="text-[#666] text-sm leading-relaxed max-w-sm md:text-right">
           {{ subtitle }}
         </p>
       </div>
@@ -77,7 +80,7 @@ const props = defineProps({
   subtitle: {
     type: String,
     default:
-      "Creatives, Developers, Designers — meet the team that specializes in turning dreams into digital masterpieces.",
+      "Four people. One team. Strategy, design, engineering, and growth — working without silos.",
   },
   // [{ name, role, image, description }]
   leaders: {

@@ -2,6 +2,11 @@
   <section :id="id || undefined" :class="sectionClass">
     <component :is="tag" :class="contentClass">
       <span v-html="text"></span>
+      <div
+        v-if="showLine"
+        class="mt-5 h-[2px] w-16 rounded-full"
+        :class="lineClass"
+      />
     </component>
   </section>
 </template>
@@ -27,6 +32,14 @@ defineProps({
   contentClass: {
     type: String,
     default: "max-w-[1248px] mx-auto text-4xl text-white",
+  },
+  showLine: {
+    type: Boolean,
+    default: false,
+  },
+  lineClass: {
+    type: String,
+    default: "bg-white/30",
   },
 });
 </script>

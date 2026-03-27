@@ -1,7 +1,7 @@
 <template>
   <section
     :id="id || undefined"
-    class="relative bg-[#DDDDDD] group overflow-hidden"
+    class="relative bg-[#161616] group overflow-hidden"
     :style="backgroundImageStyle"
   >
     <GlowEffect />
@@ -9,18 +9,18 @@
     <div class="relative z-10 max-w-[1248px] mx-auto px-6 pt-[16rem] pb-[12rem]">
       <!-- HERO TEXT -->
       <div class="text-center px-6">
-        <h1 class="text-[#161616] text-4xl sm:text-5xl font-extrabold mb-10">
+        <h1 class="text-white text-4xl sm:text-5xl font-extrabold mb-10">
           {{ title }}
         </h1>
 
-        <p class="text-[#161616] text-base sm:text-lg font-medium mb-8">
+        <p class="text-[#999999] text-base sm:text-lg font-medium mb-8">
           {{ description }}
         </p>
 
         <a
           :href="buttonLink"
-          class="inline-block mt-8 px-4 py-2 border border-[#161616] bg-[#161616] text-white font-semibold
-                 transition-colors duration-500 hover:bg-[#8D35FF] hover:border-[#8D35FF]"
+          class="inline-block mt-8 px-4 py-2 border border-white bg-white text-[#161616] font-semibold
+                 transition-colors duration-500 hover:bg-[#8D35FF] hover:border-[#8D35FF] hover:text-white"
         >
           {{ buttonText }}
         </a>
@@ -32,10 +32,15 @@
           v-for="(card, index) in cards"
           :key="index"
           :href="card.link"
-          class="group/card relative border border-[#333] bg-[#161616] overflow-hidden
-                 transition-colors duration-300 hover:bg-[#1a1a1a]
-                 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#161616]/30"
+          class="group/card relative border border-[#2a2a2a] bg-[#ffffff05] backdrop-blur overflow-hidden
+                 transition-colors duration-300 hover:bg-[#ffffff0a]
+                 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
         >
+          <GlowEffect
+            hoverClass="group-hover/card:opacity-100"
+            class="absolute inset-0 z-0 pointer-events-none"
+          />
+
           <!-- MAIN LAYOUT (same principle) -->
           <div class="relative z-10 flex flex-col min-h-[420px]">
             <!-- header: padding + fixed text box width -->
@@ -46,7 +51,7 @@
                   <span v-if="card.icon" class="mr-2">{{ card.icon }}</span>{{ card.title }}
                 </h3>
 
-                <p class="text-left mt-5 leading-relaxed" style="color: #bbbbbb !important;">
+                <p class="text-[#999999] text-left mt-5 leading-relaxed">
                   {{ card.description }}
                 </p>
               </div>

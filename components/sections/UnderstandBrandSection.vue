@@ -9,7 +9,7 @@
     <!-- как в твоём примере: grid на всю ширину -->
     <div class="mx-auto grid grid-cols-1 md:grid-cols-2 relative z-10">
       <!-- Left Column -->
-      <div class="py-12 md:border-r border-[#333]">
+      <div class="py-16 md:py-24 md:border-r border-[#333]">
         <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-12">
           <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
             {{ leftTitle }}
@@ -22,51 +22,50 @@
           <!-- Tags -->
           <div
             v-if="tags?.length"
-            class="flex flex-wrap gap-2 py-8"
+            class="flex flex-wrap gap-[10px] py-8"
             :class="{ 'pills-visible': inView }"
           >
             <div
               v-for="(tag, index) in tags"
               :key="index"
               :style="{ '--i': index }"
-              :class="[
-                'tag-pill inline-flex rounded-full p-[2px] border',
-                borderColor,
-              ]"
+              class="tag-pill"
             >
-              <a
-                href="#"
-                class="tag-pill-inner inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-medium"
-                :class="[tagBgColor, tagTextColor]"
-                @click.prevent
-              >
-                {{ tag }}
-              </a>
+              <div class="pill-body">{{ tag }}</div>
             </div>
           </div>
 
           <!-- Tools -->
-          <h2 :class="`text-2xl font-semibold pb-6 ${textColor}`">
+          <hr class="border-t border-current opacity-10 mb-6" />
+          <p :class="`text-xs font-semibold uppercase tracking-[0.14em] pb-4 opacity-50 ${textColor}`">
             {{ toolsTitle }}
-          </h2>
+          </p>
 
-          <ul class="list-disc pl-6" :class="textColor">
-            <li class="pb-2" v-for="(tool, index) in toolsList" :key="index">
-              {{ tool }}
+          <ul class="space-y-3" :class="textColor">
+            <li v-for="(tool, index) in toolsList" :key="index" class="flex items-center gap-3">
+              <img
+                v-if="tool.logo"
+                :src="tool.logo"
+                :alt="tool.text"
+                class="w-5 h-5 rounded shrink-0"
+              />
+              <span v-else class="opacity-40 shrink-0 text-sm">–</span>
+              <span class="text-sm leading-snug">{{ tool.text ?? tool }}</span>
             </li>
           </ul>
         </div>
       </div>
 
-      <!-- Right Column (Image) -->
-      <!-- без padding: картинка в край и на мобилке и на десктопе -->
-      <div class="relative border-t border-[#333] md:border-t-0">
-        <img
-          :src="imageSrc"
-          alt="Section image"
-          class="w-full h-full block object-cover"
-          :class="imagePosition"
-        />
+      <!-- Right Column (Image or slot) -->
+      <div class="relative border-t border-[#333] md:border-t-0 min-h-[280px] md:min-h-0 overflow-hidden">
+        <slot name="image">
+          <img
+            :src="imageSrc"
+            alt="Section image"
+            class="w-full h-full block object-cover"
+            :class="imagePosition"
+          />
+        </slot>
       </div>
     </div>
   </section>
@@ -124,84 +123,43 @@ onBeforeUnmount(() => observer?.disconnect());
 
 <style scoped>
 .tag-pill {
-  cursor: pointer;
-  transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.tag-pill {
-  border-color: #ffffff !important;
-}
-@media (hover: hover) and (pointer: fine) {
-  .tag-pill:hover {
-    border-color: #ffffff !important;
-  }
-}
-
-.tag-pill-inner {
   opacity: 0;
-  transform: translateY(10px);
-  will-change: transform, box-shadow, opacity;
-  transition: filter 380ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.pills-visible .tag-pill-inner {
-  animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards,
-    softPulse 4s ease-in-out infinite;
-  animation-delay: calc(var(--i) * 90ms);
+.pills-visible .tag-pill {
+  animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--i) * 70ms);
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .tag-pill:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0 18px rgba(255, 255, 255, 0.22);
-  }
-
-  .tag-pill:hover .tag-pill-inner {
-    box-shadow: 0 0 18px rgba(255, 255, 255, 0.22);
-    transform: translateY(0);
-    filter: brightness(1.06);
-  }
+.pill-body {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  border-radius: 9999px;
+  border: 1px solid #444444;
+  background: transparent;
+  padding: 0 16px;
+  font-size: 0.75rem;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  color: #888888;
+  white-space: nowrap;
+  transition: color 0.2s ease, border-color 0.2s ease;
 }
 
-.tag-pill:focus-within {
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.22);
+.tag-pill:hover .pill-body {
+  color: #aaaaaa;
+  border-color: #666666;
 }
 
 @keyframes fadeUp {
-  0% {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes softPulse {
-  0% {
-    box-shadow: 0 0 0 rgba(255, 255, 255, 0);
-  }
-  50% {
-    box-shadow: 0 0 14px rgba(255, 255, 255, 0.14);
-  }
-  100% {
-    box-shadow: 0 0 0 rgba(255, 255, 255, 0);
-  }
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tag-pill,
-  .tag-pill-inner {
-    transition: none !important;
-    animation: none !important;
-  }
-  .tag-pill-inner {
-    opacity: 1;
-    transform: none;
-  }
+  .tag-pill { animation: none; opacity: 1; }
 }
 </style>
