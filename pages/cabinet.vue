@@ -2778,13 +2778,8 @@ const { deviceId } = useAnonymousChat()
 
 const getChatHeaders = (extra: Record<string, string> = {}) => {
   const headers: Record<string, string> = { ...extra }
-  if (userEmail.value) {
-    headers['x-user-email'] = userEmail.value
-    return headers
-  }
-  if (deviceId) {
-    headers['x-device-id'] = deviceId
-  }
+  if (userEmail.value) headers['x-user-email'] = userEmail.value
+  if (deviceId) headers['x-device-id'] = deviceId
   return headers
 }
 

@@ -161,6 +161,15 @@ const saveBriefEdit = async () => {
   }
 }
 
+const { deviceId } = useAnonymousChat()
+
+const buildChatHeaders = () => {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+  if (props.userEmail) headers['x-user-email'] = props.userEmail
+  if (deviceId) headers['x-device-id'] = deviceId
+  return headers
+}
+
 const sendRefinement = async () => {
   if (!userQuestion.value.trim() || !props.brief?.id || isRefining.value) return
 
@@ -180,10 +189,7 @@ const sendRefinement = async () => {
     if (!refinementConversationId.value) {
       const convResponse = await fetch('/api/chat/conversations', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-email': props.userEmail,
-        },
+        headers: buildChatHeaders(),
         body: JSON.stringify({
           title: `Brief Refinement - ${props.brief.name}`,
           agentType: 'briefing',
@@ -200,10 +206,7 @@ const sendRefinement = async () => {
     // Send message to AI agent
     const response = await fetch('/api/chat/messages', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-user-email': props.userEmail,
-      },
+      headers: buildChatHeaders(),
       body: JSON.stringify({
         conversation_id: refinementConversationId.value,
         message: question,
