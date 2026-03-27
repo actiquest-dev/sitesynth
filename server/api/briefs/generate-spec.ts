@@ -1,5 +1,6 @@
 import { z } from 'zod'
-import { geminiJson } from '~~/server/utils/gemini'
+import { generateObject } from 'ai'
+import { google } from '@ai-sdk/google'
 import { useDatabaseClient } from '~~/server/utils/supabase'
 import { runReferenceAnalysisPipeline } from '~~/server/utils/reference-research'
 
@@ -39,7 +40,9 @@ export default defineEventHandler(async (event) => {
     }
 
     // Generate a richer design spec so the result can directly guide wireframes and Figma production.
-    const schema = z.object({
+    const { object } = await generateObject({
+      model: google('gemini-2.5-pro'),
+      schema: z.object({
         product_summary: z.object({
           vision: z.string(),
           audience: z.string(),
@@ -94,9 +97,8 @@ export default defineEventHandler(async (event) => {
           handoff_notes: z.array(z.string()),
         }),
         open_questions: z.array(z.string()),
-      })
-
-    const { data: object, model } = await geminiJson<z.infer<typeof schema>>(`
+      }),
+      prompt: `
 You are converting a design brief into a production-grade design specification for UX/UI and Figma work.
 
 Return a concrete, information-dense JSON object.
@@ -117,28 +119,19 @@ ${markdownContent}
 
 Competitive interface analysis:
 ${JSON.stringify(referenceAnalysis, null, 2)}
-      `.trim())
-
-    const parsed = schema.safeParse(object)
-    if (!parsed.success) {
-      console.error('[DesignSpec] Schema validation failed', parsed.error)
-      return {
-        success: false,
-        error: 'Failed to generate design spec',
-        model,
-      }
-    }
+      `.trim()
+    })
 
     // Save/Update the spec in the database
     const { error } = await db
       .from('briefs')
-      .update({ design_spec_json: parsed.data, updated_at: new Date().toISOString() })
+      .update({ design_spec_json: object, updated_at: new Date().toISOString() })
       .eq('id', briefId)
       .eq('user_email', userEmail)
 
     if (error) throw error
 
-    return { success: true, data: parsed.data, model }
+    return { success: true, data: object }
   } catch (error) {
     console.error('[DesignSpec] Error:', error)
     return { success: false, error: 'Failed to generate design spec' }

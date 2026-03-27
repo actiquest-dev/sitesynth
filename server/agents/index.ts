@@ -6,7 +6,7 @@ import { Agent } from '@mastra/core'
 import { google } from '@ai-sdk/google'
 
 const gemini = google('gemini-2.5-pro')
-const geminiFallback = google('gemini-2.0-pro')
+const geminiFallback = google('gemini-pro-latest')
 
 export const briefingAgent = new Agent({
   name: 'Viz - Briefing Specialist',
@@ -301,7 +301,7 @@ RULES:
   model: gemini,
 })
 
-// Fallback agents using gemini-2.0-pro (used when 2.5-pro hits rate limits)
+// Fallback agents using gemini-pro-latest (used when 2.5-pro hits rate limits)
 export const demoBuilderAgentFallback = new Agent({
   name: 'Demo Site Builder (Fallback)',
   instructions: demoBuilderAgent.instructions,

@@ -168,7 +168,7 @@ BRIEF DATA:
     }
 
     // Model fallback chain for brief generation
-    const modelNames = ['gemini-2.5-pro', 'gemini-2.0-pro', 'gemini-1.5-pro']
+    const modelNames = ['gemini-2.5-pro', 'gemini-pro-latest']
     let result: any = null
     let usedModel = ''
 

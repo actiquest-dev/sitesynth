@@ -12,7 +12,7 @@
     "sass:build": "sass assets/style.scss assets/style.css"
   },
   "dependencies": {
-    "@ai-sdk/google": "^3.0.33",
+    "@ai-sdk/google": "^1.2.22",
     "@google/generative-ai": "^0.24.1",
     "@mastra/core": "^0.10.15",
     "@nuxt/fonts": "^0.12.1",
