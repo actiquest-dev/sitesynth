@@ -26,7 +26,7 @@
           v-for="(card, index) in cards"
           :key="index"
           :href="card.link"
-          class="group/card relative border border-[#333] bg-[#ffffff14] backdrop-blur overflow-hidden transition-colors duration-300 hover:bg-[#ffffff1a] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+          class="group/card relative border border-[#2a2a2a] bg-[#ffffff05] backdrop-blur overflow-hidden transition-colors duration-300 hover:bg-[#ffffff0a] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
         >
           <GlowEffect
             hoverClass="group-hover/card:opacity-100"

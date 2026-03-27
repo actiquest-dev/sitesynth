@@ -82,6 +82,8 @@ useHead({
     { property: "og:locale", content: "en_US" },
     { property: "og:url", content: canonicalUrl },
     { property: "og:image", content: `${baseUrl}/assets/shareimage.png` },
+    { property: "og:image:width", content: "1976" },
+    { property: "og:image:height", content: "920" },
     { property: "og:image:alt", content: "SiteSynth - Share Image" },
 
     // Default Twitter Card - pages can override

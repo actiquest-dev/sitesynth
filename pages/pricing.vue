@@ -243,10 +243,10 @@
 
       <!-- Trust Icons (replacing pills) -->
       <div
-        class="mt-8 sm:mt-10 grid grid-cols-2 gap-x-6 gap-y-6 justify-items-center max-w-3xl mx-auto sm:flex sm:flex-nowrap sm:justify-center sm:gap-6 md:gap-10"
+        class="mt-8 sm:mt-10 grid grid-cols-2 gap-x-6 gap-y-6 justify-items-center max-w-3xl mx-auto sm:max-w-[1200px] sm:flex sm:flex-nowrap sm:justify-center sm:gap-8 md:gap-12 lg:gap-16"
         style="font-family: 'Inter', sans-serif;"
       >
-        <div class="flex items-center gap-3 w-full max-w-[220px]">
+        <div class="flex items-center gap-3 w-full max-w-[220px] sm:max-w-[250px] md:max-w-[270px]">
           <div class="w-8 h-8 rounded-none bg-[#8D35FF]/10 border border-[#8D35FF]/20 flex items-center justify-center shrink-0">
             <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 text-[#8D35FF]"><path d="M8 1a2 2 0 012 2v4H6V3a2 2 0 012-2zm3 6V3a3 3 0 00-6 0v4a2 2 0 00-2 2v5a2 2 0 002 2h6a2 2 0 002-2V9a2 2 0 00-2-2z"/></svg>
           </div>
@@ -255,7 +255,7 @@
             <p class="text-[#555] text-xs mt-1 leading-relaxed" style="font-family: 'Inter', sans-serif;">Full refund, no questions</p>
           </div>
         </div>
-        <div class="flex items-center gap-3 w-full max-w-[220px]">
+        <div class="flex items-center gap-3 w-full max-w-[220px] sm:max-w-[250px] md:max-w-[270px]">
           <div class="w-8 h-8 rounded-none bg-[#8D35FF]/10 border border-[#8D35FF]/20 flex items-center justify-center shrink-0">
             <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 text-[#8D35FF]"><path d="M1 3a1 1 0 011-1h12a1 1 0 011 1v2H1V3zm0 4h14v5a1 1 0 01-1 1H2a1 1 0 01-1-1V7zm5 3a1 1 0 100 2h4a1 1 0 100-2H6z"/></svg>
           </div>
@@ -264,7 +264,7 @@
             <p class="text-[#555] text-xs mt-1 leading-relaxed" style="font-family: 'Inter', sans-serif;">Price you see is final</p>
           </div>
         </div>
-        <div class="flex items-center gap-3 w-full max-w-[220px]">
+        <div class="flex items-center gap-3 w-full max-w-[220px] sm:max-w-[250px] md:max-w-[270px]">
           <div class="w-8 h-8 rounded-none bg-[#8D35FF]/10 border border-[#8D35FF]/20 flex items-center justify-center shrink-0">
             <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 text-[#8D35FF]"><path d="M5.52.359A.5.5 0 016 0h4a.5.5 0 01.474.658L8.694 6H12.5a.5.5 0 01.395.807l-7 9a.5.5 0 01-.873-.454L6.823 10H3.5a.5.5 0 01-.48-.641l2.5-9z"/></svg>
           </div>
@@ -273,7 +273,7 @@
             <p class="text-[#555] text-xs mt-1 leading-relaxed" style="font-family: 'Inter', sans-serif;">No subscriptions required</p>
           </div>
         </div>
-        <div class="flex items-center gap-3 w-full max-w-[220px]">
+        <div class="flex items-center gap-3 w-full max-w-[220px] sm:max-w-[250px] md:max-w-[270px]">
           <div class="w-8 h-8 rounded-none bg-[#8D35FF]/10 border border-[#8D35FF]/20 flex items-center justify-center shrink-0">
             <svg viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 text-[#8D35FF]"><path d="M8 3.5a.5.5 0 00-1 0V9a.5.5 0 00.252.434l3.5 2a.5.5 0 00.496-.868L8 8.71V3.5z"/><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm7-8A7 7 0 111 8a7 7 0 0114 0z"/></svg>
           </div>
@@ -631,6 +631,7 @@ useSeoMeta({
   ogDescription:
     "One-time pricing for website design and development. Pay once. Own it forever.",
   ogImage: `${siteUrl}/assets/shareimage.png`,
+  ogImageAlt: "SiteSynth pricing plans",
   twitterTitle: "Website Pricing | SiteSynth",
   twitterDescription: "One-time pricing for website design and development. Pay once. Own it forever.",
 });
@@ -686,6 +687,27 @@ useHead({
             },
           ],
         },
+      }),
+    },
+  ],
+});
+
+// FAQPage structured data for rich snippets
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: faqItems.map((item) => ({
+          '@type': 'Question',
+          name: item.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: item.answer,
+          },
+        })),
       }),
     },
   ],

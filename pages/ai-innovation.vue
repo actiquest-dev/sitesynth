@@ -13,27 +13,17 @@
   <!-- INFO -->
   <TwoColumnsDesign
     id="info-ai"
-    sectionBgColor="bg-[#DDDDDD]"
-    leftColumnBgColor="bg-[#DDDDDD]"
+    sectionBgColor="bg-[#161616]"
+    leftColumnBgColor="bg-[#161616]"
     rightColumnBgColor="bg-[#161616]"
-    textColorleft="text-[#161616]"
+    textColorleft="text-white"
     textColorRight="text-white"
   >
     <template #left>
-      <div class="py-24 md:border-r border-[#333] bg-[#DDDDDD] relative">
-        <div
-          class="absolute inset-0 pointer-events-none opacity-100 z-0"
-          style="
-            background-image: url('/assets/gradients/gradient_right_corner.svg');
-            background-size: cover;
-            background-position: bottom left;
-            background-repeat: no-repeat;
-          "
-        ></div>
-
+      <div class="py-24 md:border-r border-[#333] bg-[#161616] relative">
         <div class="relative z-10 max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
-          <h3 class="text-sm font-semibold tracking-wider mb-2">WHY AI NOW?</h3>
-          <h2 class="text-4xl font-bold mb-4">
+          <h3 class="text-sm font-semibold tracking-wider mb-2 text-[#888888]">WHY AI NOW?</h3>
+          <h2 class="text-4xl font-bold mb-4 text-white">
             You don’t need an AI lab. You need traction.
           </h2>
         </div>

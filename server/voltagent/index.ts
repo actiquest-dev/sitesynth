@@ -4,11 +4,17 @@
  * Optimized for Vercel Serverless Functions
  */
 
-import { createPinoLogger } from '@voltagent/logger'
 import { briefingAgent, consultantAgent, figmaBuilderAgent, architectAgent, criticAgent, referenceStrategistAgent, demoBuilderAgent } from '../agents'
 
-// Initialize logger for VoltOps integration
-export const logger = createPinoLogger({
+// Simple console-based logger (replaces @voltagent/logger)
+const createConsoleLogger = ({ name, level }: { name: string; level: string }) => ({
+  info: (msg: string, data?: any) => console.log(`[${name}]`, msg, data ?? ''),
+  warn: (msg: string, data?: any) => console.warn(`[${name}]`, msg, data ?? ''),
+  error: (msg: string, data?: any) => console.error(`[${name}]`, msg, data ?? ''),
+  debug: (msg: string, data?: any) => { if (level === 'debug') console.debug(`[${name}]`, msg, data ?? '') },
+})
+
+export const logger = createConsoleLogger({
   name: 'sitesynth-agents',
   level: process.env.LOG_LEVEL || 'info',
 })

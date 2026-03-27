@@ -146,8 +146,11 @@ h1 :deep(.glow-text) {
         class="text-4xl sm:text-6xl font-extrabold mb-8 leading-tight"
         v-html="title"
       ></h1>
-      <p class="text-base sm:text-lg font-normal mb-8 text-[#d4d4d4]">
+      <p class="text-base sm:text-lg font-normal mb-4 text-[#d4d4d4]">
         {{ subtitle }}
+      </p>
+      <p v-if="description" class="text-sm sm:text-base font-normal mb-8 text-[#888] max-w-xl mx-auto leading-relaxed">
+        {{ description }}
       </p>
       <NuxtLink
         v-if="ctaText"
@@ -177,6 +180,10 @@ const props = defineProps({
     required: true,
   },
   subtitle: {
+    type: String,
+    default: "",
+  },
+  description: {
     type: String,
     default: "",
   },

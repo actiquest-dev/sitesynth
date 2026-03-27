@@ -1,5 +1,5 @@
 import { defineEventHandler, readBody } from 'h3'
-import { generateImage } from 'ai'
+import { experimental_generateImage as generateImage } from 'ai'
 import { google } from '@ai-sdk/google'
 import { getDemoBuildToken } from '~~/server/utils/demo-build-token'
 

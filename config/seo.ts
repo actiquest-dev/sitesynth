@@ -4,9 +4,9 @@
 export const seoConfig = {
     // Home page
     home: {
-        title: "Just synthesis | Where Product, Brand & Tech Align - SiteSynth",
-        description: "Where product, brand, and tech finally align. We help companies bridge strategy, design, and engineering to create digital products that scale.",
-        keywords: "strategic design, product development, brand strategy, full-stack development, design systems, AI innovation, UX design, web development, no silos synthesis",
+        title: "AI-Curated. Your Tech Synthesis. - SiteSynth",
+        description: "SiteSynth curates AI-assisted design and development — strategy, brand and tech aligned by human judgment, not automation.",
+        keywords: "AI curation, strategic design, product development, brand strategy, full-stack development, design systems, AI innovation, UX design, web development",
         get ogTitle() { return this.title },
         get ogDescription() { return this.description },
         get twitterTitle() { return this.title },
