@@ -2150,7 +2150,10 @@ const loadReferenceStatus = async () => {
       headers: { 'x-user-email': userEmail.value },
     })
     const data = await res.json().catch(() => ({}))
-    if (!res.ok || !data?.success) return
+    if (!res.ok || !data?.success) {
+      console.error('[References] Status error', { status: res.status, data })
+      return
+    }
     referenceStatus.value = data.data?.status || 'pending'
     referenceAnalysis.value = data.data?.analysis || null
     referenceAssets.value = data.data?.assets || []
@@ -2171,6 +2174,7 @@ const analyzeReferences = async () => {
     })
     const data = await res.json().catch(() => ({}))
     if (!res.ok || !data?.success) {
+      console.error('[References] Run error', { status: res.status, data })
       throw new Error(data?.error || 'Reference analysis failed')
     }
     const briefRes = await fetch(`/api/briefs/${selectedBrief.value.id}`, {
@@ -2192,6 +2196,7 @@ const analyzeReferences = async () => {
     await loadReferenceStatus()
     showToast('Reference analysis completed', 'success')
   } catch (error: any) {
+    console.error('[References] Analysis failed', error)
     referenceStatus.value = 'failed'
     showToast(error?.message || 'Reference analysis failed', 'error')
   } finally {
@@ -2211,15 +2216,16 @@ const generateDesignSpec = async () => {
         markdownContent: briefEditContent.value
       })
     })
-    const data = await res.json()
+    const data = await res.json().catch(() => ({}))
     if (data.success) {
       designSpec.value = data.data
       await loadReferenceStatus()
     } else {
+      console.error('[DesignSpec] Generate error', { status: res.status, data })
       alert('Failed to generate spec: ' + data.error)
     }
-  } catch (e) {
-    console.error(e)
+  } catch (e: any) {
+    console.error('[DesignSpec] Generate failed', e)
   } finally {
     isGeneratingSpec.value = false
   }
