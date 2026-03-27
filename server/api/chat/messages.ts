@@ -11,12 +11,9 @@ import { retrieveRelevantFileChunks } from '~~/server/utils/file-rag'
 
 const supabaseUrl = process.env.SUPABASE_URL
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-
-if (!supabaseUrl || !supabaseServiceKey) {
-  throw new Error('Missing Supabase credentials')
-}
-
-const supabase = createClient(supabaseUrl, supabaseServiceKey)
+const supabase = (supabaseUrl && supabaseServiceKey)
+  ? createClient(supabaseUrl, supabaseServiceKey)
+  : null
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || '')
 
 const geminiText = async (prompt: string, modelName = 'gemini-2.5-pro') => {
@@ -49,6 +46,14 @@ const ensurePlanningSections = (draft: string, userRequest: string) => {
 
 export default defineEventHandler(async (event) => {
   const method = event.node.req.method
+
+  if (!supabase) {
+    setResponseStatus(event, 500)
+    return {
+      success: false,
+      error: 'Missing Supabase credentials',
+    }
+  }
 
   // GET /api/chat/messages - Get conversation messages (anonymous or authenticated)
   if (method === 'GET') {
