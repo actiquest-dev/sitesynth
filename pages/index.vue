@@ -3,8 +3,8 @@
 
   <HeroIndex
     id="hero-index"
-    title="We curate the AI. <span class='glow-text'>You own the result.</span>"
-    subtitle="Where product, brand, and tech finally align — by design, not accident."
+    title="AI-Curated. <span class='glow-text'>Tech Synthesis.</span>"
+    subtitle="The first AI-curated dev studio in BeNeLux."
     backgroundImage="/assets/new-assets/test/sitesynth-animated-gradient-v2.svg"
     ctaText="Make Your Site"
     ctaHref="/pricing#pay-once-forever"
