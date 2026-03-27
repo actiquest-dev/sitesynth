@@ -4,7 +4,7 @@
 export const seoConfig = {
     // Home page
     home: {
-        title: "We Curate the AI. You Own the Result. - SiteSynth",
+        title: "AI-Curated. Your Tech Synthesis. - SiteSynth",
         description: "SiteSynth curates AI-assisted design and development — strategy, brand and tech aligned by human judgment, not automation.",
         keywords: "AI curation, strategic design, product development, brand strategy, full-stack development, design systems, AI innovation, UX design, web development",
         get ogTitle() { return this.title },
