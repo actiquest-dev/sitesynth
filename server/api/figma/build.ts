@@ -4,7 +4,7 @@ import { google } from '@ai-sdk/google'
 import { z } from 'zod'
 import { useDatabaseClient } from '~~/server/utils/supabase'
 import { issueBuildToken } from '~~/server/utils/figma-build-token'
-import { getAgent, getMastraInstance } from '~~/server/mastra'
+import { getAgent, getMastraInstance, generateWithFallback } from '~~/server/mastra'
 
 export default defineEventHandler(async (event) => {
   const userEmail = getHeader(event, 'x-user-email')
@@ -140,6 +140,7 @@ ${JSON.stringify(commandTemplates, null, 2)}
     `.trim()
 
     const figmaBuilderAgent = getAgent('figmaBuilderAgent')
+    const figmaBuilderAgentFallback = getAgent('figmaBuilderAgentFallback')
     if (!figmaBuilderAgent) {
       throw new Error('Figma builder agent is unavailable')
     }
@@ -149,7 +150,7 @@ ${JSON.stringify(commandTemplates, null, 2)}
     })
 
     const runBuilderAgent = async (prompt: string) => {
-      const result = await figmaBuilderAgent.generate(prompt, { output: agentSchema })
+      const result = await generateWithFallback(figmaBuilderAgent, figmaBuilderAgentFallback, prompt, { output: agentSchema })
       return result?.object?.plan || null
     }
 

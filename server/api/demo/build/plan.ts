@@ -2,7 +2,7 @@ import { defineEventHandler, readBody } from 'h3'
 import { z } from 'zod'
 import { useDatabaseClient } from '~~/server/utils/supabase'
 import { getDemoBuildToken } from '~~/server/utils/demo-build-token'
-import { getAgent } from '~~/server/mastra'
+import { getAgent, generateWithFallback } from '~~/server/mastra'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
@@ -72,13 +72,14 @@ Return STRICT JSON with title, slug, html, and css strings only.
   `.trim()
 
   const demoBuilderAgent = getAgent('demoBuilderAgent')
+  const demoBuilderAgentFallback = getAgent('demoBuilderAgentFallback')
   if (!demoBuilderAgent) {
     return { success: false, error: 'Demo builder agent is unavailable' }
   }
 
   let output
   try {
-    const result = await demoBuilderAgent.generate(prompt, { output: buildSchema })
+    const result = await generateWithFallback(demoBuilderAgent, demoBuilderAgentFallback, prompt, { output: buildSchema })
     output = result?.object || null
   } catch (error: any) {
     return { success: false, error: error?.message || 'Agent failed to generate' }

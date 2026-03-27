@@ -6,6 +6,7 @@ import { Agent } from '@mastra/core'
 import { google } from '@ai-sdk/google'
 
 const gemini = google('gemini-2.5-pro')
+const geminiFallback = google('gemini-2.0-pro')
 
 export const briefingAgent = new Agent({
   name: 'Viz - Briefing Specialist',
@@ -298,6 +299,31 @@ RULES:
 - JSON only
   `.trim(),
   model: gemini,
+})
+
+// Fallback agents using gemini-2.0-pro (used when 2.5-pro hits rate limits)
+export const demoBuilderAgentFallback = new Agent({
+  name: 'Demo Site Builder (Fallback)',
+  instructions: demoBuilderAgent.instructions,
+  model: geminiFallback,
+})
+
+export const artDirectorAgentFallback = new Agent({
+  name: 'Art Director (Fallback)',
+  instructions: artDirectorAgent.instructions,
+  model: geminiFallback,
+})
+
+export const referenceStrategistAgentFallback = new Agent({
+  name: 'Reference Strategist (Fallback)',
+  instructions: referenceStrategistAgent.instructions,
+  model: geminiFallback,
+})
+
+export const figmaBuilderAgentFallback = new Agent({
+  name: 'Figma Builder (Fallback)',
+  instructions: figmaBuilderAgent.instructions,
+  model: geminiFallback,
 })
 
 export function getInitialGreeting(mode: 'active' | 'passive', clientName?: string): string {

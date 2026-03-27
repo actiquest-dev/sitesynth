@@ -241,14 +241,29 @@ The output must be valid JSON matching the Art Direction Contract schema.`
       })).optional(),
     })
 
-    // Generate art direction using the agent's context
-    const { object: artDirection } = await generateObject({
-      model: google('gemini-2.5-pro'),
-      schema: artDirectionSchema,
-      system: artDirectorAgent.instructions,
-      prompt: systemPrompt,
-      temperature: 0.7,
-    })
+    // Generate art direction using the agent's context (with 2.0-pro fallback)
+    const modelsToTry = [google('gemini-2.5-pro'), google('gemini-2.0-pro')]
+    let artDirection: any = null
+    for (const model of modelsToTry) {
+      try {
+        const { object } = await generateObject({
+          model,
+          schema: artDirectionSchema,
+          system: artDirectorAgent.instructions,
+          prompt: systemPrompt,
+          temperature: 0.7,
+        })
+        artDirection = object
+        break
+      } catch (err: any) {
+        const isRateLimit = err?.message?.includes('429') || err?.message?.includes('overloaded') || err?.message?.includes('RESOURCE_EXHAUSTED')
+        if (isRateLimit && model !== modelsToTry[modelsToTry.length - 1]) {
+          console.warn('[art-direction] Rate limit on', model, '— retrying with fallback model')
+          continue
+        }
+        throw err
+      }
+    }
 
     const { data: latestVersionRow, error: versionLookupError } = await db
       .from('brief_art_direction_versions')
