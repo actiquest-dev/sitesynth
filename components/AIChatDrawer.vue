@@ -156,13 +156,14 @@ const agentLabel = computed(() => {
 
 // Determine authentication status and get headers for API calls
 const getAuthHeaders = () => {
+  const headers: Record<string, string> = {}
   if (props.userEmail) {
-    // Authenticated user: pass email
-    return { 'x-user-email': props.userEmail }
-  } else {
-    // Anonymous user: pass device_id
-    return { 'x-device-id': deviceId }
+    headers['x-user-email'] = props.userEmail
   }
+  if (deviceId) {
+    headers['x-device-id'] = deviceId
+  }
+  return headers
 }
 
 // Parse markdown to HTML (simple version without external deps)
