@@ -1,13 +1,10 @@
 import { defineEventHandler, readBody, getHeader, getRouterParam, getQuery, createError } from 'h3'
 import { createClient } from '@supabase/supabase-js'
-import { generateText, tool } from 'ai'
-import { google } from '@ai-sdk/google'
-import { z } from 'zod'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 import { getAgent } from '~~/server/mastra'
 
 const briefingAgent = getAgent('briefingAgent')
 const consultantAgent = getAgent('consultantAgent')
-const criticAgent = getAgent('criticAgent')
 import { getAgentConfig } from '~~/server/utils/agent-config'
 import { getActiveWorkflow, getCurrentStepPrompt, buildWorkflowSystemPrompt } from '~~/server/utils/workflow-helper'
 import { retrieveRelevantFileChunks } from '~~/server/utils/file-rag'
@@ -20,6 +17,15 @@ if (!supabaseUrl || !supabaseServiceKey) {
 }
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey)
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || '')
+
+const geminiText = async (prompt: string, modelName = 'gemini-2.5-pro') => {
+  const model = genAI.getGenerativeModel({ model: modelName })
+  const result = await model.generateContent({
+    contents: [{ role: 'user', parts: [{ text: prompt }] }],
+  })
+  return result.response.text()
+}
 
 const ensurePlanningSections = (draft: string, userRequest: string) => {
   if (!draft) return draft
@@ -173,29 +179,6 @@ Be concise, professional, proactive. Respond in the same language as the brief c
         systemPrompt = buildWorkflowSystemPrompt(systemPrompt, workflow, currentStepPrompt)
       }
 
-      // 3. Define Tools
-      const tools = isBriefMode ? {
-        draft_brief_update: tool({
-          description: 'Prepare an updated draft of the project brief without saving it.',
-          parameters: z.object({ new_markdown_content: z.string() }),
-          execute: async ({ new_markdown_content }) => {
-            return { draft_markdown: new_markdown_content }
-          }
-        }),
-        evaluate_design_quality: tool({
-          description: 'Оценить дизайн-макет.',
-          parameters: z.object({ description: z.string() }),
-          execute: async ({ description }) => {
-            const result = await generateText({
-              model: google('gemini-2.5-pro'),
-              system: criticAgent.instructions,
-              messages: [{ role: 'user', content: `Оцени этот дизайн: ${description}` }]
-            })
-            return result.text
-          }
-        })
-      } : undefined
-
       const shouldDraftUpdate =
         isBriefMode &&
         typeof message === 'string' &&
@@ -245,45 +228,24 @@ Be concise, professional, proactive. Respond in the same language as the brief c
       }
 
       // 5. Generate Response
-      const result = await generateText({
-        model: agent.model,
-        system: systemPrompt,
-        messages: [
-          ...history.map((m: any) => ({ role: m.role as 'user' | 'assistant', content: m.content })),
-          { role: 'user', content: message }
-        ],
-        temperature: 0.7,
-        maxTokens: 4096,
-        tools,
-        toolChoice: (shouldDraftUpdate || shouldConvertPlanningToBrief) ? { type: 'tool', toolName: 'draft_brief_update' } : 'auto',
-        maxSteps: 5,
-      })
+      const conversationContext = history
+        .map((m: any) => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`)
+        .join('\n\n')
 
-      let response = result.text || ''
+      let agentInput = message
+      if (conversationContext) {
+        agentInput = `<conversation>\n${conversationContext}\n</conversation>\n\nNew message from user:\n${message}`
+      }
+
+      const result = await agent.generate(agentInput)
+
+      let response = result?.text || result?.content || String(result || '')
       let briefDraft: string | null = null
-      if (result.toolResults && result.toolResults.length > 0) {
-        for (const tr of result.toolResults) {
-          if (tr.toolName === 'draft_brief_update') {
-            if (typeof tr.result === 'string') {
-              briefDraft = tr.result
-            } else if (tr.result && typeof tr.result === 'object' && 'draft_markdown' in tr.result) {
-              briefDraft = String((tr.result as any).draft_markdown || '')
-            }
-          }
-        }
-      }
-      if (!response && briefDraft) {
-        response = 'Draft prepared. Review changes and press Save to persist (not saved yet).'
-      } else if (!response && result.toolResults && result.toolResults.length > 0) {
-        response = 'Draft prepared. Review changes and press Save to persist (not saved yet).'
-      }
 
       // Deterministic fallback: if the model answered without producing a draft,
       // generate the updated brief directly and return it to the client.
       if ((shouldDraftUpdate || shouldConvertPlanningToBrief) && !briefDraft && currentBriefContent) {
-        const draftResult = await generateText({
-          model: agent.model,
-          system: `You rewrite project briefs.
+        const draftPrompt = `You rewrite project briefs.
 
 Return the FULL updated brief as markdown only.
 Do not explain what you changed.
@@ -291,18 +253,18 @@ Do not add preamble or code fences.
 Preserve useful structure and headings.
 Apply the user's requested edits directly to the existing brief.
 If the user is discussing Figma structure, wireframes, mockups, screens, or deliverables, convert those ideas into explicit brief content under a dedicated section named "## Planned Figma Structure" or "## Design Deliverables". Create that section if needed.
-Never promise future work. Fold the plan into the brief now.`,
-          messages: [
-            {
-              role: 'user',
-              content: `Current brief:\n\n${currentBriefContent}\n\nUser request:\n${message}\n\nReturn the full updated brief in markdown only.`,
-            },
-          ],
-          temperature: 0.4,
-          maxTokens: 4096,
-        })
+Never promise future work. Fold the plan into the brief now.
 
-        briefDraft = ensurePlanningSections((draftResult.text || '').trim(), String(message))
+Current brief:
+${currentBriefContent}
+
+User request:
+${message}
+
+Return the full updated brief in markdown only.`
+
+        const draftText = await geminiText(draftPrompt, 'gemini-2.5-pro')
+        briefDraft = ensurePlanningSections(draftText.trim(), String(message))
         response = 'Draft prepared. Review changes and press Save to persist (not saved yet).'
       }
 
