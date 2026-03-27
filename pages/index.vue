@@ -3,8 +3,8 @@
 
   <HeroIndex
     id="hero-index"
-    title="No silos. <span class='glow-text'>Just synthesis.</span>"
-    subtitle="Where product, brand, and tech finally align"
+    title="We curate the AI. <span class='glow-text'>You own the result.</span>"
+    subtitle="Where product, brand, and tech finally align — by design, not accident."
     backgroundImage="/assets/new-assets/test/sitesynth-animated-gradient-v2.svg"
     ctaText="Make Your Site"
     ctaHref="/pricing#pay-once-forever"
