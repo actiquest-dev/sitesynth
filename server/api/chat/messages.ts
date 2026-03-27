@@ -1,4 +1,4 @@
-import { defineEventHandler, readBody, getHeader, getRouterParam, getQuery, createError } from 'h3'
+import { defineEventHandler, readBody, getHeader, getRouterParam, getQuery, createError, setResponseStatus } from 'h3'
 import { createClient } from '@supabase/supabase-js'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { getAgent } from '~~/server/mastra'
@@ -281,7 +281,12 @@ Return the full updated brief in markdown only.`
       return { status: 'success', message: response, messages: allMessages || [], briefDraft: briefDraft || undefined }
     } catch (error: any) {
       console.error('Chat error:', error)
-      return createError({ statusCode: 500, statusMessage: error.message })
+      setResponseStatus(event, 500)
+      return {
+        success: false,
+        error: error?.message || 'Chat error',
+        details: error?.cause?.message || undefined,
+      }
     }
   }
 
