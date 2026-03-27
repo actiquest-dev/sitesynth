@@ -52,17 +52,17 @@ const competitorSchema = z.object({
 })
 
 const referenceSummarySchema = z.object({
-  recommended_direction: z.string(),
-  style_keywords: z.array(z.string()).min(3).max(8),
-  market_patterns: z.array(z.string()).min(3).max(8),
-  opportunities_to_differentiate: z.array(z.string()).min(3).max(8),
+  recommended_direction: z.string().default(''),
+  style_keywords: z.array(z.string()).default([]),
+  market_patterns: z.array(z.string()).default([]),
+  opportunities_to_differentiate: z.array(z.string()).default([]),
   recommended_references: z.array(z.object({
-    source_url: z.string(),
-    title: z.string(),
-    reason: z.string(),
-  })).min(1).max(6),
-  do: z.array(z.string()).min(3).max(8),
-  avoid: z.array(z.string()).min(3).max(8),
+    source_url: z.string().default(''),
+    title: z.string().default(''),
+    reason: z.string().default(''),
+  })).default([]),
+  do: z.array(z.string()).default([]),
+  avoid: z.array(z.string()).default([]),
 })
 
 const REFERENCE_SECTION_START = '<!-- REFERENCE_ANALYSIS_START -->'
