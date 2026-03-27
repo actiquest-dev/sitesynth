@@ -1,5 +1,4 @@
-import { generateText } from 'ai'
-import { google } from '@ai-sdk/google'
+import { geminiText } from './gemini'
 import {
   BRIEF_GENERATION_SKILL,
   type BriefData,
@@ -24,23 +23,21 @@ export async function extractBriefDataFromConversation(
   try {
     const conversationText = messages.map((m) => `${m.role}: ${m.content}`).join('\n\n')
 
-    const { text } = await generateText({
-      model: google('gemini-2.5-pro'),
-      system: `Extract project brief information from this conversation. Return JSON only.
-      
-Extract these fields if mentioned:
-- projectName, company, companyMission, businessGoal, scope
-- targetAudience, budget, timeline, competitors, deliverables
-- features (must-have), painPoints, existingAssets, referenceLinks
-
-Return only valid JSON object.`,
-      messages: [
-        {
-          role: 'user',
-          content: `Extract brief data:\n\n${conversationText}`,
-        },
-      ],
-    })
+    const { data: text } = await geminiText(
+      [
+        'Extract project brief information from this conversation. Return JSON only.',
+        '',
+        'Extract these fields if mentioned:',
+        '- projectName, company, companyMission, businessGoal, scope',
+        '- targetAudience, budget, timeline, competitors, deliverables',
+        '- features (must-have), painPoints, existingAssets, referenceLinks',
+        '',
+        'Return only valid JSON object.',
+        '',
+        'Conversation:',
+        conversationText,
+      ].join('\n')
+    )
 
     const cleanedText = cleanJsonResponse(text)
     const briefData = JSON.parse(cleanedText)
@@ -124,18 +121,19 @@ ${briefData.conversationSummary || 'No conversation data'}
 ${fileContext}
 `
 
-    const { text } = await generateText({
-      model: google('gemini-2.5-pro'),
-      system: BRIEF_GENERATION_SKILL,
-      messages: [
-        {
-          role: 'user',
-          content: `Generate professional 8-section brief from this data:\n\n${dataContext}\n\nReturn valid JSON only.`,
-        },
-      ],
-      temperature: 0.7,
-      maxTokens: 2500,
-    })
+    const { data: text } = await geminiText(
+      [
+        BRIEF_GENERATION_SKILL,
+        '',
+        'Generate professional 8-section brief from this data:',
+        '',
+        dataContext,
+        '',
+        'Return valid JSON only.',
+      ].join('\n'),
+      undefined,
+      { temperature: 0.7, maxOutputTokens: 2500 }
+    )
 
     const cleanedText = cleanJsonResponse(text)
     const brief = JSON.parse(cleanedText)

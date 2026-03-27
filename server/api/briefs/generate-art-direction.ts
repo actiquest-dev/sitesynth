@@ -14,11 +14,10 @@
  */
 
 import { defineEventHandler, readBody, getHeader } from 'h3'
-import { generateObject } from 'ai'
-import { google } from '@ai-sdk/google'
 import { z } from 'zod'
 import { useDatabaseClient } from '~~/server/utils/supabase'
 import { getAgent } from '~~/server/mastra'
+import { geminiJson } from '~~/server/utils/gemini'
 
 const artDirectorAgent = getAgent('artDirectorAgent')
 
@@ -243,28 +242,18 @@ The output must be valid JSON matching the Art Direction Contract schema.`
       })).optional(),
     })
 
-    // Generate art direction using the agent's context (with 2.0-pro fallback)
-    const modelsToTry = [google('gemini-2.5-pro'), google('gemini-2.0-pro')]
-    let artDirection: any = null
-    for (const model of modelsToTry) {
-      try {
-        const { object } = await generateObject({
-          model,
-          schema: artDirectionSchema,
-          system: artDirectorAgent.instructions,
-          prompt: systemPrompt,
-          temperature: 0.7,
-        })
-        artDirection = object
-        break
-      } catch (err: any) {
-        const isRateLimit = err?.message?.includes('429') || err?.message?.includes('overloaded') || err?.message?.includes('RESOURCE_EXHAUSTED')
-        if (isRateLimit && model !== modelsToTry[modelsToTry.length - 1]) {
-          console.warn('[art-direction] Rate limit on', model, '— retrying with fallback model')
-          continue
-        }
-        throw err
-      }
+    const { data: artDirection, model } = await geminiJson<z.infer<typeof artDirectionSchema>>(
+      [
+        artDirectorAgent.instructions,
+        '',
+        systemPrompt,
+      ].join('\n')
+    )
+
+    const parsed = artDirectionSchema.safeParse(artDirection)
+    if (!parsed.success) {
+      console.error('[art-direction] Schema validation failed', parsed.error)
+      return { success: false, error: 'Failed to generate art direction', model }
     }
 
     const { data: latestVersionRow, error: versionLookupError } = await db
@@ -288,7 +277,7 @@ The output must be valid JSON matching the Art Direction Contract schema.`
         brief_id: briefId,
         user_email: userEmail,
         version: nextVersion,
-        art_direction_json: artDirection,
+        art_direction_json: parsed.data,
         source: 'generate-art-direction',
       })
 
@@ -300,7 +289,7 @@ The output must be valid JSON matching the Art Direction Contract schema.`
     const { error: updateError } = await db
       .from('briefs')
       .update({
-        art_direction_json: artDirection,
+        art_direction_json: parsed.data,
         updated_at: new Date().toISOString(),
       })
       .eq('id', briefId)
@@ -315,14 +304,15 @@ The output must be valid JSON matching the Art Direction Contract schema.`
       data: {
         briefId,
         version: nextVersion,
-        artDirection,
+        artDirection: parsed.data,
         summary: {
-          mood: artDirection.mood,
-          colors: Object.keys(artDirection.color_system).length,
-          sections: artDirection.section_blueprints?.length || 0,
-          antiPatterns: artDirection.anti_patterns?.length || 0,
-          fonts: [artDirection.typography.heading_font, artDirection.typography.body_font],
+          mood: parsed.data.mood,
+          colors: Object.keys(parsed.data.color_system).length,
+          sections: parsed.data.section_blueprints?.length || 0,
+          antiPatterns: parsed.data.anti_patterns?.length || 0,
+          fonts: [parsed.data.typography.heading_font, parsed.data.typography.body_font],
         },
+        model,
       },
     }
   } catch (error: any) {
