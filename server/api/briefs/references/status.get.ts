@@ -35,6 +35,7 @@ export default defineEventHandler(async (event) => {
       completedAt: brief.reference_completed_at || null,
       analysis: brief.reference_analysis_json || null,
       assets: assets || [],
+      logs: brief.reference_analysis_json?.logs || [],
     },
   }
 })

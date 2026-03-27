@@ -395,6 +395,10 @@ export async function runReferenceAnalysisPipeline(params: {
 }) {
   const { briefId, userEmail, markdownContent } = params
   const db = useDatabaseClient()
+  const logs: Array<{ ts: string; level: 'info' | 'warn' | 'error'; message: string }> = []
+  const log = (message: string, level: 'info' | 'warn' | 'error' = 'info') => {
+    logs.push({ ts: new Date().toISOString(), level, message })
+  }
 
   await db
     .from('briefs')
@@ -402,7 +406,9 @@ export async function runReferenceAnalysisPipeline(params: {
     .eq('id', briefId)
     .eq('user_email', userEmail)
 
+  log('Starting reference discovery')
   const discovered = await discoverReferences(markdownContent)
+  log(`Discovered ${discovered.urls.length} candidate URLs`)
   const candidatePages = discovered.urls.slice(0, 5)
 
   const capturedAssets = []
@@ -421,21 +427,25 @@ export async function runReferenceAnalysisPipeline(params: {
         label: index === 0 ? hostname : `${hostname}-${kind}`,
       })),
     })
+    log(`Captured ${capture.assets.length} screenshots for ${candidate.url}`)
     capturedAssets.push(...capture.assets.map((asset: any) => ({ ...asset, competitor, sourceType: (candidate as any).source || 'web_discovery' })))
   }
 
   if (capturedAssets.length === 0) {
+    log('No screenshots returned from capture service', 'error')
     throw new Error('Reference capture returned no screenshots')
   }
 
   const insertedAssets = []
   for (const asset of capturedAssets) {
+    log(`Uploading ${asset.fileName} to Drive`)
     const drive = await uploadScreenshotToDrive({
       userEmail,
       briefId,
       competitor: asset.competitor,
       asset,
     })
+    log(`Analyzing screenshot ${asset.fileName}`)
     const analysis = await analyzeAsset(asset)
 
     const row = {
@@ -468,6 +478,7 @@ export async function runReferenceAnalysisPipeline(params: {
   }
 
   const summary = await buildReferenceSummary(markdownContent, insertedAssets)
+  log('Reference summary generated')
 
   const referenceAnalysisPayload = {
     product_type: discovered.productType,
@@ -486,6 +497,7 @@ export async function runReferenceAnalysisPipeline(params: {
       notes: entry.reference.notes,
     })),
     summary,
+    logs,
   }
 
   const mergedBriefContent = mergeReferenceSectionIntoBrief(markdownContent, summary, insertedAssets)

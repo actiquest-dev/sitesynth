@@ -483,6 +483,21 @@
                           </button>
                         </div>
                       </div>
+                      <div v-if="referenceLogs.length" class="space-y-2">
+                        <p class="text-xs uppercase tracking-[0.18em] text-[#777]">Reference logs</p>
+                        <div class="border border-[#262626] bg-[#0b0b0b] max-h-56 overflow-auto">
+                          <div
+                            v-for="(log, idx) in referenceLogs"
+                            :key="`${log.ts}-${idx}`"
+                            class="px-3 py-2 border-b border-[#1f1f1f] text-[11px] text-[#cfcfcf] flex items-start gap-2"
+                          >
+                            <span class="text-[#8b8b8b] whitespace-nowrap">{{ log.ts }}</span>
+                            <span :class="log.level === 'error' ? 'text-[#ff8b8b]' : log.level === 'warn' ? 'text-[#ffd28b]' : 'text-[#cfcfcf]'">
+                              {{ log.message }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </section>
 
@@ -1707,6 +1722,7 @@ const isAnalyzingReferences = ref(false)
 const referenceStatus = ref<'pending' | 'processing' | 'completed' | 'failed'>('pending')
 const referenceAnalysis = ref<any | null>(null)
 const referenceAssets = ref<any[]>([])
+const referenceLogs = ref<Array<{ ts: string; level: string; message: string }>>([])
 const isLoadingReferenceStatus = ref(false)
 const isBuildingFigma = ref(false)
 const figmaBuildStatus = ref<string | null>(null)
@@ -2157,6 +2173,7 @@ const loadReferenceStatus = async () => {
     referenceStatus.value = data.data?.status || 'pending'
     referenceAnalysis.value = data.data?.analysis || null
     referenceAssets.value = data.data?.assets || []
+    referenceLogs.value = data.data?.logs || []
   } finally {
     isLoadingReferenceStatus.value = false
   }
@@ -3016,6 +3033,7 @@ const openBriefEditor = (brief: any) => {
   referenceStatus.value = brief.reference_status || 'pending'
   referenceAnalysis.value = brief.reference_analysis_json || null
   referenceAssets.value = []
+  referenceLogs.value = Array.isArray(brief.reference_analysis_json?.logs) ? brief.reference_analysis_json.logs : []
   loadBriefVersions(brief.id)
 
   // Open chat drawer in post-brief mode so AI can assist with this brief

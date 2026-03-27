@@ -29,11 +29,24 @@ export default defineEventHandler(async (event) => {
     })
     return { success: true, data: result }
   } catch (pipelineError: any) {
+    const errorMessage = pipelineError?.message || 'Reference analysis failed'
     await db
       .from('briefs')
-      .update({ reference_status: 'failed', updated_at: new Date().toISOString() })
+      .update({
+        reference_status: 'failed',
+        reference_analysis_json: {
+          logs: [
+            {
+              ts: new Date().toISOString(),
+              level: 'error',
+              message: errorMessage,
+            },
+          ],
+        },
+        updated_at: new Date().toISOString(),
+      })
       .eq('id', briefId)
       .eq('user_email', userEmail)
-    return { success: false, error: pipelineError?.message || 'Reference analysis failed' }
+    return { success: false, error: errorMessage }
   }
 })
