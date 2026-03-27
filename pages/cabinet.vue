@@ -1580,6 +1580,7 @@ import { marked } from 'marked'
 import FormDataDisplay from '@/components/FormDataDisplay.vue'
 import { useGoogleAuth } from '@/composables/useGoogleAuth'
 import { useChatDrawer } from '@/composables/useChatDrawer'
+import { useAnonymousChat } from '@/composables/useAnonymousChat'
 import { briefQuestions } from '@/config/brief-questions'
 import type { BriefQuestion } from '@/config/brief-questions'
 
@@ -2750,14 +2751,26 @@ const chatTime = (iso?: string) => {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
 
-const getChatUserEmail = () => userEmail.value || 'guest@sitesynth.com'
+const { deviceId } = useAnonymousChat()
+
+const getChatHeaders = (extra: Record<string, string> = {}) => {
+  const headers: Record<string, string> = { ...extra }
+  if (userEmail.value) {
+    headers['x-user-email'] = userEmail.value
+    return headers
+  }
+  if (deviceId) {
+    headers['x-device-id'] = deviceId
+  }
+  return headers
+}
 
 const loadConversationMessages = async (conversationId: string) => {
   chatLoading.value = true
   chatError.value = ''
   try {
     const response = await fetch(`/api/chat/messages?conversation_id=${conversationId}`, {
-      headers: { 'x-user-email': getChatUserEmail() },
+      headers: getChatHeaders(),
     })
     if (!response.ok) throw new Error('Failed to load messages')
     const data = await response.json()
@@ -2784,10 +2797,7 @@ const createNewConversation = async () => {
   try {
     const response = await fetch('/api/chat/conversations', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-user-email': getChatUserEmail(),
-      },
+      headers: getChatHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({
         title: `Cabinet Chat - ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`,
         agentType: 'briefing',
@@ -2819,10 +2829,7 @@ const deleteConversation = async (conversationId: string) => {
   try {
     const response = await fetch('/api/chat/conversations', {
       method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-user-email': getChatUserEmail(),
-      },
+      headers: getChatHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({ conversationId }),
     })
 
@@ -2857,7 +2864,7 @@ const loadConversations = async () => {
   chatError.value = ''
   try {
     const response = await fetch('/api/chat/conversations?agentType=briefing', {
-      headers: { 'x-user-email': getChatUserEmail() },
+      headers: getChatHeaders(),
     })
     if (!response.ok) throw new Error('Failed to load chats')
 
@@ -2899,10 +2906,7 @@ const sendChatMessage = async () => {
   try {
     const response = await fetch('/api/chat/messages', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-user-email': getChatUserEmail(),
-      },
+      headers: getChatHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({
         conversation_id: selectedConversationId.value,
         message,
