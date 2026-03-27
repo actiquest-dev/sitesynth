@@ -1,4 +1,6 @@
 import { readFile } from 'node:fs/promises'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { z } from 'zod'
 
 export const curatedReferenceEntrySchema = z.object({
@@ -37,8 +39,34 @@ export type CuratedReferenceEntry = z.infer<typeof curatedReferenceEntrySchema>
 
 const seedPath = new URL('../data/curated-reference-library/seed.json', import.meta.url)
 
+const resolveSeedPath = async () => {
+  try {
+    await readFile(seedPath, 'utf8')
+    return seedPath
+  } catch {
+    const moduleDir = path.dirname(fileURLToPath(import.meta.url))
+    const candidates = [
+      path.resolve(moduleDir, '../data/curated-reference-library/seed.json'),
+      path.resolve(process.cwd(), 'server/data/curated-reference-library/seed.json'),
+      path.resolve(process.cwd(), 'data/curated-reference-library/seed.json'),
+    ]
+
+    for (const candidate of candidates) {
+      try {
+        await readFile(candidate, 'utf8')
+        return new URL(`file://${candidate}`)
+      } catch {
+        // try next
+      }
+    }
+
+    return seedPath
+  }
+}
+
 export async function loadCuratedReferenceLibrary() {
-  const raw = await readFile(seedPath, 'utf8')
+  const resolved = await resolveSeedPath()
+  const raw = await readFile(resolved, 'utf8')
   return curatedReferenceLibrarySchema.parse(JSON.parse(raw))
 }
 
