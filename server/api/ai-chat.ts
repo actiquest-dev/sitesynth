@@ -36,12 +36,7 @@ export default defineEventHandler(async (event) => {
   const startTime = Date.now()
 
   try {
-    const { getAgentForMode } = await import('@/server/agents')
-    const {
-      getVoltAgentInstance,
-      logAgentExecution,
-      logAgentError,
-    } = await import('@/server/voltagent')
+    const { getAgent, logAgentExecution, logAgentError } = await import('@/server/mastra')
 
     const body = (await readBody(event)) as ChatRequest
 
@@ -50,13 +45,12 @@ export default defineEventHandler(async (event) => {
     }
 
     const mode = body.context?.mode || 'passive'
-    const voltAgent = getVoltAgentInstance()
 
     // Get appropriate agent based on mode
-    const agent = getAgentForMode(mode)
+    const agent = mode === 'active' ? getAgent('briefingAgent') : getAgent('consultantAgent')
 
-    voltAgent.logger.info(`🤖 [${mode.toUpperCase()}] Processing chat request`, {
-      agent: agent.name,
+    console.info(`[mastra] 🤖 [${mode.toUpperCase()}] Processing chat request`, {
+      agent: agent?.name,
       messageLength: body.message.length,
       historyLength: body.conversationHistory?.length || 0,
       userId: body.context?.userId,
@@ -65,26 +59,24 @@ export default defineEventHandler(async (event) => {
     // Call agent with conversation context
     const aiResponse = await callAgent(agent, body.message, body.conversationHistory, body.context)
 
-    // Log successful execution with VoltOps
+    // Log successful execution
     const executionTime = Date.now() - startTime
-    logAgentExecution(agent.name, mode, body.message, executionTime)
+    logAgentExecution(agent?.name || 'unknown', mode, body.message, executionTime)
 
     return {
       success: true,
       message: aiResponse,
-      agent: agent.name,
+      agent: agent?.name,
       mode,
       executionTime,
     }
   } catch (error: any) {
-    const { getVoltAgentInstance, logAgentError } = await import('@/server/voltagent')
+    const { logAgentError } = await import('@/server/mastra')
     const executionTime = Date.now() - startTime
-    const voltAgent = getVoltAgentInstance()
 
-    voltAgent.logger.error('❌ Chat endpoint error', {
+    console.error('[mastra] ❌ Chat endpoint error', {
       error: error.message,
       executionTime,
-      stack: error.stack,
     })
 
     logAgentError('chat-endpoint', error, { executionTime })
@@ -162,8 +154,7 @@ ${context?.userProjects ? `\n## Their Projects/Orders:\n${context.userProjects}`
 }
 
 /**
- * Call VoltAgent with conversation history and observability
- * Executes the agent's logic with full VoltOps telemetry support
+ * Call Mastra agent with conversation history
  */
 async function callAgent(
   agent: any,
@@ -171,16 +162,7 @@ async function callAgent(
   conversationHistory: ChatMessage[],
   context?: ChatContext
 ): Promise<string> {
-  const voltAgent = getVoltAgentInstance()
-
   try {
-    voltAgent.logger.debug('🔄 Calling VoltAgent', {
-      agent: agent.name,
-      mode: context?.mode || 'passive',
-      messageLength: userMessage.length,
-      historySize: conversationHistory?.length || 0,
-    })
-
     // Build conversation context for agent
     const conversationContext = conversationHistory
       .map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`)
@@ -193,36 +175,21 @@ async function callAgent(
       agentInput = `<conversation>\n${conversationContext}\n</conversation>\n\nNew message from user:\n${userMessage}`
     }
 
-    // Add user project context if available
     if (context?.userProjects) {
       agentInput += `\n\n<user_context>\nPast projects: ${context.userProjects}\n</user_context>`
     }
 
-    const response = await agent.generateText(agentInput)
-    const responseText = typeof response?.text === 'string'
-      ? response.text
-      : typeof response === 'string'
-        ? response
-        : response && typeof response === 'object'
-          ? (response.text || response.content || response.message || JSON.stringify(response))
-          : String(response || 'No response from agent')
+    const result = await agent.generate(agentInput)
+    const responseText = result?.text || result?.content || String(result || '')
 
-    if (typeof responseText === 'string') {
-      voltAgent.logger.debug('✅ Agent response received', {
-        agent: agent.name,
-        responseLength: responseText.length,
-      })
-      return responseText
-    }
-
-    return 'No response from agent'
+    return responseText || 'No response from agent'
   } catch (error: any) {
-    voltAgent.logger.warn(`⚠️  Agent execute failed, falling back to direct API`, {
-      agent: agent.name,
+    console.warn('[mastra] ⚠️ Agent failed, falling back to direct API', {
+      agent: agent?.name,
       error: error.message,
     })
 
-    // Fallback to direct API call if agent fails
+    // Fallback to direct Google API call if agent fails
     const systemPrompt = buildSystemPrompt(context?.mode || 'passive', context)
     return await callGoogle(
       userMessage,

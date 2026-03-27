@@ -3,7 +3,11 @@ import { createClient } from '@supabase/supabase-js'
 import { generateText, tool } from 'ai'
 import { google } from '@ai-sdk/google'
 import { z } from 'zod'
-import { briefingAgent, consultantAgent, architectAgent, criticAgent } from '../../agents'
+import { getAgent } from '~~/server/mastra'
+
+const briefingAgent = getAgent('briefingAgent')
+const consultantAgent = getAgent('consultantAgent')
+const criticAgent = getAgent('criticAgent')
 import { getAgentConfig } from '~~/server/utils/agent-config'
 import { getActiveWorkflow, getCurrentStepPrompt, buildWorkflowSystemPrompt } from '~~/server/utils/workflow-helper'
 import { retrieveRelevantFileChunks } from '~~/server/utils/file-rag'
