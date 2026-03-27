@@ -65,9 +65,14 @@ const resolveSeedPath = async () => {
 }
 
 export async function loadCuratedReferenceLibrary() {
-  const resolved = await resolveSeedPath()
-  const raw = await readFile(resolved, 'utf8')
-  return curatedReferenceLibrarySchema.parse(JSON.parse(raw))
+  try {
+    const resolved = await resolveSeedPath()
+    const raw = await readFile(resolved, 'utf8')
+    return curatedReferenceLibrarySchema.parse(JSON.parse(raw))
+  } catch (error) {
+    console.warn('[curated-reference-library] seed.json not found, falling back to empty list', error)
+    return curatedReferenceLibrarySchema.parse([])
+  }
 }
 
 export function scoreCuratedReference(params: {
