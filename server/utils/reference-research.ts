@@ -40,7 +40,6 @@ async function geminiText(parts: Array<{ text: string } | { inlineData: { data: 
 import { useDatabaseClient } from '~~/server/utils/supabase'
 import { getDriveClient, getOrCreateChildFolder, getOrCreateUserRootFolder } from '~~/server/utils/google-drive'
 import { selectCuratedReferenceShortlist } from '~~/server/utils/curated-reference-library'
-import { getAgent, generateWithFallback } from '~~/server/mastra'
 
 const competitorSchema = z.object({
   product_type: z.string(),
@@ -385,10 +384,8 @@ Reference analyses:
 ${context}
     `.trim()
 
-  const agent = getAgent('referenceStrategistAgent')
-  const agentFallback = getAgent('referenceStrategistAgentFallback')
-  const result = await generateWithFallback(agent, agentFallback, prompt, { output: referenceSummarySchema })
-  return result.object
+  const object = await geminiJson<z.infer<typeof referenceSummarySchema>>(prompt)
+  return referenceSummarySchema.parse(object)
 }
 
 export async function runReferenceAnalysisPipeline(params: {
