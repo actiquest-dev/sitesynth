@@ -424,6 +424,10 @@ export async function runReferenceAnalysisPipeline(params: {
     capturedAssets.push(...capture.assets.map((asset: any) => ({ ...asset, competitor, sourceType: (candidate as any).source || 'web_discovery' })))
   }
 
+  if (capturedAssets.length === 0) {
+    throw new Error('Reference capture returned no screenshots')
+  }
+
   const insertedAssets = []
   for (const asset of capturedAssets) {
     const drive = await uploadScreenshotToDrive({
