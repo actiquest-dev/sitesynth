@@ -418,20 +418,34 @@ export async function runReferenceAnalysisPipeline(params: {
     const pageKinds = Array.isArray((candidate as any).capture_targets) && (candidate as any).capture_targets.length
       ? (candidate as any).capture_targets.slice(0, 3)
       : ['homepage']
-    const capture = await callCaptureService({
-      briefId,
-      competitor,
-      pages: pageKinds.map((kind: string, index: number) => ({
-        url: candidate.url,
-        kind,
-        label: index === 0 ? hostname : `${hostname}-${kind}`,
-      })),
-    })
-    log(`Captured ${capture.assets.length} screenshots for ${candidate.url}`)
-    capturedAssets.push(...capture.assets.map((asset: any) => ({ ...asset, competitor, sourceType: (candidate as any).source || 'web_discovery' })))
+    log(`Requesting capture for ${candidate.url}`)
+    try {
+      const capture = await callCaptureService({
+        briefId,
+        competitor,
+        pages: pageKinds.map((kind: string, index: number) => ({
+          url: candidate.url,
+          kind,
+          label: index === 0 ? hostname : `${hostname}-${kind}`,
+        })),
+      })
+      log(`Captured ${capture.assets.length} screenshots for ${candidate.url}`)
+      capturedAssets.push(...capture.assets.map((asset: any) => ({ ...asset, competitor, sourceType: (candidate as any).source || 'web_discovery' })))
+    } catch (error: any) {
+      log(`Capture failed for ${candidate.url}: ${error?.message || 'unknown error'}`, 'warn')
+    }
   }
 
   if (capturedAssets.length === 0) {
+    await db
+      .from('briefs')
+      .update({
+        reference_status: 'failed',
+        reference_analysis_json: { logs },
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', briefId)
+      .eq('user_email', userEmail)
     log('No screenshots returned from capture service', 'error')
     throw new Error('Reference capture returned no screenshots')
   }
