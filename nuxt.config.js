@@ -158,6 +158,21 @@ export default defineNuxtConfig({
       priority: 0.8,
       lastmod: new Date().toISOString().split("T")[0],
     },
+    routes: [
+      { url: "/",                                 priority: 1.0, changefreq: "weekly" },
+      { url: "/ai-innovation",                    priority: 0.9 },
+      { url: "/brand-driven-product-strategy",    priority: 0.9 },
+      { url: "/ux-and-design-system",             priority: 0.9 },
+      { url: "/full-stack-implementation",        priority: 0.9 },
+      { url: "/pricing",                          priority: 0.9 },
+      { url: "/scoresynth",                       priority: 0.8 },
+      { url: "/about-us",                         priority: 0.7 },
+      { url: "/contact-us",                       priority: 0.7 },
+      { url: "/careers",                          priority: 0.6 },
+      { url: "/careers/full-stack-developer",     priority: 0.5 },
+      { url: "/careers/marketing-manager",        priority: 0.5 },
+      { url: "/careers/ux-ui-designer",           priority: 0.5 },
+    ],
   },
 
   vite: {

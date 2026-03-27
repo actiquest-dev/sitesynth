@@ -631,6 +631,7 @@ useSeoMeta({
   ogDescription:
     "One-time pricing for website design and development. Pay once. Own it forever.",
   ogImage: `${siteUrl}/assets/shareimage.png`,
+  ogImageAlt: "SiteSynth pricing plans",
   twitterTitle: "Website Pricing | SiteSynth",
   twitterDescription: "One-time pricing for website design and development. Pay once. Own it forever.",
 });
@@ -686,6 +687,27 @@ useHead({
             },
           ],
         },
+      }),
+    },
+  ],
+});
+
+// FAQPage structured data for rich snippets
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: faqItems.map((item) => ({
+          '@type': 'Question',
+          name: item.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: item.answer,
+          },
+        })),
       }),
     },
   ],

@@ -213,6 +213,18 @@ useHead({
       type: "application/ld+json",
       children: JSON.stringify(structuredData.marketingManagerJob(siteUrl)),
     },
+    {
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+          { "@type": "ListItem", position: 2, name: "Careers", item: `${siteUrl}/careers` },
+          { "@type": "ListItem", position: 3, name: "Marketing Manager", item: `${siteUrl}/careers/marketing-manager` },
+        ],
+      }),
+    },
   ],
 });
 </script>
