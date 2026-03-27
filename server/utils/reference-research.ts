@@ -1,7 +1,42 @@
 import { Readable } from 'node:stream'
-import { generateObject, generateText } from 'ai'
-import { google } from '@ai-sdk/google'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 import { z } from 'zod'
+
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || '')
+const GEMINI_MODELS = ['gemini-2.5-pro', 'gemini-2.0-pro', 'gemini-1.5-pro']
+
+async function geminiJson<T>(prompt: string): Promise<T> {
+  let lastError: any
+  for (const modelName of GEMINI_MODELS) {
+    try {
+      const model = genAI.getGenerativeModel({ model: modelName })
+      const result = await model.generateContent({
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        generationConfig: { responseMimeType: 'application/json', temperature: 0.5 },
+      })
+      return JSON.parse(result.response.text()) as T
+    } catch (err: any) {
+      console.warn(`[reference-research] ${modelName} failed:`, err?.message)
+      lastError = err
+    }
+  }
+  throw lastError
+}
+
+async function geminiText(parts: Array<{ text: string } | { inlineData: { data: string; mimeType: string } }>): Promise<string> {
+  let lastError: any
+  for (const modelName of GEMINI_MODELS) {
+    try {
+      const model = genAI.getGenerativeModel({ model: modelName })
+      const result = await model.generateContent({ contents: [{ role: 'user', parts }] })
+      return result.response.text()
+    } catch (err: any) {
+      console.warn(`[reference-research] ${modelName} failed:`, err?.message)
+      lastError = err
+    }
+  }
+  throw lastError
+}
 import { useDatabaseClient } from '~~/server/utils/supabase'
 import { getDriveClient, getOrCreateChildFolder, getOrCreateUserRootFolder } from '~~/server/utils/google-drive'
 import { selectCuratedReferenceShortlist } from '~~/server/utils/curated-reference-library'
@@ -159,26 +194,31 @@ async function searchDuckDuckGo(query: string) {
 }
 
 async function discoverReferences(markdownContent: string) {
-  const { object } = await generateObject({
-    model: google('gemini-2.5-pro'),
-    schema: competitorSchema,
-    prompt: `
+  const object = await geminiJson<z.infer<typeof competitorSchema>>(`
 You are identifying competitor product references for design research.
 
 From the brief below:
 - infer the product archetype,
 - infer the main surface type,
-- infer likely market tags,
-- infer likely style tags,
-- propose strong search queries,
-- list likely competitors or adjacent products worth studying.
+- infer likely market tags (array of 2-8 strings),
+- infer likely style tags (array of 2-8 strings),
+- propose strong search queries (array of 2-6 strings),
+- list likely competitors or adjacent products worth studying (array of 3-8 strings).
 
-Return structured JSON only.
+Return ONLY valid JSON matching this shape:
+{
+  "product_type": "string",
+  "surface_type": "string",
+  "market_tags": ["string"],
+  "style_tags": ["string"],
+  "search_queries": ["string"],
+  "competitor_names": ["string"],
+  "rationale": "string"
+}
 
 Brief:
 ${markdownContent}
-    `.trim(),
-  })
+  `.trim())
 
   const curatedShortlist = await selectCuratedReferenceShortlist({
     productType: object.product_type,
@@ -296,12 +336,9 @@ async function analyzeAsset(asset: any) {
   const imageResponse = await fetch(asset.publicUrl)
   const buffer = Buffer.from(await imageResponse.arrayBuffer())
 
-  const { text } = await generateText({
-    model: google('gemini-2.5-pro'),
-    prompt: [
-      {
-        type: 'text',
-        text: `Analyze this competitor screenshot for UI reference research.
+  const text = await geminiText([
+    {
+      text: `Analyze this competitor screenshot for UI reference research.
 
 Return compact structured prose with:
 - page purpose
@@ -313,14 +350,14 @@ Return compact structured prose with:
 - visual density
 - notable strengths
 - notable weaknesses`,
-      },
-      {
-        type: 'image',
-        image: buffer,
+    },
+    {
+      inlineData: {
+        data: buffer.toString('base64'),
         mimeType: 'image/png',
-      } as any,
-    ] as any,
-  })
+      },
+    },
+  ])
 
   return {
     summary: text,
@@ -350,20 +387,8 @@ ${context}
 
   const agent = getAgent('referenceStrategistAgent')
   const agentFallback = getAgent('referenceStrategistAgentFallback')
-  let object: any
-  if (agent) {
-    const result = await generateWithFallback(agent, agentFallback, prompt, { output: referenceSummarySchema })
-    object = result.object
-  } else {
-    const fallback = await generateObject({
-      model: google('gemini-2.5-pro'),
-      schema: referenceSummarySchema,
-      prompt,
-    })
-    object = fallback.object
-  }
-
-  return object
+  const result = await generateWithFallback(agent, agentFallback, prompt, { output: referenceSummarySchema })
+  return result.object
 }
 
 export async function runReferenceAnalysisPipeline(params: {
