@@ -590,9 +590,12 @@ export async function runReferenceAnalysisPipeline(params: {
   const rankedUrls = new Set(ranked.map(r => r.url))
 
   // Merge ranked results back with full candidate metadata
-  const candidatePages = discovered.urls
-    .filter(c => rankedUrls.has(c.url))
-    .slice(0, 5)
+  // If a ranked URL isn't in discovered.urls (e.g. Gemini suggested it from knowledge),
+  // still include it — don't silently drop Gemini's suggestions
+  const candidatePages = ranked.slice(0, 5).map(r => {
+    const found = discovered.urls.find(c => c.url === r.url)
+    return found || { url: r.url, query: 'gemini_suggested', source: 'ai_suggestion' }
+  })
 
   // If ranking filtered too aggressively, fall back to top candidates
   if (candidatePages.length < 3) {
