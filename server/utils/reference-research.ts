@@ -400,46 +400,51 @@ async function uploadScreenshotToDrive(params: {
   briefId: string
   competitor: string
   asset: any
-}) {
-  const driveClient = await getDriveClient()
-  const userRoot = await getOrCreateUserRootFolder(params.userEmail, driveClient)
-  const briefFolder = await getOrCreateChildFolder({
-    driveClient,
-    parentId: userRoot,
-    folderName: `Brief_${params.briefId}`,
-  })
-  const refFolder = await getOrCreateChildFolder({
-    driveClient,
-    parentId: briefFolder,
-    folderName: 'Competitor_References',
-  })
-  const competitorFolder = await getOrCreateChildFolder({
-    driveClient,
-    parentId: refFolder,
-    folderName: params.competitor,
-  })
+}): Promise<{ driveFileId: string | null; driveUrl: string | null }> {
+  try {
+    const driveClient = await getDriveClient()
+    const userRoot = await getOrCreateUserRootFolder(params.userEmail, driveClient)
+    const briefFolder = await getOrCreateChildFolder({
+      driveClient,
+      parentId: userRoot,
+      folderName: `Brief_${params.briefId}`,
+    })
+    const refFolder = await getOrCreateChildFolder({
+      driveClient,
+      parentId: briefFolder,
+      folderName: 'Competitor_References',
+    })
+    const competitorFolder = await getOrCreateChildFolder({
+      driveClient,
+      parentId: refFolder,
+      folderName: params.competitor,
+    })
 
-  const imageResponse = await fetch(params.asset.publicUrl)
-  const arrayBuffer = await imageResponse.arrayBuffer()
-  const buffer = Buffer.from(arrayBuffer)
+    const imageResponse = await fetch(params.asset.publicUrl)
+    const arrayBuffer = await imageResponse.arrayBuffer()
+    const buffer = Buffer.from(arrayBuffer)
 
-  const upload = await driveClient.files.create({
-    requestBody: {
-      name: params.asset.fileName,
-      parents: [competitorFolder],
-      mimeType: 'image/png',
-    },
-    media: {
-      mimeType: 'image/png',
-      body: Readable.from(buffer),
-    },
-    fields: 'id, webViewLink',
-    supportsAllDrives: true,
-  })
+    const upload = await driveClient.files.create({
+      requestBody: {
+        name: params.asset.fileName,
+        parents: [competitorFolder],
+        mimeType: 'image/png',
+      },
+      media: {
+        mimeType: 'image/png',
+        body: Readable.from(buffer),
+      },
+      fields: 'id, webViewLink',
+      supportsAllDrives: true,
+    })
 
-  return {
-    driveFileId: upload.data.id || null,
-    driveUrl: upload.data.webViewLink || null,
+    return {
+      driveFileId: upload.data.id || null,
+      driveUrl: upload.data.webViewLink || null,
+    }
+  } catch (err: any) {
+    console.warn('[drive-upload] skipped:', err?.message)
+    return { driveFileId: null, driveUrl: null }
   }
 }
 
@@ -710,53 +715,64 @@ export async function runReferenceAnalysisPipeline(params: {
   const workers: Promise<void>[] = []
 
   const processAsset = async (asset: any) => {
-    await log(`Uploading ${asset.fileName} to Drive`, 'info', {
-      phase: 'upload',
-      payload: { file: asset.fileName, competitor: asset.competitor },
-    })
-    const drive = await uploadScreenshotToDrive({
-      userEmail,
-      briefId,
-      competitor: asset.competitor,
-      asset,
-    })
-    await log(`Analyzing screenshot ${asset.fileName}`, 'info', {
-      phase: 'analyze',
-      payload: { file: asset.fileName, competitor: asset.competitor },
-    })
-    const analysis = await analyzeAsset(asset, briefContext)
+    try {
+      // Drive upload always returns silently on failure — never throws
+      const drive = await uploadScreenshotToDrive({
+        userEmail,
+        briefId,
+        competitor: asset.competitor,
+        asset,
+      })
+      if (drive.driveFileId) {
+        await log(`Uploaded ${asset.fileName} to Drive`, 'info', {
+          phase: 'upload',
+          payload: { file: asset.fileName, competitor: asset.competitor },
+        })
+      }
 
-    const row = {
-      brief_id: briefId,
-      source_url: asset.sourceUrl,
-      final_url: asset.finalUrl,
-      competitor: asset.competitor,
-      page_kind: asset.kind,
-      viewport: asset.viewport,
-      title: asset.title,
-      public_url: asset.publicUrl,
-      local_path: asset.fileName,
-      drive_file_id: drive.driveFileId,
-      drive_url: drive.driveUrl,
-      analysis_json: {
-        ...analysis,
-        source_type: asset.sourceType || 'web_discovery',
-      },
-      selected: true,
-      updated_at: new Date().toISOString(),
+      await log(`Analyzing screenshot ${asset.fileName}`, 'info', {
+        phase: 'analyze',
+        payload: { file: asset.fileName, competitor: asset.competitor },
+      })
+      const analysis = await analyzeAsset(asset, briefContext)
+
+      const row = {
+        brief_id: briefId,
+        source_url: asset.sourceUrl,
+        final_url: asset.finalUrl,
+        competitor: asset.competitor,
+        page_kind: asset.kind,
+        viewport: asset.viewport,
+        title: asset.title,
+        public_url: asset.publicUrl,
+        local_path: asset.fileName,
+        drive_file_id: drive.driveFileId,
+        drive_url: drive.driveUrl,
+        analysis_json: {
+          ...analysis,
+          source_type: asset.sourceType || 'web_discovery',
+        },
+        selected: true,
+        updated_at: new Date().toISOString(),
+      }
+
+      const { data } = await db
+        .from('brief_reference_assets')
+        .insert(row)
+        .select('*')
+        .single()
+
+      insertedAssets.push(data || row)
+      await log(`Stored asset ${asset.fileName} (drive=${drive.driveFileId ? 'ok' : 'skipped'})`, 'info', {
+        phase: 'upload',
+        payload: { file: asset.fileName, driveFileId: drive.driveFileId || null },
+      })
+    } catch (assetErr: any) {
+      await log(`Skipped asset ${asset.fileName}: ${assetErr?.message}`, 'warn', {
+        phase: 'upload',
+        payload: { file: asset.fileName, error: assetErr?.message },
+      })
     }
-
-    const { data } = await db
-      .from('brief_reference_assets')
-      .insert(row)
-      .select('*')
-      .single()
-
-    insertedAssets.push(data || row)
-    await log(`Stored asset ${asset.fileName} (drive=${drive.driveFileId ? 'ok' : 'skipped'})`, 'info', {
-      phase: 'upload',
-      payload: { file: asset.fileName, driveFileId: drive.driveFileId || null },
-    })
   }
 
   for (let i = 0; i < concurrencyLimit; i += 1) {
