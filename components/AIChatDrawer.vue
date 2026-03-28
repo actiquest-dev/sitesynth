@@ -139,7 +139,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:isOpen'])
 const { setBriefDraft, requestBriefDraftApply } = useChatDrawer()
-const { deviceId, setConversationId, setClaimToken } = useAnonymousChat()
+const { deviceId, setConversationId, setClaimToken, clearConversationId, clearClaimToken } = useAnonymousChat()
 
 const messages = ref<Message[]>([])
 const messageInput = ref('')
@@ -238,8 +238,12 @@ const initializeConversation = async () => {
     // Post-brief mode: reuse the brief's own conversation_id directly
     if (props.agentType === 'post-brief' && props.briefContext?.conversationId) {
       selectedConversationId.value = props.briefContext.conversationId
-      await loadConversationMessages(props.briefContext.conversationId)
-      return
+      try {
+        await loadConversationMessages(props.briefContext.conversationId)
+        return
+      } catch {
+        selectedConversationId.value = null
+      }
     }
 
     // For authenticated users, try to get existing conversations
@@ -260,8 +264,12 @@ const initializeConversation = async () => {
           console.log('Loaded existing conversation:', conversation.id)
 
           // Load messages for this conversation
-          await loadConversationMessages(conversation.id)
-          return
+          try {
+            await loadConversationMessages(conversation.id)
+            return
+          } catch {
+            selectedConversationId.value = null
+          }
         }
       }
     }
@@ -318,6 +326,13 @@ const loadConversationMessages = async (conversationId: string) => {
       method: 'GET',
       headers: authHeaders
     })
+
+    if (response.status === 403) {
+      clearConversationId()
+      clearClaimToken()
+      selectedConversationId.value = null
+      throw new Error('Chat access denied')
+    }
 
     if (response.ok) {
       const data = await response.json()
@@ -384,9 +399,13 @@ watch(() => props.isOpen, async (newVal) => {
   // If post-brief with a known conversation — just load messages, don't create new
   if (props.agentType === 'post-brief' && props.briefContext?.conversationId) {
     selectedConversationId.value = props.briefContext.conversationId
-    await loadConversationMessages(props.briefContext.conversationId)
-    if (messages.value.length === 0) {
-      await sendProactiveGreeting()
+    try {
+      await loadConversationMessages(props.briefContext.conversationId)
+      if (messages.value.length === 0) {
+        await sendProactiveGreeting()
+      }
+    } catch {
+      await initializeConversation()
     }
   } else if (!selectedConversationId.value) {
     await initializeConversation()
@@ -399,11 +418,15 @@ watch(() => props.agentType, async (newVal, oldVal) => {
     if (newVal === 'post-brief' && props.briefContext?.conversationId) {
       // Use the brief's conversation_id — this is the SAME conversation from presale
       selectedConversationId.value = props.briefContext.conversationId
-      await loadConversationMessages(props.briefContext.conversationId)
-      // Only greet if no AI messages exist yet in this conversation for post-brief
-      const hasPostBriefMessages = messages.value.some((m: Message) => m.role === 'assistant' && m.content?.includes('brief'))
-      if (!hasPostBriefMessages) {
-        await sendProactiveGreeting()
+      try {
+        await loadConversationMessages(props.briefContext.conversationId)
+        // Only greet if no AI messages exist yet in this conversation for post-brief
+        const hasPostBriefMessages = messages.value.some((m: Message) => m.role === 'assistant' && m.content?.includes('brief'))
+        if (!hasPostBriefMessages) {
+          await sendProactiveGreeting()
+        }
+      } catch {
+        await initializeConversation()
       }
     } else {
       // For other mode switches, reinitialize normally
@@ -450,6 +473,16 @@ const sendMessage = async () => {
 
     const data = await response.json()
     
+    if (response.status === 403) {
+      clearConversationId()
+      clearClaimToken()
+      selectedConversationId.value = null
+      error.value = data.error || 'Chat access denied'
+      messages.value = messages.value.filter(m => m.id !== userMessage.id)
+      await initializeConversation()
+      return
+    }
+
     if (response.ok && data.messages) {
       messages.value = data.messages
       await scrollToBottom()
