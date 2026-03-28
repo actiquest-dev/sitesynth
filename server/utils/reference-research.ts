@@ -327,7 +327,7 @@ async function callCaptureService(params: {
 }) {
   const envBaseUrl = process.env.REFERENCE_CAPTURE_SERVICE_URL
   const token = process.env.REFERENCE_CAPTURE_TOKEN || ''
-  const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL
+  const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL || !!process.env.REFERENCE_WORKER_ID
   const baseUrl = envBaseUrl || (isProd ? 'https://mcp.sitesynth.com/reference_capture' : 'http://127.0.0.1:8890')
 
   if (isProd && !token) {
@@ -561,7 +561,7 @@ export async function runReferenceAnalysisPipeline(params: {
     .eq('user_email', userEmail)
 
   await log('Starting reference discovery', 'info', { phase: 'discovery' })
-  const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL
+  const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL || !!process.env.REFERENCE_WORKER_ID
   const captureBaseUrl = process.env.REFERENCE_CAPTURE_SERVICE_URL || (isProd ? 'https://mcp.sitesynth.com/reference_capture' : 'http://127.0.0.1:8890')
   const tokenPresent = !!process.env.REFERENCE_CAPTURE_TOKEN
   await log(`Capture service config: baseUrl=${captureBaseUrl} token=${tokenPresent ? 'present' : 'missing'}`, 'info', {
