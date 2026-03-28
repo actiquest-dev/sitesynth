@@ -21,32 +21,44 @@ export default defineEventHandler(async (event) => {
   if (error) return { success: false, error: error.message }
   if (!brief) return { success: false, error: 'Brief not found' }
 
-  try {
-    const result = await runReferenceAnalysisPipeline({
-      briefId,
-      userEmail,
-      markdownContent: brief.markdown_content || '',
-    })
-    return { success: true, data: result }
-  } catch (pipelineError: any) {
-    const errorMessage = pipelineError?.message || 'Reference analysis failed'
-    await db
-      .from('briefs')
-      .update({
-        reference_status: 'failed',
-        reference_analysis_json: {
-          logs: [
-            {
-              ts: new Date().toISOString(),
-              level: 'error',
-              message: errorMessage,
-            },
-          ],
-        },
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', briefId)
-      .eq('user_email', userEmail)
-    return { success: false, error: errorMessage }
+  // Enqueue async job (worker will process)
+  const { data: existingJob } = await db
+    .from('reference_jobs')
+    .select('id, status')
+    .eq('brief_id', briefId)
+    .in('status', ['queued', 'claimed', 'running'])
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  if (existingJob?.id) {
+    return { success: true, data: { jobId: existingJob.id, status: existingJob.status } }
   }
+
+  const { data: job, error: jobError } = await db
+    .from('reference_jobs')
+    .insert({
+      brief_id: briefId,
+      user_email: userEmail,
+      status: 'queued',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    })
+    .select('id')
+    .maybeSingle()
+
+  if (jobError || !job) {
+    return { success: false, error: jobError?.message || 'Failed to enqueue reference job' }
+  }
+
+  await db
+    .from('briefs')
+    .update({
+      reference_status: 'queued',
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', briefId)
+    .eq('user_email', userEmail)
+
+  return { success: true, data: { jobId: job.id, status: 'queued' } }
 })
