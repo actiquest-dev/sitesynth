@@ -342,7 +342,7 @@ Return JSON: { "ranked": [{ "url": "...", "relevance_score": 1-5, "reason": "...
 async function callCaptureService(params: {
   briefId: string
   competitor: string
-  pages: Array<{ url: string; kind: string; label: string; viewport?: string }>
+  pages: Array<{ url: string; kind: string; label: string; viewport?: string; waitFor?: string }>
 }) {
   const envBaseUrl = process.env.REFERENCE_CAPTURE_SERVICE_URL
   const token = process.env.REFERENCE_CAPTURE_TOKEN || ''
@@ -650,14 +650,26 @@ export async function runReferenceAnalysisPipeline(params: {
       payload: { url: candidate.url, kinds: pageKinds, competitor },
     })
     try {
+      // Capture each page kind in both mobile and desktop viewports
+      const viewports = [
+        { width: 390, height: 844, name: 'mobile' },  // iPhone 14
+        { width: 1440, height: 900, name: 'desktop' }, // Standard desktop
+      ]
+
+      const pages = pageKinds.flatMap((kind: string, index: number) =>
+        viewports.map((viewport) => ({
+          url: candidate.url,
+          kind,
+          label: index === 0 ? `${hostname}-${viewport.name}` : `${hostname}-${kind}-${viewport.name}`,
+          viewport: `${viewport.width}x${viewport.height}`,
+          waitFor: 'networkidle2', // Wait for page to fully load (max 2 concurrent requests)
+        }))
+      )
+
       const capture = await callCaptureService({
         briefId,
         competitor,
-        pages: pageKinds.map((kind: string, index: number) => ({
-          url: candidate.url,
-          kind,
-          label: index === 0 ? hostname : `${hostname}-${kind}`,
-        })),
+        pages,
       })
       await log(`Captured ${capture.assets.length} screenshots for ${candidate.url}`, 'info', {
         phase: 'capture',
