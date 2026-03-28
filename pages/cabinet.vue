@@ -2267,11 +2267,15 @@ const analyzeReferences = async () => {
   isAnalyzingReferences.value = true
   referenceStatus.value = 'processing'
   startReferencePolling()
+  referenceAnalysis.value = null
+  referenceAssets.value = []
+  referenceLogs.value = []
+  referenceJob.value = null
   try {
     const res = await fetch('/api/briefs/references/run', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-user-email': userEmail.value },
-      body: JSON.stringify({ briefId: selectedBrief.value.id }),
+      body: JSON.stringify({ briefId: selectedBrief.value.id, force: true }),
     })
     const data = await res.json().catch(() => ({}))
     if (!res.ok || !data?.success) {

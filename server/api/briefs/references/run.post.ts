@@ -7,6 +7,7 @@ export default defineEventHandler(async (event) => {
 
   const body = await readBody(event)
   const briefId = body?.briefId
+  const force = Boolean(body?.force)
   if (!briefId) return { success: false, error: 'Brief ID required' }
 
   const db = useDatabaseClient()
@@ -30,8 +31,32 @@ export default defineEventHandler(async (event) => {
     .limit(1)
     .maybeSingle()
 
-  if (existingJob?.id) {
+  if (existingJob?.id && !force) {
     return { success: true, data: { jobId: existingJob.id, status: existingJob.status } }
+  }
+
+  if (force) {
+    await db
+      .from('reference_jobs')
+      .update({ status: 'cancelled', finished_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+      .eq('brief_id', briefId)
+      .eq('user_email', userEmail)
+      .in('status', ['queued', 'claimed', 'running'])
+
+    await db
+      .from('brief_reference_assets')
+      .delete()
+      .eq('brief_id', briefId)
+
+    await db
+      .from('briefs')
+      .update({
+        reference_status: 'queued',
+        reference_analysis_json: { logs: [] },
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', briefId)
+      .eq('user_email', userEmail)
   }
 
   const { data: job, error: jobError } = await db
@@ -50,14 +75,16 @@ export default defineEventHandler(async (event) => {
     return { success: false, error: jobError?.message || 'Failed to enqueue reference job' }
   }
 
-  await db
-    .from('briefs')
-    .update({
-      reference_status: 'queued',
-      updated_at: new Date().toISOString(),
-    })
-    .eq('id', briefId)
-    .eq('user_email', userEmail)
+  if (!force) {
+    await db
+      .from('briefs')
+      .update({
+        reference_status: 'queued',
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', briefId)
+      .eq('user_email', userEmail)
+  }
 
   return { success: true, data: { jobId: job.id, status: 'queued' } }
 })
