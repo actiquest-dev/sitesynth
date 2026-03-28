@@ -65,6 +65,16 @@ const competitorSchema = z.object({
   search_queries: z.array(z.string()).min(2).max(6),
   competitor_names: z.array(z.string()).min(3).max(8),
   rationale: z.string(),
+  scoring_priority: z.enum(['market_fit', 'visual_direction', 'ux_quality', 'balanced']).default('balanced'),
+  exclude_tags: z.array(z.string()).default([]),
+})
+
+const relevanceRankingSchema = z.object({
+  ranked: z.array(z.object({
+    url: z.string(),
+    relevance_score: z.number().min(1).max(5),
+    reason: z.string(),
+  })),
 })
 
 const referenceSummarySchema = z.object({
@@ -209,7 +219,9 @@ From the brief below:
 - infer likely market tags (array of 2-8 strings),
 - infer likely style tags (array of 2-8 strings),
 - propose strong search queries (array of 2-6 strings),
-- list likely competitors or adjacent products worth studying (array of 3-8 strings).
+- list likely competitors or adjacent products worth studying (array of 3-8 strings),
+- decide what matters most for reference selection: "market_fit", "visual_direction", "ux_quality", or "balanced",
+- list tags that should EXCLUDE references (e.g. if the brief is B2B fintech, exclude "consumer", "travel", "gaming").
 
 Return ONLY valid JSON matching this shape:
 {
@@ -219,7 +231,9 @@ Return ONLY valid JSON matching this shape:
   "style_tags": ["string"],
   "search_queries": ["string"],
   "competitor_names": ["string"],
-  "rationale": "string"
+  "rationale": "string",
+  "scoring_priority": "market_fit" | "visual_direction" | "ux_quality" | "balanced",
+  "exclude_tags": ["string"]
 }
 
 Brief:
@@ -232,7 +246,9 @@ ${markdownContent}
     surfaceType: object.surface_type,
     marketTags: object.market_tags,
     styleTags: object.style_tags,
-    limit: 5,
+    excludeTags: object.exclude_tags,
+    scoringPriority: object.scoring_priority,
+    limit: 8,
   })
 
   const discovered = []
@@ -241,7 +257,7 @@ ${markdownContent}
     discovered.push(...urls.map((url) => ({ url, query, source: 'web_discovery' })))
   }
 
-  const uniqueWeb = Array.from(new Map(discovered.map((item) => [item.url, item])).values()).slice(0, 8)
+  const uniqueWeb = Array.from(new Map(discovered.map((item) => [item.url, item])).values()).slice(0, 12)
   const curatedUrls = curatedShortlist.map(({ reference, score }) => ({
     url: reference.url,
     query: 'curated_library',
@@ -252,7 +268,7 @@ ${markdownContent}
     notes: reference.notes,
   }))
 
-  const urls = Array.from(new Map([...curatedUrls, ...uniqueWeb].map((item) => [item.url, item])).values()).slice(0, 10)
+  const urls = Array.from(new Map([...curatedUrls, ...uniqueWeb].map((item) => [item.url, item])).values()).slice(0, 20)
 
   return {
     productType: object.product_type,
@@ -262,9 +278,46 @@ ${markdownContent}
     searchQueries: object.search_queries,
     competitorNames: object.competitor_names,
     rationale: object.rationale,
+    scoringPriority: object.scoring_priority,
+    excludeTags: object.exclude_tags,
     curatedShortlist,
     urls,
   }
+}
+
+async function rankCandidatesByRelevance(
+  candidates: Array<{ url: string; source?: string; title?: string; notes?: string }>,
+  briefContext: { productType: string; surfaceType: string; marketTags: string[] },
+  limit: number = 5
+) {
+  const candidateList = candidates.map((c, i) =>
+    `${i + 1}. ${c.url}${c.title ? ` (${c.title})` : ''}${c.notes ? ` — ${c.notes}` : ''}`
+  ).join('\n')
+
+  const result = await geminiJson<z.infer<typeof relevanceRankingSchema>>(`
+You are selecting the most relevant competitor references for a design research project.
+
+Project context:
+- Product type: ${briefContext.productType}
+- Surface type: ${briefContext.surfaceType}
+- Market tags: ${briefContext.marketTags.join(', ')}
+
+Candidate URLs:
+${candidateList}
+
+Rank each URL by relevance (1-5) to THIS specific project.
+Only include URLs with relevance_score >= 3.
+Explain in one sentence WHY each is useful for this project.
+Return the top ${limit} most relevant.
+
+Return JSON: { "ranked": [{ "url": "...", "relevance_score": 1-5, "reason": "..." }] }
+  `.trim())
+
+  const parsed = relevanceRankingSchema.parse(result)
+  return parsed.ranked
+    .filter(r => r.relevance_score >= 3)
+    .sort((a, b) => b.relevance_score - a.relevance_score)
+    .slice(0, limit)
 }
 
 async function callCaptureService(params: {
@@ -365,24 +418,30 @@ async function uploadScreenshotToDrive(params: {
   }
 }
 
-async function analyzeAsset(asset: any) {
+async function analyzeAsset(asset: any, briefContext?: { productType: string; surfaceType: string; primaryGoal?: string }) {
   const imageResponse = await fetch(asset.publicUrl)
   const buffer = Buffer.from(await imageResponse.arrayBuffer())
 
+  const contextLine = briefContext
+    ? `You are analyzing a competitor screenshot for a ${briefContext.productType} (${briefContext.surfaceType}) project.${briefContext.primaryGoal ? ` Primary goal: ${briefContext.primaryGoal}.` : ''}
+Focus on what is transferable to THIS project type. Ignore patterns irrelevant to ${briefContext.productType}.`
+    : `Analyze this competitor screenshot for UI reference research.`
+
   const text = await geminiText([
     {
-      text: `Analyze this competitor screenshot for UI reference research.
+      text: `${contextLine}
 
 Return compact structured prose with:
 - page purpose
-- section order
+- section order and layout architecture
 - navigation pattern
 - card/layout pattern
 - CTA treatment
 - typography mood
 - visual density
-- notable strengths
-- notable weaknesses`,
+- transferable patterns for ${briefContext?.productType || 'this project'}
+- what to avoid from this reference
+- relevance score (1-5) for this specific project type`,
     },
     {
       inlineData: {
@@ -504,17 +563,46 @@ export async function runReferenceAnalysisPipeline(params: {
     payload: { baseUrl: captureBaseUrl, tokenPresent },
   })
   const discovered = await discoverReferences(markdownContent)
-  await log(`Discovered ${discovered.urls.length} candidate URLs`, 'info', {
+  await log(`Discovered ${discovered.urls.length} candidate URLs (priority=${discovered.scoringPriority}, exclude=${discovered.excludeTags.join(',') || 'none'})`, 'info', {
     phase: 'discovery',
     payload: {
       candidates: discovered.urls.length,
       curated: discovered.curatedShortlist?.length || 0,
+      scoringPriority: discovered.scoringPriority,
+      excludeTags: discovered.excludeTags,
     },
   })
-  const candidatePages = discovered.urls.slice(0, 5)
-  await log(`Selected ${candidatePages.length} capture candidates`, 'info', {
+
+  const briefContext = {
+    productType: discovered.productType,
+    surfaceType: discovered.surfaceType,
+    marketTags: discovered.marketTags,
+  }
+
+  await log(`Ranking ${discovered.urls.length} candidates by relevance`, 'info', { phase: 'discovery' })
+  const ranked = await rankCandidatesByRelevance(discovered.urls, briefContext, 5)
+  const rankedUrls = new Set(ranked.map(r => r.url))
+
+  // Merge ranked results back with full candidate metadata
+  const candidatePages = discovered.urls
+    .filter(c => rankedUrls.has(c.url))
+    .slice(0, 5)
+
+  // If ranking filtered too aggressively, fall back to top candidates
+  if (candidatePages.length < 3) {
+    const fallbackCandidates = discovered.urls
+      .filter(c => !rankedUrls.has(c.url))
+      .slice(0, 5 - candidatePages.length)
+    candidatePages.push(...fallbackCandidates)
+    await log(`Relevance filter too strict, added ${fallbackCandidates.length} fallback candidates`, 'warn', { phase: 'discovery' })
+  }
+
+  await log(`Selected ${candidatePages.length} capture candidates after relevance ranking`, 'info', {
     phase: 'capture',
-    payload: { selected: candidatePages.length },
+    payload: {
+      selected: candidatePages.length,
+      ranked: ranked.map(r => ({ url: r.url, score: r.relevance_score, reason: r.reason })),
+    },
   })
 
   const capturedAssets = []
@@ -589,7 +677,7 @@ export async function runReferenceAnalysisPipeline(params: {
       phase: 'analyze',
       payload: { file: asset.fileName, competitor: asset.competitor },
     })
-    const analysis = await analyzeAsset(asset)
+    const analysis = await analyzeAsset(asset, briefContext)
 
     const row = {
       brief_id: briefId,
@@ -648,6 +736,8 @@ export async function runReferenceAnalysisPipeline(params: {
     search_queries: discovered.searchQueries,
     competitor_names: discovered.competitorNames,
     rationale: discovered.rationale,
+    scoring_priority: discovered.scoringPriority,
+    exclude_tags: discovered.excludeTags,
     curated_shortlist: discovered.curatedShortlist.map((entry: any) => ({
       id: entry.reference.id,
       title: entry.reference.title,

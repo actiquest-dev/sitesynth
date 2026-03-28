@@ -90,30 +90,56 @@ export async function loadCuratedReferenceLibrary() {
   }
 }
 
+const PRIORITY_WEIGHTS = {
+  market_fit:       { product: 0.8, surface: 0.5, market: 0.3, style: 0.05, quality: 0.2 },
+  visual_direction: { product: 0.3, surface: 0.2, market: 0.1, style: 0.4,  quality: 0.5 },
+  ux_quality:       { product: 0.4, surface: 0.4, market: 0.15, style: 0.1, quality: 0.4 },
+  balanced:         { product: 0.5, surface: 0.35, market: 0.12, style: 0.08, quality: 0.3 },
+} as const
+
 export function scoreCuratedReference(params: {
   reference: CuratedReferenceEntry
   productType?: string | null
   surfaceType?: string | null
   marketTags?: string[]
   styleTags?: string[]
+  excludeTags?: string[]
+  scoringPriority?: string | null
 }) {
   const { reference, productType, surfaceType } = params
   const marketTags = params.marketTags || []
   const styleTags = params.styleTags || []
+  const excludeTags = params.excludeTags || []
+
+  // Hard gate: exclude_tags match → skip entirely
+  if (excludeTags.length > 0) {
+    const refTags = [...reference.market_tags, ...reference.product_types].map(t => t.toLowerCase())
+    if (excludeTags.some(t => refTags.includes(t.toLowerCase()))) return 0
+  }
+
+  // Hard gate: avoid_for match against product type
+  if (productType && reference.avoid_for.some(a =>
+    a.toLowerCase().includes(productType.toLowerCase())
+  )) return 0
 
   const productHit = productType && reference.product_types.includes(productType) ? 1 : 0
   const surfaceHit = surfaceType && reference.surface_types.includes(surfaceType) ? 1 : 0
   const marketHits = marketTags.filter((tag) => reference.market_tags.includes(tag)).length
   const styleHits = styleTags.filter((tag) => reference.style_tags.includes(tag)).length
 
-  const weighted =
+  // Require at least one relevance signal — pure quality alone is not enough
+  if (productHit + surfaceHit + marketHits + styleHits === 0) return 0
+
+  const w = PRIORITY_WEIGHTS[(params.scoringPriority as keyof typeof PRIORITY_WEIGHTS)] || PRIORITY_WEIGHTS.balanced
+
+  const qualityBase =
     reference.reference_value_score * 0.3 +
     reference.ux_quality_score * 0.25 +
     reference.visual_quality_score * 0.2 +
     reference.modernity_score * 0.15 +
     reference.quality_score * 0.1
 
-  return Number((weighted + productHit * 0.5 + surfaceHit * 0.35 + marketHits * 0.12 + styleHits * 0.08).toFixed(2))
+  return Number((qualityBase * w.quality + productHit * w.product + surfaceHit * w.surface + marketHits * w.market + styleHits * w.style).toFixed(2))
 }
 
 export async function selectCuratedReferenceShortlist(params: {
@@ -121,6 +147,8 @@ export async function selectCuratedReferenceShortlist(params: {
   surfaceType?: string | null
   marketTags?: string[]
   styleTags?: string[]
+  excludeTags?: string[]
+  scoringPriority?: string | null
   limit?: number
 }) {
   const limit = params.limit || 6
@@ -135,8 +163,11 @@ export async function selectCuratedReferenceShortlist(params: {
         surfaceType: params.surfaceType,
         marketTags: params.marketTags,
         styleTags: params.styleTags,
+        excludeTags: params.excludeTags,
+        scoringPriority: params.scoringPriority,
       }),
     }))
+    .filter(({ score }) => score > 0)
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)
 }
