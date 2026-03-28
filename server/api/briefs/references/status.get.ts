@@ -28,6 +28,15 @@ export default defineEventHandler(async (event) => {
 
   if (assetsError) return { success: false, error: assetsError.message }
 
+  const { data: job } = await db
+    .from('reference_jobs')
+    .select('id, status, last_error, claimed_by, claimed_at, started_at, finished_at, updated_at')
+    .eq('brief_id', briefId)
+    .eq('user_email', userEmail)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
   return {
     success: true,
     data: {
@@ -36,6 +45,7 @@ export default defineEventHandler(async (event) => {
       analysis: brief.reference_analysis_json || null,
       assets: assets || [],
       logs: brief.reference_analysis_json?.logs || [],
+      job: job || null,
     },
   }
 })

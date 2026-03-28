@@ -421,6 +421,15 @@
                         Reference analysis status:
                         <span class="uppercase tracking-[0.18em] text-[10px] text-[#bdbdbd]">{{ referenceStatus }}</span>
                       </div>
+                      <div v-if="referenceJob" class="text-[#8b8b8b]">
+                        Job:
+                        <span class="text-[#cfcfcf]">{{ referenceJob.status }}</span>
+                        <span v-if="referenceJob.started_at" class="ml-2">started {{ formatDateTime(referenceJob.started_at) }}</span>
+                        <span v-if="referenceJob.finished_at" class="ml-2">finished {{ formatDateTime(referenceJob.finished_at) }}</span>
+                      </div>
+                      <div v-if="referenceJob?.last_error" class="text-[#ff9b9b]">
+                        Last error: {{ referenceJob.last_error }}
+                      </div>
                       <div v-if="referenceAnalysis?.summary?.recommended_direction" class="text-[#cfcfcf]">
                         Recommended direction: {{ referenceAnalysis.summary.recommended_direction }}
                       </div>
@@ -1723,6 +1732,7 @@ const referenceStatus = ref<'pending' | 'processing' | 'completed' | 'failed'>('
 const referenceAnalysis = ref<any | null>(null)
 const referenceAssets = ref<any[]>([])
 const referenceLogs = ref<Array<{ ts: string; level: string; message: string }>>([])
+const referenceJob = ref<any | null>(null)
 const isLoadingReferenceStatus = ref(false)
 const isBuildingFigma = ref(false)
 const figmaBuildStatus = ref<string | null>(null)
@@ -1740,6 +1750,7 @@ const demoEvents = ref<any[]>([])
 const demoArtifacts = ref<any[]>([])
 const isLoadingDemoStatus = ref(false)
 let demoStatusTimer: number | null = null
+let referenceStatusTimer: number | null = null
 const designSpec = ref<any>(null)
 const lastSavedContent = ref('')
 const lastSavedAt = ref<string | null>(null)
@@ -2174,8 +2185,26 @@ const loadReferenceStatus = async () => {
     referenceAnalysis.value = data.data?.analysis || null
     referenceAssets.value = data.data?.assets || []
     referenceLogs.value = data.data?.logs || []
+    referenceJob.value = data.data?.job || null
+    if (['processing', 'queued'].includes(referenceStatus.value)) {
+      startReferencePolling()
+    } else {
+      stopReferencePolling()
+    }
   } finally {
     isLoadingReferenceStatus.value = false
+  }
+}
+
+const startReferencePolling = () => {
+  if (referenceStatusTimer) return
+  referenceStatusTimer = window.setInterval(loadReferenceStatus, 5000)
+}
+
+const stopReferencePolling = () => {
+  if (referenceStatusTimer) {
+    window.clearInterval(referenceStatusTimer)
+    referenceStatusTimer = null
   }
 }
 
@@ -2183,6 +2212,7 @@ const analyzeReferences = async () => {
   if (!selectedBrief.value) return
   isAnalyzingReferences.value = true
   referenceStatus.value = 'processing'
+  startReferencePolling()
   try {
     const res = await fetch('/api/briefs/references/run', {
       method: 'POST',
@@ -2193,6 +2223,9 @@ const analyzeReferences = async () => {
     if (!res.ok || !data?.success) {
       console.error('[References] Run error', { status: res.status, data })
       throw new Error(data?.error || 'Reference analysis failed')
+    }
+    if (data?.data) {
+      referenceJob.value = data.data
     }
     const briefRes = await fetch(`/api/briefs/${selectedBrief.value.id}`, {
       headers: { 'x-user-email': userEmail.value },
@@ -2211,7 +2244,7 @@ const analyzeReferences = async () => {
       lastSavedAt.value = briefData.data.updated_at || new Date().toISOString()
     }
     await loadReferenceStatus()
-    showToast('Reference analysis completed', 'success')
+    showToast('Reference analysis queued', 'success')
   } catch (error: any) {
     console.error('[References] Analysis failed', error)
     referenceStatus.value = 'failed'
@@ -2255,6 +2288,7 @@ watch(selectedBrief, async (value) => {
   await loadDemoBuildStatus()
   if (figmaStatusTimer) window.clearInterval(figmaStatusTimer)
   if (demoStatusTimer) window.clearInterval(demoStatusTimer)
+  if (referenceStatusTimer) window.clearInterval(referenceStatusTimer)
   figmaStatusTimer = window.setInterval(loadFigmaBuildStatus, 8000)
   demoStatusTimer = window.setInterval(loadDemoBuildStatus, 8000)
 })
@@ -2266,6 +2300,7 @@ watch(mediaLibraryTab, () => {
 onBeforeUnmount(() => {
   if (figmaStatusTimer) window.clearInterval(figmaStatusTimer)
   if (demoStatusTimer) window.clearInterval(demoStatusTimer)
+  if (referenceStatusTimer) window.clearInterval(referenceStatusTimer)
 })
 
 const queueFigmaBuild = async () => {

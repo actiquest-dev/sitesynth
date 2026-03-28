@@ -1,6 +1,5 @@
-import { defineEventHandler, readBody } from 'h3'
+import { defineEventHandler, getHeader, readBody } from 'h3'
 import { useDatabaseClient } from '~~/server/utils/supabase'
-import { runReferenceAnalysisPipeline } from '~~/server/utils/reference-research'
 
 export default defineEventHandler(async (event) => {
   const userEmail = getHeader(event, 'x-user-email')

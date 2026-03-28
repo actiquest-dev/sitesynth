@@ -405,21 +405,33 @@ export async function runReferenceAnalysisPipeline(params: {
   const { briefId, userEmail, markdownContent } = params
   const db = useDatabaseClient()
   const logs: Array<{ ts: string; level: 'info' | 'warn' | 'error'; message: string }> = []
+  const startedAt = Date.now()
   const persistLogs = async () => {
-    await db
-      .from('briefs')
-      .update({
-        reference_analysis_json: { logs },
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', briefId)
-      .eq('user_email', userEmail)
+    try {
+      const { data: brief } = await db
+        .from('briefs')
+        .select('reference_analysis_json')
+        .eq('id', briefId)
+        .eq('user_email', userEmail)
+        .maybeSingle()
+      await db
+        .from('briefs')
+        .update({
+          reference_analysis_json: { ...(brief?.reference_analysis_json || {}), logs },
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', briefId)
+        .eq('user_email', userEmail)
+    } catch (err: any) {
+      console.warn('[reference-research] log persist failed:', err?.message || err)
+    }
   }
   const log = async (message: string, level: 'info' | 'warn' | 'error' = 'info') => {
     logs.push({ ts: new Date().toISOString(), level, message })
     await persistLogs()
   }
 
+  await log('Reference analysis started')
   await db
     .from('briefs')
     .update({ reference_status: 'processing', updated_at: new Date().toISOString() })
@@ -434,6 +446,7 @@ export async function runReferenceAnalysisPipeline(params: {
   const discovered = await discoverReferences(markdownContent)
   await log(`Discovered ${discovered.urls.length} candidate URLs`)
   const candidatePages = discovered.urls.slice(0, 5)
+  await log(`Selected ${candidatePages.length} capture candidates`)
 
   const capturedAssets = []
   for (const candidate of candidatePages) {
@@ -442,7 +455,7 @@ export async function runReferenceAnalysisPipeline(params: {
     const pageKinds = Array.isArray((candidate as any).capture_targets) && (candidate as any).capture_targets.length
       ? (candidate as any).capture_targets.slice(0, 3)
       : ['homepage']
-    await log(`Requesting capture for ${candidate.url}`)
+    await log(`Requesting capture for ${candidate.url} (kinds=${pageKinds.join(', ')})`)
     try {
       const capture = await callCaptureService({
         briefId,
@@ -474,6 +487,7 @@ export async function runReferenceAnalysisPipeline(params: {
     throw new Error('Reference capture returned no screenshots')
   }
 
+  await log(`Processing ${capturedAssets.length} captured assets`)
   const insertedAssets = []
   for (const asset of capturedAssets) {
     await log(`Uploading ${asset.fileName} to Drive`)
@@ -513,8 +527,10 @@ export async function runReferenceAnalysisPipeline(params: {
       .single()
 
     insertedAssets.push(data || row)
+    await log(`Stored asset ${asset.fileName} (drive=${drive.driveFileId ? 'ok' : 'skipped'})`)
   }
 
+  await log('Building reference summary')
   const summary = await buildReferenceSummary(markdownContent, insertedAssets)
   await log('Reference summary generated')
 
@@ -552,6 +568,8 @@ export async function runReferenceAnalysisPipeline(params: {
     .eq('id', briefId)
     .eq('user_email', userEmail)
 
+  const elapsedSec = ((Date.now() - startedAt) / 1000).toFixed(1)
+  await log(`Reference analysis finished in ${elapsedSec}s`)
   return {
     discovered,
     assets: insertedAssets,

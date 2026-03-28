@@ -122,18 +122,19 @@ const loop = async () => {
     }
 
     try {
+      await appendLog(job.brief_id, job.user_email, { level: 'info', message: `Worker picked job ${job.id}` })
       const brief = await fetchBrief(job.brief_id, job.user_email)
-      await appendLog(brief.id, brief.user_email, { level: 'info', message: 'Reference job claimed by worker', payload: { jobId: job.id } })
+      await appendLog(brief.id, brief.user_email, { level: 'info', message: 'Loaded brief content for reference analysis', payload: { jobId: job.id } })
       await runReferenceAnalysisPipeline({
         briefId: brief.id,
         userEmail: brief.user_email,
         markdownContent: brief.markdown_content || '',
       })
-      await appendLog(brief.id, brief.user_email, { level: 'info', message: 'Reference analysis completed' })
+      await appendLog(brief.id, brief.user_email, { level: 'info', message: 'Reference analysis completed', payload: { jobId: job.id } })
       await markJobComplete(job.id)
     } catch (error: any) {
       const message = error?.message || 'Reference analysis failed'
-      await appendLog(job.brief_id, job.user_email, { level: 'error', message })
+      await appendLog(job.brief_id, job.user_email, { level: 'error', message, payload: { jobId: job.id } })
       await markJobFailed(job.id, message)
     }
   }
