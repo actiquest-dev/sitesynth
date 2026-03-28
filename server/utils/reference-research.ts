@@ -170,15 +170,6 @@ function mergeReferenceSectionIntoBrief(content: string, summary: any, assets: a
   return [clean, section].filter(Boolean).join('\n\n').trim()
 }
 
-function stripHtml(input: string) {
-  return input
-    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
-    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-}
-
 async function searchDuckDuckGo(query: string) {
   const url = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(query)}`
   const response = await fetch(url, {
