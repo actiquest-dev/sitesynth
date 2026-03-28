@@ -57,6 +57,38 @@ const fetchBrief = async (briefId: string, userEmail: string) => {
   return brief
 }
 
+const appendLog = async (briefId: string, userEmail: string, entry: { level: string; message: string; payload?: any }) => {
+  const { data: brief } = await supabase
+    .from('briefs')
+    .select('reference_analysis_json')
+    .eq('id', briefId)
+    .eq('user_email', userEmail)
+    .maybeSingle()
+
+  const existing = Array.isArray(brief?.reference_analysis_json?.logs)
+    ? brief.reference_analysis_json.logs
+    : []
+
+  const next = [
+    ...existing,
+    {
+      ts: new Date().toISOString(),
+      level: entry.level,
+      message: entry.message,
+      ...(entry.payload ? { payload: entry.payload } : {}),
+    },
+  ]
+
+  await supabase
+    .from('briefs')
+    .update({
+      reference_analysis_json: { ...(brief?.reference_analysis_json || {}), logs: next },
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', briefId)
+    .eq('user_email', userEmail)
+}
+
 const markJobFailed = async (jobId: string, errorMessage: string) => {
   await supabase
     .from('reference_jobs')
@@ -91,14 +123,17 @@ const loop = async () => {
 
     try {
       const brief = await fetchBrief(job.brief_id, job.user_email)
+      await appendLog(brief.id, brief.user_email, { level: 'info', message: 'Reference job claimed by worker', payload: { jobId: job.id } })
       await runReferenceAnalysisPipeline({
         briefId: brief.id,
         userEmail: brief.user_email,
         markdownContent: brief.markdown_content || '',
       })
+      await appendLog(brief.id, brief.user_email, { level: 'info', message: 'Reference analysis completed' })
       await markJobComplete(job.id)
     } catch (error: any) {
       const message = error?.message || 'Reference analysis failed'
+      await appendLog(job.brief_id, job.user_email, { level: 'error', message })
       await markJobFailed(job.id, message)
     }
   }
