@@ -39,9 +39,13 @@ const agentMode = computed(() => {
   return isAuthenticated.value ? "briefing" : "presale";
 });
 
-// Get user email
+// Get user email (fallback to localStorage for cabinet auth flow)
 const userEmail = computed(() => {
-  return user?.value?.email || null;
+  if (user?.value?.email) return user.value.email;
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("user_email") || null;
+  }
+  return null;
 });
 
 const isCabinetRoute = computed(() => route.path.startsWith("/cabinet"));
