@@ -241,9 +241,9 @@ const initializeConversation = async () => {
       try {
         await loadConversationMessages(props.briefContext.conversationId)
         return
-      } catch {
-        error.value = 'Chat access denied'
-        return
+      } catch (err) {
+        console.warn('[AIChatDrawer] post-brief conversation denied, falling back', err)
+        // Fall through to normal initialization (existing auth conversations or new)
       }
     }
 
@@ -341,7 +341,7 @@ const loadConversationMessages = async (conversationId: string) => {
           const data = await retry.json()
           messages.value = data.messages || data.data || []
           console.log('Loaded messages:', messages.value.length)
-          return
+          return true
         }
       }
       throw new Error('Chat access denied')
@@ -351,9 +351,12 @@ const loadConversationMessages = async (conversationId: string) => {
       const data = await response.json()
       messages.value = data.messages || data.data || []
       console.log('Loaded messages:', messages.value.length)
+      return true
     }
+    throw new Error(`Chat load failed (${response.status})`)
   } catch (err) {
     console.error('Failed to load messages:', err)
+    throw err
   }
 }
 
