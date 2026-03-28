@@ -3140,9 +3140,9 @@ const openBriefEditor = (brief: any) => {
   referenceAnalysis.value = brief.reference_analysis_json || null
   referenceAssets.value = []
   referenceLogs.value = Array.isArray(brief.reference_analysis_json?.logs) ? brief.reference_analysis_json.logs : []
-  // Auto-start polling if brief is already queued or processing
+  // Load reference assets if status is not pending
   stopReferencePolling()
-  if (['queued', 'processing'].includes(referenceStatus.value)) {
+  if (['queued', 'processing', 'completed'].includes(referenceStatus.value)) {
     loadReferenceStatus()
   }
   loadBriefVersions(brief.id)
