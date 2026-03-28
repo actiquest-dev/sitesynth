@@ -435,6 +435,27 @@
                       </div>
                     </div>
 
+                    <div v-if="referenceStatus !== 'pending'" class="border border-[#2f2f2f] bg-[#0f0f0f] p-4 space-y-3">
+                      <div class="flex items-center justify-between">
+                        <span class="text-[#9a9a9a] text-xs uppercase tracking-[0.18em]">Reference Pipeline</span>
+                        <span class="text-[10px] uppercase tracking-[0.18em] text-[#8b8b8b]">{{ referencePipelineState.status }}</span>
+                      </div>
+                      <div class="flex flex-wrap gap-2">
+                        <div
+                          v-for="(step, index) in referencePipelineSteps"
+                          :key="step.key"
+                          class="flex items-center gap-2 px-3 py-2 border text-xs uppercase tracking-[0.16em]"
+                          :class="index <= referencePipelineState.activeIndex ? 'border-[#8D35FF] text-white' : 'border-[#262626] text-[#7a7a7a]'"
+                        >
+                          <span class="text-[10px]">{{ index + 1 }}</span>
+                          <span>{{ step.label }}</span>
+                        </div>
+                      </div>
+                      <div v-if="referencePipelineState.currentStep" class="text-xs text-[#bdbdbd]">
+                        Current step: {{ referencePipelineState.currentStep }}
+                      </div>
+                    </div>
+
                     <div v-if="referenceAnalysis || referenceAssets.length" class="border border-[#2f2f2f] bg-[#0f0f0f] p-4 space-y-4">
                       <div class="flex items-center justify-between">
                         <span class="text-[#9a9a9a] text-xs uppercase tracking-[0.18em]">Reference Analysis</span>
@@ -1671,6 +1692,39 @@ const formatDateTime = (dateString: string | Date): string => {
   const date = typeof dateString === 'string' ? new Date(dateString) : dateString
   return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(date)
 }
+
+const referencePipelineSteps = [
+  { key: 'discovery', label: 'Discovery' },
+  { key: 'capture', label: 'Capture' },
+  { key: 'upload', label: 'Upload' },
+  { key: 'analyze', label: 'Analyze' },
+  { key: 'summary', label: 'Summary' },
+]
+
+const getStepFromLog = (message: string) => {
+  const text = (message || '').toLowerCase()
+  if (text.includes('reference discovery') || text.includes('discovered')) return 'discovery'
+  if (text.includes('capture') || text.includes('captured')) return 'capture'
+  if (text.includes('upload') || text.includes('drive')) return 'upload'
+  if (text.includes('analyzing') || text.includes('analysis')) return 'analyze'
+  if (text.includes('summary')) return 'summary'
+  return null
+}
+
+const referencePipelineState = computed(() => {
+  const logs = referenceLogs.value || []
+  let currentStep: string | null = null
+  for (const log of logs) {
+    const step = getStepFromLog(log.message || '')
+    if (step) currentStep = step
+  }
+  const activeIndex = referencePipelineSteps.findIndex((step) => step.key === currentStep)
+  return {
+    currentStep,
+    activeIndex,
+    status: referenceStatus.value,
+  }
+})
 
 type Conversation = {
   id: string
