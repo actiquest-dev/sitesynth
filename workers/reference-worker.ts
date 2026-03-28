@@ -15,32 +15,14 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const claimNextJob = async () => {
-  const { data: job } = await supabase
-    .from('reference_jobs')
-    .select('id, brief_id, user_email, attempts')
-    .eq('status', 'queued')
-    .is('claimed_by', null)
-    .order('created_at', { ascending: true })
-    .limit(1)
+  const { data: claimed, error } = await supabase
+    .rpc('claim_reference_job', { worker_id: WORKER_ID })
     .maybeSingle()
 
-  if (!job) return null
-
-  const { data: claimed } = await supabase
-    .from('reference_jobs')
-    .update({
-      status: 'running',
-      claimed_by: WORKER_ID,
-      claimed_at: new Date().toISOString(),
-      started_at: new Date().toISOString(),
-      attempts: (job.attempts || 0) + 1,
-      updated_at: new Date().toISOString(),
-    })
-    .eq('id', job.id)
-    .eq('status', 'queued')
-    .is('claimed_by', null)
-    .select('id, brief_id, user_email')
-    .maybeSingle()
+  if (error) {
+    console.warn('[reference-worker] claim_reference_job failed:', error.message)
+    return null
+  }
 
   return claimed || null
 }
