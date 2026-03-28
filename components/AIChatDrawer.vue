@@ -234,6 +234,7 @@ const initializeConversation = async () => {
   try {
     const authHeaders = getAuthHeaders()
     const isAuthenticated = !!props.userEmail
+    const effectiveAgentType = props.agentType === 'post-brief' ? 'briefing' : props.agentType
 
     // Post-brief mode: reuse the brief's own conversation_id directly
     if (props.agentType === 'post-brief' && props.briefContext?.conversationId) {
@@ -249,7 +250,7 @@ const initializeConversation = async () => {
 
     // For authenticated users, try to get existing conversations
     if (isAuthenticated) {
-      const getResponse = await fetch(`/api/chat/conversations?agentType=${props.agentType}`, {
+      const getResponse = await fetch(`/api/chat/conversations?agentType=${effectiveAgentType}`, {
         method: 'GET',
         headers: authHeaders
       })
@@ -280,7 +281,7 @@ const initializeConversation = async () => {
       },
       body: JSON.stringify({
         title: `${props.agentType === 'briefing' ? 'Briefing' : 'Consultation'} - ${new Date().toLocaleDateString()}`,
-        agentType: props.agentType
+        agentType: effectiveAgentType
       })
     })
 

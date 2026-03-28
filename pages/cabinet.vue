@@ -2604,6 +2604,10 @@ onMounted(async () => {
     return
   }
 
+  try {
+    localStorage.setItem('user_email', userEmail.value)
+  } catch {}
+
   await tryClaimAnonymousConversation()
 
   // Load projects and briefs first to update stats correctly
