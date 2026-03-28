@@ -16,7 +16,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const claimNextJob = async () => {
   const { data: claimed, error } = await supabase
-    .rpc('claim_reference_job', { worker_id: WORKER_ID })
+    .rpc('claim_reference_job_v2', { worker_id: WORKER_ID })
     .maybeSingle()
 
   if (error) {
@@ -24,7 +24,12 @@ const claimNextJob = async () => {
     return null
   }
 
-  return claimed || null
+  if (!claimed) return null
+  return {
+    id: claimed.job_id,
+    brief_id: claimed.brief_id,
+    user_email: claimed.user_email,
+  }
 }
 
 const fetchBrief = async (briefId: string, userEmail: string) => {
