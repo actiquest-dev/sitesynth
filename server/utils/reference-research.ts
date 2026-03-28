@@ -64,6 +64,7 @@ const competitorSchema = z.object({
   style_tags: z.array(z.string()).min(2).max(8),
   search_queries: z.array(z.string()).min(2).max(6),
   competitor_names: z.array(z.string()).min(3).max(8),
+  competitor_urls: z.array(z.string()).min(3).max(8),
   rationale: z.string(),
   scoring_priority: z.enum(['market_fit', 'visual_direction', 'ux_quality', 'balanced']).default('balanced'),
   exclude_tags: z.array(z.string()).default([]),
@@ -219,9 +220,13 @@ From the brief below:
 - infer likely market tags (array of 2-8 strings),
 - infer likely style tags (array of 2-8 strings),
 - propose strong search queries (array of 2-6 strings),
-- list likely competitors or adjacent products worth studying (array of 3-8 strings),
+- list likely competitors or adjacent products worth studying (array of 3-8 names),
+- for each competitor, provide the REAL homepage URL (array of 3-8 URLs, same order as competitor_names),
 - decide what matters most for reference selection: "market_fit", "visual_direction", "ux_quality", or "balanced",
 - list tags that should EXCLUDE references (e.g. if the brief is B2B fintech, exclude "consumer", "travel", "gaming").
+
+IMPORTANT: competitor_urls must be real, working homepage URLs (e.g. "https://www.rocketmoney.com").
+Each URL must correspond to the competitor at the same index in competitor_names.
 
 Return ONLY valid JSON matching this shape:
 {
@@ -231,6 +236,7 @@ Return ONLY valid JSON matching this shape:
   "style_tags": ["string"],
   "search_queries": ["string"],
   "competitor_names": ["string"],
+  "competitor_urls": ["string"],
   "rationale": "string",
   "scoring_priority": "market_fit" | "visual_direction" | "ux_quality" | "balanced",
   "exclude_tags": ["string"]
@@ -268,7 +274,17 @@ ${markdownContent}
     notes: reference.notes,
   }))
 
-  const urls = Array.from(new Map([...curatedUrls, ...uniqueWeb].map((item) => [item.url, item])).values()).slice(0, 20)
+  // Gemini competitor_urls as structured fallback (not hallucinated ranking — explicit discovery output)
+  const geminiUrls = object.competitor_urls.map((url, i) => ({
+    url,
+    query: 'gemini_discovery',
+    source: 'gemini_competitor',
+    title: object.competitor_names[i] || '',
+  }))
+
+  // Priority: curated > web discovery > Gemini competitor URLs
+  const allCandidates = [...curatedUrls, ...uniqueWeb, ...geminiUrls]
+  const urls = Array.from(new Map(allCandidates.map((item) => [item.url, item])).values()).slice(0, 20)
 
   return {
     productType: object.product_type,
@@ -277,6 +293,7 @@ ${markdownContent}
     styleTags: object.style_tags,
     searchQueries: object.search_queries,
     competitorNames: object.competitor_names,
+    competitorUrls: object.competitor_urls,
     rationale: object.rationale,
     scoringPriority: object.scoring_priority,
     excludeTags: object.exclude_tags,
@@ -290,6 +307,8 @@ async function rankCandidatesByRelevance(
   briefContext: { productType: string; surfaceType: string; marketTags: string[] },
   limit: number = 5
 ) {
+  if (candidates.length === 0) return []
+
   const candidateList = candidates.map((c, i) =>
     `${i + 1}. ${c.url}${c.title ? ` (${c.title})` : ''}${c.notes ? ` — ${c.notes}` : ''}`
   ).join('\n')
@@ -590,12 +609,10 @@ export async function runReferenceAnalysisPipeline(params: {
   const rankedUrls = new Set(ranked.map(r => r.url))
 
   // Merge ranked results back with full candidate metadata
-  // If a ranked URL isn't in discovered.urls (e.g. Gemini suggested it from knowledge),
-  // still include it — don't silently drop Gemini's suggestions
-  const candidatePages = ranked.slice(0, 5).map(r => {
-    const found = discovered.urls.find(c => c.url === r.url)
-    return found || { url: r.url, query: 'gemini_suggested', source: 'ai_suggestion' }
-  })
+  // Only use URLs that were in the discovered list (no hallucinated URLs)
+  const candidatePages = ranked.slice(0, 5)
+    .map(r => discovered.urls.find(c => c.url === r.url))
+    .filter((c): c is NonNullable<typeof c> => !!c)
 
   // If ranking filtered too aggressively, fall back to top candidates
   if (candidatePages.length < 3) {
@@ -765,6 +782,7 @@ export async function runReferenceAnalysisPipeline(params: {
     style_tags: discovered.styleTags,
     search_queries: discovered.searchQueries,
     competitor_names: discovered.competitorNames,
+    competitor_urls: discovered.competitorUrls,
     rationale: discovered.rationale,
     scoring_priority: discovered.scoringPriority,
     exclude_tags: discovered.excludeTags,
