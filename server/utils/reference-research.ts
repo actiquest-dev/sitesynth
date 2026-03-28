@@ -4,16 +4,31 @@ import { z } from 'zod'
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || '')
 const GEMINI_MODELS = ['gemini-2.5-pro', 'gemini-pro-latest']
+const DEFAULT_TIMEOUT_MS = 120000
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
+const withTimeout = async <T>(promise: Promise<T>, ms: number, label: string) => {
+  let timeoutId: NodeJS.Timeout
+  const timeout = new Promise<never>((_, reject) => {
+    timeoutId = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms)
+  })
+  try {
+    return await Promise.race([promise, timeout])
+  } finally {
+    clearTimeout(timeoutId!)
+  }
+}
 
 async function geminiJson<T>(prompt: string): Promise<T> {
   let lastError: any
   for (const modelName of GEMINI_MODELS) {
     try {
       const model = genAI.getGenerativeModel({ model: modelName })
-      const result = await model.generateContent({
+      const result = await withTimeout(model.generateContent({
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
         generationConfig: { responseMimeType: 'application/json', temperature: 0.5 },
-      })
+      }), DEFAULT_TIMEOUT_MS, `geminiJson(${modelName})`)
       return JSON.parse(result.response.text()) as T
     } catch (err: any) {
       console.warn(`[reference-research] ${modelName} failed:`, err?.message)
@@ -28,7 +43,7 @@ async function geminiText(parts: Array<{ text: string } | { inlineData: { data: 
   for (const modelName of GEMINI_MODELS) {
     try {
       const model = genAI.getGenerativeModel({ model: modelName })
-      const result = await model.generateContent({ contents: [{ role: 'user', parts }] })
+      const result = await withTimeout(model.generateContent({ contents: [{ role: 'user', parts }] }), DEFAULT_TIMEOUT_MS, `geminiText(${modelName})`)
       return result.response.text()
     } catch (err: any) {
       console.warn(`[reference-research] ${modelName} failed:`, err?.message)
@@ -40,6 +55,7 @@ async function geminiText(parts: Array<{ text: string } | { inlineData: { data: 
 import { useDatabaseClient } from './supabase'
 import { getDriveClient, getOrCreateChildFolder, getOrCreateUserRootFolder } from './google-drive'
 import { selectCuratedReferenceShortlist } from './curated-reference-library'
+import { getAgent, generateWithFallback } from '../mastra'
 
 const competitorSchema = z.object({
   product_type: z.string(),
@@ -193,7 +209,7 @@ async function searchDuckDuckGo(query: string) {
 }
 
 async function discoverReferences(markdownContent: string) {
-  const object = await geminiJson<z.infer<typeof competitorSchema>>(`
+  const raw = await geminiJson<z.infer<typeof competitorSchema>>(`
 You are identifying competitor product references for design research.
 
 From the brief below:
@@ -218,6 +234,7 @@ Return ONLY valid JSON matching this shape:
 Brief:
 ${markdownContent}
   `.trim())
+  const object = competitorSchema.parse(raw)
 
   const curatedShortlist = await selectCuratedReferenceShortlist({
     productType: object.product_type,
@@ -273,23 +290,40 @@ async function callCaptureService(params: {
     throw new Error(`Reference capture token missing (baseUrl=${baseUrl})`)
   }
 
-  const response = await fetch(`${baseUrl}/capture`, {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      ...(token ? { authorization: `Bearer ${token}` } : {}),
-    },
-    body: JSON.stringify(params),
-  })
+  const maxAttempts = 3
+  let lastError: any
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    try {
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT_MS)
+      const response = await fetch(`${baseUrl}/capture`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          ...(token ? { authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify(params),
+        signal: controller.signal,
+      })
+      clearTimeout(timeout)
 
-  const data = await response.json().catch(() => ({}))
-  if (!response.ok) {
-    throw new Error(`Reference capture HTTP ${response.status} from ${baseUrl}`)
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        throw new Error(`Reference capture HTTP ${response.status} from ${baseUrl}`)
+      }
+      if (!data.success) {
+        throw new Error(data.error ? `${data.error} (${baseUrl})` : `Reference capture failed (${baseUrl})`)
+      }
+      return data.data
+    } catch (err: any) {
+      lastError = err
+      if (attempt < maxAttempts) {
+        await sleep(2000 * attempt)
+        continue
+      }
+    }
   }
-  if (!data.success) {
-    throw new Error(data.error ? `${data.error} (${baseUrl})` : `Reference capture failed (${baseUrl})`)
-  }
-  return data.data
+  throw lastError
 }
 
 async function uploadScreenshotToDrive(params: {
@@ -372,6 +406,9 @@ Return compact structured prose with:
   }
 }
 
+const referenceStrategistAgent = getAgent('referenceStrategistAgent')
+const referenceStrategistAgentFallback = getAgent('referenceStrategistAgentFallback')
+
 async function buildReferenceSummary(markdownContent: string, assets: any[]) {
   const context = assets.map((asset) => {
     const analysis = asset.analysis_json?.summary || ''
@@ -393,7 +430,17 @@ Reference analyses:
 ${context}
     `.trim()
 
-  const object = await geminiJson<z.infer<typeof referenceSummarySchema>>(prompt)
+  const result = await generateWithFallback(
+    referenceStrategistAgent,
+    referenceStrategistAgentFallback,
+    prompt
+  )
+  const rawText = typeof result === 'string'
+    ? result
+    : (result?.text || result?.response?.text || result?.content || '')
+
+  const jsonText = rawText.trim().startsWith('{') ? rawText : rawText.replace(/^[\\s\\S]*?(\\{[\\s\\S]*\\})[\\s\\S]*$/, '$1')
+  const object = JSON.parse(jsonText) as z.infer<typeof referenceSummarySchema>
   return referenceSummarySchema.parse(object)
 }
 
@@ -406,6 +453,17 @@ export async function runReferenceAnalysisPipeline(params: {
   const db = useDatabaseClient()
   const logs: Array<{ ts: string; level: 'info' | 'warn' | 'error'; message: string; phase?: string; payload?: any }> = []
   const startedAt = Date.now()
+  const mergeLogs = (existing: typeof logs, incoming: typeof logs) => {
+    const seen = new Set<string>()
+    const combined = [...existing, ...incoming]
+    return combined.filter((entry) => {
+      const key = `${entry.ts}|${entry.level}|${entry.message}`
+      if (seen.has(key)) return false
+      seen.add(key)
+      return true
+    })
+  }
+
   const persistLogs = async () => {
     try {
       const { data: brief } = await db
@@ -414,10 +472,14 @@ export async function runReferenceAnalysisPipeline(params: {
         .eq('id', briefId)
         .eq('user_email', userEmail)
         .maybeSingle()
+      const existingLogs = Array.isArray(brief?.reference_analysis_json?.logs)
+        ? brief?.reference_analysis_json?.logs
+        : []
+      const mergedLogs = mergeLogs(existingLogs, logs)
       await db
         .from('briefs')
         .update({
-          reference_analysis_json: { ...(brief?.reference_analysis_json || {}), logs },
+          reference_analysis_json: { ...(brief?.reference_analysis_json || {}), logs: mergedLogs },
           updated_at: new Date().toISOString(),
         })
         .eq('id', briefId)
@@ -516,8 +578,12 @@ export async function runReferenceAnalysisPipeline(params: {
     phase: 'upload',
     payload: { count: capturedAssets.length },
   })
-  const insertedAssets = []
-  for (const asset of capturedAssets) {
+  const insertedAssets: any[] = []
+  const concurrencyLimit = 3
+  const queue = [...capturedAssets]
+  const workers: Promise<void>[] = []
+
+  const processAsset = async (asset: any) => {
     await log(`Uploading ${asset.fileName} to Drive`, 'info', {
       phase: 'upload',
       payload: { file: asset.fileName, competitor: asset.competitor },
@@ -566,6 +632,18 @@ export async function runReferenceAnalysisPipeline(params: {
       payload: { file: asset.fileName, driveFileId: drive.driveFileId || null },
     })
   }
+
+  for (let i = 0; i < concurrencyLimit; i += 1) {
+    workers.push((async () => {
+      while (queue.length) {
+        const asset = queue.shift()
+        if (!asset) return
+        await processAsset(asset)
+      }
+    })())
+  }
+
+  await Promise.all(workers)
 
   await log('Building reference summary', 'info', { phase: 'summary' })
   const summary = await buildReferenceSummary(markdownContent, insertedAssets)

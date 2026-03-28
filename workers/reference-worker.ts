@@ -19,6 +19,7 @@ const claimNextJob = async () => {
     .from('reference_jobs')
     .select('id, brief_id, user_email, attempts')
     .eq('status', 'queued')
+    .is('claimed_by', null)
     .order('created_at', { ascending: true })
     .limit(1)
     .maybeSingle()
@@ -32,10 +33,12 @@ const claimNextJob = async () => {
       claimed_by: WORKER_ID,
       claimed_at: new Date().toISOString(),
       started_at: new Date().toISOString(),
+      attempts: (job.attempts || 0) + 1,
       updated_at: new Date().toISOString(),
     })
     .eq('id', job.id)
     .eq('status', 'queued')
+    .is('claimed_by', null)
     .select('id, brief_id, user_email')
     .maybeSingle()
 
@@ -125,11 +128,15 @@ const loop = async () => {
       await appendLog(job.brief_id, job.user_email, { level: 'info', message: `Worker picked job ${job.id}` })
       const brief = await fetchBrief(job.brief_id, job.user_email)
       await appendLog(brief.id, brief.user_email, { level: 'info', message: 'Loaded brief content for reference analysis', payload: { jobId: job.id } })
-      await runReferenceAnalysisPipeline({
-        briefId: brief.id,
-        userEmail: brief.user_email,
-        markdownContent: brief.markdown_content || '',
-      })
+      await withTimeout(
+        runReferenceAnalysisPipeline({
+          briefId: brief.id,
+          userEmail: brief.user_email,
+          markdownContent: brief.markdown_content || '',
+        }),
+        20 * 60 * 1000,
+        'reference pipeline'
+      )
       await appendLog(brief.id, brief.user_email, { level: 'info', message: 'Reference analysis completed', payload: { jobId: job.id } })
       await markJobComplete(job.id)
     } catch (error: any) {
@@ -137,6 +144,18 @@ const loop = async () => {
       await appendLog(job.brief_id, job.user_email, { level: 'error', message, payload: { jobId: job.id } })
       await markJobFailed(job.id, message)
     }
+  }
+}
+
+const withTimeout = async <T>(promise: Promise<T>, ms: number, label: string) => {
+  let timeoutId: NodeJS.Timeout
+  const timeout = new Promise<never>((_, reject) => {
+    timeoutId = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms)
+  })
+  try {
+    return await Promise.race([promise, timeout])
+  } finally {
+    clearTimeout(timeoutId!)
   }
 }
 
