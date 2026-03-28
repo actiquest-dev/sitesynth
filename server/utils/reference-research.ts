@@ -334,12 +334,13 @@ async function callCaptureService(params: {
     throw new Error(`Reference capture token missing (baseUrl=${baseUrl})`)
   }
 
-  const maxAttempts = 3
+  const CAPTURE_TIMEOUT = 60000 // 60 seconds per capture attempt
+  const maxAttempts = 2 // Reduced from 3 to avoid long waits
   let lastError: any
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
     try {
       const controller = new AbortController()
-      const timeout = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT_MS)
+      const timeout = setTimeout(() => controller.abort(), CAPTURE_TIMEOUT)
       const response = await fetch(`${baseUrl}/capture`, {
         method: 'POST',
         headers: {
@@ -361,8 +362,13 @@ async function callCaptureService(params: {
       return data.data
     } catch (err: any) {
       lastError = err
-      if (attempt < maxAttempts) {
-        await sleep(2000 * attempt)
+      const isTimeout = err.name === 'AbortError' || err.message?.includes('timed out') || err.message?.includes('timeout')
+      if (isTimeout && attempt === 1) {
+        // On first timeout, skip retry to avoid long waits - move to next URL
+        throw new Error(`Capture timeout (${CAPTURE_TIMEOUT}ms) - skipping URL`)
+      }
+      if (attempt < maxAttempts && !isTimeout) {
+        await sleep(1000 * attempt)
         continue
       }
     }
@@ -606,12 +612,14 @@ export async function runReferenceAnalysisPipeline(params: {
   })
 
   const capturedAssets = []
+  const failedUrls = new Map<string, string[]>()
   for (const candidate of candidatePages) {
     const hostname = new URL(candidate.url).hostname.replace(/^www\./, '')
     const competitor = hostname.split('.')[0] || 'reference'
     const pageKinds = Array.isArray((candidate as any).capture_targets) && (candidate as any).capture_targets.length
       ? (candidate as any).capture_targets.slice(0, 3)
       : ['homepage']
+
     await log(`Requesting capture for ${candidate.url} (kinds=${pageKinds.join(', ')})`, 'info', {
       phase: 'capture',
       payload: { url: candidate.url, kinds: pageKinds, competitor },
@@ -632,9 +640,28 @@ export async function runReferenceAnalysisPipeline(params: {
       })
       capturedAssets.push(...capture.assets.map((asset: any) => ({ ...asset, competitor, sourceType: (candidate as any).source || 'web_discovery' })))
     } catch (error: any) {
-      await log(`Capture failed for ${candidate.url}: ${error?.message || 'unknown error'}`, 'warn', {
+      const errorMsg = error?.message || 'unknown error'
+      failedUrls.set(candidate.url, [competitor, errorMsg])
+
+      const isTimeoutError = errorMsg.includes('timeout') || errorMsg.includes('Timeout') || errorMsg.includes('AbortError')
+      const logLevel = isTimeoutError ? 'warn' : 'warn'
+      await log(`Capture failed for ${candidate.url}: ${errorMsg}`, logLevel, {
         phase: 'capture',
-        payload: { url: candidate.url, error: error?.message || 'unknown error' },
+        payload: { url: candidate.url, error: errorMsg, timeout: isTimeoutError },
+      })
+    }
+  }
+
+  // Log summary of failed URLs
+  if (failedUrls.size > 0) {
+    const timeoutUrls = Array.from(failedUrls.entries())
+      .filter(([_, [__, msg]]) => msg.includes('timeout') || msg.includes('Timeout'))
+      .map(([url]) => url)
+
+    if (timeoutUrls.length > 0) {
+      await log(`${timeoutUrls.length} URL(s) skipped due to capture timeout`, 'info', {
+        phase: 'capture',
+        payload: { skipped_urls: timeoutUrls },
       })
     }
   }

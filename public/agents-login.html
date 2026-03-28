@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sitesynth Agent Dashboard</title>
+  <style>
+    @font-face {
+      font-family: "Roc Grotesk";
+      src: url("/login-assets/rocgrotesk-medium.otf") format("opentype");
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Roc Grotesk";
+      src: url("/login-assets/rocgrotesk-bold.otf") format("opentype");
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "Roc Grotesk", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0f0f0f;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .login-container { width: 100%; max-width: 400px; padding: 0 20px; }
+
+    .login-box {
+      background: linear-gradient(180deg, #1a1a1a 0%, #161616 100%);
+      border: 1px solid #333;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .logo-section { text-align: center; margin-bottom: 32px; }
+
+    .logo-box {
+      width: 56px; height: 56px;
+      margin: 0 auto 20px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-box svg { width: 100%; height: 100%; }
+
+    h1 { font-size: 24px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.5px; }
+    .subtitle { font-size: 14px; color: #888; font-weight: 500; }
+
+    .form-group { margin-bottom: 20px; }
+
+    label {
+      display: block; font-size: 13px; font-weight: 500;
+      margin-bottom: 8px; color: #999;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+
+    input {
+      width: 100%; padding: 12px 14px;
+      background: #0f0f0f; border: 1px solid #333;
+      color: #fff; font-size: 14px;
+      font-family: "Inter", -apple-system, sans-serif;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus {
+      outline: none; border-color: #8D35FF;
+      box-shadow: 0 0 0 3px rgba(141, 53, 255, 0.1);
+    }
+    input::placeholder { color: #555; }
+
+    .submit-btn {
+      width: 100%; padding: 12px;
+      background: #8D35FF; border: none;
+      color: #fff; font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: background 0.2s;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      margin-top: 10px;
+      font-family: "Inter", -apple-system, sans-serif;
+    }
+    .submit-btn:hover { background: #7B2AE8; }
+    .submit-btn:active { transform: scale(0.98); }
+
+    .error {
+      display: none;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444; padding: 12px 14px;
+      margin-bottom: 20px; font-size: 13px;
+    }
+
+    .footer {
+      text-align: center; font-size: 12px; color: #555;
+      margin-top: 28px; padding-top: 20px;
+      border-top: 1px solid #2a2a2a;
+    }
+
+    @media (max-width: 480px) {
+      .login-box { padding: 30px 20px; }
+      h1 { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-box">
+      <div class="logo-section">
+        <div class="logo-box">
+          <svg width="64" height="57" viewBox="0 0 64 57" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12.7047 12.0074H64V0H12.794C5.72839 0 0 6.04756 0 13.5069C0 20.9662 5.72839 27.0138 12.794 27.0138H21.5136C22.2457 27.0138 22.8399 27.641 22.8399 28.4139C22.8399 29.1868 22.2457 29.8141 21.5136 29.8141H0.0376249V41.8215L21.5262 41.7586C25.806 41.7454 29.5842 39.5028 31.8809 36.0735C34.1384 39.6749 37.9965 42.0632 42.3908 42.1012L51.2938 42.179C52.0259 42.1856 52.6153 42.8129 52.6153 43.5858C52.6153 44.362 52.018 44.9926 51.2828 44.9926H0.0172448V57H51.1918C58.2575 57 63.9859 50.9524 63.9859 43.4931C63.9859 36.0338 58.2575 29.9862 51.1918 29.9862H42.4723C41.7402 29.9862 41.146 29.359 41.146 28.5861C41.146 27.8132 41.7402 27.1859 42.4723 27.1859H63.9781V15.1785L42.4597 15.2414C38.1799 15.2546 34.4017 17.4972 32.105 20.9265C29.8475 17.3251 25.9894 14.9368 21.5951 14.8988L12.6921 14.821C11.96 14.8144 11.3706 14.1871 11.3706 13.4142C11.3706 12.6413 11.9679 12.0074 12.7031 12.0074H12.7047Z" fill="white"/>
+          </svg>
+        </div>
+        <h1>Sitesynth</h1>
+        <p class="subtitle">Agent Dashboard</p>
+      </div>
+
+      <div class="error" id="error">Неверный логин или пароль</div>
+
+      <form id="form">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="user" placeholder="Username" required autofocus>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="pass" placeholder="Password" required>
+        </div>
+        <button type="submit" class="submit-btn">Sign In</button>
+      </form>
+
+      <div class="footer">Secure access to AI agents and workflows</div>
+    </div>
+  </div>
+
+  <script>
+    // SHA-256 implementation (Web Crypto API)
+    async function sha256(message) {
+      const msgBuffer = new TextEncoder().encode(message);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    const form = document.getElementById('form');
+    const errorEl = document.getElementById('error');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorEl.style.display = 'none';
+
+      const user = document.getElementById('user').value.trim();
+      const pass = document.getElementById('pass').value.trim();
+
+      if (!user || !pass) return;
+
+      // Compute token: SHA-256(user:pass:secret)
+      const token = await sha256(user + ':' + pass + ':sitesynth-agents-secret');
+
+      // Set auth cookie (secure, 30 days)
+      const expires = new Date(Date.now() + 30 * 864e5).toUTCString();
+      document.cookie = `ss_auth=${token}; path=/; expires=${expires}; SameSite=Strict; Secure`;
+
+      // Redirect to dashboard
+      window.location.href = '/';
+    });
+  </script>
+</body>
+</html>

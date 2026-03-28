@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ssh -i /Users/miguelaprossine/synth/sitesynth/.ssh/codex_sitesynth ubuntu@138.2.134.17 \"sudo grep ''include.*sites'' /etc/nginx/nginx.conf\")"
+    ]
+  }
+}
