@@ -405,8 +405,19 @@ export async function runReferenceAnalysisPipeline(params: {
   const { briefId, userEmail, markdownContent } = params
   const db = useDatabaseClient()
   const logs: Array<{ ts: string; level: 'info' | 'warn' | 'error'; message: string }> = []
-  const log = (message: string, level: 'info' | 'warn' | 'error' = 'info') => {
+  const persistLogs = async () => {
+    await db
+      .from('briefs')
+      .update({
+        reference_analysis_json: { logs },
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', briefId)
+      .eq('user_email', userEmail)
+  }
+  const log = async (message: string, level: 'info' | 'warn' | 'error' = 'info') => {
     logs.push({ ts: new Date().toISOString(), level, message })
+    await persistLogs()
   }
 
   await db
@@ -415,13 +426,13 @@ export async function runReferenceAnalysisPipeline(params: {
     .eq('id', briefId)
     .eq('user_email', userEmail)
 
-  log('Starting reference discovery')
+  await log('Starting reference discovery')
   const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL
   const captureBaseUrl = process.env.REFERENCE_CAPTURE_SERVICE_URL || (isProd ? 'https://mcp.sitesynth.com/reference_capture' : 'http://127.0.0.1:8890')
   const tokenPresent = !!process.env.REFERENCE_CAPTURE_TOKEN
-  log(`Capture service config: baseUrl=${captureBaseUrl} token=${tokenPresent ? 'present' : 'missing'}`)
+  await log(`Capture service config: baseUrl=${captureBaseUrl} token=${tokenPresent ? 'present' : 'missing'}`)
   const discovered = await discoverReferences(markdownContent)
-  log(`Discovered ${discovered.urls.length} candidate URLs`)
+  await log(`Discovered ${discovered.urls.length} candidate URLs`)
   const candidatePages = discovered.urls.slice(0, 5)
 
   const capturedAssets = []
@@ -431,7 +442,7 @@ export async function runReferenceAnalysisPipeline(params: {
     const pageKinds = Array.isArray((candidate as any).capture_targets) && (candidate as any).capture_targets.length
       ? (candidate as any).capture_targets.slice(0, 3)
       : ['homepage']
-    log(`Requesting capture for ${candidate.url}`)
+    await log(`Requesting capture for ${candidate.url}`)
     try {
       const capture = await callCaptureService({
         briefId,
@@ -442,10 +453,10 @@ export async function runReferenceAnalysisPipeline(params: {
           label: index === 0 ? hostname : `${hostname}-${kind}`,
         })),
       })
-      log(`Captured ${capture.assets.length} screenshots for ${candidate.url}`)
+      await log(`Captured ${capture.assets.length} screenshots for ${candidate.url}`)
       capturedAssets.push(...capture.assets.map((asset: any) => ({ ...asset, competitor, sourceType: (candidate as any).source || 'web_discovery' })))
     } catch (error: any) {
-      log(`Capture failed for ${candidate.url}: ${error?.message || 'unknown error'}`, 'warn')
+      await log(`Capture failed for ${candidate.url}: ${error?.message || 'unknown error'}`, 'warn')
     }
   }
 
@@ -459,20 +470,20 @@ export async function runReferenceAnalysisPipeline(params: {
       })
       .eq('id', briefId)
       .eq('user_email', userEmail)
-    log('No screenshots returned from capture service', 'error')
+    await log('No screenshots returned from capture service', 'error')
     throw new Error('Reference capture returned no screenshots')
   }
 
   const insertedAssets = []
   for (const asset of capturedAssets) {
-    log(`Uploading ${asset.fileName} to Drive`)
+    await log(`Uploading ${asset.fileName} to Drive`)
     const drive = await uploadScreenshotToDrive({
       userEmail,
       briefId,
       competitor: asset.competitor,
       asset,
     })
-    log(`Analyzing screenshot ${asset.fileName}`)
+    await log(`Analyzing screenshot ${asset.fileName}`)
     const analysis = await analyzeAsset(asset)
 
     const row = {
@@ -505,7 +516,7 @@ export async function runReferenceAnalysisPipeline(params: {
   }
 
   const summary = await buildReferenceSummary(markdownContent, insertedAssets)
-  log('Reference summary generated')
+  await log('Reference summary generated')
 
   const referenceAnalysisPayload = {
     product_type: discovered.productType,
