@@ -10,7 +10,7 @@ function resolveCredentials() {
       type: 'service_account',
       project_id: 'sitesynth-llm',
       private_key_id: 'key',
-      private_key: process.env.GOOGLE_DRIVE_PRIVATE_KEY,
+      private_key: process.env.GOOGLE_DRIVE_PRIVATE_KEY.replace(/\\n/g, '\n'),
       client_email: process.env.GOOGLE_DRIVE_SERVICE_ACCOUNT_EMAIL,
       client_id: '1234567890',
       auth_uri: 'https://accounts.google.com/o/oauth2/auth',
