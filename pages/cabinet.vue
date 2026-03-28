@@ -2604,6 +2604,8 @@ onMounted(async () => {
     return
   }
 
+  await tryClaimAnonymousConversation()
+
   // Load projects and briefs first to update stats correctly
   await loadBriefs()
   await loadUserFiles()
@@ -2774,7 +2776,29 @@ const chatTime = (iso?: string) => {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
 
-const { deviceId } = useAnonymousChat()
+const { deviceId, getClaimToken, clearClaimToken } = useAnonymousChat()
+
+const tryClaimAnonymousConversation = async () => {
+  if (!userEmail.value) return
+  const claimToken = getClaimToken()
+  if (!claimToken) return
+  try {
+    const response = await fetch('/api/auth/claim-conversation', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ claim_token: claimToken, user_email: userEmail.value }),
+    })
+    if (response.ok) {
+      clearClaimToken()
+      console.log('[Cabinet] Claimed anonymous conversation via claim_token')
+    } else {
+      const err = await response.json().catch(() => ({}))
+      console.warn('[Cabinet] Claim conversation failed:', err?.statusMessage || err?.error || response.status)
+    }
+  } catch (e) {
+    console.warn('[Cabinet] Claim conversation error:', e)
+  }
+}
 
 const getChatHeaders = (extra: Record<string, string> = {}) => {
   const headers: Record<string, string> = { ...extra }

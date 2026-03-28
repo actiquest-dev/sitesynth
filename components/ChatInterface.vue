@@ -251,13 +251,14 @@ async function startNewChat() {
     if (conversation) {
       conversations.value.push(conversation)
 
-      // ✅ For anonymous users: store conversation_id and claim_token in localStorage
+      // ✅ Store conversation_id for anonymous users
       if (!isAuthenticated) {
         setConversationId(conversation.id)
-        if (conversation.claim_token) {
-          setClaimToken(conversation.claim_token)
-          console.log('[ChatInterface] Stored claim_token for future registration')
-        }
+      }
+      // ✅ Always store claim_token if returned (needed to claim after login)
+      if (conversation.claim_token) {
+        setClaimToken(conversation.claim_token)
+        console.log('[ChatInterface] Stored claim_token for future registration')
       }
 
       selectConversation(conversation.id)

@@ -264,8 +264,14 @@ async function callCaptureService(params: {
   competitor: string
   pages: Array<{ url: string; kind: string; label: string; viewport?: string }>
 }) {
-  const baseUrl = process.env.REFERENCE_CAPTURE_SERVICE_URL || 'http://127.0.0.1:8890'
+  const envBaseUrl = process.env.REFERENCE_CAPTURE_SERVICE_URL
   const token = process.env.REFERENCE_CAPTURE_TOKEN || ''
+  const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL
+  const baseUrl = envBaseUrl || (isProd ? 'https://mcp.sitesynth.com/reference_capture' : 'http://127.0.0.1:8890')
+
+  if (isProd && !token) {
+    throw new Error('Reference capture token missing')
+  }
 
   const response = await fetch(`${baseUrl}/capture`, {
     method: 'POST',
@@ -276,9 +282,12 @@ async function callCaptureService(params: {
     body: JSON.stringify(params),
   })
 
-  const data = await response.json()
+  const data = await response.json().catch(() => ({}))
+  if (!response.ok) {
+    throw new Error(`Reference capture HTTP ${response.status} from ${baseUrl}`)
+  }
   if (!data.success) {
-    throw new Error(data.error || 'Reference capture failed')
+    throw new Error(data.error || `Reference capture failed (${baseUrl})`)
   }
   return data.data
 }

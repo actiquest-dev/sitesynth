@@ -291,14 +291,15 @@ const initializeConversation = async () => {
 
       console.log('Created new conversation:', conversationId)
 
-      // ✅ For anonymous users: store conversation_id and claim_token in localStorage
+      // ✅ Store conversation_id for anonymous users
       if (!isAuthenticated && conversationId) {
         setConversationId(conversationId)
-        if (data.data?.claim_token || data.claim_token) {
-          const claimToken = data.data?.claim_token || data.claim_token
-          setClaimToken(claimToken)
-          console.log('[AIChatDrawer] Stored claim_token for future registration')
-        }
+      }
+      // ✅ Always store claim_token if returned (needed to claim after login)
+      if (data.data?.claim_token || data.claim_token) {
+        const claimToken = data.data?.claim_token || data.claim_token
+        setClaimToken(claimToken)
+        console.log('[AIChatDrawer] Stored claim_token for future registration')
       }
 
       // Persist presale conversation_id so payment page can claim it after registration
