@@ -4,7 +4,7 @@ returns table (
   id uuid,
   brief_id uuid,
   user_email text
-) language plpgsql as 29256
+) language plpgsql as $$
 begin
   return query
   with candidate as (
@@ -26,4 +26,4 @@ begin
   where reference_jobs.id in (select id from candidate)
   returning reference_jobs.id, reference_jobs.brief_id, reference_jobs.user_email;
 end;
-29256;
+$$;
