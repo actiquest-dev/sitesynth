@@ -37,9 +37,9 @@ async function geminiText(parts: Array<{ text: string } | { inlineData: { data: 
   }
   throw lastError
 }
-import { useDatabaseClient } from '~~/server/utils/supabase'
-import { getDriveClient, getOrCreateChildFolder, getOrCreateUserRootFolder } from '~~/server/utils/google-drive'
-import { selectCuratedReferenceShortlist } from '~~/server/utils/curated-reference-library'
+import { useDatabaseClient } from './supabase'
+import { getDriveClient, getOrCreateChildFolder, getOrCreateUserRootFolder } from './google-drive'
+import { selectCuratedReferenceShortlist } from './curated-reference-library'
 
 const competitorSchema = z.object({
   product_type: z.string(),
