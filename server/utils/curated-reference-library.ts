@@ -39,6 +39,16 @@ export type CuratedReferenceEntry = z.infer<typeof curatedReferenceEntrySchema>
 
 const seedPath = new URL('../data/curated-reference-library/seed.json', import.meta.url)
 
+const loadBundledSeed = async () => {
+  try {
+    // Prefer bundled JSON when running in serverless environments
+    const mod: any = await import('../data/curated-reference-library/seed.json', { assert: { type: 'json' } } as any)
+    return mod?.default || mod
+  } catch {
+    return null
+  }
+}
+
 const resolveSeedPath = async () => {
   try {
     await readFile(seedPath, 'utf8')
@@ -66,6 +76,11 @@ const resolveSeedPath = async () => {
 
 export async function loadCuratedReferenceLibrary() {
   try {
+    const bundled = await loadBundledSeed()
+    if (bundled) {
+      return curatedReferenceLibrarySchema.parse(bundled)
+    }
+
     const resolved = await resolveSeedPath()
     const raw = await readFile(resolved, 'utf8')
     return curatedReferenceLibrarySchema.parse(JSON.parse(raw))
