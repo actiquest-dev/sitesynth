@@ -2269,7 +2269,6 @@ const analyzeReferences = async () => {
   if (!selectedBrief.value) return
   isAnalyzingReferences.value = true
   referenceStatus.value = 'processing'
-  startReferencePolling()
   referenceAnalysis.value = null
   referenceAssets.value = []
   referenceLogs.value = []
@@ -2288,6 +2287,8 @@ const analyzeReferences = async () => {
     if (data?.data) {
       referenceJob.value = data.data
     }
+    // Start polling only AFTER the job is queued in DB
+    startReferencePolling()
     const briefRes = await fetch(`/api/briefs/${selectedBrief.value.id}`, {
       headers: { 'x-user-email': userEmail.value },
     })
