@@ -3153,6 +3153,11 @@ const openBriefEditor = (brief: any) => {
   referenceAnalysis.value = brief.reference_analysis_json || null
   referenceAssets.value = []
   referenceLogs.value = Array.isArray(brief.reference_analysis_json?.logs) ? brief.reference_analysis_json.logs : []
+  // Auto-start polling if brief is already queued or processing
+  stopReferencePolling()
+  if (['queued', 'processing'].includes(referenceStatus.value)) {
+    loadReferenceStatus()
+  }
   loadBriefVersions(brief.id)
 
   // Open chat drawer in post-brief mode so AI can assist with this brief
