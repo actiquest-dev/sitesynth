@@ -404,7 +404,7 @@ export async function runReferenceAnalysisPipeline(params: {
 }) {
   const { briefId, userEmail, markdownContent } = params
   const db = useDatabaseClient()
-  const logs: Array<{ ts: string; level: 'info' | 'warn' | 'error'; message: string }> = []
+  const logs: Array<{ ts: string; level: 'info' | 'warn' | 'error'; message: string; phase?: string; payload?: any }> = []
   const startedAt = Date.now()
   const persistLogs = async () => {
     try {
@@ -426,27 +426,43 @@ export async function runReferenceAnalysisPipeline(params: {
       console.warn('[reference-research] log persist failed:', err?.message || err)
     }
   }
-  const log = async (message: string, level: 'info' | 'warn' | 'error' = 'info') => {
-    logs.push({ ts: new Date().toISOString(), level, message })
+  const log = async (
+    message: string,
+    level: 'info' | 'warn' | 'error' = 'info',
+    meta?: { phase?: string; payload?: any }
+  ) => {
+    logs.push({ ts: new Date().toISOString(), level, message, ...(meta?.phase ? { phase: meta.phase } : {}), ...(meta?.payload ? { payload: meta.payload } : {}) })
     await persistLogs()
   }
 
-  await log('Reference analysis started')
+  await log('Reference analysis started', 'info', { phase: 'discovery' })
   await db
     .from('briefs')
     .update({ reference_status: 'processing', updated_at: new Date().toISOString() })
     .eq('id', briefId)
     .eq('user_email', userEmail)
 
-  await log('Starting reference discovery')
+  await log('Starting reference discovery', 'info', { phase: 'discovery' })
   const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL
   const captureBaseUrl = process.env.REFERENCE_CAPTURE_SERVICE_URL || (isProd ? 'https://mcp.sitesynth.com/reference_capture' : 'http://127.0.0.1:8890')
   const tokenPresent = !!process.env.REFERENCE_CAPTURE_TOKEN
-  await log(`Capture service config: baseUrl=${captureBaseUrl} token=${tokenPresent ? 'present' : 'missing'}`)
+  await log(`Capture service config: baseUrl=${captureBaseUrl} token=${tokenPresent ? 'present' : 'missing'}`, 'info', {
+    phase: 'discovery',
+    payload: { baseUrl: captureBaseUrl, tokenPresent },
+  })
   const discovered = await discoverReferences(markdownContent)
-  await log(`Discovered ${discovered.urls.length} candidate URLs`)
+  await log(`Discovered ${discovered.urls.length} candidate URLs`, 'info', {
+    phase: 'discovery',
+    payload: {
+      candidates: discovered.urls.length,
+      curated: discovered.curatedShortlist?.length || 0,
+    },
+  })
   const candidatePages = discovered.urls.slice(0, 5)
-  await log(`Selected ${candidatePages.length} capture candidates`)
+  await log(`Selected ${candidatePages.length} capture candidates`, 'info', {
+    phase: 'capture',
+    payload: { selected: candidatePages.length },
+  })
 
   const capturedAssets = []
   for (const candidate of candidatePages) {
@@ -455,7 +471,10 @@ export async function runReferenceAnalysisPipeline(params: {
     const pageKinds = Array.isArray((candidate as any).capture_targets) && (candidate as any).capture_targets.length
       ? (candidate as any).capture_targets.slice(0, 3)
       : ['homepage']
-    await log(`Requesting capture for ${candidate.url} (kinds=${pageKinds.join(', ')})`)
+    await log(`Requesting capture for ${candidate.url} (kinds=${pageKinds.join(', ')})`, 'info', {
+      phase: 'capture',
+      payload: { url: candidate.url, kinds: pageKinds, competitor },
+    })
     try {
       const capture = await callCaptureService({
         briefId,
@@ -466,10 +485,16 @@ export async function runReferenceAnalysisPipeline(params: {
           label: index === 0 ? hostname : `${hostname}-${kind}`,
         })),
       })
-      await log(`Captured ${capture.assets.length} screenshots for ${candidate.url}`)
+      await log(`Captured ${capture.assets.length} screenshots for ${candidate.url}`, 'info', {
+        phase: 'capture',
+        payload: { url: candidate.url, count: capture.assets.length },
+      })
       capturedAssets.push(...capture.assets.map((asset: any) => ({ ...asset, competitor, sourceType: (candidate as any).source || 'web_discovery' })))
     } catch (error: any) {
-      await log(`Capture failed for ${candidate.url}: ${error?.message || 'unknown error'}`, 'warn')
+      await log(`Capture failed for ${candidate.url}: ${error?.message || 'unknown error'}`, 'warn', {
+        phase: 'capture',
+        payload: { url: candidate.url, error: error?.message || 'unknown error' },
+      })
     }
   }
 
@@ -483,21 +508,30 @@ export async function runReferenceAnalysisPipeline(params: {
       })
       .eq('id', briefId)
       .eq('user_email', userEmail)
-    await log('No screenshots returned from capture service', 'error')
+    await log('No screenshots returned from capture service', 'error', { phase: 'capture' })
     throw new Error('Reference capture returned no screenshots')
   }
 
-  await log(`Processing ${capturedAssets.length} captured assets`)
+  await log(`Processing ${capturedAssets.length} captured assets`, 'info', {
+    phase: 'upload',
+    payload: { count: capturedAssets.length },
+  })
   const insertedAssets = []
   for (const asset of capturedAssets) {
-    await log(`Uploading ${asset.fileName} to Drive`)
+    await log(`Uploading ${asset.fileName} to Drive`, 'info', {
+      phase: 'upload',
+      payload: { file: asset.fileName, competitor: asset.competitor },
+    })
     const drive = await uploadScreenshotToDrive({
       userEmail,
       briefId,
       competitor: asset.competitor,
       asset,
     })
-    await log(`Analyzing screenshot ${asset.fileName}`)
+    await log(`Analyzing screenshot ${asset.fileName}`, 'info', {
+      phase: 'analyze',
+      payload: { file: asset.fileName, competitor: asset.competitor },
+    })
     const analysis = await analyzeAsset(asset)
 
     const row = {
@@ -527,12 +561,15 @@ export async function runReferenceAnalysisPipeline(params: {
       .single()
 
     insertedAssets.push(data || row)
-    await log(`Stored asset ${asset.fileName} (drive=${drive.driveFileId ? 'ok' : 'skipped'})`)
+    await log(`Stored asset ${asset.fileName} (drive=${drive.driveFileId ? 'ok' : 'skipped'})`, 'info', {
+      phase: 'upload',
+      payload: { file: asset.fileName, driveFileId: drive.driveFileId || null },
+    })
   }
 
-  await log('Building reference summary')
+  await log('Building reference summary', 'info', { phase: 'summary' })
   const summary = await buildReferenceSummary(markdownContent, insertedAssets)
-  await log('Reference summary generated')
+  await log('Reference summary generated', 'info', { phase: 'summary' })
 
   const referenceAnalysisPayload = {
     product_type: discovered.productType,
@@ -569,7 +606,7 @@ export async function runReferenceAnalysisPipeline(params: {
     .eq('user_email', userEmail)
 
   const elapsedSec = ((Date.now() - startedAt) / 1000).toFixed(1)
-  await log(`Reference analysis finished in ${elapsedSec}s`)
+  await log(`Reference analysis finished in ${elapsedSec}s`, 'info', { phase: 'summary', payload: { durationSec: Number(elapsedSec) } })
   return {
     discovered,
     assets: insertedAssets,
