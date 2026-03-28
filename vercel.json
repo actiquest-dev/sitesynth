@@ -1,6 +1,11 @@
 {
     "buildCommand": "npm run build",
     "outputDirectory": ".output",
+    "functions": {
+        "api/briefs/references/run": {
+            "maxDuration": 300
+        }
+    },
     "headers": [
         {
             "source": "/sitemap.xml",
