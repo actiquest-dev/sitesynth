@@ -1,16 +1,20 @@
 import { google } from 'googleapis'
 
 function normalizePemKey(raw: string): string {
-  // Replace literal \n escape sequences with real newlines
-  let key = raw.replace(/\\n/g, '\n')
-  // If key is already properly formatted, return as-is
-  if (key.split('\n').length > 3) return key
-  // Key body is one long string — reformat to PEM (64-char lines)
-  const m = key.match(/-----BEGIN ([^-]+)-----([A-Za-z0-9+/=\s]+)-----END ([^-]+)-----/)
-  if (!m) return key
+  // If already properly formatted (real newlines), return as-is
+  if (raw.split('\n').length > 3) return raw
+
+  // Replace literal \n escape sequences with real newlines and check again
+  const withNewlines = raw.replace(/\\n/g, '\n')
+  if (withNewlines.split('\n').length > 3) return withNewlines
+
+  // Systemd strips backslash from \n in unquoted env values, leaving just 'n'.
+  // Extract header/footer and strip ALL non-base64 chars from the body.
+  const m = raw.match(/-----BEGIN ([^-]+)-----(.+?)-----END ([^-]+)-----/s)
+  if (!m) return raw
   const header = `-----BEGIN ${m[1]}-----`
   const footer = `-----END ${m[3]}-----`
-  const body = m[2].replace(/\s/g, '')
+  const body = m[2].replace(/[^A-Za-z0-9+/=]/g, '')
   const lines = body.match(/.{1,64}/g) || []
   return `${header}\n${lines.join('\n')}\n${footer}\n`
 }
