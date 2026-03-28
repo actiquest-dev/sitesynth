@@ -22,6 +22,56 @@ function generateSecureToken(): string {
 
 export default defineEventHandler(async (event) => {
   const method = event.node.req.method
+  const path = event.node.req.url || ''
+
+  // POST /api/chat/conversations/claim - Claim anonymous conversation for authenticated user
+  if (method === 'POST' && path.includes('/claim')) {
+    const userEmail = getHeader(event, 'x-user-email') || null
+    const body = await readBody(event)
+    const conversationId = body?.conversation_id || body?.conversationId
+    const claimToken = body?.claim_token || body?.claimToken
+
+    if (!userEmail) {
+      return createError({ statusCode: 401, statusMessage: 'User email required' })
+    }
+    if (!conversationId || !claimToken) {
+      return createError({ statusCode: 400, statusMessage: 'conversation_id and claim_token required' })
+    }
+
+    const { data: conversation, error: convError } = await supabase
+      .from('conversations')
+      .select('id, claim_token, user_email')
+      .eq('id', conversationId)
+      .maybeSingle()
+
+    if (convError || !conversation) {
+      return createError({ statusCode: 404, statusMessage: 'Conversation not found' })
+    }
+    if (conversation.user_email && conversation.user_email !== userEmail) {
+      return createError({ statusCode: 403, statusMessage: 'Conversation already claimed' })
+    }
+    if (conversation.claim_token !== claimToken) {
+      return createError({ statusCode: 403, statusMessage: 'Invalid claim token' })
+    }
+
+    const { error: updateError } = await supabase
+      .from('conversations')
+      .update({
+        user_email: userEmail,
+        claimed_at: new Date().toISOString(),
+      })
+      .eq('id', conversationId)
+
+    if (updateError) {
+      return createError({ statusCode: 500, statusMessage: updateError.message })
+    }
+
+    return {
+      status: 'success',
+      message: 'Conversation claimed',
+      data: { id: conversationId },
+    }
+  }
 
   // GET /api/chat/conversations - Get conversations for user (authenticated or anonymous)
   if (method === 'GET') {

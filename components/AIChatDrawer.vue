@@ -139,7 +139,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:isOpen'])
 const { setBriefDraft, requestBriefDraftApply } = useChatDrawer()
-const { deviceId, setConversationId, setClaimToken, clearConversationId, clearClaimToken } = useAnonymousChat()
+const { deviceId, setConversationId, setClaimToken, getClaimToken } = useAnonymousChat()
 
 const messages = ref<Message[]>([])
 const messageInput = ref('')
@@ -242,7 +242,8 @@ const initializeConversation = async () => {
         await loadConversationMessages(props.briefContext.conversationId)
         return
       } catch {
-        selectedConversationId.value = null
+        error.value = 'Chat access denied'
+        return
       }
     }
 
@@ -264,12 +265,8 @@ const initializeConversation = async () => {
           console.log('Loaded existing conversation:', conversation.id)
 
           // Load messages for this conversation
-          try {
-            await loadConversationMessages(conversation.id)
-            return
-          } catch {
-            selectedConversationId.value = null
-          }
+          await loadConversationMessages(conversation.id)
+          return
         }
       }
     }
@@ -327,10 +324,25 @@ const loadConversationMessages = async (conversationId: string) => {
       headers: authHeaders
     })
 
-    if (response.status === 403) {
-      clearConversationId()
-      clearClaimToken()
-      selectedConversationId.value = null
+    if (response.status === 403 && props.userEmail) {
+      const claimToken = getClaimToken()
+      if (claimToken) {
+        await fetch('/api/chat/conversations/claim', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...authHeaders },
+          body: JSON.stringify({ conversation_id: conversationId, claim_token: claimToken }),
+        })
+        const retry = await fetch(`/api/chat/messages?conversation_id=${conversationId}`, {
+          method: 'GET',
+          headers: authHeaders
+        })
+        if (retry.ok) {
+          const data = await retry.json()
+          messages.value = data.messages || data.data || []
+          console.log('Loaded messages:', messages.value.length)
+          return
+        }
+      }
       throw new Error('Chat access denied')
     }
 
@@ -473,13 +485,36 @@ const sendMessage = async () => {
 
     const data = await response.json()
     
-    if (response.status === 403) {
-      clearConversationId()
-      clearClaimToken()
-      selectedConversationId.value = null
+    if (response.status === 403 && props.userEmail) {
+      const claimToken = getClaimToken()
+      if (claimToken) {
+        await fetch('/api/chat/conversations/claim', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...authHeaders },
+          body: JSON.stringify({ conversation_id: selectedConversationId.value, claim_token: claimToken }),
+        })
+        const retry = await fetch('/api/chat/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...authHeaders
+          },
+          body: JSON.stringify({
+            conversation_id: selectedConversationId.value,
+            message: content,
+            history: messages.value.filter(m => m.id !== userMessage.id),
+            agent_type: props.agentType
+          })
+        })
+        if (retry.ok) {
+          const retryData = await retry.json()
+          messages.value = retryData.messages || messages.value
+          await scrollToBottom()
+          return
+        }
+      }
       error.value = data.error || 'Chat access denied'
       messages.value = messages.value.filter(m => m.id !== userMessage.id)
-      await initializeConversation()
       return
     }
 
