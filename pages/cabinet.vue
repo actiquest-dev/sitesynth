@@ -440,7 +440,7 @@
                         <span class="text-[#9a9a9a] text-xs uppercase tracking-[0.18em]">Reference Pipeline</span>
                         <span class="text-[10px] uppercase tracking-[0.18em] text-[#8b8b8b]">{{ referencePipelineState.status }}</span>
                       </div>
-                      <div v-if="referencePipelineState.status === 'queued'" class="text-xs text-[#8b8b8b]">
+                      <div v-if="referencePipelineState.status === 'queued' && !referenceLogs.length" class="text-xs text-[#8b8b8b]">
                         Waiting for worker to pick up the job…
                       </div>
                       <div class="flex flex-wrap gap-2">
@@ -459,7 +459,7 @@
                       </div>
                     </div>
 
-                    <div v-if="referenceAnalysis || referenceAssets.length" class="border border-[#2f2f2f] bg-[#0f0f0f] p-4 space-y-4">
+                    <div v-if="referenceAnalysis || referenceAssets.length || referenceLogs.length" class="border border-[#2f2f2f] bg-[#0f0f0f] p-4 space-y-4">
                       <div class="flex items-center justify-between">
                         <span class="text-[#9a9a9a] text-xs uppercase tracking-[0.18em]">Reference Analysis</span>
                         <span class="text-[10px] uppercase tracking-[0.18em] text-[#8b8b8b]">{{ referenceStatus }}</span>
