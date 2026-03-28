@@ -440,6 +440,9 @@
                         <span class="text-[#9a9a9a] text-xs uppercase tracking-[0.18em]">Reference Pipeline</span>
                         <span class="text-[10px] uppercase tracking-[0.18em] text-[#8b8b8b]">{{ referencePipelineState.status }}</span>
                       </div>
+                      <div v-if="referencePipelineState.status === 'queued'" class="text-xs text-[#8b8b8b]">
+                        Waiting for worker to pick up the job…
+                      </div>
                       <div class="flex flex-wrap gap-2">
                         <div
                           v-for="(step, index) in referencePipelineSteps"

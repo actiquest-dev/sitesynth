@@ -439,7 +439,7 @@ ${context}
     ? result
     : (result?.text || result?.response?.text || result?.content || '')
 
-  const jsonText = rawText.trim().startsWith('{') ? rawText : rawText.replace(/^[\\s\\S]*?(\\{[\\s\\S]*\\})[\\s\\S]*$/, '$1')
+  const jsonText = rawText.trim().startsWith('{') ? rawText : rawText.replace(/^[\s\S]*?(\{[\s\S]*\})[\s\S]*$/, '$1')
   const object = JSON.parse(jsonText) as z.infer<typeof referenceSummarySchema>
   return referenceSummarySchema.parse(object)
 }

@@ -54,20 +54,25 @@ const appendLog = async (briefId: string, userEmail: string, entry: { level: str
     ? brief.reference_analysis_json.logs
     : []
 
-  const next = [
-    ...existing,
-    {
-      ts: new Date().toISOString(),
-      level: entry.level,
-      message: entry.message,
-      ...(entry.payload ? { payload: entry.payload } : {}),
-    },
-  ]
+  const nextEntry = {
+    ts: new Date().toISOString(),
+    level: entry.level,
+    message: entry.message,
+    ...(entry.payload ? { payload: entry.payload } : {}),
+  }
+  const merged = [...existing, nextEntry]
+  const seen = new Set<string>()
+  const deduped = merged.filter((item) => {
+    const key = `${item.ts}|${item.level}|${item.message}`
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
 
   await supabase
     .from('briefs')
     .update({
-      reference_analysis_json: { ...(brief?.reference_analysis_json || {}), logs: next },
+      reference_analysis_json: { ...(brief?.reference_analysis_json || {}), logs: deduped },
       updated_at: new Date().toISOString(),
     })
     .eq('id', briefId)
