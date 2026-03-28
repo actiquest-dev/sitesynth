@@ -1553,13 +1553,13 @@
             </button>
           </div>
           <div class="grid grid-cols-[minmax(0,1fr)_320px] flex-1 min-h-0">
-            <div class="bg-[#090909] flex items-center justify-center p-6 min-h-[420px]">
-              <div v-if="activeMediaItem" class="w-full h-full flex flex-col gap-4">
+            <div class="bg-[#090909] flex flex-col p-6 min-h-[420px] overflow-y-auto">
+              <div v-if="activeMediaItem" class="w-full flex flex-col gap-4">
                 <img
                   v-if="activeMediaItem.kind === 'image'"
                   :src="activeMediaItem.url"
                   :alt="activeMediaItem.title"
-                  class="max-h-[65vh] w-full object-contain bg-[#050505] border border-[#1f1f1f]"
+                  class="w-full h-auto object-cover bg-[#050505] border border-[#1f1f1f]"
                 />
                 <div v-else class="border border-[#262626] p-6 bg-[#0f0f0f]">
                   <p class="text-white text-sm font-medium">{{ activeMediaItem.title }}</p>
