@@ -270,7 +270,7 @@ async function callCaptureService(params: {
   const baseUrl = envBaseUrl || (isProd ? 'https://mcp.sitesynth.com/reference_capture' : 'http://127.0.0.1:8890')
 
   if (isProd && !token) {
-    throw new Error('Reference capture token missing')
+    throw new Error(`Reference capture token missing (baseUrl=${baseUrl})`)
   }
 
   const response = await fetch(`${baseUrl}/capture`, {
@@ -287,7 +287,7 @@ async function callCaptureService(params: {
     throw new Error(`Reference capture HTTP ${response.status} from ${baseUrl}`)
   }
   if (!data.success) {
-    throw new Error(data.error || `Reference capture failed (${baseUrl})`)
+    throw new Error(data.error ? `${data.error} (${baseUrl})` : `Reference capture failed (${baseUrl})`)
   }
   return data.data
 }
@@ -416,6 +416,10 @@ export async function runReferenceAnalysisPipeline(params: {
     .eq('user_email', userEmail)
 
   log('Starting reference discovery')
+  const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL
+  const captureBaseUrl = process.env.REFERENCE_CAPTURE_SERVICE_URL || (isProd ? 'https://mcp.sitesynth.com/reference_capture' : 'http://127.0.0.1:8890')
+  const tokenPresent = !!process.env.REFERENCE_CAPTURE_TOKEN
+  log(`Capture service config: baseUrl=${captureBaseUrl} token=${tokenPresent ? 'present' : 'missing'}`)
   const discovered = await discoverReferences(markdownContent)
   log(`Discovered ${discovered.urls.length} candidate URLs`)
   const candidatePages = discovered.urls.slice(0, 5)
