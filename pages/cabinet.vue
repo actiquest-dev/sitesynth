@@ -2255,7 +2255,7 @@ const loadReferenceStatus = async () => {
 
 const startReferencePolling = () => {
   if (referenceStatusTimer) return
-  referenceStatusTimer = window.setInterval(loadReferenceStatus, 5000)
+  referenceStatusTimer = window.setInterval(loadReferenceStatus, 3000)
 }
 
 const stopReferencePolling = () => {
@@ -2287,25 +2287,11 @@ const analyzeReferences = async () => {
     if (data?.data) {
       referenceJob.value = data.data
     }
-    // Start polling only AFTER the job is queued in DB
+    // Force status to queued locally so polling won't stop on stale 'failed'
+    referenceStatus.value = 'queued'
+    // Start polling — status is now queued so loadReferenceStatus won't kill the timer
+    stopReferencePolling()
     startReferencePolling()
-    const briefRes = await fetch(`/api/briefs/${selectedBrief.value.id}`, {
-      headers: { 'x-user-email': userEmail.value },
-    })
-    const briefData = await briefRes.json().catch(() => ({}))
-    if (briefRes.ok && briefData?.success && briefData?.data?.markdown_content) {
-      selectedBrief.value = {
-        ...selectedBrief.value,
-        ...briefData.data,
-        content: briefData.data.markdown_content,
-        markdown_content: briefData.data.markdown_content,
-      }
-      const normalized = normalizeBriefContent(briefData.data.markdown_content)
-      briefEditContent.value = normalized
-      lastSavedContent.value = normalized
-      lastSavedAt.value = briefData.data.updated_at || new Date().toISOString()
-    }
-    await loadReferenceStatus()
     showToast('Reference analysis queued', 'success')
   } catch (error: any) {
     console.error('[References] Analysis failed', error)
