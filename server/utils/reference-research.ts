@@ -997,12 +997,34 @@ export async function runReferenceAnalysisPipeline(params: {
     logs,
   }
 
-  const mergedBriefContent = mergeReferenceSectionIntoBrief(markdownContent, summary, insertedAssets)
+  // Re-read latest brief before final write to avoid overwriting user edits made while job was running.
+  const { data: latestBrief } = await db
+    .from('briefs')
+    .select('markdown_content, brief_data')
+    .eq('id', briefId)
+    .eq('user_email', userEmail)
+    .maybeSingle()
+
+  const latestContent = typeof latestBrief?.markdown_content === 'string'
+    ? latestBrief.markdown_content
+    : markdownContent
+  const mergedBriefContent = mergeReferenceSectionIntoBrief(latestContent, summary, insertedAssets)
+  const existingReferenceLinks = Array.isArray(latestBrief?.brief_data?.referenceLinks)
+    ? latestBrief.brief_data.referenceLinks
+    : []
+  const mergedReferenceLinks = Array.from(new Set([
+    ...existingReferenceLinks,
+    ...(discovered.clientUrls || []),
+  ].filter(Boolean)))
 
   await db
     .from('briefs')
     .update({
       markdown_content: mergedBriefContent,
+      brief_data: {
+        ...(latestBrief?.brief_data || {}),
+        ...(mergedReferenceLinks.length ? { referenceLinks: mergedReferenceLinks } : {}),
+      },
       reference_analysis_json: referenceAnalysisPayload,
       reference_status: 'completed',
       reference_completed_at: new Date().toISOString(),
