@@ -378,7 +378,7 @@ ${markdownContent}
     visual: dedupedCandidates.filter((item) => item.source === 'visual_gallery').sort((a, b) => sourceWeight(b) - sourceWeight(a)),
     trend: dedupedCandidates.filter((item) => item.source === 'web_discovery').sort((a, b) => sourceWeight(b) - sourceWeight(a)),
   }
-  const urls = Array.from(new Map([
+  const candidatePriorityList = [
     ...clientCandidates,
     ...buckets.competitor.slice(0, explicitReferenceMode ? Math.max(clientCandidates.length, 6) : quotas.competitor),
     ...buckets.adjacent.slice(0, explicitReferenceMode ? 1 : quotas.adjacent),
@@ -388,7 +388,9 @@ ${markdownContent}
     ...buckets.adjacent.slice(explicitReferenceMode ? 1 : quotas.adjacent),
     ...buckets.visual.slice(explicitReferenceMode ? 1 : quotas.visual),
     ...buckets.trend.slice(explicitReferenceMode ? 1 : quotas.trend),
-  ].map((item) => [item.url, item]))).values()).slice(0, explicitReferenceMode ? Math.max(clientCandidates.length + 3, 12) : 20)
+  ]
+  const dedupedByUrl = new Map(candidatePriorityList.map((item) => [item.url, item]))
+  const urls = Array.from(dedupedByUrl.values()).slice(0, explicitReferenceMode ? Math.max(clientCandidates.length + 3, 12) : 20)
 
   return {
     productType: object.product_type,
