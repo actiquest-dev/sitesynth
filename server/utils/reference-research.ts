@@ -55,6 +55,14 @@ async function geminiText(parts: Array<{ text: string } | { inlineData: { data: 
 import { useDatabaseClient } from './supabase'
 import { getDriveClient, getOrCreateChildFolder, getOrCreateUserRootFolder } from './google-drive'
 import { selectCuratedReferenceShortlist } from './curated-reference-library'
+import {
+  briefSignalSchema,
+  buildSearchQueryPack,
+  buildSourceExclusionSet,
+  diversifyCandidateWeights,
+  inferCandidateQuotas,
+} from './reference-source-enrichment'
+import { extractClientUrls, getReferenceSourcePack, loadRecentReferenceHistory } from './reference-source-packs'
 import { getAgent, generateWithFallback } from '../mastra'
 
 const competitorSchema = z.object({
@@ -210,7 +218,43 @@ async function searchDuckDuckGo(query: string) {
   return Array.from(new Set(urls)).slice(0, 8)
 }
 
-async function discoverReferences(markdownContent: string) {
+async function discoverReferences(markdownContent: string, params?: { briefId?: string; userEmail?: string }) {
+  const briefSignalsRaw = await geminiJson<z.infer<typeof briefSignalSchema>>(`
+You are extracting design-strategy signals from a project brief.
+
+Return only JSON with:
+{
+  "product_archetype": "consumer_finance" | "b2b_saas" | "dashboard_analytics" | "marketplace" | "mobile_app" | "marketing_site" | "internal_tool" | "content_platform" | "other",
+  "business_model": "string",
+  "audience_summary": "string",
+  "primary_job_to_be_done": "string",
+  "product_stage": "idea" | "mvp" | "growth" | "mature" | "enterprise",
+  "visual_direction": "trustworthy_minimal" | "premium_editorial" | "dense_product_led" | "bold_expressive" | "technical_enterprise" | "mobile_first" | "conversion_focused" | "mixed",
+  "source_mix": {
+    "competitor_site": 0-5,
+    "adjacent_product": 0-5,
+    "visual_gallery": 0-5,
+    "trend_source": 0-5,
+    "client_provided": 0-5
+  },
+  "source_priorities": ["string"],
+  "source_exclusions": ["string"],
+  "must_avoid_patterns": ["string"],
+  "reference_angle": "string"
+}
+
+Brief:
+${markdownContent}
+  `.trim())
+  const briefSignals = briefSignalSchema.parse(briefSignalsRaw)
+  const sourcePack = getReferenceSourcePack(briefSignals.product_archetype, buildSearchQueryPack(briefSignals))
+  const clientUrls = extractClientUrls(markdownContent)
+  const db = useDatabaseClient()
+  const recentHistory = params?.userEmail
+    ? await loadRecentReferenceHistory({ db, userEmail: params.userEmail, currentBriefId: params.briefId, limit: 12 })
+    : { urls: new Set<string>(), domains: new Set<string>() }
+  const explicitReferenceMode = clientUrls.length >= 3
+
   const raw = await geminiJson<z.infer<typeof competitorSchema>>(`
 You are identifying competitor product references for design research.
 
@@ -246,24 +290,52 @@ Brief:
 ${markdownContent}
   `.trim())
   const object = competitorSchema.parse(raw)
+  const sourceExclusions = buildSourceExclusionSet(briefSignals)
+  const searchQueries = Array.from(new Set([
+    ...sourcePack.queryPacks,
+    ...buildSearchQueryPack(briefSignals),
+  ]))
+  const quotas = inferCandidateQuotas({
+    ...briefSignals,
+    source_mix: {
+      ...briefSignals.source_mix,
+      ...sourcePack.sourceMix,
+    },
+  })
+  const weights = diversifyCandidateWeights(briefSignals)
 
   const curatedShortlist = await selectCuratedReferenceShortlist({
     productType: object.product_type,
     surfaceType: object.surface_type,
     marketTags: object.market_tags,
     styleTags: object.style_tags,
-    excludeTags: object.exclude_tags,
+    excludeTags: [...object.exclude_tags, ...Array.from(sourceExclusions), ...Array.from(recentHistory.domains)],
     scoringPriority: object.scoring_priority,
-    limit: 8,
+    limit: Math.max(8, quotas.competitor + quotas.visual + quotas.adjacent + quotas.trend),
   })
 
   const discovered = []
-  for (const query of object.search_queries) {
+  const combinedQueries = explicitReferenceMode
+    ? searchQueries.slice(0, 2)
+    : Array.from(new Set([
+        ...searchQueries,
+        ...object.search_queries,
+      ]))
+  for (const query of combinedQueries) {
     const urls = await searchDuckDuckGo(query)
     discovered.push(...urls.map((url) => ({ url, query, source: 'web_discovery' })))
   }
 
-  const uniqueWeb = Array.from(new Map(discovered.map((item) => [item.url, item])).values()).slice(0, 12)
+  const uniqueWeb = Array.from(new Map(discovered.map((item) => [item.url, item])).values())
+    .filter((item) => {
+      try {
+        const hostname = new URL(item.url).hostname.replace(/^www\./, '').toLowerCase()
+        return !sourceExclusions.has(hostname) && !recentHistory.domains.has(hostname) && !recentHistory.urls.has(item.url)
+      } catch {
+        return true
+      }
+    })
+    .slice(0, explicitReferenceMode ? 4 : 18)
   const curatedUrls = curatedShortlist.map(({ reference, score }) => ({
     url: reference.url,
     query: 'curated_library',
@@ -282,9 +354,41 @@ ${markdownContent}
     title: object.competitor_names[i] || '',
   }))
 
-  // Priority: curated > web discovery > Gemini competitor URLs
-  const allCandidates = [...curatedUrls, ...uniqueWeb, ...geminiUrls]
-  const urls = Array.from(new Map(allCandidates.map((item) => [item.url, item])).values()).slice(0, 20)
+  const clientCandidates = clientUrls.map((url) => ({
+    url,
+    query: 'client_provided',
+    source: 'client_provided',
+    title: url,
+  }))
+
+  const allCandidates = [...clientCandidates, ...curatedUrls, ...uniqueWeb, ...geminiUrls]
+  const dedupedCandidates = Array.from(new Map(allCandidates.map((item) => [item.url, item])).values())
+
+  const sourceWeight = (item: any) => {
+    if (item.source === 'competitor_site' || item.source === 'gemini_competitor') return weights.competitorWeight
+    if (item.source === 'product_reference') return weights.adjacentWeight
+    if (item.source === 'visual_gallery') return weights.visualWeight
+    return weights.trendWeight
+  }
+
+  // Prefer a mixed portfolio: curated/competitor + web discovery + Gemini fallbacks
+  const buckets = {
+    competitor: dedupedCandidates.filter((item) => item.source === 'competitor_site' || item.source === 'gemini_competitor').sort((a, b) => sourceWeight(b) - sourceWeight(a)),
+    adjacent: dedupedCandidates.filter((item) => item.source === 'product_reference').sort((a, b) => sourceWeight(b) - sourceWeight(a)),
+    visual: dedupedCandidates.filter((item) => item.source === 'visual_gallery').sort((a, b) => sourceWeight(b) - sourceWeight(a)),
+    trend: dedupedCandidates.filter((item) => item.source === 'web_discovery').sort((a, b) => sourceWeight(b) - sourceWeight(a)),
+  }
+  const urls = Array.from(new Map([
+    ...clientCandidates,
+    ...buckets.competitor.slice(0, explicitReferenceMode ? Math.max(clientCandidates.length, 6) : quotas.competitor),
+    ...buckets.adjacent.slice(0, explicitReferenceMode ? 1 : quotas.adjacent),
+    ...buckets.visual.slice(0, explicitReferenceMode ? 1 : quotas.visual),
+    ...buckets.trend.slice(0, explicitReferenceMode ? 1 : quotas.trend),
+    ...buckets.competitor.slice(explicitReferenceMode ? Math.max(clientCandidates.length, 6) : quotas.competitor),
+    ...buckets.adjacent.slice(explicitReferenceMode ? 1 : quotas.adjacent),
+    ...buckets.visual.slice(explicitReferenceMode ? 1 : quotas.visual),
+    ...buckets.trend.slice(explicitReferenceMode ? 1 : quotas.trend),
+  ].map((item) => [item.url, item]))).values()).slice(0, explicitReferenceMode ? Math.max(clientCandidates.length + 3, 12) : 20)
 
   return {
     productType: object.product_type,
@@ -297,6 +401,14 @@ ${markdownContent}
     rationale: object.rationale,
     scoringPriority: object.scoring_priority,
     excludeTags: object.exclude_tags,
+    briefSignals,
+    sourcePack,
+    explicitReferenceMode,
+    sourceWeights: weights,
+    recentHistory: {
+      urls: Array.from(recentHistory.urls),
+      domains: Array.from(recentHistory.domains),
+    },
     curatedShortlist,
     urls,
   }
@@ -508,6 +620,12 @@ ${markdownContent}
 
 Reference analyses:
 ${context}
+
+What matters:
+- infer the actual product story from the brief
+- separate UX / IA patterns from visual style
+- call out the market position and design direction explicitly
+- explain what should be copied, adapted, and avoided
     `.trim()
 
   const result = await generateWithFallback(
@@ -592,14 +710,44 @@ export async function runReferenceAnalysisPipeline(params: {
     phase: 'discovery',
     payload: { baseUrl: captureBaseUrl, tokenPresent },
   })
-  const discovered = await discoverReferences(markdownContent)
-  await log(`Discovered ${discovered.urls.length} candidate URLs (priority=${discovered.scoringPriority}, exclude=${discovered.excludeTags.join(',') || 'none'})`, 'info', {
+  // Load already-captured source URLs for this brief to avoid duplicates on re-run
+  const { data: existingAssets } = await db
+    .from('brief_reference_assets')
+    .select('source_url')
+    .eq('brief_id', briefId)
+    .eq('user_email', userEmail)
+  const alreadyCapturedUrls = new Set(
+    (existingAssets || []).map((a: any) => {
+      try { return new URL(a.source_url).hostname.replace(/^www\./, '') } catch { return a.source_url }
+    }).filter(Boolean)
+  )
+
+  const discovered = await discoverReferences(markdownContent, { briefId, userEmail })
+
+  // Filter out already-captured domains so re-runs discover fresh references
+  const freshCandidates = alreadyCapturedUrls.size > 0
+    ? discovered.urls.filter((c) => {
+        try {
+          const hostname = new URL(c.url).hostname.replace(/^www\./, '')
+          return !alreadyCapturedUrls.has(hostname)
+        } catch { return true }
+      })
+    : discovered.urls
+
+  const candidatePool = freshCandidates.length >= 3 ? freshCandidates : discovered.urls
+
+  await log(`Discovered ${discovered.urls.length} candidate URLs (priority=${discovered.scoringPriority}, exclude=${discovered.excludeTags.join(',') || 'none'}, skipped=${discovered.urls.length - candidatePool.length} already captured)`, 'info', {
     phase: 'discovery',
     payload: {
-      candidates: discovered.urls.length,
+      candidates: candidatePool.length,
       curated: discovered.curatedShortlist?.length || 0,
       scoringPriority: discovered.scoringPriority,
       excludeTags: discovered.excludeTags,
+      alreadyCaptured: alreadyCapturedUrls.size,
+      archetype: discovered.briefSignals?.product_archetype || null,
+      visualDirection: discovered.briefSignals?.visual_direction || null,
+      sourcePack: discovered.sourcePack?.archetype || null,
+      clientUrls: Array.isArray(discovered.recentHistory?.urls) ? discovered.recentHistory.urls.length : 0,
     },
   })
 
@@ -609,8 +757,8 @@ export async function runReferenceAnalysisPipeline(params: {
     marketTags: discovered.marketTags,
   }
 
-  await log(`Ranking ${discovered.urls.length} candidates by relevance`, 'info', { phase: 'discovery' })
-  const ranked = await rankCandidatesByRelevance(discovered.urls, briefContext, 5)
+  await log(`Ranking ${candidatePool.length} candidates by relevance`, 'info', { phase: 'discovery' })
+  const ranked = await rankCandidatesByRelevance(candidatePool, briefContext, 5)
   const rankedUrls = new Set(ranked.map(r => r.url))
 
   // Merge ranked results back with full candidate metadata
@@ -814,6 +962,9 @@ export async function runReferenceAnalysisPipeline(params: {
     rationale: discovered.rationale,
     scoring_priority: discovered.scoringPriority,
     exclude_tags: discovered.excludeTags,
+    brief_signals: discovered.briefSignals,
+    source_pack: discovered.sourcePack,
+    recent_history: discovered.recentHistory,
     curated_shortlist: discovered.curatedShortlist.map((entry: any) => ({
       id: entry.reference.id,
       title: entry.reference.title,

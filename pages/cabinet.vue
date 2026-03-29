@@ -500,6 +500,48 @@
                           </div>
                         </div>
                       </div>
+                      <div v-if="referenceAnalysis?.source_pack || referenceAnalysis?.brief_signals" class="grid grid-cols-1 lg:grid-cols-2 gap-4 text-sm">
+                        <div v-if="referenceAnalysis.source_pack" class="border border-[#262626] p-3 space-y-2">
+                          <p class="text-xs uppercase tracking-[0.18em] text-[#777]">Source pack</p>
+                          <div class="text-white">{{ referenceAnalysis.source_pack.archetype }}</div>
+                          <div class="text-[#8b8b8b] text-xs">
+                            client URLs first: {{ referenceAnalysis.source_pack.clientUrlsFirst ? 'yes' : 'no' }}
+                          </div>
+                          <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div v-for="(value, key) in referenceAnalysis.source_pack.sourceMix || {}" :key="key" class="border border-[#1f1f1f] p-2">
+                              <div class="text-[#8b8b8b] uppercase tracking-[0.14em]">{{ key }}</div>
+                              <div class="text-white mt-1">{{ value }}</div>
+                            </div>
+                          </div>
+                          <div v-if="referenceAnalysis.source_pack.queryPacks?.length" class="space-y-1">
+                            <div class="text-[#8b8b8b] text-xs uppercase tracking-[0.14em]">Queries</div>
+                            <ul class="text-[#d0d0d0] text-xs list-disc ml-4 space-y-1">
+                              <li v-for="query in referenceAnalysis.source_pack.queryPacks" :key="query">{{ query }}</li>
+                            </ul>
+                          </div>
+                        </div>
+                        <div v-if="referenceAnalysis.brief_signals" class="border border-[#262626] p-3 space-y-2">
+                          <p class="text-xs uppercase tracking-[0.18em] text-[#777]">Brief signals</p>
+                          <div class="text-white">{{ referenceAnalysis.brief_signals.product_archetype }}</div>
+                          <div class="text-[#8b8b8b] text-xs">
+                            {{ referenceAnalysis.brief_signals.business_model }}
+                          </div>
+                          <div class="text-[#d0d0d0] text-xs">
+                            Audience: {{ referenceAnalysis.brief_signals.audience_summary }}
+                          </div>
+                          <div class="text-[#d0d0d0] text-xs">
+                            Job to be done: {{ referenceAnalysis.brief_signals.primary_job_to_be_done }}
+                          </div>
+                          <div class="text-[#8b8b8b] text-xs">
+                            Visual direction: {{ referenceAnalysis.brief_signals.visual_direction }}
+                          </div>
+                        </div>
+                      </div>
+                      <div v-if="referenceAnalysis?.recent_history" class="border border-[#262626] p-3 text-sm space-y-2">
+                        <p class="text-xs uppercase tracking-[0.18em] text-[#777]">Repeat guard</p>
+                        <div class="text-[#8b8b8b] text-xs">Recent URLs excluded: {{ referenceAnalysis.recent_history.urls?.length || 0 }}</div>
+                        <div class="text-[#8b8b8b] text-xs">Recent domains excluded: {{ referenceAnalysis.recent_history.domains?.length || 0 }}</div>
+                      </div>
                       <div v-if="referenceAssets.length" class="space-y-2">
                         <p class="text-xs uppercase tracking-[0.18em] text-[#777]">Captured reference assets</p>
                         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
@@ -3423,7 +3465,9 @@ const generateDynamicQuestions = async () => {
       type: q.type,
       options: q.options,
       hint: q.hint,
-      saveKey: q.id.toLowerCase(), // Use question ID as save key
+      saveKey: /competitor|reference|url|link/i.test(`${q.id} ${q.text}`)
+        ? 'referenceLinks'
+        : q.id.toLowerCase(), // Use question ID as save key unless it's the reference URLs question
     }))
 
     if (dynamicQuestions.value.length === 0) {
@@ -3479,7 +3523,12 @@ const submitMultiSelect = () => {
 
 const submitAnswer = () => {
   if (!userMessage.value.trim() || !currentQ.value) return
-  briefData.value[currentQ.value.saveKey] = userMessage.value
+  briefData.value[currentQ.value.saveKey] = currentQ.value.saveKey === 'referenceLinks'
+    ? userMessage.value
+        .split(/[\n,]+/)
+        .map((item) => item.trim())
+        .filter(Boolean)
+    : userMessage.value
   answeredQuestions.value.push({
     id: currentQ.value.id,
     questionText: currentQ.value.text,

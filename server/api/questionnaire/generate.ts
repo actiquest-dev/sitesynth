@@ -101,6 +101,12 @@ Domain branches (add only if relevant):
 - Catalog: taxonomy, filters, cards, detail pages, comparison
 - Branding: positioning, tone, differentiation
 
+Mandatory reference question rule:
+- Always include exactly one question asking for 3-5 competitor/reference URLs.
+- The question must use save intent suitable for URLs or links.
+- Prefer a textarea or text_input question.
+- If the user has no competitor URLs, ask for the closest inspiration sites or products they admire.
+
 Output valid JSON ONLY.`
 
     let responseText = ''

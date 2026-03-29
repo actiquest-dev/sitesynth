@@ -10,6 +10,12 @@ if (!supabaseUrl || !supabaseServiceKey) {
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
+const urlPattern = /\bhttps?:\/\/[^\s)<>"']+/gi
+function extractUrls(text: string) {
+  const matches = text?.match(urlPattern) || []
+  return Array.from(new Set(matches.map((url) => url.replace(/[.,]$/, ''))))
+}
+
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
   const userEmail = getHeader(event, 'x-user-email')
@@ -56,6 +62,24 @@ export default defineEventHandler(async (event) => {
       if (content !== undefined) updates.markdown_content = content
       if (name !== undefined) updates.name = name
       if (briefData !== undefined) updates.brief_data = briefData
+
+      const currentReferenceLinks = Array.isArray(currentBrief?.brief_data?.referenceLinks)
+        ? currentBrief.brief_data.referenceLinks
+        : []
+      const contentUrls = typeof content === 'string' ? extractUrls(content) : []
+      const briefUrls = Array.isArray(briefData?.referenceLinks) ? briefData.referenceLinks : []
+      const mergedReferenceLinks = Array.from(new Set([
+        ...briefUrls,
+        ...contentUrls,
+        ...currentReferenceLinks,
+      ].filter(Boolean)))
+      if (mergedReferenceLinks.length > 0) {
+        updates.brief_data = {
+          ...(currentBrief.brief_data || {}),
+          ...(briefData || {}),
+          referenceLinks: mergedReferenceLinks,
+        }
+      }
 
       const { data, error } = await supabase
         .from('briefs')

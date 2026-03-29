@@ -129,6 +129,7 @@ BRIEF DATA:
 - Color Palette: ${briefData?.colorPalette || 'Not provided'}
 - Timeline: ${briefData?.timeline || 'Not provided'}
 - Budget: ${briefData?.budget || 'Not provided'}
+- Reference / Competitor URLs: ${Array.isArray(briefData?.referenceLinks) ? briefData.referenceLinks.join(', ') : (briefData?.referenceLinks || 'Not provided')}
 - Deliverables: ${Array.isArray(briefData?.deliverables) ? briefData.deliverables.join(', ') : (briefData?.deliverables || 'Not provided')}
 - Technical Requirements: ${Array.isArray(briefData?.technicalRequirements) ? briefData.technicalRequirements.join(', ') : (briefData?.technicalRequirements || 'Not provided')}
 `
@@ -180,7 +181,7 @@ BRIEF DATA:
       console.log(`[Brief] 💬 Generating response to user question...`)
     } else {
       // Generate complete brief
-      prompt = `${briefContext}\n\nBased on the above information, generate a comprehensive 10-section design brief. The first section must explicitly define Product Type & Platform. Format it clearly with headers for each section. If the user provided any reference files, use them as additional context.`
+      prompt = `${briefContext}\n\nBased on the above information, generate a comprehensive 10-section design brief. The first section must explicitly define Product Type & Platform. Format it clearly with headers for each section. If the user provided any reference files or competitor URLs, use them as additional context and mention them in the brief under Market & Competitors / Brand & Visual Direction as appropriate.`
       console.log(`[Brief] 🚀 Generating comprehensive brief...`)
       console.log(`[Brief] 📋 Prompt length: ${prompt.length} characters, Files included: ${totalFiles}, Data fields: ${Object.keys(briefData || {}).length}`)
     }
