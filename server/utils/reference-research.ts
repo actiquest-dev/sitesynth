@@ -102,6 +102,19 @@ const referenceSummarySchema = z.object({
 
 const REFERENCE_SECTION_START = '<!-- REFERENCE_ANALYSIS_START -->'
 const REFERENCE_SECTION_END = '<!-- REFERENCE_ANALYSIS_END -->'
+const NON_DESIGN_HOSTS = new Set([
+  'github.com',
+  'gist.github.com',
+  'microsoft.github.io',
+  'docs.github.com',
+  'developer.mozilla.org',
+])
+const NON_DESIGN_PATH_PATTERNS = [
+  /^\/docs(\/|$)/i,
+  /^\/documentation(\/|$)/i,
+  /^\/blog(\/|$)/i,
+  /^\/api(\/|$)/i,
+]
 
 function escapeHtml(value: string) {
   return String(value || '')
@@ -335,7 +348,11 @@ ${markdownContent}
   const uniqueWeb = Array.from(new Map(discovered.map((item) => [item.url, item])).values())
     .filter((item) => {
       try {
-        const hostname = new URL(item.url).hostname.replace(/^www\./, '').toLowerCase()
+        const parsed = new URL(item.url)
+        const hostname = parsed.hostname.replace(/^www\./, '').toLowerCase()
+        const isLikelyNonDesign = NON_DESIGN_HOSTS.has(hostname)
+          || NON_DESIGN_PATH_PATTERNS.some((pattern) => pattern.test(parsed.pathname || ''))
+        if (isLikelyNonDesign) return false
         return !sourceExclusions.has(hostname) && !recentHistory.domains.has(hostname) && !recentHistory.urls.has(item.url)
       } catch {
         return true
