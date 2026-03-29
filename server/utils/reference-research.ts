@@ -218,7 +218,10 @@ async function searchDuckDuckGo(query: string) {
   return Array.from(new Set(urls)).slice(0, 8)
 }
 
-async function discoverReferences(markdownContent: string, params?: { briefId?: string; userEmail?: string }) {
+async function discoverReferences(
+  markdownContent: string,
+  params?: { briefId?: string; userEmail?: string; referenceLinks?: string[] }
+) {
   const briefSignalsRaw = await geminiJson<z.infer<typeof briefSignalSchema>>(`
 You are extracting design-strategy signals from a project brief.
 
@@ -248,7 +251,10 @@ ${markdownContent}
   `.trim())
   const briefSignals = briefSignalSchema.parse(briefSignalsRaw)
   const sourcePack = getReferenceSourcePack(briefSignals.product_archetype, buildSearchQueryPack(briefSignals))
-  const clientUrls = extractClientUrls(markdownContent)
+  const clientUrls = Array.from(new Set([
+    ...extractClientUrls(markdownContent),
+    ...((params?.referenceLinks || []).filter(Boolean)),
+  ]))
   const db = useDatabaseClient()
   const recentHistory = params?.userEmail
     ? await loadRecentReferenceHistory({ db, userEmail: params.userEmail, currentBriefId: params.briefId, limit: 12 })
@@ -406,6 +412,7 @@ ${markdownContent}
     briefSignals,
     sourcePack,
     explicitReferenceMode,
+    clientUrls,
     sourceWeights: weights,
     recentHistory: {
       urls: Array.from(recentHistory.urls),
@@ -648,8 +655,9 @@ export async function runReferenceAnalysisPipeline(params: {
   briefId: string
   userEmail: string
   markdownContent: string
+  referenceLinks?: string[]
 }) {
-  const { briefId, userEmail, markdownContent } = params
+  const { briefId, userEmail, markdownContent, referenceLinks = [] } = params
   const db = useDatabaseClient()
   const logs: Array<{ ts: string; level: 'info' | 'warn' | 'error'; message: string; phase?: string; payload?: any }> = []
   const startedAt = Date.now()
@@ -724,11 +732,12 @@ export async function runReferenceAnalysisPipeline(params: {
     }).filter(Boolean)
   )
 
-  const discovered = await discoverReferences(markdownContent, { briefId, userEmail })
+  const discovered = await discoverReferences(markdownContent, { briefId, userEmail, referenceLinks })
 
   // Filter out already-captured domains so re-runs discover fresh references
   const freshCandidates = alreadyCapturedUrls.size > 0
     ? discovered.urls.filter((c) => {
+        if ((c as any).source === 'client_provided') return true
         try {
           const hostname = new URL(c.url).hostname.replace(/^www\./, '')
           return !alreadyCapturedUrls.has(hostname)
@@ -759,21 +768,30 @@ export async function runReferenceAnalysisPipeline(params: {
     marketTags: discovered.marketTags,
   }
 
+  const explicitClientCandidates = candidatePool.filter((c: any) => c.source === 'client_provided')
+  const maxCandidates = discovered.explicitReferenceMode
+    ? Math.min(Math.max(explicitClientCandidates.length, 5), 15)
+    : 5
+
   await log(`Ranking ${candidatePool.length} candidates by relevance`, 'info', { phase: 'discovery' })
-  const ranked = await rankCandidatesByRelevance(candidatePool, briefContext, 5)
+  const ranked = await rankCandidatesByRelevance(candidatePool, briefContext, maxCandidates)
   const rankedUrls = new Set(ranked.map(r => r.url))
 
-  // Merge ranked results back with full candidate metadata
-  // Only use URLs that were in the discovered list (no hallucinated URLs)
-  const candidatePages = ranked.slice(0, 5)
-    .map(r => discovered.urls.find(c => c.url === r.url))
-    .filter((c): c is NonNullable<typeof c> => !!c)
+  // Always keep client-provided URLs first when present.
+  const candidatePages = [...explicitClientCandidates]
+  for (const rankedItem of ranked) {
+    const match = discovered.urls.find(c => c.url === rankedItem.url)
+    if (!match) continue
+    if (candidatePages.some((item) => item.url === match.url)) continue
+    candidatePages.push(match)
+    if (candidatePages.length >= maxCandidates) break
+  }
 
   // If ranking filtered too aggressively, fall back to top candidates
   if (candidatePages.length < 3) {
     const fallbackCandidates = discovered.urls
       .filter(c => !rankedUrls.has(c.url))
-      .slice(0, 5 - candidatePages.length)
+      .slice(0, maxCandidates - candidatePages.length)
     candidatePages.push(...fallbackCandidates)
     await log(`Relevance filter too strict, added ${fallbackCandidates.length} fallback candidates`, 'warn', { phase: 'discovery' })
   }

@@ -35,7 +35,7 @@ const claimNextJob = async () => {
 const fetchBrief = async (briefId: string, userEmail: string) => {
   const { data: brief, error } = await supabase
     .from('briefs')
-    .select('id, markdown_content, user_email')
+    .select('id, markdown_content, brief_data, user_email')
     .eq('id', briefId)
     .eq('user_email', userEmail)
     .maybeSingle()
@@ -125,6 +125,7 @@ const loop = async () => {
           briefId: brief.id,
           userEmail: brief.user_email,
           markdownContent: brief.markdown_content || '',
+          referenceLinks: Array.isArray((brief as any)?.brief_data?.referenceLinks) ? (brief as any).brief_data.referenceLinks : [],
         }),
         20 * 60 * 1000,
         'reference pipeline'
