@@ -507,10 +507,10 @@
                             v-for="asset in referenceAssets"
                             :key="asset.id"
                             type="button"
-                            @click="openMediaLibrary('references', asset.public_url)"
+                            @click="openMediaLibrary('references', proxyImageUrl(asset.public_url))"
                             class="border border-[#262626] p-3 hover:border-[#444] transition space-y-2"
                           >
-                            <img :src="asset.public_url" :alt="asset.title || asset.competitor || 'Reference asset'" class="w-full h-40 object-cover border border-[#1f1f1f] bg-[#090909]" />
+                            <img :src="proxyImageUrl(asset.public_url)" :alt="asset.title || asset.competitor || 'Reference asset'" class="w-full h-40 object-cover border border-[#1f1f1f] bg-[#090909]" />
                             <div class="text-xs text-white truncate">{{ asset.title || asset.competitor || asset.source_url }}</div>
                             <div class="text-[11px] text-[#8b8b8b]">{{ asset.page_kind }} · {{ asset.viewport }}</div>
                           </button>
@@ -1574,7 +1574,7 @@
                   <div class="flex items-center gap-2">
                     <button @click="selectPrevMedia" class="px-3 py-2 border border-[#333] text-[#bbb] text-xs hover:bg-white/5">Prev</button>
                     <button @click="selectNextMedia" class="px-3 py-2 border border-[#333] text-[#bbb] text-xs hover:bg-white/5">Next</button>
-                    <a :href="activeMediaItem.url" target="_blank" rel="noopener" class="px-3 py-2 border border-[#333] text-[#bbb] text-xs hover:bg-white/5">Open</a>
+                    <a :href="activeMediaItem.originalUrl || activeMediaItem.url" target="_blank" rel="noopener" class="px-3 py-2 border border-[#333] text-[#bbb] text-xs hover:bg-white/5">Open</a>
                   </div>
                 </div>
               </div>
@@ -1855,12 +1855,19 @@ const compareSummary = computed(() => {
   if (!compareVersion.value) return [] as string[]
   return computeDraftDiff(lastSavedContent.value, normalizeBriefContent(compareVersion.value.markdown_content)).changedTitles
 })
+const proxyImageUrl = (url: string) => {
+  if (url && url.startsWith('https://mcp.sitesynth.com/design_references/')) {
+    return `/api/reference-image?url=${encodeURIComponent(url)}`
+  }
+  return url
+}
 const referenceMediaItems = computed(() => (
   referenceAssets.value || []
 ).map((asset: any) => ({
   id: asset.id,
   kind: 'image',
-  url: asset.public_url,
+  url: proxyImageUrl(asset.public_url),
+  originalUrl: asset.public_url,
   title: asset.title || asset.competitor || asset.source_url || 'Reference',
   meta: `${asset.page_kind || 'page'} · ${asset.viewport || 'view'} · ${asset.competitor || 'reference'}`,
 })))
