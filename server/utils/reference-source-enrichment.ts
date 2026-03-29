@@ -33,7 +33,7 @@ export const briefSignalSchema = z.object({
     trend_source: z.number().min(0).max(5),
     client_provided: z.number().min(0).max(5),
   }),
-  source_priorities: z.array(z.string()).min(2).max(8),
+  source_priorities: z.array(z.string()).min(1).max(8).default(['market_fit']),
   source_exclusions: z.array(z.string()).default([]),
   must_avoid_patterns: z.array(z.string()).default([]),
   reference_angle: z.string(),
