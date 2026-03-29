@@ -124,7 +124,7 @@ const getFigmaClientCredentials = () => {
   return { clientId, clientSecret }
 }
 
-export const exchangeFigmaOAuthCode = async (code: string, redirectUri: string) => {
+export const exchangeFigmaOAuthCode = async (code: string, oauthRedirectUri: string) => {
   const { clientId, clientSecret } = getFigmaClientCredentials()
   const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
 
@@ -135,7 +135,7 @@ export const exchangeFigmaOAuthCode = async (code: string, redirectUri: string) 
       Authorization: `Basic ${basicAuth}`,
     },
     body: new URLSearchParams({
-      redirect_uri: redirectUri,
+      redirect_uri: oauthRedirectUri,
       code,
       grant_type: 'authorization_code',
     }),

@@ -54,10 +54,10 @@ export const discoverMcpOAuth = async (mcpUrl: string) => {
   } as MpcOAuthDiscovery
 }
 
-export const registerMcpClient = async (registrationEndpoint: string, redirectUri: string) => {
+export const registerMcpClient = async (registrationEndpoint: string, mcpRedirectUri: string) => {
   const payload = {
     client_name: 'sitesynth-mcp-client',
-    redirect_uris: [redirectUri],
+    redirect_uris: [mcpRedirectUri],
     grant_types: ['authorization_code'],
     response_types: ['code'],
     token_endpoint_auth_method: 'none',
