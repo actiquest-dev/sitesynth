@@ -868,7 +868,7 @@
                   </div>
                   <p class="text-sm text-white font-medium mb-1">No projects yet</p>
                   <p class="text-xs text-[#666] mb-5">Create your first brief to start a project</p>
-                  <button @click="openBriefWizard" class="inline-flex h-10 items-center gap-2 px-4 bg-[#8D35FF] text-white rounded-none text-sm font-medium hover:bg-[#7B2AE8] transition-colors">
+                  <button @click="openBriefWizard" class="inline-flex h-10 items-center gap-2 px-4 bg-[#161616] border border-white text-white rounded-none text-sm font-medium hover:border-[#8D35FF] hover:text-[#d8c0ff] transition-colors duration-300">
                     Create Brief
                   </button>
                 </div>
