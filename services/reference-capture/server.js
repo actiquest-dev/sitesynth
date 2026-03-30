@@ -15,6 +15,8 @@ const TOKEN = process.env.REFERENCE_CAPTURE_TOKEN || ''
 const STORAGE_ROOT = process.env.REFERENCE_CAPTURE_STORAGE_ROOT || path.join(__dirname, 'storage')
 const PUBLIC_BASE_URL = process.env.REFERENCE_CAPTURE_PUBLIC_BASE_URL || 'https://mcp.sitesynth.com/design_references'
 const CHROMIUM_PATH = process.env.CHROMIUM_PATH || '/usr/bin/chromium-browser'
+const CAPTURE_HEADLESS = process.env.REFERENCE_CAPTURE_HEADLESS === 'true'
+const USER_DATA_DIR = process.env.REFERENCE_CAPTURE_USER_DATA_DIR || '/tmp/reference-capture-chrome-profile'
 
 const json = (statusCode, payload) => ({
   statusCode,
@@ -59,21 +61,32 @@ const uniqueName = (name) => {
 }
 
 const launchBrowser = async () => {
+  await ensureDir(USER_DATA_DIR)
   return puppeteer.launch({
     executablePath: CHROMIUM_PATH,
-    headless: true,
+    headless: CAPTURE_HEADLESS,
+    userDataDir: USER_DATA_DIR,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
-      '--disable-gpu',
+      '--start-maximized',
       '--hide-scrollbars',
+      '--disable-blink-features=AutomationControlled',
     ],
+    defaultViewport: null,
   })
 }
 
 const captureOne = async (browser, jobRoot, publicRoot, item, viewport) => {
   const page = await browser.newPage()
+  await page.setUserAgent(
+    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+  )
+  await page.setExtraHTTPHeaders({ 'accept-language': 'en-US,en;q=0.9' })
+  await page.evaluateOnNewDocument(() => {
+    Object.defineProperty(navigator, 'webdriver', { get: () => false })
+  })
   await page.setViewport(viewport)
   await page.goto(item.url, {
     waitUntil: 'networkidle2',
@@ -174,5 +187,5 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, HOST, async () => {
   await ensureDir(STORAGE_ROOT)
-  console.log(`[reference-capture] listening on http://${HOST}:${PORT}`)
+  console.log(`[reference-capture] listening on http://${HOST}:${PORT} mode=${CAPTURE_HEADLESS ? 'headless' : 'headed'} profile=${USER_DATA_DIR}`)
 })
