@@ -4,6 +4,7 @@ const HOST = process.env.REFERENCE_HARVESTER_HOST || '127.0.0.1'
 const PORT = Number(process.env.REFERENCE_HARVESTER_PORT || 8891)
 const TOKEN = process.env.REFERENCE_HARVESTER_TOKEN || ''
 const DEFAULT_SOURCES = [
+  'https://mobbin.com/discover/sites/latest',
   'https://www.awwwards.com/websites/',
   'https://land-book.com/',
   'https://www.lapa.ninja/',
