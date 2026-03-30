@@ -1016,8 +1016,36 @@
                 </div>
                 <div class="px-5 py-4 flex items-center justify-between">
                   <p class="text-sm text-[#888]">••••••••••••</p>
-                  <button class="inline-flex h-10 items-center px-4 text-sm text-[#888] hover:text-white border border-[#333] hover:border-[#555] rounded-none transition-colors">
-                    Change
+                  <button
+                    @click="showPasswordForm = !showPasswordForm; passwordError = ''; passwordSuccess = ''"
+                    class="inline-flex h-10 items-center px-4 text-sm text-[#888] hover:text-white border border-[#333] hover:border-[#555] rounded-none transition-colors"
+                  >
+                    {{ showPasswordForm ? 'Cancel' : 'Change' }}
+                  </button>
+                </div>
+                <div v-if="showPasswordForm" class="px-5 pb-5 space-y-3 border-t border-[#2a2a2a]">
+                  <div class="pt-4 space-y-3">
+                    <input
+                      v-model="passwordNew"
+                      type="password"
+                      placeholder="New password"
+                      class="w-full h-10 bg-[#111] border border-[#333] px-3 text-sm text-white placeholder-[#555] focus:outline-none focus:border-[#555] rounded-none"
+                    />
+                    <input
+                      v-model="passwordConfirm"
+                      type="password"
+                      placeholder="Confirm new password"
+                      class="w-full h-10 bg-[#111] border border-[#333] px-3 text-sm text-white placeholder-[#555] focus:outline-none focus:border-[#555] rounded-none"
+                    />
+                  </div>
+                  <p v-if="passwordError" class="text-xs text-red-400">{{ passwordError }}</p>
+                  <p v-if="passwordSuccess" class="text-xs text-green-400">{{ passwordSuccess }}</p>
+                  <button
+                    @click="handleChangePassword"
+                    :disabled="passwordSaving"
+                    class="inline-flex h-10 items-center px-4 text-sm text-white bg-[#333] hover:bg-[#444] border border-[#444] rounded-none transition-colors disabled:opacity-50"
+                  >
+                    {{ passwordSaving ? 'Saving…' : 'Save password' }}
                   </button>
                 </div>
               </div>
@@ -2689,6 +2717,43 @@ const formatDate = (dateString: string | Date): string => {
   if (!dateString) return '—'
   const date = typeof dateString === 'string' ? new Date(dateString) : dateString
   return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: 'numeric' }).format(date)
+}
+
+// ── Settings: password change ──
+const showPasswordForm = ref(false)
+const passwordNew = ref('')
+const passwordConfirm = ref('')
+const passwordSaving = ref(false)
+const passwordError = ref('')
+const passwordSuccess = ref('')
+
+const handleChangePassword = async () => {
+  passwordError.value = ''
+  passwordSuccess.value = ''
+  if (passwordNew.value.length < 8) {
+    passwordError.value = 'Password must be at least 8 characters.'
+    return
+  }
+  if (passwordNew.value !== passwordConfirm.value) {
+    passwordError.value = 'Passwords do not match.'
+    return
+  }
+  passwordSaving.value = true
+  try {
+    const { createClient } = await import('@supabase/supabase-js')
+    const config = useRuntimeConfig()
+    const client = createClient(config.public.supabaseUrl, config.public.supabaseAnonKey)
+    const { error } = await client.auth.updateUser({ password: passwordNew.value })
+    if (error) { passwordError.value = error.message; return }
+    passwordSuccess.value = 'Password updated successfully.'
+    passwordNew.value = ''
+    passwordConfirm.value = ''
+    setTimeout(() => { showPasswordForm.value = false; passwordSuccess.value = '' }, 2000)
+  } catch (e: any) {
+    passwordError.value = e.message || 'Something went wrong.'
+  } finally {
+    passwordSaving.value = false
+  }
 }
 
 const handleLogout = async () => {
