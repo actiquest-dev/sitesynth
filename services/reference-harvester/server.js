@@ -38,6 +38,12 @@ const parseBody = async (req) => {
 
 const cleanText = (value) => String(value || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
 const normalizeHost = (host) => host.replace(/^www\./i, '').toLowerCase()
+const looksBadBrand = (name) => {
+  if (!name) return true
+  if (name.length < 2 || name.length > 80) return true
+  if (/visit-count|count\"|<|>|#|\{|\}/i.test(name)) return true
+  return false
+}
 
 const parseAnchors = (html, baseUrl) => {
   const out = []
@@ -60,7 +66,9 @@ const toCandidate = (sourceUrl, anchor) => {
   const host = normalizeHost(url.hostname)
   if (host === sourceHost) return null
   if (SOCIAL_HOSTS.has(host)) return null
-  const brand = anchor.text || host.split('.')[0]
+  const hostBrand = host.split('.')[0]
+  const candidateBrand = (anchor.text || '').replace(/\s+/g, ' ').trim()
+  const brand = looksBadBrand(candidateBrand) ? hostBrand : candidateBrand
   return { brand, url: `${url.protocol}//${url.host}`, host, source: sourceHost }
 }
 
@@ -106,4 +114,3 @@ const server = http.createServer(async (req, res) => {
 server.listen(PORT, HOST, () => {
   console.log(`[reference-harvester] listening on http://${HOST}:${PORT}`)
 })
-
