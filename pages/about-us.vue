@@ -203,7 +203,7 @@ const values = [
   {
     author: "Koen Vergauwen",
     email: "koen@sitesynth.com",
-    avatar: "/assets/new-assets/people-for-CTA/oval-koen.png",
+    avatar: "/assets/new-assets/people-for-CTA/oval-koen.webp",
     date: "Jan 2024",
     title: "No ego.",
     body: "Helping others is part of the job. It is okay to say you do not know something and <strong class=\"text-[#aaa]\">ask for clarity</strong>. We work together, assume positive intent, and communicate in a kind, direct, and transparent way.",
