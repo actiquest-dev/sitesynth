@@ -145,7 +145,7 @@
 />
   <Testimonial
     id="testimonial-koen"
-    imageSrc="/assets/new-assets/people-for-CTA/oval-koen.png"
+    imageSrc="/assets/new-assets/people-for-CTA/oval-koen.webp"
     personName="Koen Vergauwen"
     personTitle="Head of Growth"
     quoteTitle="We are not a family"
