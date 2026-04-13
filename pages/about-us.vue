@@ -97,35 +97,49 @@
     </div>
   </section>
 
-  <!-- ABOUT US + PHOTO -->
-  <TwoColumnsDesign
-    sectionBgColor="bg-[#161616]"
-  >
-    <template #left>
-      <div class="py-24 md:border-r border-[#333] bg-[#161616]">
-        <div class="max-w-[600px] ml-auto px-6 md:px-0 md:pr-16">
-          <p class="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#555] mb-8">Where We Are</p>
-          <h2 class="text-white text-3xl sm:text-4xl font-bold mb-6">Puurs-Sint-Amands,<br />Belgium.</h2>
-          <p class="text-[#999] text-base leading-relaxed mb-6">
-            We're based in a small office within a beautifully restored historical building by the Schelde river. It's not flashy — but it's meaningful: rooted, quiet, and real.
-          </p>
-          <p class="text-[#999] text-base leading-relaxed">
-            Strategically located between Antwerp, Brussels, and Ghent — easy reach of clients and collaborators across Europe, while keeping the clarity and calm that comes from a smaller place.
-          </p>
+  <!-- WHERE WE ARE -->
+  <section class="bg-[#0e0e0e] border-t border-b border-[#1a1a1a] py-24">
+    <div class="max-w-4xl mx-auto px-6">
+
+      <!-- Top: label + heading + meta -->
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-16">
+        <div>
+          <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#444] mb-6">Where We Are</p>
+          <h2 class="text-white text-3xl sm:text-[2.5rem] font-bold leading-tight">
+            Puurs-Sint-Amands,<br />Belgium.
+          </h2>
+        </div>
+        <div class="flex flex-col gap-4 md:text-right">
+          <div class="flex md:justify-end items-center gap-5">
+            <span class="font-mono text-[11px] text-[#666] tracking-wide">51.0694° N</span>
+            <span class="w-px h-3 bg-[#333]"></span>
+            <span class="font-mono text-[11px] text-[#666] tracking-wide">4.3527° E</span>
+          </div>
+          <div class="flex md:justify-end gap-6">
+            <span v-for="city in ['Antwerp · 45m', 'Brussels · 55m', 'Ghent · 40m']" :key="city"
+              class="font-mono text-[10px] text-[#555] tracking-wide">{{ city }}</span>
+          </div>
         </div>
       </div>
-    </template>
-    <template #right>
-      <div class="min-h-[400px] md:min-h-0 max-h-[600px] overflow-hidden">
-        <img
-          src="/assets/new-assets/company-page/about-us/mayya-koen.webp"
-          alt="SiteSynth office"
-          class="h-full w-full object-cover object-top"
-          style="min-height: 400px;"
-        />
+
+      <!-- Photo -->
+      <div class="flex justify-center">
+        <div class="overflow-hidden border border-[#1a1a1a]" style="width: 560px; height: 560px; transform: rotate(-2.5deg);">
+          <img
+            src="/assets/new-assets/company-page/about-us/mayya-koen.webp"
+            alt="SiteSynth team at office"
+            class="w-full h-full object-cover object-top"
+          />
+        </div>
       </div>
-    </template>
-  </TwoColumnsDesign>
+
+      <!-- Caption -->
+      <p class="text-center font-mono text-[11px] text-[#333] tracking-widest mt-8 uppercase">
+        SiteSynth · Puurs-Sint-Amands, Belgium
+      </p>
+
+    </div>
+  </section>
 
   <!-- OUR LEADERS -->
   <LeadersSection :leaders="leaders" :id="'our-leaders'" />
