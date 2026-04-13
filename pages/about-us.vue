@@ -116,11 +116,11 @@
       </div>
     </template>
     <template #right>
-      <div class="min-h-[400px] md:min-h-0">
+      <div class="min-h-[400px] md:min-h-0 max-h-[600px] overflow-hidden">
         <img
-          src="/assets/new-assets/company-page/about-us/team-about-us.webp"
+          src="/assets/new-assets/company-page/about-us/mayya-koen.webp"
           alt="SiteSynth office"
-          class="h-full w-full object-cover"
+          class="h-full w-full object-cover object-top"
           style="min-height: 400px;"
         />
       </div>
@@ -216,25 +216,25 @@ const leaders = [
   {
     name: "Mayya Aprosina",
     role: "Founder & CEO",
-    image: "/assets/new-assets/company-page/about-us/our-team/Mayya Aprosina.png",
+    image: "/assets/mayya-aprosina.webp",
     description: "Leads SiteSynth's strategic direction and product vision. Connects brand, design, and engineering into one coherent story for clients.",
   },
   {
     name: "Miguel Aprossine",
     role: "AI & Web3 Visionary Partner",
-    image: "/assets/new-assets/company-page/about-us/our-team/Miguel Aprossine.png",
+    image: "/assets/maguel-aprossine.webp",
     description: "Focuses on AI, Web3, and new business models. Helps clients explore emerging technologies without losing focus on real outcomes.",
   },
   {
     name: "Koen Vergauwen",
     role: "Head of Growth",
-    image: "/assets/new-assets/company-page/about-us/our-team/Koen Vergauwen.png",
+    image: "/assets/koen-vergauwen.webp",
     description: "Works at the intersection of sales, strategy, and partnerships. Turns complex needs into clear, realistic engagement models.",
   },
   {
     name: "Marco Maffei",
     role: "Technology & Engineering Partner",
-    image: "/assets/new-assets/company-page/about-us/our-team/Marco Maffei.png",
+    image: "/assets/marco-marco.webp",
     description: "Owns the technical backbone of our projects. Bridges design intent with robust, scalable implementation.",
   },
 ];
