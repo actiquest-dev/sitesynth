@@ -295,12 +295,6 @@ const navItems = [
         link: "https://membria.ai/",
         target: "_blank",
       },
-      {
-        imageSrc: "/assets/new-assets/Menu/Product/gray/AILivePod.svg",
-        label: "AI Live Pod",
-        link: "https://ailivepod.framer.website/product",
-        target: "_blank",
-      },
     ],
   },
   {
