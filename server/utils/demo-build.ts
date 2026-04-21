@@ -8,6 +8,24 @@ const slugifyValue = (value: string) =>
 export const getDemoBaseUrl = () =>
   process.env.DEMO_SITE_BASE_URL || 'https://demo.sitesynth.com'
 
+export const DEMO_DESIGN_ANTI_PATTERNS = [
+  'Do not use lorem ipsum or generic filler copy unless explicitly requested in the brief',
+  'Do not invent colors outside the provided color system',
+  'Do not ignore section order or section composition from section_blueprints',
+  'Do not use default browser typography stacks as a final design choice',
+  'Do not ship low-contrast text/background combinations',
+  'Do not produce placeholder-looking card grids with repetitive generic copy',
+  'Do not add decorative gradients that conflict with the art direction',
+]
+
+export const DEMO_VERIFICATION_GATES = [
+  'Every section uses exact copy and hierarchy from section_blueprints',
+  'Colors, spacing, and typography map directly to contract tokens',
+  'Primary mobile interactions meet a minimum 44px hit target',
+  'No overflow clipping for primary heading and call-to-action blocks',
+  'Desktop and mobile layouts are both intentional, not auto-collapsed variants',
+]
+
 export const buildDemoSlug = (projectName: string, briefId: string) =>
   slugifyValue(`${projectName}-${briefId.slice(0, 6)}`)
 
@@ -128,7 +146,10 @@ export const buildDemoContract = (brief: any, slug: string) => {
       'Use provided design tokens exactly',
       'No lorem ipsum unless explicitly present in the brief',
       'Prefer production-grade layout and spacing over generic templates',
+      ...DEMO_DESIGN_ANTI_PATTERNS.map((item) => `Avoid: ${item}`),
     ],
+    antiPatterns: DEMO_DESIGN_ANTI_PATTERNS,
+    qualityGates: DEMO_VERIFICATION_GATES,
   }
 }
 
