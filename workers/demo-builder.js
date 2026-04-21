@@ -204,6 +204,11 @@ const listWorkspaceFiles = async (targetDir) => {
   return results
 }
 
+const formatList = (items = []) => {
+  if (!Array.isArray(items) || items.length === 0) return '- none'
+  return items.map((item) => `- ${item}`).join('\n')
+}
+
 const buildClinePrompt = (payload) => `You are implementing a production-quality demo website in the current workspace.
 
 Read these files first:
@@ -213,16 +218,27 @@ Read these files first:
 - reference_report.json
 - asset_manifest.json
 
+Quality gates:
+${formatList(payload?.buildContract?.qualityGates)}
+
+Anti-patterns to avoid:
+${formatList(payload?.buildContract?.antiPatterns)}
+
 Requirements:
 - implement the requested demo website in this workspace
 - prefer semantic HTML/CSS or the framework specified in build_job.json
 - use the design tokens and layout direction from design_contract.json
 - use any provided assets from asset_manifest.json
 - no lorem ipsum unless the brief explicitly requires placeholders
+- keep layout composition intentional on both desktop and mobile
+- prioritize exact copy fidelity over improvised marketing text
 - run the appropriate build or validation commands if package.json exists
 - fix any build errors before finishing
 
-When done, leave the workspace in a runnable state and print a short summary of what changed.
+When done:
+- leave the workspace in a runnable state
+- print a short summary of what changed
+- print SELF_CHECK with explicit pass/fail per quality gate
 
 Project slug: ${payload?.slug || 'demo-site'}
 Target URL: ${payload?.targetUrl || payload?.buildContract?.project?.targetUrl || ''}
@@ -258,6 +274,8 @@ Review criteria:
 - use of exact copy from the contract
 - avoidance of anti_patterns
 - responsiveness and implementation quality
+- pass/fail against every quality gate below:
+${formatList(payload?.buildContract?.qualityGates)}
 
 If the site is weak, produce concrete fixInstructions the builder can apply immediately.
 
@@ -284,6 +302,8 @@ Requirements:
 - preserve valid HTML and CSS
 - move the implementation closer to the art direction contract
 - do not add generic filler sections
+- verify each quality gate before finishing:
+${formatList(payload?.buildContract?.qualityGates)}
 
 When finished, print a short summary.
 `.trim()

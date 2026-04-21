@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { useDatabaseClient } from '~~/server/utils/supabase'
 import { getDemoBuildToken } from '~~/server/utils/demo-build-token'
 import { getAgent, generateWithFallback } from '~~/server/mastra'
+import { DEMO_DESIGN_ANTI_PATTERNS, DEMO_VERIFICATION_GATES } from '~~/server/utils/demo-build'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
@@ -34,6 +35,12 @@ export default defineEventHandler(async (event) => {
 
   const artDirection = job.spec_snapshot?.art_direction || {}
   const buildContract = job.build_contract || job.spec_snapshot?.build_contract || {}
+  const antiPatterns = Array.isArray(buildContract?.antiPatterns) && buildContract.antiPatterns.length > 0
+    ? buildContract.antiPatterns
+    : DEMO_DESIGN_ANTI_PATTERNS
+  const qualityGates = Array.isArray(buildContract?.qualityGates) && buildContract.qualityGates.length > 0
+    ? buildContract.qualityGates
+    : DEMO_VERIFICATION_GATES
 
   const prompt = `
 🎨 ART DIRECTION CONTRACT (ONLY source of truth for design implementation):
@@ -47,6 +54,12 @@ ${JSON.stringify({
     assetManifest: buildContract?.assetManifest || {},
   }, null, 2)}
 
+🚫 ANTI-PATTERNS (must explicitly avoid):
+${JSON.stringify(antiPatterns, null, 2)}
+
+✅ QUALITY GATES (must self-check before returning):
+${JSON.stringify(qualityGates, null, 2)}
+
 ═══════════════════════════════════════════════════════════════════════════
 
 🚀 TASK:
@@ -59,14 +72,16 @@ MANDATORY RULES:
 - Use color_system exact values with no substitutions
 - Use typography and spacing values exactly as provided
 - Implement component_recipes if present
-- Explicitly avoid every anti_pattern listed
+- Explicitly avoid every anti_pattern listed in contract and anti-patterns block
 - Use assetManifest if assets are provided
+- If a requirement is missing, reuse closest existing contract token/value instead of inventing new style language
 
 BUILD WITH:
 - semantic HTML
 - CSS custom properties derived from the art direction contract
 - responsive layout driven by the provided section_blueprints and spacing values
 - exact copy from the contract instead of generic marketing filler
+- contrast-safe text/background pairs and intentional component hierarchy
 
 Return STRICT JSON with title, slug, html, and css strings only.
   `.trim()
