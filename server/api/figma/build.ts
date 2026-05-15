@@ -1,6 +1,6 @@
 import { defineEventHandler, readBody } from 'h3'
 import { generateObject } from 'ai'
-import { google } from '@ai-sdk/google'
+import { geminiModel } from '~~/server/utils/gemini-model'
 import { z } from 'zod'
 import { useDatabaseClient } from '~~/server/utils/supabase'
 import { issueBuildToken } from '~~/server/utils/figma-build-token'

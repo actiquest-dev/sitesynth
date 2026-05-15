@@ -1,6 +1,4 @@
-import { GoogleGenerativeAI } from '@google/generative-ai'
-
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || '')
+import { geminiGenerateContent } from '~~/server/utils/gemini-client'
 
 export interface DynamicQuestion {
   id: string
@@ -30,7 +28,6 @@ export default defineEventHandler(async (event) => {
 
     // Try primary model, fallback to other Pro models
     const modelNames = ['gemini-2.5-pro', 'gemini-pro-latest']
-    let model = genAI.getGenerativeModel({ model: modelNames[0] })
 
     const systemPrompt = `You are a senior product strategist. Generate a branching discovery questionnaire as a JSON object.
 
@@ -112,9 +109,9 @@ Output valid JSON ONLY.`
     let responseText = ''
     for (const modelName of modelNames) {
       try {
-        model = genAI.getGenerativeModel({ model: modelName })
         console.log(`[Questionnaire] Trying model: ${modelName}`)
-        const result = await model.generateContent({
+        const data = await geminiGenerateContent({
+          model: modelName,
           contents: [
             {
               role: 'user',
@@ -131,7 +128,7 @@ Output valid JSON ONLY.`
             responseMimeType: 'application/json', // All Pro models support this
           },
         })
-        responseText = result.response.text()
+        responseText = data?.candidates?.[0]?.content?.parts?.[0]?.text || ''
         console.log(`[Questionnaire] Success with model: ${modelName}`)
         break
       } catch (modelError: any) {

@@ -1,5 +1,5 @@
 import { generateText } from 'ai'
-import { google } from '@ai-sdk/google'
+import { geminiModel } from '~~/server/utils/gemini-model'
 import {
   BRIEF_GENERATION_SKILL,
   type BriefData,
@@ -25,7 +25,7 @@ export async function extractBriefDataFromConversation(
     const conversationText = messages.map((m) => `${m.role}: ${m.content}`).join('\n\n')
 
     const { text } = await generateText({
-      model: google('gemini-2.5-pro'),
+      model: geminiModel('gemini-2.5-pro'),
       system: `Extract project brief information from this conversation. Return JSON only.
       
 Extract these fields if mentioned:
@@ -125,7 +125,7 @@ ${fileContext}
 `
 
     const { text } = await generateText({
-      model: google('gemini-2.5-pro'),
+      model: geminiModel('gemini-2.5-pro'),
       system: BRIEF_GENERATION_SKILL,
       messages: [
         {

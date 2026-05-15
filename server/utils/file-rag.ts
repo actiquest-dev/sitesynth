@@ -1,8 +1,6 @@
-import { GoogleGenerativeAI } from '@google/generative-ai'
 import { createClient } from '@supabase/supabase-js'
 import { google } from 'googleapis'
-
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || '')
+import { geminiGenerateContent } from './gemini-client'
 
 const supabaseUrl = process.env.SUPABASE_URL
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -100,8 +98,8 @@ async function downloadDriveFile(fileId: string) {
 }
 
 async function extractTextWithModel(buffer: Buffer, mimeType: string, fileName: string) {
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' })
-  const result = await model.generateContent({
+  const data = await geminiGenerateContent({
+    model: 'gemini-2.0-flash',
     contents: [{
       role: 'user',
       parts: [
@@ -123,7 +121,7 @@ File name: ${fileName}`,
     }],
   })
 
-  return result.response.text().trim()
+  return (data?.candidates?.[0]?.content?.parts?.[0]?.text || '').trim()
 }
 
 async function extractTextFromDriveFile(fileId: string) {

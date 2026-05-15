@@ -3,10 +3,10 @@
  */
 
 import { Agent } from '@mastra/core/agent'
-import { google } from '@ai-sdk/google'
+import { geminiModel } from '~~/server/utils/gemini-model'
 
-const gemini = google('gemini-2.5-pro')
-const geminiFallback = google('gemini-pro-latest')
+const gemini = geminiModel('gemini-2.5-pro')
+const geminiFallback = geminiModel('gemini-pro-latest')
 
 export const briefingAgent = new Agent({
   name: 'Viz - Briefing Specialist',

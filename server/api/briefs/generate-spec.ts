@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { generateObject } from 'ai'
-import { google } from '@ai-sdk/google'
+import { geminiModel } from '~~/server/utils/gemini-model'
 import { useDatabaseClient } from '~~/server/utils/supabase'
 import { runReferenceAnalysisPipeline } from '~~/server/utils/reference-research'
 
@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
 
     // Generate a richer design spec so the result can directly guide wireframes and Figma production.
     const { object } = await generateObject({
-      model: google('gemini-2.5-pro'),
+      model: geminiModel('gemini-2.5-pro'),
       schema: z.object({
         product_summary: z.object({
           vision: z.string(),

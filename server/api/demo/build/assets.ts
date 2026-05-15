@@ -1,6 +1,6 @@
 import { defineEventHandler, readBody } from 'h3'
 import { experimental_generateImage as generateImage } from 'ai'
-import { google } from '@ai-sdk/google'
+import { geminiModel } from '~~/server/utils/gemini-model'
 import { getDemoBuildToken } from '~~/server/utils/demo-build-token'
 
 const mimeToExtension = (mediaType: string) => {

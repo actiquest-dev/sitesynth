@@ -1,14 +1,8 @@
 import { defineEventHandler, readBody } from 'h3'
-import { GoogleGenerativeAI } from '@google/generative-ai'
+import { geminiGenerateContent } from '~~/server/utils/gemini-client'
 
 const getPluginSecret = () =>
   process.env.FIGMA_PLUGIN_SECRET || process.env.NUXT_SESSION_PASSWORD || 'local-figma-plugin-secret'
-
-const getGemini = () => {
-  const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY
-  if (!apiKey) throw new Error('GOOGLE_GENERATIVE_AI_API_KEY not configured')
-  return new GoogleGenerativeAI(apiKey)
-}
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
@@ -26,8 +20,6 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const genAI = getGemini()
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-pro' })
     const prompt = `
 You are a senior UI designer reviewing a Figma build snapshot.
 Return only JSON with suggested global fixes in this schema:
@@ -48,11 +40,11 @@ Stage: ${stage || 'unknown'}
 Structure: ${JSON.stringify(structure).slice(0, 4000)}
     `.trim()
 
-    const result = await model.generateContent([
-      { text: prompt },
-      { inlineData: { data: imageBase64, mimeType: 'image/png' } },
-    ])
-    const text = result.response.text().trim()
+    const data = await geminiGenerateContent({
+      model: 'gemini-2.5-pro',
+      contents: [{ role: 'user', parts: [{ text: prompt }, { inlineData: { data: imageBase64, mimeType: 'image/png' } }] }],
+    })
+    const text = (data?.candidates?.[0]?.content?.parts?.[0]?.text || '').trim()
     let parsed
     try {
       parsed = JSON.parse(text)

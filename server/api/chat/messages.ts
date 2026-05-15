@@ -1,7 +1,7 @@
 import { defineEventHandler, readBody, getHeader, getRouterParam, getQuery, createError, setResponseStatus } from 'h3'
 import { createClient } from '@supabase/supabase-js'
-import { GoogleGenerativeAI } from '@google/generative-ai'
 import { getAgent } from '~~/server/mastra'
+import { geminiTextFromPrompt } from '~~/server/utils/gemini-client'
 
 const briefingAgent = getAgent('briefingAgent')
 const consultantAgent = getAgent('consultantAgent')
@@ -14,14 +14,9 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 const supabase = (supabaseUrl && supabaseServiceKey)
   ? createClient(supabaseUrl, supabaseServiceKey)
   : null
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || '')
 
 const geminiText = async (prompt: string, modelName = 'gemini-2.5-pro') => {
-  const model = genAI.getGenerativeModel({ model: modelName })
-  const result = await model.generateContent({
-    contents: [{ role: 'user', parts: [{ text: prompt }] }],
-  })
-  return result.response.text()
+  return await geminiTextFromPrompt(modelName, prompt)
 }
 
 const ensurePlanningSections = (draft: string, userRequest: string) => {

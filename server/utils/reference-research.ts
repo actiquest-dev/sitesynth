@@ -1,8 +1,7 @@
 import { Readable } from 'node:stream'
-import { GoogleGenerativeAI } from '@google/generative-ai'
 import { z } from 'zod'
+import { geminiGenerateContent } from './gemini-client'
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || '')
 const GEMINI_MODELS = ['gemini-2.5-pro', 'gemini-pro-latest']
 const DEFAULT_TIMEOUT_MS = 120000
 
@@ -24,12 +23,12 @@ async function geminiJson<T>(prompt: string): Promise<T> {
   let lastError: any
   for (const modelName of GEMINI_MODELS) {
     try {
-      const model = genAI.getGenerativeModel({ model: modelName })
-      const result = await withTimeout(model.generateContent({
+      const data = await withTimeout(geminiGenerateContent({
+        model: modelName,
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
         generationConfig: { responseMimeType: 'application/json', temperature: 0.5 },
       }), DEFAULT_TIMEOUT_MS, `geminiJson(${modelName})`)
-      return JSON.parse(result.response.text()) as T
+      return JSON.parse(data?.candidates?.[0]?.content?.parts?.[0]?.text || '{}') as T
     } catch (err: any) {
       console.warn(`[reference-research] ${modelName} failed:`, err?.message)
       lastError = err
@@ -42,9 +41,12 @@ async function geminiText(parts: Array<{ text: string } | { inlineData: { data: 
   let lastError: any
   for (const modelName of GEMINI_MODELS) {
     try {
-      const model = genAI.getGenerativeModel({ model: modelName })
-      const result = await withTimeout(model.generateContent({ contents: [{ role: 'user', parts }] }), DEFAULT_TIMEOUT_MS, `geminiText(${modelName})`)
-      return result.response.text()
+      const data = await withTimeout(
+        geminiGenerateContent({ model: modelName, contents: [{ role: 'user', parts }] }),
+        DEFAULT_TIMEOUT_MS,
+        `geminiText(${modelName})`
+      )
+      return data?.candidates?.[0]?.content?.parts?.[0]?.text || ''
     } catch (err: any) {
       console.warn(`[reference-research] ${modelName} failed:`, err?.message)
       lastError = err

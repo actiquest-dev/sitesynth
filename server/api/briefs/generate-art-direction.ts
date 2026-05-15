@@ -16,7 +16,7 @@
 import { defineEventHandler, readBody, getHeader } from 'h3'
 import { z } from 'zod'
 import { generateObject } from 'ai'
-import { google } from '@ai-sdk/google'
+import { geminiModel } from '~~/server/utils/gemini-model'
 import { useDatabaseClient } from '~~/server/utils/supabase'
 import { getAgent } from '~~/server/mastra'
 
@@ -244,7 +244,7 @@ The output must be valid JSON matching the Art Direction Contract schema.`
     })
 
     // Generate art direction using the agent's context (with 2.0-pro fallback)
-    const modelsToTry = [google('gemini-2.5-pro'), google('gemini-pro-latest')]
+    const modelsToTry = [geminiModel('gemini-2.5-pro'), geminiModel('gemini-pro-latest')]
     let artDirection: any = null
     for (const model of modelsToTry) {
       try {

@@ -1,7 +1,5 @@
 import { defineEventHandler, readBody, getHeader, createError } from 'h3'
-import { GoogleGenerativeAI } from '@google/generative-ai'
-
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || '')
+import { geminiTextFromPrompt } from '~~/server/utils/gemini-client'
 
 export default defineEventHandler(async (event) => {
   const userEmail = getHeader(event, 'x-user-email')
@@ -16,8 +14,6 @@ export default defineEventHandler(async (event) => {
   if (!intakePayload) {
     throw createError({ statusCode: 400, statusMessage: 'intakePayload is required' })
   }
-
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-pro' })
 
   const prompt = `
 You are preparing a polished intake summary for a design brief wizard.
@@ -44,8 +40,7 @@ Intake payload:
 ${JSON.stringify(intakePayload, null, 2)}
   `.trim()
 
-  const result = await model.generateContent(prompt)
-  const summary = result.response.text().trim()
+  const summary = (await geminiTextFromPrompt('gemini-2.5-pro', prompt)).trim()
 
   return {
     success: true,

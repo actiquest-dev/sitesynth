@@ -1,7 +1,5 @@
-import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/generative-ai'
+import { geminiGenerateContent } from '~~/server/utils/gemini-client'
 import { google } from 'googleapis'
-
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || '')
 
 // Helper function to read file content from Google Drive
 async function readGoogleDriveFile(fileId: string): Promise<{ mimeType: string; data: string } | null> {
@@ -193,28 +191,18 @@ BRIEF DATA:
     for (const modelName of modelNames) {
       try {
         console.log(`[Brief] Trying model: ${modelName}`)
-        const model = genAI.getGenerativeModel({
+        result = await geminiGenerateContent({
           model: modelName,
-          systemInstruction: systemPrompt,
-        })
-
-        result = await model.generateContent({
           contents: [
             {
               role: 'user',
-              parts: promptParts,
+              parts: [{ text: `${systemPrompt}\n\n${prompt}` }, ...promptParts.filter((part) => part.inlineData)],
             },
           ],
           generationConfig: {
             temperature: 0.7,
             maxOutputTokens: 4096,
           },
-          safetySettings: [
-            {
-              category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-              threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-            },
-          ],
         })
         usedModel = modelName
         console.log(`[Brief] ✓ Success with model: ${modelName}`)
@@ -225,7 +213,7 @@ BRIEF DATA:
       }
     }
 
-    const responseText = result.response.text()
+    const responseText = result?.candidates?.[0]?.content?.parts?.[0]?.text || ''
     console.log(`[Brief] ✓ Brief generated successfully with ${usedModel} (${responseText.length} characters)`)
 
     return {
